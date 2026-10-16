@@ -1,0 +1,57 @@
+@use 'palette' as *;
+
+$m3-role-overrides: (
+  primary: ref(blue-500),
+  on-primary: ref(white),
+  primary-container: ref(blue-50),
+  on-primary-container: ref(blue-900),
+  inverse-primary: ref(blue-300),
+  secondary: ref(cyan-500),
+  on-secondary: ref(navy-900),   
+  secondary-container: ref(cyan-50),
+  on-secondary-container: ref(cyan-750),
+  background: ref(slate-25),
+  on-background: ref(navy-900),
+  surface: ref(white),
+  on-surface: ref(navy-900),
+  on-surface-variant: ref(slate-600),
+  surface-container-low: ref(slate-50),
+  surface-container: ref(slate-100),
+  surface-container-high: ref(slate-200),
+  outline: ref(slate-300),
+  outline-variant: ref(slate-200),
+  inverse-surface: ref(navy-950),
+  inverse-on-surface: ref(slate-50),
+  error: ref(red-600),
+  on-error: ref(white),
+  error-container: ref(red-50),
+  on-error-container: ref(red-700),
+);
+
+$extended-roles: (
+  on-surface-muted: ref(slate-500),
+  inverse-surface-container: ref(navy-800),
+  inverse-on-surface-variant: ref(slate-400),
+  outline-strong: ref(slate-500),
+  success: ref(emerald-700),
+  on-success: ref(white),
+  success-container: ref(emerald-50),
+  on-success-container: ref(emerald-800),
+  warning: ref(amber-700),
+  on-warning: ref(white),
+  warning-container: ref(amber-50),
+  on-warning-container: ref(amber-800),
+);
+
+@mixin extended-tokens() {
+  @each $role, $value in $extended-roles {
+    --nx-sys-#{$role}: #{$value};
+  }
+
+  --nx-sys-focus-ring-color: var(--mat-sys-primary);
+  --nx-sys-focus-ring-width: 3px;
+  --nx-sys-focus-ring-offset: 2px;
+  --nx-sys-disabled-content: color-mix(in srgb, var(--mat-sys-on-surface) 38%, transparent);
+  --nx-sys-disabled-container: color-mix(in srgb, var(--mat-sys-on-surface) 12%, transparent);
+  --nx-sys-disabled-outline: color-mix(in srgb, var(--mat-sys-on-surface) 12%, transparent);
+}

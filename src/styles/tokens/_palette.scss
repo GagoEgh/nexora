@@ -1,0 +1,45 @@
+@use 'sass:map';
+
+$ref: (
+  blue-500: #0f55e8,   // electric blue of the ribbon           -> primary
+  blue-300: #86adff,   //                                        -> inverse-primary
+  blue-50:  #eef4ff,   //                                        -> primary-container
+  blue-900: #0e2c6b,   //                                        -> on-primary-container
+  cyan-500: #12aeeb,   // cyan highlight                         -> secondary
+  cyan-50:  #e8f8fe,   //                                        -> secondary-container
+  cyan-700: #0b7aa6,   // spec on-secondary-container: 4.44:1 on cyan-50 (fails AA). Kept as the
+                       // brand primitive for non-text use; text uses cyan-750 instead.
+  cyan-750: #0b76a1,   // (AA) cyan-700 darkened 3% -> 4.68:1 on cyan-50  -> on-secondary-container
+  navy-900: #0b1324,   // wordmark navy                          -> on-surface, on-secondary
+  navy-800: #1a2540,   //                                        -> inverse-surface-container
+  navy-950: #060b17,   //                                        -> inverse-surface
+
+  // --- Neutrals 
+  white:     #ffffff,
+  slate-25:  #fafbfd,  // background
+  slate-50:  #f6f8fb,  // surface-container-low, inverse-on-surface
+  slate-100: #eef2f7,  // surface-container
+  slate-200: #e2e8f0,  // surface-container-high, outline-variant
+  slate-300: #cbd5e1,  // outline (hairlines / dividers only: 1.48:1 on white)
+  slate-400: #94a3b8,  // inverse-on-surface-variant
+  slate-500: #64748b,  // on-surface-muted, outline-strong (4.76:1 on white)
+  slate-600: #475569,  // on-surface-variant (7.58:1 on white)
+
+  // --- Status 
+  red-600:     #dc2626, // error (4.83:1 on white)
+  red-700:     #b91c1c, // (AA) on-error-container: 5.91:1 on red-50 (red-600 is 4.41:1)
+  red-50:      #fef2f2, // error-container
+  emerald-700: #047857, // (AA) success: 5.48:1 on white (spec emerald-600 #059669 is 3.77:1)
+  emerald-800: #065f46, // (AA) on-success-container: 7.29:1 on emerald-50
+  emerald-50:  #ecfdf5, // success-container
+  amber-700:   #b45309, // warning: 5.02:1 on white
+  amber-800:   #92400e, // on-warning-container: 6.84:1 on amber-50
+  amber-50:    #fffbeb, // warning-container
+);
+
+@function ref($name) {
+  @if not map.has-key($ref, $name) {
+    @error 'Unknown reference colour "#{$name}". Add it to tokens/_palette.scss first.';
+  }
+  @return map.get($ref, $name);
+}

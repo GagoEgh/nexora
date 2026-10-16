@@ -1,0 +1,35 @@
+@use '@angular/material' as mat;
+@use './styles/theme/material' as nexora;
+@use './styles/tokens/color';
+@use './styles/tokens/spacing';
+@use './styles/tokens/layout';
+
+html {
+  height: 100%;
+  @include nexora.theme();
+  @include color.extended-tokens();
+  @include spacing.tokens();
+  @include layout.tokens();
+}
+
+@include mat.strong-focus-indicators(
+  (
+    border-color: var(--nx-sys-focus-ring-color),
+    border-width: var(--nx-sys-focus-ring-width),
+  )
+);
+
+:where(:focus-visible):not(.mat-focus-indicator) {
+  outline: var(--nx-sys-focus-ring-width) solid var(--nx-sys-focus-ring-color);
+  outline-offset: var(--nx-sys-focus-ring-offset);
+}
+
+body {
+  color-scheme: light;
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+
+  margin: 0;
+  height: 100%;
+}

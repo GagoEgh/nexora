@@ -1,0 +1,56 @@
+@use 'sass:map';
+@use 'spacing';
+
+$breakpoints: (
+  compact: 0,
+  medium: 600,
+  expanded: 840,
+  large: 1200,
+  extra-large: 1600,
+);
+
+$container-max: 1280px;
+
+$grid: (
+  compact: (columns: 4, margin: 20, gutter: 16),
+  medium: (columns: 8, margin: 32, gutter: 24),
+  expanded: (columns: 12, margin: 40, gutter: 24),
+  large: (columns: 12, margin: 80, gutter: 32),
+  extra-large: (columns: 12),
+);
+
+@mixin up($class) {
+  @if not map.has-key($breakpoints, $class) {
+    @error 'Unknown window size class "#{$class}".';
+  }
+  $min: map.get($breakpoints, $class);
+  @if $min == 0 {
+    @content;
+  } @else {
+    @media (min-width: #{$min}px) {
+      @content;
+    }
+  }
+}
+
+@mixin _grid-tokens($config) {
+  @if map.has-key($config, columns) {
+    --nx-layout-columns: #{map.get($config, columns)};
+  }
+  @if map.has-key($config, margin) {
+    --nx-layout-margin: #{spacing.space(map.get($config, margin))};
+  }
+  @if map.has-key($config, gutter) {
+    --nx-layout-gutter: #{spacing.space(map.get($config, gutter))};
+  }
+}
+
+@mixin tokens() {
+  --nx-layout-container-max: #{$container-max};
+
+  @each $class, $config in $grid {
+    @include up($class) {
+      @include _grid-tokens($config);
+    }
+  }
+}
