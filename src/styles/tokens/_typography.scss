@@ -1,0 +1,13 @@
+$plain-family: (Inter, sans-serif);
+$brand-family: $plain-family;
+
+$label-large-size: 0.9375rem;
+$label-large-line-height: 1.25rem;
+$label-large-weight: 600;
+
+$m3-typescale-overrides: (
+  label-large: $label-large-weight $label-large-size #{'/'} $label-large-line-height $plain-family,
+  label-large-size: $label-large-size,
+  label-large-line-height: $label-large-line-height,
+  label-large-weight: $label-large-weight,
+);

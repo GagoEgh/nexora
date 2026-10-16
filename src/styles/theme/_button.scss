@@ -1,0 +1,56 @@
+@use '@angular/material' as mat;
+
+$_disabled-container: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
+$_disabled-label: var(--nx-sys-on-surface-muted);
+$_pressed-opacity: calc(var(--mat-sys-pressed-state-layer-opacity) * 100%);
+
+@mixin theme() {
+  @include mat.button-overrides(
+    (
+      filled-container-height: 48px,
+      tonal-container-height: 48px,
+      outlined-container-height: 48px,
+      text-container-height: 48px,
+      filled-icon-offset: 0,
+      tonal-icon-offset: 0,
+      outlined-icon-offset: 0,
+      text-icon-offset: 0,
+      filled-state-layer-color: var(--mat-sys-on-surface),
+      filled-hover-state-layer-opacity: 0.2,
+      filled-ripple-color: color-mix(in srgb, var(--mat-sys-on-surface) $_pressed-opacity, transparent),
+      filled-disabled-container-color: $_disabled-container,
+      filled-disabled-label-text-color: $_disabled-label,
+
+      tonal-container-color: var(--mat-sys-primary-container),
+      tonal-label-text-color: var(--mat-sys-on-primary-container),
+      tonal-state-layer-color: var(--mat-sys-primary),
+      tonal-ripple-color: color-mix(in srgb, var(--mat-sys-primary) $_pressed-opacity, transparent),
+      tonal-disabled-container-color: $_disabled-container,
+      tonal-disabled-label-text-color: $_disabled-label,
+
+      outlined-outline-color: var(--mat-sys-outline),
+      outlined-disabled-outline-color: var(--mat-sys-outline-variant),
+      outlined-disabled-label-text-color: $_disabled-label,
+
+      text-disabled-label-text-color: $_disabled-label,
+    )
+  );
+
+  @at-root {
+    .mat-mdc-button,
+    .mat-mdc-unelevated-button,
+    .mat-mdc-outlined-button,
+    .mat-tonal-button {
+      --mat-focus-indicator-border-width: 2px;
+      --mat-focus-indicator-border-color: var(--mat-sys-primary);
+
+      &.mat-mdc-button-base .mat-focus-indicator::before {
+        margin: calc(var(--mat-focus-indicator-border-width) * -1);
+      }
+    }
+
+    .mat-mdc-unelevated-button {
+      --mat-focus-indicator-border-color: var(--mat-sys-on-surface);
+    }
+  }
+}

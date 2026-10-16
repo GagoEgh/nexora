@@ -133,7 +133,6 @@ test.describe('colour tokens', () => {
     const strong = await resolveColorToken(page, '--nx-sys-outline-strong');
     for (const token of [
       '--mat-form-field-outlined-outline-color',
-      '--mat-button-outlined-outline-color',
       '--mat-chip-outline-color',
     ]) {
       expect(await resolveColorToken(page, token), token).toEqual(strong);

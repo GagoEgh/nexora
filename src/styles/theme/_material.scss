@@ -1,6 +1,8 @@
 @use '@angular/material' as mat;
 @use 'theme-colors' as palettes;
 @use '../tokens/color';
+@use '../tokens/typography';
+@use 'button';
 
 @mixin theme() {
   @include mat.theme(
@@ -10,18 +12,17 @@
         primary: palettes.$primary-palette,
         tertiary: palettes.$tertiary-palette,
       ),
-      typography: Roboto,
+      typography: (
+        plain-family: typography.$plain-family,
+        brand-family: typography.$brand-family,
+      ),
       density: 0,
     )
   );
   @include mat.theme-overrides(color.$m3-role-overrides);
-  
+  @include mat.theme-overrides(typography.$m3-typescale-overrides);
+
   @include mat.form-field-overrides(
-    (
-      outlined-outline-color: var(--nx-sys-outline-strong),
-    )
-  );
-  @include mat.button-overrides(
     (
       outlined-outline-color: var(--nx-sys-outline-strong),
     )
@@ -31,4 +32,5 @@
       outline-color: var(--nx-sys-outline-strong),
     )
   );
+  @include button.theme();
 }
