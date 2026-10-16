@@ -1,0 +1,29 @@
+@use 'tokens/spacing';
+
+:host {
+  display: inline-flex;
+  align-items: center;
+  gap: spacing.space(12);
+  height: var(--app-logo-height, 32px);
+  line-height: 0;
+}
+
+:host([data-tone='light']) {
+  color: var(--mat-sys-on-surface);
+}
+
+:host([data-tone='dark']) {
+  color: var(--mat-sys-inverse-on-surface);
+}
+
+.app-logo__mark {
+  display: block;
+  height: 100%;
+  width: auto;
+}
+
+.app-logo__wordmark {
+  display: block;
+  height: 50%;
+  width: auto;
+}
