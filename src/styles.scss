@@ -33,3 +33,10 @@ body {
   margin: 0;
   height: 100%;
 }
+
+// Registry icons (public/icons) are stroked with on-surface navy in their source
+// files. Rendered through <mat-icon> they follow the surface's content colour,
+// so one file serves light and inverse surfaces alike.
+.mat-icon svg [stroke] {
+  stroke: currentColor;
+}
