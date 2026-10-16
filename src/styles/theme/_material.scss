@@ -3,6 +3,7 @@
 @use '../tokens/color';
 @use '../tokens/typography';
 @use 'button';
+@use 'chip';
 
 @mixin theme() {
   @include mat.theme(
@@ -27,10 +28,6 @@
       outlined-outline-color: var(--nx-sys-outline-strong),
     )
   );
-  @include mat.chips-overrides(
-    (
-      outline-color: var(--nx-sys-outline-strong),
-    )
-  );
   @include button.theme();
+  @include chip.theme();
 }

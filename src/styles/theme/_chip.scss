@@ -1,0 +1,46 @@
+@use '@angular/material' as mat;
+@use '../tokens/spacing';
+
+$_on-active: var(--mat-sys-on-primary-container);
+
+@mixin theme() {
+  @include mat.chips-overrides(
+    (
+      container-height: 36px,
+      elevated-container-color: var(--mat-sys-surface),
+      outline-color: var(--mat-sys-outline),
+      label-text-color: var(--mat-sys-on-surface),
+      label-text-font: var(--mat-sys-label-medium-font),
+      label-text-size: var(--mat-sys-label-medium-size),
+      label-text-line-height: var(--mat-sys-label-medium-line-height),
+      label-text-weight: var(--mat-sys-label-medium-weight),
+      label-text-tracking: var(--mat-sys-label-medium-tracking),
+      with-icon-icon-color: var(--mat-sys-primary),
+      with-avatar-avatar-size: 18px,
+
+      elevated-selected-container-color: var(--mat-sys-primary-container),
+      selected-label-text-color: $_on-active,
+      with-icon-selected-icon-color: $_on-active,
+      selected-trailing-icon-color: $_on-active,
+      selected-hover-state-layer-color: $_on-active,
+      selected-focus-state-layer-color: $_on-active,
+    )
+  );
+
+  @at-root {
+    button.mat-mdc-chip {
+      appearance: none;
+      border: 0;
+      padding: 0;
+      font: inherit;
+      color: inherit;
+      text-align: inherit;
+      cursor: pointer;
+    }
+
+    .mat-mdc-chip.mat-mdc-standard-chip.mdc-evolution-chip--with-primary-graphic
+      .mdc-evolution-chip__graphic {
+      padding-inline-start: spacing.space(12);
+    }
+  }
+}

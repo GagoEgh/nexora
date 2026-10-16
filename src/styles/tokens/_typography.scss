@@ -5,9 +5,17 @@ $label-large-size: 0.9375rem;
 $label-large-line-height: 1.25rem;
 $label-large-weight: 600;
 
+$label-medium-size: 0.8125rem;
+$label-medium-line-height: 1.125rem;
+$label-medium-weight: 500;
+
 $m3-typescale-overrides: (
   label-large: $label-large-weight $label-large-size #{'/'} $label-large-line-height $plain-family,
   label-large-size: $label-large-size,
   label-large-line-height: $label-large-line-height,
   label-large-weight: $label-large-weight,
+  label-medium: $label-medium-weight $label-medium-size #{'/'} $label-medium-line-height $plain-family,
+  label-medium-size: $label-medium-size,
+  label-medium-line-height: $label-medium-line-height,
+  label-medium-weight: $label-medium-weight,
 );
