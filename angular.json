@@ -23,7 +23,7 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular/build:application",
+          "builder": "@angular-builders/custom-esbuild:application",
           "options": {
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
@@ -41,7 +41,10 @@
               "includePaths": [
                 "src/styles"
               ]
-            }
+            },
+            "plugins": [
+              "./esbuild.plugins.ts"
+            ]
           },
           "configurations": {
             "production": {
@@ -68,7 +71,7 @@
           "defaultConfiguration": "production"
         },
         "serve": {
-          "builder": "@angular/build:dev-server",
+          "builder": "@angular-builders/custom-esbuild:dev-server",
           "configurations": {
             "production": {
               "buildTarget": "nexora:build:production"
@@ -77,10 +80,24 @@
               "buildTarget": "nexora:build:development"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "development",
+          "options": {
+            "prebundle": {
+              "exclude": [
+                "intlayer",
+                "angular-intlayer",
+                "@intlayer/config",
+                "@intlayer/core"
+              ]
+            }
+          }
         },
         "test": {
-          "builder": "@angular/build:unit-test"
+          "builder": "@angular-builders/custom-esbuild:unit-test",
+          "options": {
+            "buildTarget": "nexora:build:development",
+            "tsConfig": "tsconfig.spec.json"
+          }
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",

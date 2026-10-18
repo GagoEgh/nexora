@@ -1,0 +1,19 @@
+@use 'tokens/spacing';
+
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.app__main {
+  flex: 1 0 auto;
+  padding-block: spacing.space(48);
+  padding-inline: var(--nx-layout-margin);
+}
+
+.app__main > * {
+  display: block;
+  max-width: var(--nx-layout-container-max);
+  margin-inline: auto;
+}

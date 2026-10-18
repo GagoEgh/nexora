@@ -34,7 +34,7 @@ test.describe('logo component', () => {
   });
 
   test('renders the lockup as one accessible image', async ({ page }) => {
-    const logo = page.getByRole('img', { name: 'Nexora' });
+    const logo = page.locator('app-header').getByRole('img', { name: 'Nexora' });
     await expect(logo).toBeVisible();
     await expect(logo).toHaveAttribute('data-variant', 'lockup');
 
@@ -51,19 +51,21 @@ test.describe('logo component', () => {
   test('wordmark follows the theme: on-surface on light, inverse-on-surface on dark', async ({
     page,
   }) => {
-    const logo = page.getByRole('img', { name: 'Nexora' });
+    const logo = page.locator('app-header').getByRole('img', { name: 'Nexora' });
     const wordmarkFill = () =>
       logo.locator('svg.app-logo__wordmark path').first().evaluate((p) => getComputedStyle(p).fill);
     const onSurface = await resolveColorToken(page, '--mat-sys-on-surface');
     const inverseOnSurface = await resolveColorToken(page, '--mat-sys-inverse-on-surface');
 
-    // Default (auto) on the light surface: inherits body colour = on-surface = source #0B1324.
+    // Default (auto) on the light surface: inherits the header brand link colour = on-surface = source #0B1324.
     expect(await wordmarkFill()).toBe('rgb(11, 19, 36)');
     expect(onSurface).toEqual({ r: 11 / 255, g: 19 / 255, b: 36 / 255, a: 1 });
 
     // Auto inside an inverse surface: inherits inverse-on-surface = source #F6F8FB.
+    // The shell renders two logos (header, footer); the contract is checked on the header one.
     await page.evaluate(() => {
-      document.body.style.color = 'var(--mat-sys-inverse-on-surface)';
+      const brand = document.querySelector<HTMLElement>('app-header .header__brand');
+      if (brand) brand.style.color = 'var(--mat-sys-inverse-on-surface)';
     });
     expect(await wordmarkFill()).toBe('rgb(246, 248, 251)');
     expect(inverseOnSurface).toEqual({ r: 246 / 255, g: 248 / 255, b: 251 / 255, a: 1 });

@@ -1,13 +1,24 @@
-import { Component, signal } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Logo } from './shared/ui/logo/logo';
+import { useLocale } from 'angular-intlayer';
+import { Footer } from './layout/footer/footer';
+import { Header } from './layout/header/header';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Logo],
+  imports: [RouterOutlet, Header, Footer],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrl: './app.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
-  protected readonly title = signal('nexora');
+  private readonly document = inject(DOCUMENT);
+  private readonly locale = useLocale().locale;
+
+  constructor() {
+    effect(() => {
+      this.document.documentElement.lang = this.locale();
+    });
+  }
 }

@@ -3,6 +3,7 @@ import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { MAT_SNACK_BAR_DEFAULT_OPTIONS, type MatSnackBarConfig } from '@angular/material/snack-bar';
 import { provideRouter } from '@angular/router';
+import { provideIntlayer } from 'angular-intlayer';
 
 import { routes } from './app.routes';
 import { provideAppIcons } from './core/icons/provide-app-icons';
@@ -11,6 +12,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
+    provideIntlayer(),
     provideHttpClient(),
     provideAppIcons(),
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline' } },

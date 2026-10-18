@@ -21,10 +21,13 @@
     "@angular/material": "^22.2.3",
     "@angular/platform-browser": "^22.2.3",
     "@angular/router": "^22.2.3",
+    "angular-intlayer": "^9.7.0",
+    "intlayer": "^9.7.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
+    "@angular-builders/custom-esbuild": "^22.0.1",
     "@angular/build": "^22.2.3",
     "@angular/cli": "^22.2.3",
     "@angular/compiler-cli": "^22.2.3",

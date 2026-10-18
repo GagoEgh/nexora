@@ -1,0 +1,49 @@
+<footer class="footer">
+  <div class="footer__grid">
+    <div class="footer__brand">
+      <app-logo />
+      <p class="footer__description">{{ content().description }}</p>
+      <p class="footer__tagline">{{ content().tagline }}</p>
+    </div>
+
+    @for (column of content().columns; track $index; let lastColumn = $last) {
+      <nav class="footer__column" [attr.aria-label]="column.heading.value">
+        <h2 class="footer__heading">{{ column.heading }}</h2>
+        <ul class="footer__list">
+          @for (link of column.links; track $index) {
+            <li>
+              <a class="footer__link" [routerLink]="link.path.value">{{ link.label }}</a>
+            </li>
+          }
+          @if (lastColumn) {
+            <li class="footer__muted">{{ content().contactPending }}</li>
+          }
+        </ul>
+      </nav>
+    }
+  </div>
+
+  <div class="footer__bottom">
+    <p class="footer__copyright">&copy; {{ year }} Nexora. {{ content().rightsReserved }}</p>
+
+    <div class="footer__legal">
+      @for (link of content().legal; track link.path.value) {
+        <a class="footer__link" [routerLink]="link.path.value">{{ link.label }}</a>
+      }
+
+      <div class="footer__languages" role="group" [attr.aria-label]="content().language.value">
+        @for (code of locales; track code) {
+          <button
+            class="footer__language"
+            type="button"
+            [attr.lang]="code"
+            [attr.aria-current]="code === locale() ? 'true' : null"
+            (click)="setLocale(code)"
+          >
+            {{ localeNames[code] }}
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+</footer>

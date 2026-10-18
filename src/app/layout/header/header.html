@@ -1,0 +1,65 @@
+<div class="header">
+  <a class="header__brand" routerLink="/" [attr.aria-label]="content().brandLink.value" (click)="closeMenu()">
+    <app-logo />
+  </a>
+
+  <button
+    #menuButton
+    class="header__menu"
+    type="button"
+    matIconButton
+    [attr.aria-label]="menuOpen() ? content().closeMenu.value : content().openMenu.value"
+    [attr.aria-expanded]="menuOpen()"
+    aria-controls="header-nav"
+    (click)="toggleMenu()"
+  >
+    <mat-icon [svgIcon]="menuOpen() ? closeIcon : menuIcon" />
+  </button>
+
+  <nav id="header-nav" class="header__nav" [attr.aria-label]="content().navLabel.value">
+    @for (item of content().items; track item.path.value) {
+      <a
+        class="header__link"
+        [routerLink]="item.path.value"
+        routerLinkActive="header__link--active"
+        [routerLinkActiveOptions]="exact"
+        ariaCurrentWhenActive="page"
+        (click)="closeMenu()"
+      >
+        {{ item.label }}
+        @if (item.chevron) {
+          <mat-icon class="header__chevron" [svgIcon]="chevronIcon" />
+        }
+      </a>
+    }
+  </nav>
+
+  <div class="header__actions">
+    <button
+      class="header__lang"
+      type="button"
+      [matMenuTriggerFor]="langMenu"
+      [attr.aria-label]="content().language.value"
+    >
+      <mat-icon class="header__lang-icon" [svgIcon]="globeIcon" />
+      <span class="header__lang-code">{{ locale().toUpperCase() }}</span>
+      <mat-icon class="header__lang-icon" [svgIcon]="chevronIcon" />
+    </button>
+    <mat-menu #langMenu="matMenu">
+      @for (code of locales; track code) {
+        <button
+          mat-menu-item
+          [attr.lang]="code"
+          [attr.aria-current]="code === locale() ? 'true' : null"
+          (click)="setLocale(code)"
+        >
+          {{ localeNames[code] }}
+        </button>
+      }
+    </mat-menu>
+
+    <a class="header__cta" matButton="filled" routerLink="/contact" (click)="closeMenu()">
+      {{ content().cta }}
+    </a>
+  </div>
+</div>
