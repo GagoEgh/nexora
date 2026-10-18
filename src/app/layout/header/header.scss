@@ -5,9 +5,10 @@
 :host {
   --app-logo-height: 28px;
 
+  position: relative;
+  z-index: 1;
   display: block;
   padding-inline: var(--nx-layout-margin);
-  background-color: var(--mat-sys-surface);
   border-block-end: 1px solid var(--mat-sys-outline-variant);
 
   @include layout.up(large) {
@@ -20,14 +21,13 @@
 .header {
   display: grid;
   grid-template-columns: 1fr auto;
-  grid-template-rows: 64px;
+  grid-template-rows: var(--nx-layout-header-height);
   align-items: center;
   max-width: var(--nx-layout-container-max);
   margin-inline: auto;
 
   @include layout.up(large) {
     grid-template-columns: auto 1fr auto;
-    grid-template-rows: 76px;
   }
 }
 

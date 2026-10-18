@@ -5,6 +5,8 @@ import { expect, test, type Page } from '@playwright/test';
  * language switching. Geometry is asserted at the design widths; colours resolve from the
  * Nexora tokens; lazy routes are observed through their chunk requests.
  */
+const HOME_HEADING = 'Engineering Digital Solutions That Move Business Forward.';
+
 const NAV = [
   ['/', 'Home'],
   ['/services', 'Services'],
@@ -111,6 +113,9 @@ test.describe('header at the mobile design width', () => {
     await expect(menu).toHaveAttribute('aria-expanded', 'false');
     expect((await box(page, 'app-header button.header__menu mat-icon')).w).toBe(24);
     expect(await style(page, 'app-header button.header__menu mat-icon', 'color')).toBe('rgb(11, 19, 36)');
+    // Home runs its hero behind the bar, so the hairline is dropped there and kept elsewhere.
+    expect(await style(page, 'app-header', 'border-bottom-width')).toBe('0px');
+    await page.goto('/about');
     expect(await style(page, 'app-header', 'border-bottom-width')).toBe('1px');
     expect(await style(page, 'app-header', 'border-bottom-color')).toBe('rgb(226, 232, 240)');
   });
@@ -196,7 +201,7 @@ test.describe('routing', () => {
       if (/chunk-.*\.js$/.test(req.url())) requested.push(req.url());
     });
     await page.goto('/');
-    await expect(page.locator('main h1')).toHaveText('Home');
+    await expect(page.locator('main h1')).toHaveText(HOME_HEADING);
     const before = requested.length;
 
     await page.locator('app-header nav a.header__link', { hasText: 'Services' }).click();
@@ -209,7 +214,7 @@ test.describe('routing', () => {
   test('every header and footer route resolves to its page', async ({ page }) => {
     for (const [href, label] of NAV) {
       await page.goto(href);
-      await expect(page.locator('main h1')).toHaveText(label);
+      await expect(page.locator('main h1')).toHaveText(href === '/' ? HOME_HEADING : label);
     }
     await page.goto('/privacy-policy');
     await expect(page.locator('main h1')).toHaveText('Privacy Policy');
@@ -220,6 +225,6 @@ test.describe('routing', () => {
   test('unknown URLs redirect to Home', async ({ page }) => {
     await page.goto('/does-not-exist');
     await expect(page).toHaveURL(/\/$/);
-    await expect(page.locator('main h1')).toHaveText('Home');
+    await expect(page.locator('main h1')).toHaveText(HOME_HEADING);
   });
 });

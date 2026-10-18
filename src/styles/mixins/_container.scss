@@ -1,0 +1,12 @@
+@use '../tokens/spacing';
+
+@mixin page() {
+  display: block;
+  padding-block: spacing.space(48);
+  padding-inline: var(--nx-layout-margin);
+
+  > * {
+    max-width: var(--nx-layout-container-max);
+    margin-inline: auto;
+  }
+}

@@ -1,5 +1,10 @@
+@use 'sass:map';
+@use 'layout';
+
 $plain-family: (Inter, sans-serif);
 $brand-family: $plain-family;
+
+$code-font: 0.75rem #{'/'} 1.25rem ui-monospace, Menlo, Consolas, monospace;
 
 $weight-regular: 400;
 $weight-medium: 500;
@@ -31,3 +36,45 @@ $m3-typescale-overrides: (
   body-small-line-height: $body-small-line-height,
   body-small-weight: $body-small-weight,
 );
+
+$display-hero-tracking: -0.02em;
+$display-hero: (
+  compact: (
+    size: 2.5rem,
+    line-height: 3rem,
+  ),
+  large: (
+    size: 4rem,
+    line-height: 4.5rem,
+  ),
+);
+$body-lead: (
+  compact: (
+    size: 1rem,
+    line-height: 1.625rem,
+  ),
+  large: (
+    size: 1.125rem,
+    line-height: 1.875rem,
+  ),
+);
+
+@mixin _role($name, $weight, $sizes) {
+  --nx-sys-#{$name}-weight: #{$weight};
+  --nx-sys-#{$name}-font: #{$plain-family};
+  --nx-sys-#{$name}-size: #{map.get($sizes, size)};
+  --nx-sys-#{$name}-line-height: #{map.get($sizes, line-height)};
+  --nx-sys-#{$name}: #{$weight} #{map.get($sizes, size)} #{'/'} #{map.get($sizes, line-height)} #{$plain-family};
+}
+
+@mixin extended-tokens() {
+  --nx-sys-display-hero-tracking: #{$display-hero-tracking};
+
+  @include _role(display-hero, $weight-semibold, map.get($display-hero, compact));
+  @include _role(body-lead, $weight-regular, map.get($body-lead, compact));
+
+  @include layout.up(large) {
+    @include _role(display-hero, $weight-semibold, map.get($display-hero, large));
+    @include _role(body-lead, $weight-regular, map.get($body-lead, large));
+  }
+}

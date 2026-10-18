@@ -1,0 +1,105 @@
+@use 'tokens/spacing';
+@use 'tokens/layout';
+@use 'tokens/typography';
+
+
+:host {
+  display: contents;
+}
+
+.notes__card {
+  display: none;
+  position: absolute;
+  box-sizing: border-box;
+  padding: spacing.space(16);
+  box-shadow: var(--mat-sys-level2);
+
+  @include layout.up(large) {
+    display: block;
+  }
+}
+
+.notes__workflow {
+  top: calc(-1 * #{spacing.space(80)});
+  right: calc(-1 * #{spacing.space(40)});
+  width: 240px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--mat-sys-corner-large);
+  background-color: var(--mat-sys-surface);
+}
+
+.notes__title {
+  display: flex;
+  align-items: center;
+  gap: spacing.space(8);
+  margin: 0 0 spacing.space(12);
+  font: var(--mat-sys-body-medium);
+  font-weight: typography.$weight-semibold;
+  color: var(--mat-sys-on-surface);
+
+  .mat-icon {
+    width: 18px;
+    height: 18px;
+    color: var(--mat-sys-primary);
+  }
+}
+
+.notes__steps {
+  display: grid;
+  gap: spacing.space(12);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.notes__step {
+  display: flex;
+  align-items: center;
+  gap: spacing.space(8);
+  font: var(--mat-sys-body-medium);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.notes__mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--mat-sys-outline);
+  border-radius: var(--mat-sys-corner-full);
+
+  .mat-icon {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+.notes__step--done {
+  color: var(--mat-sys-on-surface);
+
+  .notes__mark {
+    border-color: var(--mat-sys-primary);
+    background-color: var(--mat-sys-primary);
+    color: var(--mat-sys-on-primary);
+  }
+}
+
+.notes__request {
+  bottom: calc(-1 * #{spacing.space(64)});
+  left: calc(-1 * #{spacing.space(48)});
+  margin: 0;
+  border-radius: var(--mat-sys-corner-medium);
+  background-color: var(--mat-sys-inverse-surface);
+  font: typography.$code-font;
+  color: var(--mat-sys-inverse-on-surface);
+}
+
+.notes__method {
+  color: var(--mat-sys-inverse-primary);
+}
+
+.notes__status {
+  color: var(--nx-sys-inverse-success);
+}

@@ -3,6 +3,7 @@
 @use './styles/tokens/color';
 @use './styles/tokens/spacing';
 @use './styles/tokens/layout';
+@use './styles/tokens/typography';
 
 html {
   height: 100%;
@@ -10,6 +11,7 @@ html {
   @include color.extended-tokens();
   @include spacing.tokens();
   @include layout.tokens();
+  @include typography.extended-tokens();
 }
 
 @include mat.strong-focus-indicators(
@@ -34,9 +36,6 @@ body {
   height: 100%;
 }
 
-// Registry icons (public/icons) are stroked with on-surface navy in their source
-// files. Rendered through <mat-icon> they follow the surface's content colour,
-// so one file serves light and inverse surfaces alike.
 .mat-icon svg [stroke] {
   stroke: currentColor;
 }

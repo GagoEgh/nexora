@@ -2,7 +2,9 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import { MatIcon } from '@angular/material/icon';
 import { appIcon, type AppIconName } from '../../../core/icons/icons';
 
-export type IconTileTone = 'primary' | 'secondary' | 'neutral' | 'inverse';
+export type IconTileTone = 'primary' | 'secondary' | 'neutral' | 'inverse' | 'inverse-container';
+
+export type IconTileSize = 'medium' | 'small';
 
 @Component({
   selector: 'app-icon-tile',
@@ -13,10 +15,12 @@ export type IconTileTone = 'primary' | 'secondary' | 'neutral' | 'inverse';
   host: {
     'aria-hidden': 'true',
     '[attr.data-tone]': 'tone()',
+    '[attr.data-size]': 'size()',
   },
 })
 export class IconTile {
   readonly icon = input.required<AppIconName>();
   readonly tone = input.required<IconTileTone>();
+  readonly size = input<IconTileSize>('medium');
   protected readonly svgIcon = computed(() => appIcon(this.icon()));
 }

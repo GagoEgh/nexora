@@ -30,3 +30,19 @@
   background-color: var(--mat-sys-inverse-surface);
   color: var(--mat-sys-inverse-on-surface);
 }
+
+:host([data-tone='inverse-container']) {
+  background-color: var(--nx-sys-inverse-surface-container);
+  color: var(--mat-sys-inverse-primary);
+}
+
+:host([data-size='small']) {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+
+  .mat-icon {
+    width: 20px;
+    height: 20px;
+  }
+}

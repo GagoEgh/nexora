@@ -1,0 +1,31 @@
+<section class="hero">
+  <div class="hero__copy">
+    <p class="hero__eyebrow">
+      <span class="hero__eyebrow-text hero__eyebrow-text--full">{{ content().eyebrow }}</span>
+      <span class="hero__eyebrow-text hero__eyebrow-text--short">{{ content().eyebrowShort }}</span>
+    </p>
+
+    <h1 class="hero__title">{{ content().title }}</h1>
+
+    <p class="hero__lead">{{ content().lead }}</p>
+
+    <div class="hero__actions">
+      <a matButton="filled" routerLink="/contact">
+        {{ content().primaryCta }}
+        <mat-icon iconPositionEnd [svgIcon]="arrowIcon" />
+      </a>
+      <a matButton="outlined" routerLink="/services">{{ content().secondaryCta }}</a>
+    </div>
+
+    <ul class="hero__trust">
+      @for (item of content().trust; track $index) {
+        <li class="hero__trust-item">
+          <mat-icon class="hero__trust-icon" [svgIcon]="checkIcon" />
+          {{ item }}
+        </li>
+      }
+    </ul>
+  </div>
+
+  <app-hero-illustration class="hero__art" />
+</section>

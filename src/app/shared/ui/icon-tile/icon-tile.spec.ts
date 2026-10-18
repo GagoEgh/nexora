@@ -3,7 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideAppIcons } from '../../../core/icons/provide-app-icons';
-import { IconTile, type IconTileTone } from './icon-tile';
+import { IconTile, type IconTileSize, type IconTileTone } from './icon-tile';
 
 const CODE_SVG =
   '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">' +
@@ -11,10 +11,11 @@ const CODE_SVG =
 
 @Component({
   imports: [IconTile],
-  template: `<app-icon-tile icon="code" [tone]="tone()" />`,
+  template: `<app-icon-tile icon="code" [tone]="tone()" [size]="size()" />`,
 })
 class Host {
   readonly tone = signal<IconTileTone>('primary');
+  readonly size = signal<IconTileSize>('medium');
 }
 
 describe('IconTile', () => {
@@ -52,10 +53,17 @@ describe('IconTile', () => {
   });
 
   it('reflects every tone for the stylesheet', async () => {
-    for (const tone of ['primary', 'secondary', 'neutral', 'inverse'] as const) {
+    for (const tone of ['primary', 'secondary', 'neutral', 'inverse', 'inverse-container'] as const) {
       fixture.componentInstance.tone.set(tone);
       await fixture.whenStable();
       expect(tile.getAttribute('data-tone')).toBe(tone);
     }
+  });
+
+  it('defaults to the medium size and reflects the small size', async () => {
+    expect(tile.getAttribute('data-size')).toBe('medium');
+    fixture.componentInstance.size.set('small');
+    await fixture.whenStable();
+    expect(tile.getAttribute('data-size')).toBe('small');
   });
 });

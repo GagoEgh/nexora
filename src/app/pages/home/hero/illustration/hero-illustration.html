@@ -1,0 +1,45 @@
+<div class="art">
+  <div class="art__window">
+    <div class="art__bar">
+      <span class="art__dots"></span>
+      <span class="art__path">{{ content().illustration.windowTitle }}</span>
+    </div>
+
+    <div class="art__canvas">
+      @for (tier of content().illustration.tiers; track $index; let i = $index) {
+        @if (i > 0) {
+          <svg class="art__link" viewBox="0 0 100 56" preserveAspectRatio="none">
+            <path [attr.d]="links[i - 1]" vector-effect="non-scaling-stroke" />
+          </svg>
+        }
+        <div class="art__tier">
+          @for (node of tier; track $index) {
+            <div class="art__node" [class.art__node--dark]="node.dark">
+              <app-icon-tile
+                size="small"
+                [icon]="nodeIcon(node.icon.value)"
+                [tone]="node.dark ? 'inverse-container' : 'primary'"
+              />
+              <div class="art__node-text">
+                <span class="art__node-label art__node-label--full">{{ node.label }}</span>
+                <span class="art__node-label art__node-label--short">{{ node.shortLabel }}</span>
+                <span class="art__node-meta">{{ node.meta }}</span>
+              </div>
+            </div>
+          }
+        </div>
+      }
+
+      <ul class="art__pipeline">
+        @for (step of content().illustration.pipeline; track $index; let last = $last) {
+          <li class="art__chip" [class.art__chip--idle]="last">{{ step }}</li>
+          @if (!last) {
+            <li class="art__arrow"><mat-icon [svgIcon]="arrowIcon" /></li>
+          }
+        }
+      </ul>
+    </div>
+  </div>
+
+  <app-hero-notes />
+</div>

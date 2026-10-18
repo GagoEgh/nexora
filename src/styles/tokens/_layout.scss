@@ -11,6 +11,11 @@ $breakpoints: (
 
 $container-max: 1280px;
 
+$header-height: (
+  compact: 64px,
+  large: 76px,
+);
+
 $grid: (
   compact: (columns: 4, margin: 20, gutter: 16),
   medium: (columns: 8, margin: 32, gutter: 24),
@@ -47,6 +52,11 @@ $grid: (
 
 @mixin tokens() {
   --nx-layout-container-max: #{$container-max};
+  --nx-layout-header-height: #{map.get($header-height, compact)};
+
+  @include up(large) {
+    --nx-layout-header-height: #{map.get($header-height, large)};
+  }
 
   @each $class, $config in $grid {
     @include up($class) {

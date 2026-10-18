@@ -4,6 +4,13 @@ import { useIntlayer } from 'angular-intlayer';
 @Component({
   selector: 'app-terms-of-use',
   template: `<h1>{{ content().title }}</h1>`,
+  styles: `
+    @use 'mixins/container';
+
+    :host {
+      @include container.page();
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TermsOfUse {

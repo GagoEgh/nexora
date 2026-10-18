@@ -8,12 +8,8 @@
 
 .app__main {
   flex: 1 0 auto;
-  padding-block: spacing.space(48);
-  padding-inline: var(--nx-layout-margin);
 }
 
-.app__main > * {
-  display: block;
-  max-width: var(--nx-layout-container-max);
-  margin-inline: auto;
+app-header:has(+ .app__main app-hero) {
+  border-block-end: 0;
 }
