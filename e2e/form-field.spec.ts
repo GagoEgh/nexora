@@ -97,4 +97,38 @@ test.describe('text field theme', () => {
     expect(await rootTokenValue(page, '--mat-sys-title-small-line-height')).toBe('1.25rem');
     expect(await rootTokenValue(page, '--mat-sys-title-small-weight')).toBe('500');
   });
+
+  test('textarea fields: fill the parent, 140px box, Body/Large subscript, muted counter; single-line untouched', async ({
+    page,
+    request,
+  }) => {
+    const css = (await (await request.get('/styles.css')).text()).replace(/\s+/g, ' ');
+    const scope = '\\.mat-mdc-form-field:has\\(\\.mat-mdc-form-field-textarea-control\\)';
+    expect(css).toMatch(
+      new RegExp(
+        `${scope} \\{ ` +
+          '--mat-form-field-subscript-text-font: var\\(--mat-sys-body-large-font\\); ' +
+          '--mat-form-field-subscript-text-size: var\\(--mat-sys-body-large-size\\); ' +
+          '--mat-form-field-subscript-text-line-height: var\\(--mat-sys-body-large-line-height\\); ' +
+          '--mat-form-field-subscript-text-weight: var\\(--mat-sys-body-large-weight\\); ' +
+          '--mat-form-field-subscript-text-tracking: var\\(--mat-sys-body-large-tracking\\); ' +
+          'width: 100%; \\}',
+      ),
+    );
+    expect(css).toMatch(
+      new RegExp(
+        `${scope} \\.mat-mdc-form-field-textarea-control \\{ min-height: calc\\(140px - 2 \\* var\\(--mat-form-field-container-vertical-padding\\)\\); \\}`,
+      ),
+    );
+    expect(css).toMatch(
+      new RegExp(
+        `${scope} \\.mat-mdc-form-field-hint-end \\{ color: var\\(--nx-sys-on-surface-muted\\); \\}`,
+      ),
+    );
+    // Body/Large is Material's untouched 16/24 scale; the root subscript tokens stay body-small.
+    expect(await rootTokenValue(page, '--mat-sys-body-large-size')).toBe('1rem');
+    expect(await rootTokenValue(page, '--mat-sys-body-large-line-height')).toBe('1.5rem');
+    await untouched(page, '--mat-form-field-subscript-text-size');
+    await untouched(page, '--mat-form-field-subscript-text-line-height');
+  });
 });

@@ -33,5 +33,23 @@
     .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--invalid .mat-mdc-notch-piece {
       border-width: var(--mat-form-field-outlined-focus-outline-width, 2px);
     }
+
+    .mat-mdc-form-field:has(.mat-mdc-form-field-textarea-control) {
+      --mat-form-field-subscript-text-font: var(--mat-sys-body-large-font);
+      --mat-form-field-subscript-text-size: var(--mat-sys-body-large-size);
+      --mat-form-field-subscript-text-line-height: var(--mat-sys-body-large-line-height);
+      --mat-form-field-subscript-text-weight: var(--mat-sys-body-large-weight);
+      --mat-form-field-subscript-text-tracking: var(--mat-sys-body-large-tracking);
+
+      width: 100%;
+
+      .mat-mdc-form-field-textarea-control {
+        min-height: calc(140px - 2 * var(--mat-form-field-container-vertical-padding));
+      }
+
+      .mat-mdc-form-field-hint-end {
+        color: var(--nx-sys-on-surface-muted);
+      }
+    }
   }
 }
