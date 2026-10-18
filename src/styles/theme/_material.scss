@@ -4,6 +4,7 @@
 @use '../tokens/typography';
 @use 'button';
 @use 'chip';
+@use 'form-field';
 
 @mixin theme() {
   @include mat.theme(
@@ -23,11 +24,7 @@
   @include mat.theme-overrides(color.$m3-role-overrides);
   @include mat.theme-overrides(typography.$m3-typescale-overrides);
 
-  @include mat.form-field-overrides(
-    (
-      outlined-outline-color: var(--nx-sys-outline-strong),
-    )
-  );
   @include button.theme();
   @include chip.theme();
+  @include form-field.theme();
 }

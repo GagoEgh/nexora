@@ -1,0 +1,37 @@
+@use '@angular/material' as mat;
+@use '../tokens/spacing';
+
+@mixin theme() {
+  @include mat.form-field-overrides(
+    (
+      container-height: 52px,
+      container-vertical-padding: 14px,
+      outlined-container-shape: var(--mat-sys-corner-medium),
+      outlined-outline-color: var(--mat-sys-outline),
+      outlined-hover-outline-color: var(--mat-sys-outline),
+      outlined-error-hover-outline-color: var(--mat-sys-error),
+      outlined-input-text-placeholder-color: var(--nx-sys-on-surface-muted),
+      outlined-disabled-outline-color: var(--nx-sys-disabled-outline),
+      outlined-disabled-input-text-color: var(--nx-sys-disabled-content),
+      disabled-input-text-placeholder-color: var(--nx-sys-disabled-content),
+    )
+  );
+
+  @at-root {
+    .mat-mdc-form-field-hint {
+      color: var(--mat-sys-on-surface-variant);
+    }
+
+    .mat-mdc-form-field .mat-mdc-form-field-subscript-wrapper {
+      margin-block-start: spacing.space(8);
+    }
+
+    .mat-mdc-form-field .mat-mdc-form-field-hint-wrapper,
+    .mat-mdc-form-field .mat-mdc-form-field-error-wrapper {
+      padding-inline: 0;
+    }
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--invalid .mat-mdc-notch-piece {
+      border-width: var(--mat-form-field-outlined-focus-outline-width, 2px);
+    }
+  }
+}

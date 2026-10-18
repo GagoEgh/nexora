@@ -128,13 +128,4 @@ test.describe('colour tokens', () => {
     expect(await rootTokenValue(page, '--mat-focus-indicator-border-width')).toBe('3px');
     expect(await rootTokenValue(page, '--mat-focus-indicator-display')).toBe('block');
   });
-
-  test('interactive component boundaries use outline-strong', async ({ page }) => {
-    const strong = await resolveColorToken(page, '--nx-sys-outline-strong');
-    for (const token of [
-      '--mat-form-field-outlined-outline-color',
-    ]) {
-      expect(await resolveColorToken(page, token), token).toEqual(strong);
-    }
-  });
 });

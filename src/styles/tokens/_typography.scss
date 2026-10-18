@@ -1,13 +1,21 @@
 $plain-family: (Inter, sans-serif);
 $brand-family: $plain-family;
 
+$weight-regular: 400;
+$weight-medium: 500;
+$weight-semibold: 600;
+
 $label-large-size: 0.9375rem;
 $label-large-line-height: 1.25rem;
-$label-large-weight: 600;
+$label-large-weight: $weight-semibold;
 
 $label-medium-size: 0.8125rem;
 $label-medium-line-height: 1.125rem;
-$label-medium-weight: 500;
+$label-medium-weight: $weight-medium;
+
+$body-small-size: 0.875rem;
+$body-small-line-height: 1.375rem;
+$body-small-weight: $weight-regular;
 
 $m3-typescale-overrides: (
   label-large: $label-large-weight $label-large-size #{'/'} $label-large-line-height $plain-family,
@@ -18,4 +26,8 @@ $m3-typescale-overrides: (
   label-medium-size: $label-medium-size,
   label-medium-line-height: $label-medium-line-height,
   label-medium-weight: $label-medium-weight,
+  body-small: $body-small-weight $body-small-size #{'/'} $body-small-line-height $plain-family,
+  body-small-size: $body-small-size,
+  body-small-line-height: $body-small-line-height,
+  body-small-weight: $body-small-weight,
 );

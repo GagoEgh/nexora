@@ -1,0 +1,14 @@
+@use 'tokens/spacing';
+@use 'tokens/typography';
+
+:host {
+  display: block;
+  margin-block-end: spacing.space(8);
+}
+
+label {
+  display: block;
+  font: var(--mat-sys-title-small);
+  font-weight: typography.$weight-semibold;
+  color: var(--mat-sys-on-surface);
+}
