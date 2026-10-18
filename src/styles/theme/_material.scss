@@ -5,6 +5,7 @@
 @use 'button';
 @use 'chip';
 @use 'form-field';
+@use 'snack-bar';
 
 @mixin theme() {
   @include mat.theme(
@@ -27,4 +28,5 @@
   @include button.theme();
   @include chip.theme();
   @include form-field.theme();
+  @include snack-bar.theme();
 }

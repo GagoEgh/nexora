@@ -24,6 +24,8 @@ const TEXT_PAIRS: [string, string][] = [
   ['--mat-sys-inverse-primary', '--nx-sys-inverse-surface-container'],
   ['--nx-sys-inverse-on-surface-variant', '--mat-sys-inverse-surface'],
   ['--nx-sys-inverse-on-surface-variant', '--nx-sys-inverse-surface-container'],
+  ['--nx-sys-inverse-success', '--mat-sys-inverse-surface'],
+  ['--nx-sys-inverse-error', '--mat-sys-inverse-surface'],
   ['--mat-sys-error', '--mat-sys-surface'],
   ['--mat-sys-on-error', '--mat-sys-error'],
   ['--mat-sys-on-error-container', '--mat-sys-error-container'],

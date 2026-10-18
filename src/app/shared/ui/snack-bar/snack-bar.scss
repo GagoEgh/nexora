@@ -1,0 +1,27 @@
+@use 'tokens/spacing';
+
+:host {
+  display: flex;
+  align-items: center;
+}
+
+.snack-bar__label {
+  display: flex;
+  align-items: center;
+  gap: spacing.space(12);
+}
+
+.snack-bar__icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  color: var(--mat-sys-inverse-primary);
+}
+
+:host([data-tone='success']) .snack-bar__icon {
+  color: var(--nx-sys-inverse-success);
+}
+
+:host([data-tone='error']) .snack-bar__icon {
+  color: var(--nx-sys-inverse-error);
+}

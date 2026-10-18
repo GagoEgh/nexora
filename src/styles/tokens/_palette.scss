@@ -29,9 +29,11 @@ $ref: (
   red-600:     #dc2626, // error (4.83:1 on white)
   red-700:     #b91c1c, // (AA) on-error-container: 5.91:1 on red-50 (red-600 is 4.41:1)
   red-50:      #fef2f2, // error-container
+  red-300:     #fca5a5, // inverse-error: 10.36:1 on navy-950 (icons on inverse surfaces)
   emerald-700: #047857, // (AA) success: 5.48:1 on white (spec emerald-600 #059669 is 3.77:1)
   emerald-800: #065f46, // (AA) on-success-container: 7.29:1 on emerald-50
   emerald-50:  #ecfdf5, // success-container
+  emerald-300: #6ee7b7, // inverse-success: 12.90:1 on navy-950 (icons on inverse surfaces)
   amber-700:   #b45309, // warning: 5.02:1 on white
   amber-800:   #92400e, // on-warning-container: 6.84:1 on amber-50
   amber-50:    #fffbeb, // warning-container

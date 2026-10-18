@@ -1,0 +1,8 @@
+<div matSnackBarLabel class="snack-bar__label">
+  <mat-icon class="snack-bar__icon" [svgIcon]="svgIcon" />
+  <span class="snack-bar__message">{{ data.message }}</span>
+</div>
+
+<div matSnackBarActions>
+  <button matButton matSnackBarAction (click)="dismiss()">{{ action }}</button>
+</div>

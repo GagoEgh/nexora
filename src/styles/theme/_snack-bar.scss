@@ -1,0 +1,24 @@
+@use '@angular/material' as mat;
+
+@mixin theme() {
+  @include mat.snack-bar-overrides(
+    (
+      container-shape: var(--mat-sys-corner-medium),
+      supporting-text-font: var(--mat-sys-body-large-font),
+      supporting-text-size: var(--mat-sys-body-large-size),
+      supporting-text-line-height: var(--mat-sys-body-large-line-height),
+      supporting-text-weight: var(--mat-sys-body-large-weight),
+    )
+  );
+
+  @at-root {
+    .mat-mdc-snack-bar-container .mat-mdc-snackbar-surface {
+      min-height: 60px;
+      box-shadow: var(--mat-sys-level3);
+    }
+
+    .mat-mdc-snack-bar-container .mat-mdc-button {
+      --mat-focus-indicator-border-color: var(--mat-sys-inverse-primary);
+    }
+  }
+}
