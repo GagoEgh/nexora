@@ -1,7 +1,7 @@
 <div class="header">
   <a
     class="header__brand"
-    routerLink="/"
+    [routerLink]="'/' | localizedPath"
     [attr.aria-label]="content().brandLink.value"
     (click)="closeMenu()"
   >
@@ -25,7 +25,7 @@
     @for (item of content().items; track item.path.value) {
       <a
         class="header__link"
-        [routerLink]="item.path.value"
+        [routerLink]="item.path.value | localizedPath"
         routerLinkActive="header__link--active"
         [routerLinkActiveOptions]="exact"
         ariaCurrentWhenActive="page"
@@ -47,23 +47,28 @@
       [attr.aria-label]="content().language.value"
     >
       <mat-icon class="header__lang-icon" [svgIcon]="globeIcon" />
-      <span class="header__lang-code">{{ locale().toUpperCase() }}</span>
+      <span class="header__lang-code">{{ i18n.locale().toUpperCase() }}</span>
       <mat-icon class="header__lang-icon" [svgIcon]="chevronIcon" />
     </button>
     <mat-menu #langMenu="matMenu">
-      @for (code of locales; track code) {
+      @for (code of i18n.locales; track code) {
         <button
           mat-menu-item
           [attr.lang]="code"
-          [attr.aria-current]="code === locale() ? 'true' : null"
-          (click)="setLocale(code)"
+          [attr.aria-current]="code === i18n.locale() ? 'true' : null"
+          (click)="i18n.switchTo(code)"
         >
-          {{ localeNames[code] }}
+          {{ i18n.names[code] }}
         </button>
       }
     </mat-menu>
 
-    <a class="header__cta" matButton="filled" routerLink="/contact" (click)="closeMenu()">
+    <a
+      class="header__cta"
+      matButton="filled"
+      [routerLink]="'/contact' | localizedPath"
+      (click)="closeMenu()"
+    >
       {{ content().cta }}
     </a>
   </div>

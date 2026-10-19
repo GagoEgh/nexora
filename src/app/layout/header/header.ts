@@ -11,10 +11,11 @@ import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { useIntlayer, useLocale } from 'angular-intlayer';
+import { useIntlayer } from 'angular-intlayer';
 import { filter } from 'rxjs';
+import { useLocaleSwitcher } from '../../core/i18n/locale-switcher';
+import { LocalizedPathPipe } from '../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../core/icons/icons';
-import { type AppLocale, LOCALE_NAMES } from '../../core/i18n/locale-labels';
 import { Logo } from '../../shared/ui/logo/logo';
 
 @Component({
@@ -22,6 +23,7 @@ import { Logo } from '../../shared/ui/logo/logo';
   imports: [
     RouterLink,
     RouterLinkActive,
+    LocalizedPathPipe,
     Logo,
     MatIcon,
     MatButton,
@@ -40,12 +42,8 @@ import { Logo } from '../../shared/ui/logo/logo';
 })
 export class Header {
   protected readonly content = useIntlayer('header');
-  private readonly i18n = useLocale();
+  protected readonly i18n = useLocaleSwitcher();
   private readonly menuButton = viewChild.required('menuButton', { read: ElementRef });
-
-  protected readonly locale = this.i18n.locale;
-  protected readonly locales = this.i18n.availableLocales;
-  protected readonly localeNames = LOCALE_NAMES;
 
   protected readonly menuOpen = signal(false);
   protected readonly exact = { exact: true } as const;
@@ -77,9 +75,5 @@ export class Header {
     }
     this.closeMenu();
     (this.menuButton().nativeElement as HTMLButtonElement).focus();
-  }
-
-  protected setLocale(locale: AppLocale): void {
-    this.i18n.setLocale(locale);
   }
 }

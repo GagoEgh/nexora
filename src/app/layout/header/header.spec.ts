@@ -109,8 +109,18 @@ describe('Header', () => {
 
     items()[2].click();
     await fixture.whenStable();
+    expect(router.url).toBe('/ru');
     expect(root.querySelector('.header__lang-code')?.textContent?.trim()).toBe('RU');
     expect(links()[1].textContent?.trim()).toBe('Услуги');
+    expect(links().map((a) => a.getAttribute('href'))).toEqual([
+      '/ru',
+      '/ru/services',
+      '/ru/solutions',
+      '/ru/about',
+      '/ru/partnerships',
+      '/ru/contact',
+    ]);
+    expect(root.querySelector('a.header__cta')?.getAttribute('href')).toBe('/ru/contact');
     expect(root.querySelector('a.header__cta')?.textContent?.trim()).toBe('Давайте обсудим');
   });
 

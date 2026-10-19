@@ -1,7 +1,8 @@
 import { Routes } from '@angular/router';
+import { matchLocalePrefix, syncLocaleWithUrl } from './core/i18n/locale-routing';
 import type { DocumentMetaRouteData } from './core/seo/document-meta';
 
-export const routes: Routes = [
+const pages: Routes = [
   {
     path: '',
     loadComponent: () => import('./pages/home/home').then((m) => m.Home),
@@ -44,4 +45,14 @@ export const routes: Routes = [
     data: { meta: 'terms-of-use' } satisfies DocumentMetaRouteData,
   },
   { path: '**', redirectTo: '' },
+];
+
+export const routes: Routes = [
+  {
+    path: ':locale',
+    canMatch: [matchLocalePrefix],
+    canActivate: [syncLocaleWithUrl],
+    children: pages,
+  },
+  { path: '', canActivate: [syncLocaleWithUrl], children: pages },
 ];

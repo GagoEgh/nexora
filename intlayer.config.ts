@@ -6,7 +6,7 @@ const config: IntlayerConfig = {
     defaultLocale: Locales.ENGLISH,
   },
   routing: {
-    mode: 'no-prefix',
+    mode: 'prefix-no-default',
     enableProxy: false,
   },
   editor: {

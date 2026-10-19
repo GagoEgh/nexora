@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { Router, provideRouter } from '@angular/router';
 import { provideIntlayer, useLocale } from 'angular-intlayer';
 import { routes } from '../../app.routes';
 import { Footer } from './footer';
@@ -62,8 +62,12 @@ describe('Footer', () => {
 
     buttons()[2].click();
     await fixture.whenStable();
+    expect(TestBed.inject(Router).url).toBe('/ru');
     expect(buttons().map((b) => b.getAttribute('aria-current'))).toEqual([null, null, 'true']);
     expect(root.querySelector('.footer__heading')?.textContent?.trim()).toBe('Услуги');
     expect(root.querySelector('.footer__copyright')?.textContent).toContain('Все права защищены.');
+    expect(root.querySelector('.footer__column a.footer__link')?.getAttribute('href')).toBe(
+      '/ru/services',
+    );
   });
 });

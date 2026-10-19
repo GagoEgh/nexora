@@ -109,6 +109,7 @@ test.describe('header at the desktop design width', () => {
     await expect(items).toHaveText(['English', 'Հայերեն', 'Русский']);
     await expect(items.first()).toHaveAttribute('aria-current', 'true');
     await items.nth(1).click();
+    await expect(page).toHaveURL(/\/hy$/);
     await expect(page.locator('app-header .header__lang-code')).toHaveText('HY');
     await expect(page.locator('app-header nav a.header__link').nth(1)).toHaveText(
       'Ծառայություններ',
@@ -215,6 +216,7 @@ test.describe('footer at the desktop design width', () => {
     page,
   }) => {
     await page.locator('app-footer .footer__language', { hasText: 'Русский' }).click();
+    await expect(page).toHaveURL(/\/ru$/);
     await expect(page.locator('app-footer .footer__heading').first()).toHaveText('Услуги');
     await expect(page.locator('app-header nav a.header__link').nth(1)).toHaveText('Услуги');
     await expect(page.locator('html')).toHaveAttribute('lang', 'ru');
@@ -264,6 +266,44 @@ test.describe('routing', () => {
     await page.goto('/does-not-exist');
     await expect(page).toHaveURL(/\/$/);
     await expect(page.locator('main h1')).toHaveText(HOME_HEADING);
+  });
+
+  test('localized pages have their own URLs with localized links and alternates', async ({
+    page,
+  }) => {
+    await page.goto('/ru/services');
+    await expect(page.locator('main h1')).toHaveText('Услуги');
+    await expect(page.locator('html')).toHaveAttribute('lang', 'ru');
+    await expect(page).toHaveTitle('Услуги | Nexora');
+    await expect(page.locator('app-header nav a.header__link').nth(1)).toHaveAttribute(
+      'href',
+      '/ru/services',
+    );
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', /\/ru\/services$/);
+    await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveAttribute(
+      'href',
+      /\/services$/,
+    );
+    await expect(page.locator('link[rel="alternate"][hreflang="hy"]')).toHaveAttribute(
+      'href',
+      /\/hy\/services$/,
+    );
+    await expect(page.locator('link[rel="alternate"][hreflang="x-default"]')).toHaveAttribute(
+      'href',
+      /\/services$/,
+    );
+
+    // Switching keeps the route and moves it under the new prefix.
+    await page.locator('app-footer .footer__language', { hasText: 'Հայերեն' }).click();
+    await expect(page).toHaveURL(/\/hy\/services$/);
+    await expect(page.locator('main h1')).toHaveText('Ծառայություններ');
+
+    // Unknown paths fall back to the root of their locale; a bare entry honours the last choice.
+    await page.goto('/hy/does-not-exist');
+    await expect(page).toHaveURL(/\/hy$/);
+    await page.goto('/');
+    await expect(page).toHaveURL(/\/hy$/);
+    await expect(page.locator('html')).toHaveAttribute('lang', 'hy');
   });
 
   test('document metadata follows the route and the locale', async ({ page }) => {

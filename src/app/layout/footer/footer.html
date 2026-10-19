@@ -12,7 +12,9 @@
         <ul class="footer__list">
           @for (link of column.links; track $index) {
             <li>
-              <a class="footer__link" [routerLink]="link.path.value">{{ link.label }}</a>
+              <a class="footer__link" [routerLink]="link.path.value | localizedPath">
+                {{ link.label }}
+              </a>
             </li>
           }
           @if (lastColumn) {
@@ -28,19 +30,21 @@
 
     <div class="footer__legal">
       @for (link of content().legal; track link.path.value) {
-        <a class="footer__link" [routerLink]="link.path.value">{{ link.label }}</a>
+        <a class="footer__link" [routerLink]="link.path.value | localizedPath">
+          {{ link.label }}
+        </a>
       }
 
       <div class="footer__languages" role="group" [attr.aria-label]="content().language.value">
-        @for (code of locales; track code) {
+        @for (code of i18n.locales; track code) {
           <button
             class="footer__language"
             type="button"
             [attr.lang]="code"
-            [attr.aria-current]="code === locale() ? 'true' : null"
-            (click)="setLocale(code)"
+            [attr.aria-current]="code === i18n.locale() ? 'true' : null"
+            (click)="i18n.switchTo(code)"
           >
-            {{ localeNames[code] }}
+            {{ i18n.names[code] }}
           </button>
         }
       </div>

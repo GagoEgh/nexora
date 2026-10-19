@@ -7,7 +7,8 @@ single-page Angular application with localized content in English, Armenian and 
 
 - Angular 22 with standalone components, signals and zoneless change detection
 - Angular Material 22 themed through the Nexora design tokens in `src/styles`
-- Intlayer for localization: each component keeps its copy in a sibling `*.content.ts` file
+- Intlayer for localization: each component keeps its copy in a sibling `*.content.ts` file.
+  English pages live at the bare paths, Armenian and Russian pages under `/hy` and `/ru`
 - Vitest for unit tests, Playwright for end-to-end tests, ESLint and Prettier for code quality
 
 ## Requirements

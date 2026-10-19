@@ -6,6 +6,7 @@ import { provideRouter } from '@angular/router';
 import { provideIntlayer } from 'angular-intlayer';
 
 import { routes } from './app.routes';
+import { localeFromLocation } from './core/i18n/locale-routing';
 import { provideAppIcons } from './core/icons/provide-app-icons';
 import { provideDocumentMeta } from './core/seo/document-meta';
 
@@ -13,7 +14,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    provideIntlayer(),
+    provideIntlayer(localeFromLocation(window.location.pathname)),
     provideHttpClient(),
     provideAppIcons(),
     provideDocumentMeta(),

@@ -3,12 +3,13 @@ import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { useIntlayer } from 'angular-intlayer';
+import { LocalizedPathPipe } from '../../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../../core/icons/icons';
 import { HeroIllustration } from './illustration/hero-illustration';
 
 @Component({
   selector: 'app-hero',
-  imports: [RouterLink, MatButton, MatIcon, HeroIllustration],
+  imports: [RouterLink, LocalizedPathPipe, MatButton, MatIcon, HeroIllustration],
   templateUrl: './hero.html',
   styleUrl: './hero.scss',
 })
