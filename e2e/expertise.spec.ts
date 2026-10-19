@@ -101,6 +101,7 @@ test.describe('expertise at narrower widths', () => {
   test('one column at 390px without horizontal overflow', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/');
+    await expect(page.locator('app-expertise .expertise__card')).toHaveCount(6);
     const cards = await boxes(page, 'app-expertise .expertise__card');
     expect(cards.map((c) => c.x)).toEqual(Array(6).fill(20));
     expect(cards.every((c) => c.w === 350)).toBe(true);
@@ -111,6 +112,7 @@ test.describe('expertise at narrower widths', () => {
   test('two columns at 840px', async ({ page }) => {
     await page.setViewportSize({ width: 840, height: 900 });
     await page.goto('/');
+    await expect(page.locator('app-expertise .expertise__card')).toHaveCount(6);
     const cards = await boxes(page, 'app-expertise .expertise__card');
     expect(new Set(cards.map((c) => c.x)).size).toBe(2);
     expect(cards[0].x).toBe(40);

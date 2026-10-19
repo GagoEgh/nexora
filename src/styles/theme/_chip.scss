@@ -42,5 +42,13 @@ $_on-active: var(--mat-sys-on-primary-container);
       .mdc-evolution-chip__graphic {
       padding-inline-start: spacing.space(12);
     }
+
+    .mat-mdc-chip-set .mdc-evolution-chip-set__chips {
+      row-gap: spacing.space(8);
+    }
+
+    .mat-mdc-chip-set .mat-mdc-chip.mdc-evolution-chip {
+      margin-block: 0;
+    }
   }
 }

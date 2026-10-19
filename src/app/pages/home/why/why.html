@@ -1,0 +1,39 @@
+<section class="why">
+  <div class="why__copy">
+    <p class="why__eyebrow">{{ content().eyebrow }}</p>
+    <h2 class="why__title">{{ content().title }}</h2>
+    <p class="why__lead">{{ content().lead }}</p>
+
+    <div class="why__card">
+      <p class="why__card-title">
+        <app-logo variant="mark" />
+        {{ content().team.title }}
+      </p>
+      <mat-chip-listbox
+        class="why__chips"
+        hideSingleSelectionIndicator
+        [value]="selected()"
+        [attr.aria-label]="content().team.disciplinesLabel.value"
+        (change)="onSelection($event)"
+      >
+        @for (discipline of content().disciplines; track $index) {
+          <mat-chip-option [value]="$index">
+            <span class="why__dot" aria-hidden="true"></span>
+            {{ discipline.label }}
+          </mat-chip-option>
+        }
+      </mat-chip-listbox>
+      <p class="why__card-note">{{ content().team.note }}</p>
+    </div>
+  </div>
+
+  <ol class="why__list" aria-live="polite">
+    @for (reason of reasons(); track $index) {
+      <li class="why__item">
+        <span class="why__number">{{ ordinal($index) }}</span>
+        <h3 class="why__item-title">{{ reason.title }}</h3>
+        <p class="why__item-text">{{ reason.description }}</p>
+      </li>
+    }
+  </ol>
+</section>
