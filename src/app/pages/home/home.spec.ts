@@ -8,7 +8,7 @@ import { provideAppIcons } from '../../core/icons/provide-app-icons';
 import { Home } from './home';
 
 describe('Home', () => {
-  it('renders the hero, then expertise, then the why section', async () => {
+  it('renders the hero, then expertise, then why, then the what-we-build section', async () => {
     await TestBed.configureTestingModule({
       imports: [Home],
       providers: [
@@ -29,6 +29,7 @@ describe('Home', () => {
     expect(root.querySelector('app-hero')).not.toBeNull();
     expect(root.querySelector('app-hero + app-expertise')).not.toBeNull();
     expect(root.querySelector('app-expertise + app-why')).not.toBeNull();
+    expect(root.querySelector('app-why + app-what-we-build')).not.toBeNull();
     expect(root.querySelectorAll('h1')).toHaveLength(1);
   });
 });

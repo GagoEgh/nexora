@@ -1,0 +1,80 @@
+:host {
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 368 / 168;
+  border-radius: var(--mat-sys-corner-medium);
+  background-color: var(--mat-sys-background);
+}
+
+svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.i-primary {
+  fill: var(--mat-sys-primary);
+}
+
+.i-primary-container {
+  fill: var(--mat-sys-primary-container);
+}
+
+.i-secondary {
+  fill: var(--mat-sys-secondary);
+}
+
+.i-secondary-container {
+  fill: var(--mat-sys-secondary-container);
+}
+
+.i-surface {
+  fill: var(--mat-sys-surface);
+}
+
+.i-container {
+  fill: var(--mat-sys-surface-container);
+}
+
+.i-outline {
+  fill: var(--mat-sys-outline-variant);
+}
+
+.i-on-surface {
+  fill: var(--mat-sys-on-surface);
+}
+
+.i-muted {
+  fill: var(--nx-sys-on-surface-muted);
+}
+
+.i-success {
+  fill: var(--nx-sys-success);
+}
+
+.i-inverse {
+  fill: var(--mat-sys-inverse-surface);
+}
+
+.i-inverse-container {
+  fill: var(--nx-sys-inverse-surface-container);
+}
+
+.i-inverse-on {
+  fill: var(--mat-sys-inverse-on-surface);
+}
+
+.i-inverse-primary {
+  fill: var(--mat-sys-inverse-primary);
+}
+
+.i-frame {
+  fill: var(--mat-sys-surface);
+  stroke: var(--mat-sys-outline-variant);
+}
+
+.i-link {
+  fill: none;
+  stroke: var(--mat-sys-primary);
+  stroke-width: 2;
+}
