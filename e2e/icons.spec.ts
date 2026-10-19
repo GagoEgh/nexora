@@ -7,8 +7,8 @@ import { APP_ICON_NAMES } from '../src/app/core/icons/icons';
  * Icon system contract.
  * - The catalogue (core/icons/icons.ts) and public/icons agree exactly.
  * - Every icon is served verbatim.
- * - Rendered inside a `.mat-icon` host, strokes follow the surface colour:
- *   on-surface on light surfaces, inverse-on-surface on inverse surfaces.
+ * - Icons are monochrome line drawings that stroke with `currentColor`, so once the registry
+ *   inlines them into `<mat-icon>` they take the colour of their host without any global rule.
  */
 const ICONS_DIR = join(__dirname, '..', 'public', 'icons');
 
@@ -34,29 +34,36 @@ test.describe('icon assets', () => {
 });
 
 test.describe('icon theming', () => {
-  test('strokes follow currentColor inside a mat-icon host', async ({ page, request }) => {
+  test('every icon strokes with currentColor and carries no literal colour', () => {
+    for (const name of APP_ICON_NAMES) {
+      const svg = readFileSync(join(ICONS_DIR, `${name}.svg`), 'utf8');
+      const strokes = Array.from(svg.matchAll(/stroke="([^"]*)"/g), (m) => m[1]);
+      expect(strokes.length, name).toBeGreaterThan(0);
+      expect(new Set(strokes), name).toEqual(new Set(['currentColor']));
+      expect(svg, name).not.toMatch(/#[0-9a-f]{3,8}\b|rgb\(|style=/i);
+    }
+  });
+
+  test('rendered icons take the colour of their mat-icon host on light and inverse surfaces', async ({
+    page,
+  }) => {
     await page.goto('/');
-    const svg = await (await request.get('/icons/arrow-right.svg')).text();
+    await expect(page.locator('app-hero .hero__trust-icon svg')).toHaveCount(3);
+    await expect(page.locator('app-hero-illustration app-icon-tile svg')).toHaveCount(5);
 
-    // Reproduce what MatIconRegistry does: the fetched SVG is inlined inside the `.mat-icon` host.
-    const strokes = await page.evaluate((markup) => {
-      const host = document.createElement('span');
-      host.className = 'mat-icon';
-      host.innerHTML = markup;
-      document.body.append(host);
-      const path = host.querySelector('path') as SVGPathElement;
-
-      const light = getComputedStyle(path).stroke;
-      document.body.style.color = 'var(--mat-sys-inverse-on-surface)';
-      const dark = getComputedStyle(path).stroke;
-
-      document.body.style.color = '';
-      host.remove();
-      return { light, dark, sourceAttribute: path.getAttribute('stroke') };
-    }, svg);
-
-    expect(strokes.sourceAttribute).toBe('#0B1324'); // file untouched
-    expect(strokes.light).toBe('rgb(11, 19, 36)'); // on-surface == source colour
-    expect(strokes.dark).toBe('rgb(246, 248, 251)'); // inverse-on-surface
+    const samples = await page.locator('mat-icon svg [stroke]').evaluateAll((els) =>
+      els.map((el) => ({
+        stroke: getComputedStyle(el).stroke,
+        host: getComputedStyle(el.closest('mat-icon') as HTMLElement).color,
+      })),
+    );
+    expect(samples.length).toBeGreaterThan(10);
+    for (const sample of samples) {
+      expect(sample.stroke).toBe(sample.host);
+    }
+    const strokes = new Set(samples.map((s) => s.stroke));
+    expect(strokes).toContain('rgb(11, 19, 36)'); // on-surface: header chevron
+    expect(strokes).toContain('rgb(15, 85, 232)'); // primary: trust checks, primary tiles
+    expect(strokes).toContain('rgb(134, 173, 255)'); // inverse-primary: the dark hero node tile
   });
 });
