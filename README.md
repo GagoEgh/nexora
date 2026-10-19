@@ -1,59 +1,43 @@
 # Nexora
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.27.
+Marketing website for Nexora, a technology development and AI solutions partner. The site is a
+single-page Angular application with localized content in English, Armenian and Russian.
 
-## Development server
+## Stack
 
-To start a local development server, run:
+- Angular 22 with standalone components, signals and zoneless change detection
+- Angular Material 22 themed through the Nexora design tokens in `src/styles`
+- Intlayer for localization: each component keeps its copy in a sibling `*.content.ts` file
+- Vitest for unit tests, Playwright for end-to-end tests, ESLint and Prettier for code quality
 
-```bash
-ng serve
-```
+## Requirements
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- Node.js 24 and npm 12 (the versions the project is developed and verified with; CI uses Node 24)
+- Chromium for Playwright: `npx playwright install chromium` after installing dependencies
 
-## Code scaffolding
+## Commands
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+| Command                | What it does                                                             |
+| ---------------------- | ------------------------------------------------------------------------ |
+| `npm ci`               | Installs dependencies and the pre-commit formatting hook                 |
+| `npm start`            | Serves the application on `http://localhost:4200/` with live reload      |
+| `npm run build`        | Production build into `dist/nexora`                                      |
+| `npm run watch`        | Development build that rebuilds on change                                |
+| `npm test`             | Unit tests with Vitest                                                   |
+| `npm run lint`         | ESLint for TypeScript and templates                                      |
+| `npm run e2e`          | Playwright tests against a dev server on port 4300 (Chromium only)       |
+| `npm run format`       | Formats the project with Prettier                                        |
+| `npm run format:check` | Verifies formatting; also run by the pre-commit hook and the CI workflow |
 
-```bash
-ng generate component component-name
-```
+## Project layout
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+- `src/app/core`: application-wide building blocks (icon registry, locale labels)
+- `src/app/layout`: header and footer shell
+- `src/app/pages`: lazily loaded routes; home sections live under `pages/home`
+- `src/app/shared/ui`: reusable presentational components
+- `src/styles`: design tokens, Material theme overrides and mixins
+- `public`: brand assets and the SVG icon catalogue
+- `e2e`: Playwright specs that check the sections against the design mockups
 
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Intlayer generates its dictionaries and types into `.intlayer/` during serve, test and build; the
+folder is ignored by Git and never edited by hand.

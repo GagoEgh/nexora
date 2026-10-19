@@ -265,4 +265,9 @@ test.describe('routing', () => {
     await expect(page).toHaveURL(/\/$/);
     await expect(page.locator('main h1')).toHaveText(HOME_HEADING);
   });
+
+  test('the document title is the brand name', async ({ page }) => {
+    await page.goto('/');
+    await expect(page).toHaveTitle('Nexora');
+  });
 });
