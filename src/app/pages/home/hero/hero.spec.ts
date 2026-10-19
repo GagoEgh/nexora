@@ -91,5 +91,10 @@ describe('Hero', () => {
       'Создаём цифровые решения, которые двигают бизнес вперёд.',
     );
     expect(root.querySelector('.hero__actions a')?.textContent?.trim()).toBe('Обсудить ваш проект');
+    // The illustration and its notes receive the localized content through their inputs.
+    expect(root.querySelector('.art__node-label--full')?.textContent?.trim()).toBe(
+      'Веб-приложение',
+    );
+    expect(root.querySelector('.notes__title')?.textContent?.trim()).toBe('Рабочий процесс агента');
   });
 });

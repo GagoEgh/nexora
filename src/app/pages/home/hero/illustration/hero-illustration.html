@@ -2,11 +2,11 @@
   <div class="art__window">
     <div class="art__bar">
       <span class="art__dots"></span>
-      <span class="art__path">{{ content().illustration.windowTitle }}</span>
+      <span class="art__path">{{ content().windowTitle }}</span>
     </div>
 
     <div class="art__canvas">
-      @for (tier of content().illustration.tiers; track $index; let i = $index) {
+      @for (tier of content().tiers; track $index; let i = $index) {
         @if (i > 0) {
           <svg class="art__link" viewBox="0 0 100 56" preserveAspectRatio="none">
             <path [attr.d]="links[i - 1]" vector-effect="non-scaling-stroke" />
@@ -31,7 +31,7 @@
       }
 
       <ul class="art__pipeline">
-        @for (step of content().illustration.pipeline; track $index; let last = $last) {
+        @for (step of content().pipeline; track $index; let last = $last) {
           <li class="art__chip" [class.art__chip--idle]="last">{{ step }}</li>
           @if (!last) {
             <li class="art__arrow"><mat-icon [svgIcon]="arrowIcon" /></li>
@@ -41,5 +41,5 @@
     </div>
   </div>
 
-  <app-hero-notes />
+  <app-hero-notes [content]="content()" />
 </div>

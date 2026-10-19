@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import { useIntlayer } from 'angular-intlayer';
 import { appIcon } from '../../../../../core/icons/icons';
+import type { HeroIllustrationContent } from '../hero-illustration';
+
+export type HeroNotesContent = Pick<HeroIllustrationContent, 'workflow' | 'request'>;
 
 @Component({
   selector: 'app-hero-notes',
@@ -11,7 +13,7 @@ import { appIcon } from '../../../../../core/icons/icons';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeroNotes {
-  protected readonly content = useIntlayer('hero');
+  readonly content = input.required<HeroNotesContent>();
   protected readonly botIcon = appIcon('bot');
   protected readonly checkIcon = appIcon('check');
 }

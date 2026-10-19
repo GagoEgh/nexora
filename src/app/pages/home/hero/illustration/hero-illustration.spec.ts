@@ -1,7 +1,7 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideIntlayer } from 'angular-intlayer';
+import { getIntlayer } from 'angular-intlayer';
 import { provideAppIcons } from '../../../../core/icons/provide-app-icons';
 import { HeroIllustration } from './hero-illustration';
 
@@ -17,15 +17,11 @@ describe('HeroIllustration', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HeroIllustration],
-      providers: [
-        provideIntlayer(),
-        provideHttpClient(),
-        provideHttpClientTesting(),
-        provideAppIcons(),
-      ],
+      providers: [provideHttpClient(), provideHttpClientTesting(), provideAppIcons()],
     }).compileComponents();
     http = TestBed.inject(HttpTestingController);
     fixture = TestBed.createComponent(HeroIllustration);
+    fixture.componentRef.setInput('content', getIntlayer('hero').illustration);
     root = fixture.nativeElement as HTMLElement;
     await fixture.whenStable();
     http.match(() => true).forEach((req) => req.flush(ICON_SVG));

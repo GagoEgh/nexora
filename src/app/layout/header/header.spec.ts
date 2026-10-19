@@ -1,6 +1,8 @@
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MATERIAL_ANIMATIONS } from '@angular/material/core';
 import { Router, provideRouter } from '@angular/router';
 import { provideIntlayer, useLocale } from 'angular-intlayer';
 import { routes } from '../../app.routes';
@@ -31,6 +33,7 @@ describe('Header', () => {
         provideHttpClient(),
         provideHttpClientTesting(),
         provideAppIcons(),
+        { provide: MATERIAL_ANIMATIONS, useValue: { animationsDisabled: true } },
       ],
     }).compileComponents();
     http = TestBed.inject(HttpTestingController);
@@ -91,6 +94,24 @@ describe('Header', () => {
     setLocale('ru');
     await fixture.whenStable();
     expect(links()[1].textContent?.trim()).toBe('Услуги');
+  });
+
+  it('switches the locale from the language menu and re-renders', async () => {
+    const overlay = TestBed.inject(OverlayContainer).getContainerElement();
+    const items = () =>
+      Array.from(overlay.querySelectorAll<HTMLButtonElement>('button[mat-menu-item]'));
+
+    root.querySelector<HTMLButtonElement>('button.header__lang')?.click();
+    await fixture.whenStable();
+    expect(items().map((b) => b.textContent?.trim())).toEqual(['English', 'Հայերեն', 'Русский']);
+    expect(items().map((b) => b.getAttribute('lang'))).toEqual(['en', 'hy', 'ru']);
+    expect(items().map((b) => b.getAttribute('aria-current'))).toEqual(['true', null, null]);
+
+    items()[2].click();
+    await fixture.whenStable();
+    expect(root.querySelector('.header__lang-code')?.textContent?.trim()).toBe('RU');
+    expect(links()[1].textContent?.trim()).toBe('Услуги');
+    expect(root.querySelector('a.header__cta')?.textContent?.trim()).toBe('Давайте обсудим');
   });
 
   it('toggles the mobile menu with aria state and closes it on Escape', async () => {

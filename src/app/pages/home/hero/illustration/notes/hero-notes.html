@@ -1,10 +1,10 @@
 <div class="notes__card notes__workflow">
   <p class="notes__title">
     <mat-icon [svgIcon]="botIcon" />
-    {{ content().illustration.workflow.title }}
+    {{ content().workflow.title }}
   </p>
   <ul class="notes__steps">
-    @for (step of content().illustration.workflow.steps; track $index) {
+    @for (step of content().workflow.steps; track $index) {
       <li class="notes__step" [class.notes__step--done]="step.done">
         <span class="notes__mark">
           @if (step.done) {
@@ -19,5 +19,5 @@
 
 <pre
   class="notes__card notes__request"
-><span class="notes__method">{{ content().illustration.request.method }}</span> {{ content().illustration.request.path }}
-<span class="notes__status">{{ content().illustration.request.status }}</span> {{ content().illustration.request.body }}</pre>
+><span class="notes__method">{{ content().request.method }}</span> {{ content().request.path }}
+<span class="notes__status">{{ content().request.status }}</span> {{ content().request.body }}</pre>
