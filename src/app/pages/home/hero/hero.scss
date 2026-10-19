@@ -4,7 +4,6 @@
 
 :host {
   display: block;
-  margin-block-start: calc(-1 * var(--nx-layout-header-height));
   padding-inline: var(--nx-layout-margin);
   background: linear-gradient(180deg, var(--mat-sys-primary-container), var(--mat-sys-background));
 }

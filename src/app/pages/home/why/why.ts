@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, signal, viewChild } from '@angular/core';
+import { Component, computed, signal, viewChild } from '@angular/core';
 import { MatChipListbox, type MatChipListboxChange, MatChipOption } from '@angular/material/chips';
 import { useIntlayer } from 'angular-intlayer';
 import { Logo } from '../../../shared/ui/logo/logo';
@@ -8,7 +8,6 @@ import { Logo } from '../../../shared/ui/logo/logo';
   imports: [Logo, MatChipListbox, MatChipOption],
   templateUrl: './why.html',
   styleUrl: './why.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Why {
   protected readonly content = useIntlayer('why');

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { useIntlayer } from 'angular-intlayer';
 import {
   WhatWeBuildIllustration,
@@ -11,7 +11,6 @@ import {
   imports: [WhatWeBuildIllustration],
   templateUrl: './what-we-build.html',
   styleUrl: './what-we-build.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WhatWeBuild {
   protected readonly content = useIntlayer('what-we-build');

@@ -10,6 +10,10 @@
   flex: 1 0 auto;
 }
 
-app-header:has(+ .app__main app-hero) {
+.app__main:has(> [data-layout='immersive']) {
+  margin-block-start: calc(-1 * var(--nx-layout-header-height));
+}
+
+app-header:has(+ .app__main > [data-layout='immersive']) {
   border-block-end: 0;
 }

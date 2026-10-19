@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
@@ -11,7 +11,6 @@ import { IconTile } from '../../../shared/ui/icon-tile/icon-tile';
   imports: [RouterLink, MatButton, MatIcon, IconTile],
   templateUrl: './expertise.html',
   styleUrl: './expertise.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Expertise {
   protected readonly content = useIntlayer('expertise');

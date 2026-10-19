@@ -18,6 +18,9 @@ import { Why } from './why/why';
       display: block;
     }
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    // Shell layout contract (app.scss): the page runs under the transparent header.
+    'data-layout': 'immersive',
+  },
 })
 export class Home {}

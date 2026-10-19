@@ -7,6 +7,7 @@ import { provideIntlayer } from 'angular-intlayer';
 
 import { routes } from './app.routes';
 import { provideAppIcons } from './core/icons/provide-app-icons';
+import { provideDocumentMeta } from './core/seo/document-meta';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,6 +16,7 @@ export const appConfig: ApplicationConfig = {
     provideIntlayer(),
     provideHttpClient(),
     provideAppIcons(),
+    provideDocumentMeta(),
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline' } },
     {
       provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,

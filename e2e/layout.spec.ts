@@ -266,8 +266,27 @@ test.describe('routing', () => {
     await expect(page.locator('main h1')).toHaveText(HOME_HEADING);
   });
 
-  test('the document title is the brand name', async ({ page }) => {
+  test('document metadata follows the route and the locale', async ({ page }) => {
+    const HOME_TITLE = 'Nexora | Technology development and AI solutions partner';
     await page.goto('/');
-    await expect(page).toHaveTitle('Nexora');
+    await expect(page).toHaveTitle(HOME_TITLE);
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+      'content',
+      /Senior and Senior\+ engineering expertise/,
+    );
+    await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', HOME_TITLE);
+    await expect(page.locator('meta[property="og:type"]')).toHaveAttribute('content', 'website');
+    await expect(page.locator('meta[property="og:locale"]')).toHaveAttribute('content', 'en_US');
+
+    await page.locator('app-header nav a.header__link', { hasText: 'Services' }).click();
+    await expect(page).toHaveTitle('Services | Nexora');
+    await expect(page.locator('meta[property="og:title"]')).toHaveAttribute(
+      'content',
+      'Services | Nexora',
+    );
+
+    await page.locator('app-footer .footer__language', { hasText: 'Русский' }).click();
+    await expect(page).toHaveTitle('Услуги | Nexora');
+    await expect(page.locator('meta[property="og:locale"]')).toHaveAttribute('content', 'ru_RU');
   });
 });

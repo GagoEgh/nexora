@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
@@ -11,7 +11,6 @@ import { HeroIllustration } from './illustration/hero-illustration';
   imports: [RouterLink, MatButton, MatIcon, HeroIllustration],
   templateUrl: './hero.html',
   styleUrl: './hero.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Hero {
   protected readonly content = useIntlayer('hero');
