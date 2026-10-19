@@ -11,7 +11,7 @@
   <ul class="what-we-build__grid">
     @for (item of content().items; track $index) {
       <li class="what-we-build__card">
-        <app-what-we-build-illustration [kind]="illustration(item.illustration.value)" />
+        <app-what-we-build-illustration [kind]="item.illustration.value" />
         <div class="what-we-build__card-copy">
           <h3 class="what-we-build__card-title">{{ item.title }}</h3>
           <p class="what-we-build__card-desc">{{ item.description }}</p>

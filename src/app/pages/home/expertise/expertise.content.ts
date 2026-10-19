@@ -1,4 +1,5 @@
 import { t, type Dictionary } from 'intlayer';
+import type { AppIconName } from '../../../core/icons/icons';
 
 const expertiseContent = {
   key: 'expertise',
@@ -22,7 +23,7 @@ const expertiseContent = {
     explore: t({ en: 'Explore service', hy: 'Ծանոթանալ ծառայությանը', ru: 'Подробнее об услуге' }),
     services: [
       {
-        icon: 'code',
+        icon: 'code' satisfies AppIconName,
         title: t({
           en: 'Software & Web Development',
           hy: 'Ծրագրային և վեբ մշակում',
@@ -35,7 +36,7 @@ const expertiseContent = {
         }),
       },
       {
-        icon: 'smartphone',
+        icon: 'smartphone' satisfies AppIconName,
         title: t({
           en: 'Mobile Applications',
           hy: 'Մոբայլ հավելվածներ',
@@ -48,7 +49,7 @@ const expertiseContent = {
         }),
       },
       {
-        icon: 'sparkle',
+        icon: 'sparkle' satisfies AppIconName,
         title: t({
           en: 'AI Engineering & Automation',
           hy: 'AI ինժեներիա և ավտոմատացում',
@@ -61,7 +62,7 @@ const expertiseContent = {
         }),
       },
       {
-        icon: 'pen-tool',
+        icon: 'pen-tool' satisfies AppIconName,
         title: t({ en: 'UI/UX Design', hy: 'UI/UX դիզայն', ru: 'UI/UX-дизайн' }),
         description: t({
           en: 'Research-led interfaces, prototypes and design systems that make complex products clear to use.',
@@ -70,7 +71,7 @@ const expertiseContent = {
         }),
       },
       {
-        icon: 'cloud',
+        icon: 'cloud' satisfies AppIconName,
         title: t({
           en: 'Cloud Infrastructure & DevOps',
           hy: 'Ամպային ենթակառուցվածք և DevOps',
@@ -83,7 +84,7 @@ const expertiseContent = {
         }),
       },
       {
-        icon: 'users',
+        icon: 'users' satisfies AppIconName,
         title: t({
           en: 'Dedicated Engineering Teams',
           hy: 'Նվիրված ինժեներական թիմեր',

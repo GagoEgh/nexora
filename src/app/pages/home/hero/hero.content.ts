@@ -1,4 +1,5 @@
 import { t, type Dictionary } from 'intlayer';
+import type { AppIconName } from '../../../core/icons/icons';
 
 const heroContent = {
   key: 'hero',
@@ -51,14 +52,14 @@ const heroContent = {
       tiers: [
         [
           {
-            icon: 'code',
+            icon: 'code' satisfies AppIconName,
             label: t({ en: 'Web App', hy: 'Վեբ հավելված', ru: 'Веб-приложение' }),
             shortLabel: t({ en: 'Web App', hy: 'Վեբ', ru: 'Веб' }),
             meta: 'next.js',
             dark: false,
           },
           {
-            icon: 'plug',
+            icon: 'plug' satisfies AppIconName,
             label: 'CRM / ERP',
             shortLabel: 'CRM / ERP',
             meta: 'rest · webhooks',
@@ -67,7 +68,7 @@ const heroContent = {
         ],
         [
           {
-            icon: 'sparkle',
+            icon: 'sparkle' satisfies AppIconName,
             label: t({ en: 'AI Orchestrator', hy: 'AI նվագախումբ', ru: 'AI-оркестратор' }),
             shortLabel: t({ en: 'AI Orchestrator', hy: 'AI նվագախումբ', ru: 'AI-оркестратор' }),
             meta: 'agents · rag',
@@ -76,14 +77,14 @@ const heroContent = {
         ],
         [
           {
-            icon: 'smartphone',
+            icon: 'smartphone' satisfies AppIconName,
             label: t({ en: 'Mobile App', hy: 'Մոբայլ հավելված', ru: 'Мобильное приложение' }),
             shortLabel: t({ en: 'Mobile', hy: 'Մոբայլ', ru: 'Мобильное' }),
             meta: 'ios · android',
             dark: false,
           },
           {
-            icon: 'database',
+            icon: 'database' satisfies AppIconName,
             label: t({ en: 'Knowledge Base', hy: 'Գիտելիքների բազա', ru: 'База знаний' }),
             shortLabel: t({ en: 'Knowledge', hy: 'Գիտելիք', ru: 'Знания' }),
             meta: 'vector search',

@@ -4,7 +4,7 @@ import { MatIcon } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { useIntlayer } from 'angular-intlayer';
 import { LocalizedPathPipe } from '../../../core/i18n/localized-path.pipe';
-import { appIcon, type AppIconName, isAppIconName } from '../../../core/icons/icons';
+import { appIcon } from '../../../core/icons/icons';
 import { IconTile } from '../../../shared/ui/icon-tile/icon-tile';
 
 @Component({
@@ -16,11 +16,4 @@ import { IconTile } from '../../../shared/ui/icon-tile/icon-tile';
 export class Expertise {
   protected readonly content = useIntlayer('expertise');
   protected readonly arrowIcon = appIcon('arrow-right');
-
-  protected serviceIcon(name: string): AppIconName {
-    if (!isAppIconName(name)) {
-      throw new Error(`Unknown service icon "${name}"`);
-    }
-    return name;
-  }
 }

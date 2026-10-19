@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   WHAT_WE_BUILD_ILLUSTRATION_KINDS,
   WhatWeBuildIllustration,
-  isWhatWeBuildIllustrationKind,
 } from './what-we-build-illustration';
 
 describe('WhatWeBuildIllustration', () => {
@@ -30,11 +29,5 @@ describe('WhatWeBuildIllustration', () => {
       expect(host.getAttribute('aria-hidden')).toBe('true');
       expect(host.getAttribute('data-kind')).toBe(kind);
     }
-  });
-
-  it('exposes a guard for ids coming from the dictionary', () => {
-    expect(isWhatWeBuildIllustrationKind('saas')).toBe(true);
-    expect(isWhatWeBuildIllustrationKind('internal-tools')).toBe(true);
-    expect(isWhatWeBuildIllustrationKind('dashboard')).toBe(false);
   });
 });

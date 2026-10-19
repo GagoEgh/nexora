@@ -1,4 +1,5 @@
 import { t, type Dictionary } from 'intlayer';
+import type { WhatWeBuildIllustrationKind } from './illustration/what-we-build-illustration';
 
 const whatWeBuildContent = {
   key: 'what-we-build',
@@ -21,7 +22,7 @@ const whatWeBuildContent = {
     }),
     items: [
       {
-        illustration: 'saas',
+        illustration: 'saas' satisfies WhatWeBuildIllustrationKind,
         title: t({ en: 'SaaS Platforms', hy: 'SaaS հարթակներ', ru: 'SaaS-платформы' }),
         description: t({
           en: 'Multi-tenant products with subscriptions, roles, billing and admin tooling.',
@@ -30,7 +31,7 @@ const whatWeBuildContent = {
         }),
       },
       {
-        illustration: 'crm-erp',
+        illustration: 'crm-erp' satisfies WhatWeBuildIllustrationKind,
         title: t({ en: 'CRM & ERP Systems', hy: 'CRM և ERP համակարգեր', ru: 'CRM- и ERP-системы' }),
         description: t({
           en: 'Custom or extended systems that match how your teams sell and operate.',
@@ -39,7 +40,7 @@ const whatWeBuildContent = {
         }),
       },
       {
-        illustration: 'web',
+        illustration: 'web' satisfies WhatWeBuildIllustrationKind,
         title: t({ en: 'Web Applications', hy: 'Վեբ հավելվածներ', ru: 'Веб-приложения' }),
         description: t({
           en: 'Fast, accessible applications for customers, partners and staff.',
@@ -48,7 +49,7 @@ const whatWeBuildContent = {
         }),
       },
       {
-        illustration: 'mobile',
+        illustration: 'mobile' satisfies WhatWeBuildIllustrationKind,
         title: t({
           en: 'Mobile Applications',
           hy: 'Մոբայլ հավելվածներ',
@@ -61,7 +62,7 @@ const whatWeBuildContent = {
         }),
       },
       {
-        illustration: 'ai',
+        illustration: 'ai' satisfies WhatWeBuildIllustrationKind,
         title: t({
           en: 'AI Assistants & Agents',
           hy: 'AI օգնականներ և գործակալներ',
@@ -74,7 +75,7 @@ const whatWeBuildContent = {
         }),
       },
       {
-        illustration: 'automation',
+        illustration: 'automation' satisfies WhatWeBuildIllustrationKind,
         title: t({
           en: 'Business Automation Platforms',
           hy: 'Բիզնես ավտոմատացման հարթակներ',
@@ -87,7 +88,7 @@ const whatWeBuildContent = {
         }),
       },
       {
-        illustration: 'portal',
+        illustration: 'portal' satisfies WhatWeBuildIllustrationKind,
         title: t({ en: 'B2B Portals', hy: 'B2B պորտալներ', ru: 'B2B-порталы' }),
         description: t({
           en: 'Secure self-service portals for clients, distributors and partners.',
@@ -96,7 +97,7 @@ const whatWeBuildContent = {
         }),
       },
       {
-        illustration: 'internal-tools',
+        illustration: 'internal-tools' satisfies WhatWeBuildIllustrationKind,
         title: t({
           en: 'Internal Business Tools',
           hy: 'Ներքին բիզնես գործիքներ',
@@ -109,7 +110,7 @@ const whatWeBuildContent = {
         }),
       },
       {
-        illustration: 'api',
+        illustration: 'api' satisfies WhatWeBuildIllustrationKind,
         title: t({
           en: 'API-Connected Systems',
           hy: 'API-ով միացված համակարգեր',

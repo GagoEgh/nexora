@@ -14,10 +14,6 @@ export const WHAT_WE_BUILD_ILLUSTRATION_KINDS = [
 
 export type WhatWeBuildIllustrationKind = (typeof WHAT_WE_BUILD_ILLUSTRATION_KINDS)[number];
 
-export function isWhatWeBuildIllustrationKind(kind: string): kind is WhatWeBuildIllustrationKind {
-  return (WHAT_WE_BUILD_ILLUSTRATION_KINDS as readonly string[]).includes(kind);
-}
-
 @Component({
   selector: 'app-what-we-build-illustration',
   templateUrl: './what-we-build-illustration.html',
