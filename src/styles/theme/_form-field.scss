@@ -30,7 +30,8 @@
     .mat-mdc-form-field .mat-mdc-form-field-error-wrapper {
       padding-inline: 0;
     }
-    .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--invalid .mat-mdc-notch-piece {
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--invalid
+      .mat-mdc-notch-piece {
       border-width: var(--mat-form-field-outlined-focus-outline-width, 2px);
     }
 

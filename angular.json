@@ -4,10 +4,7 @@
   "cli": {
     "packageManager": "npm",
     "analytics": "9b06b7bf-4485-4308-b82f-a2a28fa05888",
-    "schematicCollections": [
-      "angular-eslint",
-      "playwright-ng-schematics"
-    ]
+    "schematicCollections": ["angular-eslint", "playwright-ng-schematics"]
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -34,17 +31,11 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.scss"
-            ],
+            "styles": ["src/styles.scss"],
             "stylePreprocessorOptions": {
-              "includePaths": [
-                "src/styles"
-              ]
+              "includePaths": ["src/styles"]
             },
-            "plugins": [
-              "./esbuild.plugins.ts"
-            ]
+            "plugins": ["./esbuild.plugins.ts"]
           },
           "configurations": {
             "production": {
@@ -83,12 +74,7 @@
           "defaultConfiguration": "development",
           "options": {
             "prebundle": {
-              "exclude": [
-                "intlayer",
-                "angular-intlayer",
-                "@intlayer/config",
-                "@intlayer/core"
-              ]
+              "exclude": ["intlayer", "angular-intlayer", "@intlayer/config", "@intlayer/core"]
             }
           }
         },
@@ -102,11 +88,7 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": [
-              "src/**/*.ts",
-              "src/**/*.html",
-              "e2e/**/*.ts"
-            ]
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html", "e2e/**/*.ts"]
           }
         },
         "e2e": {

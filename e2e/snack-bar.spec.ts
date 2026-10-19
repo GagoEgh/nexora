@@ -39,7 +39,9 @@ test.describe('snack bar theme', () => {
     page,
   }) => {
     expect(await rootTokenValue(page, '--mat-snack-bar-supporting-text-size')).toBe('1rem');
-    expect(await rootTokenValue(page, '--mat-snack-bar-supporting-text-line-height')).toBe('1.5rem');
+    expect(await rootTokenValue(page, '--mat-snack-bar-supporting-text-line-height')).toBe(
+      '1.5rem',
+    );
     expect(await rootTokenValue(page, '--mat-snack-bar-supporting-text-weight')).toBe('400');
     expect(await rootTokenValue(page, '--mat-snack-bar-supporting-text-font')).toMatch(/^Inter\b/);
     // The action is a Material text button: it reads label-large through the button tokens.

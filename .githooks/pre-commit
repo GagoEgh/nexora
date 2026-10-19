@@ -1,0 +1,6 @@
+#!/bin/sh
+# Formatting gate. Installed by "npm install" through the "prepare" script (core.hooksPath).
+# Staged files must already be Prettier-formatted: run "npm run format" and stage again.
+staged=$(git diff --cached --name-only --diff-filter=ACMR)
+[ -z "$staged" ] && exit 0
+printf '%s\n' "$staged" | tr '\n' '\0' | xargs -0 node node_modules/prettier/bin/prettier.cjs --check --ignore-unknown

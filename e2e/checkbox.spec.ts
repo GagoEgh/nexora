@@ -53,7 +53,9 @@ test.describe('checkbox theme', () => {
     expect(css).toMatch(
       /\.mat-mdc-checkbox \.mdc-checkbox__background \{ width: var\(--nx-checkbox-size\); height: var\(--nx-checkbox-size\); top: var\(--nx-checkbox-inset\); left: var\(--nx-checkbox-inset\); \}/,
     );
-    expect(css).toMatch(/\.mat-mdc-checkbox \.mat-internal-form-field \{ align-items: flex-start; \}/);
+    expect(css).toMatch(
+      /\.mat-mdc-checkbox \.mat-internal-form-field \{ align-items: flex-start; \}/,
+    );
     expect(css).toMatch(
       /\.mat-mdc-checkbox \.mat-internal-form-field > \.mat-internal-form-field-label \{ padding-inline-start: var\(--nx-space-12\); padding-block-start: calc\(\(var\(--mat-checkbox-state-layer-size\) - var\(--mat-checkbox-label-text-line-height\)\) \/ 2\); \}/,
     );

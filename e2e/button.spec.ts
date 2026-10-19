@@ -89,7 +89,12 @@ test.describe('button theme', () => {
       expect(match, `rule for ${selector}`).not.toBeNull();
       return match?.[1] ?? '';
     };
-    const hosts = ['.mat-mdc-button', '.mat-mdc-unelevated-button', '.mat-mdc-outlined-button', '.mat-tonal-button'];
+    const hosts = [
+      '.mat-mdc-button',
+      '.mat-mdc-unelevated-button',
+      '.mat-mdc-outlined-button',
+      '.mat-tonal-button',
+    ];
 
     const scoped = rule(hosts.join(', '));
     expect(scoped).toContain('--mat-focus-indicator-border-width: 2px');
@@ -123,9 +128,10 @@ test.describe('button theme', () => {
       expect(container.a, v).toBeCloseTo(0.08, 2);
     }
     for (const v of VARIANTS) {
-      expect(await resolveColorToken(page, `--mat-button-${v}-disabled-label-text-color`), v).toEqual(
-        muted,
-      );
+      expect(
+        await resolveColorToken(page, `--mat-button-${v}-disabled-label-text-color`),
+        v,
+      ).toEqual(muted);
     }
     expect(await resolveColorToken(page, '--mat-button-outlined-disabled-outline-color')).toEqual(
       await resolveColorToken(page, '--mat-sys-outline-variant'),

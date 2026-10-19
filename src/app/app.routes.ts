@@ -27,7 +27,8 @@ export const routes: Routes = [
   },
   {
     path: 'privacy-policy',
-    loadComponent: () => import('./pages/privacy-policy/privacy-policy').then((m) => m.PrivacyPolicy),
+    loadComponent: () =>
+      import('./pages/privacy-policy/privacy-policy').then((m) => m.PrivacyPolicy),
   },
   {
     path: 'terms-of-use',

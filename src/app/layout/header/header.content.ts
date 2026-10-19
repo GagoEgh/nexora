@@ -12,7 +12,11 @@ const headerContent = {
         label: t({ en: 'Services', hy: 'Ծառայություններ', ru: 'Услуги' }),
         chevron: true,
       },
-      { path: '/solutions', label: t({ en: 'Solutions', hy: 'Լուծումներ', ru: 'Решения' }), chevron: false },
+      {
+        path: '/solutions',
+        label: t({ en: 'Solutions', hy: 'Լուծումներ', ru: 'Решения' }),
+        chevron: false,
+      },
       { path: '/about', label: t({ en: 'About', hy: 'Մեր մասին', ru: 'О нас' }), chevron: false },
       {
         path: '/partnerships',

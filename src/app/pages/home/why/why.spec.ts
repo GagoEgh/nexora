@@ -29,8 +29,10 @@ describe('Why', () => {
   const setLocale = (locale: string) =>
     TestBed.runInInjectionContext(() => useLocale()).setLocale(locale);
   const options = () => Array.from(root.querySelectorAll<HTMLElement>('mat-chip-option'));
-  const selectedOptions = () => options().filter((o) => o.classList.contains('mat-mdc-chip-selected'));
-  const reasonTitles = () => Array.from(root.querySelectorAll('.why__item h3')).map((h) => h.textContent?.trim());
+  const selectedOptions = () =>
+    options().filter((o) => o.classList.contains('mat-mdc-chip-selected'));
+  const reasonTitles = () =>
+    Array.from(root.querySelectorAll('.why__item h3')).map((h) => h.textContent?.trim());
   const chooseOption = async (index: number) => {
     (options()[index].querySelector('button[role="option"]') as HTMLButtonElement).click();
     await fixture.whenStable();
@@ -65,14 +67,18 @@ describe('Why', () => {
   it('renders the one-team card as a single-selection listbox with the first discipline selected', () => {
     const card = root.querySelector('.why__card') as HTMLElement;
     expect(card.querySelector('app-logo')?.getAttribute('data-variant')).toBe('mark');
-    expect(card.querySelector('.why__card-title')?.textContent?.trim()).toBe('One team, every discipline');
+    expect(card.querySelector('.why__card-title')?.textContent?.trim()).toBe(
+      'One team, every discipline',
+    );
 
     const listbox = card.querySelector('mat-chip-listbox');
     expect(listbox?.getAttribute('role')).toBe('listbox');
     expect(listbox?.getAttribute('aria-multiselectable')).toBe('false');
     expect(options().map((o) => o.textContent?.trim())).toEqual(DISCIPLINES);
     expect(selectedOptions().map((o) => o.textContent?.trim())).toEqual(['Solution architecture']);
-    expect(options()[0].querySelector('button[role="option"]')?.getAttribute('aria-selected')).toBe('true');
+    expect(options()[0].querySelector('button[role="option"]')?.getAttribute('aria-selected')).toBe(
+      'true',
+    );
     for (const option of options()) {
       expect(option.querySelector('.why__dot')).not.toBeNull();
     }
@@ -81,32 +87,28 @@ describe('Why', () => {
     );
   });
 
-  it('lists the selected discipline\'s reasons with two-digit ordinals', () => {
+  it("lists the selected discipline's reasons with two-digit ordinals", () => {
     expect(reasonTitles()).toEqual(ARCHITECTURE_REASONS);
-    expect(Array.from(root.querySelectorAll('.why__number')).map((n) => n.textContent?.trim())).toEqual([
-      '01',
-      '02',
-      '03',
-      '04',
-      '05',
-    ]);
+    expect(
+      Array.from(root.querySelectorAll('.why__number')).map((n) => n.textContent?.trim()),
+    ).toEqual(['01', '02', '03', '04', '05']);
     expect(root.querySelector('.why__list')?.getAttribute('aria-live')).toBe('polite');
   });
 
   it('selecting another discipline moves the single active state and swaps the reasons', async () => {
     await chooseOption(4);
     expect(selectedOptions().map((o) => o.textContent?.trim())).toEqual(['AI engineering']);
-    expect(options()[0].querySelector('button[role="option"]')?.getAttribute('aria-selected')).toBe('false');
+    expect(options()[0].querySelector('button[role="option"]')?.getAttribute('aria-selected')).toBe(
+      'false',
+    );
     expect(reasonTitles()).toEqual([
       'Built into real processes',
       'Measurable and controllable',
       'Your data stays yours',
     ]);
-    expect(Array.from(root.querySelectorAll('.why__number')).map((n) => n.textContent?.trim())).toEqual([
-      '01',
-      '02',
-      '03',
-    ]);
+    expect(
+      Array.from(root.querySelectorAll('.why__number')).map((n) => n.textContent?.trim()),
+    ).toEqual(['01', '02', '03']);
 
     await chooseOption(5);
     expect(selectedOptions().map((o) => o.textContent?.trim())).toEqual(['DevOps']);

@@ -4,11 +4,6 @@
     "outDir": "./out-tsc/app",
     "types": []
   },
-  "include": [
-    "src/**/*.ts",
-    "./.intlayer/**/*.ts"
-  ],
-  "exclude": [
-    "src/**/*.spec.ts"
-  ]
+  "include": ["src/**/*.ts", "./.intlayer/**/*.ts"],
+  "exclude": ["src/**/*.spec.ts"]
 }

@@ -17,7 +17,12 @@ describe('HeroIllustration', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HeroIllustration],
-      providers: [provideIntlayer(), provideHttpClient(), provideHttpClientTesting(), provideAppIcons()],
+      providers: [
+        provideIntlayer(),
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideAppIcons(),
+      ],
     }).compileComponents();
     http = TestBed.inject(HttpTestingController);
     fixture = TestBed.createComponent(HeroIllustration);
@@ -29,7 +34,9 @@ describe('HeroIllustration', () => {
 
   it('is decorative and draws the five nodes in three tiers with catalogue icons', () => {
     expect(root.getAttribute('aria-hidden')).toBe('true');
-    expect(root.querySelector('.art__path')?.textContent?.trim()).toBe('nexora / system-architecture');
+    expect(root.querySelector('.art__path')?.textContent?.trim()).toBe(
+      'nexora / system-architecture',
+    );
 
     const tiers = Array.from(root.querySelectorAll('.art__tier'));
     expect(tiers.map((tier) => tier.querySelectorAll('.art__node').length)).toEqual([2, 1, 2]);
@@ -38,7 +45,13 @@ describe('HeroIllustration', () => {
     const labels = Array.from(root.querySelectorAll('.art__node-label--full')).map((el) =>
       el.textContent?.trim(),
     );
-    expect(labels).toEqual(['Web App', 'CRM / ERP', 'AI Orchestrator', 'Mobile App', 'Knowledge Base']);
+    expect(labels).toEqual([
+      'Web App',
+      'CRM / ERP',
+      'AI Orchestrator',
+      'Mobile App',
+      'Knowledge Base',
+    ]);
     const shortLabels = Array.from(root.querySelectorAll('.art__node-label--short')).map((el) =>
       el.textContent?.trim(),
     );
@@ -70,8 +83,16 @@ describe('HeroIllustration', () => {
       'Retrieve context from CRM',
       'Draft reply for review',
     ]);
-    expect(steps.map((s) => s.classList.contains('notes__step--done'))).toEqual([true, true, false]);
-    expect(root.querySelector('.notes__request')?.textContent).toContain('POST /v1/automations/route');
-    expect(root.querySelector('.notes__request')?.textContent).toContain('200 { owner: "sales-eu" }');
+    expect(steps.map((s) => s.classList.contains('notes__step--done'))).toEqual([
+      true,
+      true,
+      false,
+    ]);
+    expect(root.querySelector('.notes__request')?.textContent).toContain(
+      'POST /v1/automations/route',
+    );
+    expect(root.querySelector('.notes__request')?.textContent).toContain(
+      '200 { owner: "sales-eu" }',
+    );
   });
 });

@@ -83,7 +83,9 @@ test.describe('text field theme', () => {
     await untouched(page, '--mat-form-field-error-text-color'); // error
 
     const css = (await (await request.get('/styles.css')).text()).replace(/\s+/g, ' ');
-    expect(css).toMatch(/\.mat-mdc-form-field-hint \{ color: var\(--mat-sys-on-surface-variant\); \}/);
+    expect(css).toMatch(
+      /\.mat-mdc-form-field-hint \{ color: var\(--mat-sys-on-surface-variant\); \}/,
+    );
     expect(css).toMatch(
       /\.mat-mdc-form-field \.mat-mdc-form-field-subscript-wrapper \{ margin-block-start: var\(--nx-space-8\); \}/,
     );

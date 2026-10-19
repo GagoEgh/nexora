@@ -1,5 +1,10 @@
 import { expect, test } from '@playwright/test';
-import { contrastRatio, parseCssColor, resolveColorToken, rootTokenValue } from './support/contrast';
+import {
+  contrastRatio,
+  parseCssColor,
+  resolveColorToken,
+  rootTokenValue,
+} from './support/contrast';
 
 const AA_TEXT = 4.5;
 const AA_NON_TEXT = 3;

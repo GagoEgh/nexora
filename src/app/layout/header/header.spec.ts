@@ -94,7 +94,9 @@ describe('Header', () => {
   });
 
   it('toggles the mobile menu with aria state and closes it on Escape', async () => {
-    const button = root.querySelector<HTMLButtonElement>('button.header__menu') as HTMLButtonElement;
+    const button = root.querySelector<HTMLButtonElement>(
+      'button.header__menu',
+    ) as HTMLButtonElement;
     expect(button.getAttribute('aria-expanded')).toBe('false');
     expect(button.getAttribute('aria-controls')).toBe('header-nav');
     expect(root.hasAttribute('data-open')).toBe(false);
@@ -115,7 +117,9 @@ describe('Header', () => {
   });
 
   it('closes the mobile menu after any completed navigation', async () => {
-    const button = root.querySelector<HTMLButtonElement>('button.header__menu') as HTMLButtonElement;
+    const button = root.querySelector<HTMLButtonElement>(
+      'button.header__menu',
+    ) as HTMLButtonElement;
     button.click();
     await fixture.whenStable();
     expect(root.hasAttribute('data-open')).toBe(true);

@@ -17,13 +17,19 @@ const NAV = [
 ] as const;
 
 const box = (page: Page, selector: string) =>
-  page.locator(selector).first().evaluate((el) => {
-    const r = el.getBoundingClientRect();
-    return { x: r.left, y: r.top, w: r.width, h: r.height };
-  });
+  page
+    .locator(selector)
+    .first()
+    .evaluate((el) => {
+      const r = el.getBoundingClientRect();
+      return { x: r.left, y: r.top, w: r.width, h: r.height };
+    });
 
 const style = (page: Page, selector: string, prop: string) =>
-  page.locator(selector).first().evaluate((el, p) => getComputedStyle(el).getPropertyValue(p), prop);
+  page
+    .locator(selector)
+    .first()
+    .evaluate((el, p) => getComputedStyle(el).getPropertyValue(p), prop);
 
 test.describe('header at the desktop design width', () => {
   test.use({ viewport: { width: 1440, height: 900 } });
@@ -32,7 +38,9 @@ test.describe('header at the desktop design width', () => {
     await page.goto('/');
   });
 
-  test('76px bar, 32px logo at the 80px margin, navigation and actions inline', async ({ page }) => {
+  test('76px bar, 32px logo at the 80px margin, navigation and actions inline', async ({
+    page,
+  }) => {
     expect((await box(page, 'app-header .header')).h).toBe(76);
     const logo = await box(page, 'app-header app-logo');
     expect(logo.h).toBe(32);
@@ -42,7 +50,9 @@ test.describe('header at the desktop design width', () => {
     expect(await style(page, 'app-header', 'border-bottom-width')).toBe('0px');
   });
 
-  test('navigation links, chevron on Services, active pill on the current route', async ({ page }) => {
+  test('navigation links, chevron on Services, active pill on the current route', async ({
+    page,
+  }) => {
     const links = page.locator('app-header nav a.header__link');
     await expect(links).toHaveCount(6);
     for (const [index, [href, label]] of NAV.entries()) {
@@ -58,7 +68,9 @@ test.describe('header at the desktop design width', () => {
     expect(await style(page, 'app-header a.header__link--active', 'background-color')).toBe(
       'rgb(238, 244, 255)',
     );
-    expect(await style(page, 'app-header a.header__link--active', 'color')).toBe('rgb(14, 44, 107)');
+    expect(await style(page, 'app-header a.header__link--active', 'color')).toBe(
+      'rgb(14, 44, 107)',
+    );
     const pill = await box(page, 'app-header a.header__link--active');
     expect(pill.h).toBe(40);
     expect(await style(page, 'app-header a.header__link', 'font-size')).toBe('15px');
@@ -78,18 +90,29 @@ test.describe('header at the desktop design width', () => {
     await expect(cta).toHaveAttribute('href', '/contact');
     await expect(cta).toHaveText("Let's Talk");
     expect((await box(page, 'app-header a.header__cta')).h).toBe(48);
-    expect(await style(page, 'app-header a.header__cta', 'background-color')).toBe('rgb(15, 85, 232)');
-    expect(Math.round((await box(page, 'app-header a.header__cta')).x + (await box(page, 'app-header a.header__cta')).w)).toBe(1360);
+    expect(await style(page, 'app-header a.header__cta', 'background-color')).toBe(
+      'rgb(15, 85, 232)',
+    );
+    expect(
+      Math.round(
+        (await box(page, 'app-header a.header__cta')).x +
+          (await box(page, 'app-header a.header__cta')).w,
+      ),
+    ).toBe(1360);
   });
 
-  test('switching the language from the header menu re-renders the navigation', async ({ page }) => {
+  test('switching the language from the header menu re-renders the navigation', async ({
+    page,
+  }) => {
     await page.locator('app-header button.header__lang').click();
     const items = page.locator('.mat-mdc-menu-panel button[mat-menu-item]');
     await expect(items).toHaveText(['English', 'Հայերեն', 'Русский']);
     await expect(items.first()).toHaveAttribute('aria-current', 'true');
     await items.nth(1).click();
     await expect(page.locator('app-header .header__lang-code')).toHaveText('HY');
-    await expect(page.locator('app-header nav a.header__link').nth(1)).toHaveText('Ծառայություններ');
+    await expect(page.locator('app-header nav a.header__link').nth(1)).toHaveText(
+      'Ծառայություններ',
+    );
     await expect(page.locator('html')).toHaveAttribute('lang', 'hy');
   });
 });
@@ -112,7 +135,9 @@ test.describe('header at the mobile design width', () => {
     await expect(menu).toBeVisible();
     await expect(menu).toHaveAttribute('aria-expanded', 'false');
     expect((await box(page, 'app-header button.header__menu mat-icon')).w).toBe(24);
-    expect(await style(page, 'app-header button.header__menu mat-icon', 'color')).toBe('rgb(11, 19, 36)');
+    expect(await style(page, 'app-header button.header__menu mat-icon', 'color')).toBe(
+      'rgb(11, 19, 36)',
+    );
     // Home runs its hero behind the bar, so the hairline is dropped there and kept elsewhere.
     expect(await style(page, 'app-header', 'border-bottom-width')).toBe('0px');
     await page.goto('/about');
@@ -146,7 +171,9 @@ test.describe('footer at the desktop design width', () => {
 
     const headings = page.locator('app-footer .footer__heading');
     await expect(headings).toHaveText(['Services', 'Solutions', 'Company', 'Get in touch']);
-    const xs = await headings.evaluateAll((els) => els.map((el) => Math.round(el.getBoundingClientRect().left)));
+    const xs = await headings.evaluateAll((els) =>
+      els.map((el) => Math.round(el.getBoundingClientRect().left)),
+    );
     expect(xs).toEqual([488, 718, 948, 1178]);
     expect(await style(page, 'app-footer .footer__heading', 'font-weight')).toBe('600');
     expect(await style(page, 'app-footer .footer__heading', 'font-size')).toBe('15px');
@@ -161,8 +188,12 @@ test.describe('footer at the desktop design width', () => {
     await expect(pending.locator('a')).toHaveCount(0);
   });
 
-  test('legal row: divider, copyright with the current year, legal links, languages', async ({ page }) => {
-    expect(await style(page, 'app-footer .footer__bottom', 'border-top-color')).toBe('rgb(226, 232, 240)');
+  test('legal row: divider, copyright with the current year, legal links, languages', async ({
+    page,
+  }) => {
+    expect(await style(page, 'app-footer .footer__bottom', 'border-top-color')).toBe(
+      'rgb(226, 232, 240)',
+    );
     await expect(page.locator('app-footer .footer__copyright')).toHaveText(
       `© ${new Date().getFullYear()} Nexora. All rights reserved.`,
     );
@@ -173,29 +204,36 @@ test.describe('footer at the desktop design width', () => {
     const languages = page.locator('app-footer .footer__language');
     await expect(languages).toHaveText(['English', 'Հայերեն', 'Русский']);
     await expect(languages.first()).toHaveAttribute('aria-current', 'true');
-    expect(await style(page, 'app-footer .footer__language[aria-current="true"]', 'font-weight')).toBe('600');
+    expect(
+      await style(page, 'app-footer .footer__language[aria-current="true"]', 'font-weight'),
+    ).toBe('600');
     expect(await style(page, 'app-footer .footer__copyright', 'font-size')).toBe('14px');
     expect(await style(page, 'app-footer .footer__legal a.footer__link', 'font-size')).toBe('14px');
   });
 
-  test('a footer language button changes the locale and the choice survives a reload', async ({ page }) => {
+  test('a footer language button changes the locale and the choice survives a reload', async ({
+    page,
+  }) => {
     await page.locator('app-footer .footer__language', { hasText: 'Русский' }).click();
     await expect(page.locator('app-footer .footer__heading').first()).toHaveText('Услуги');
     await expect(page.locator('app-header nav a.header__link').nth(1)).toHaveText('Услуги');
     await expect(page.locator('html')).toHaveAttribute('lang', 'ru');
-    expect((await page.context().cookies()).find((c) => c.name === 'INTLAYER_LOCALE')?.value).toBe('ru');
+    expect((await page.context().cookies()).find((c) => c.name === 'INTLAYER_LOCALE')?.value).toBe(
+      'ru',
+    );
 
     await page.reload();
     await expect(page.locator('app-header nav a.header__link').nth(1)).toHaveText('Услуги');
-    await expect(page.locator('app-footer .footer__language', { hasText: 'Русский' })).toHaveAttribute(
-      'aria-current',
-      'true',
-    );
+    await expect(
+      page.locator('app-footer .footer__language', { hasText: 'Русский' }),
+    ).toHaveAttribute('aria-current', 'true');
   });
 });
 
 test.describe('routing', () => {
-  test('pages are lazy: the chunk is requested on navigation and the active state follows', async ({ page }) => {
+  test('pages are lazy: the chunk is requested on navigation and the active state follows', async ({
+    page,
+  }) => {
     const requested: string[] = [];
     page.on('request', (req) => {
       if (/chunk-.*\.js$/.test(req.url())) requested.push(req.url());

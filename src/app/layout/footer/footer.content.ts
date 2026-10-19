@@ -15,7 +15,11 @@ const footerContent = {
         links: [
           {
             path: '/services',
-            label: t({ en: 'Software Engineering', hy: 'Ծրագրային ինժեներիա', ru: 'Разработка ПО' }),
+            label: t({
+              en: 'Software Engineering',
+              hy: 'Ծրագրային ինժեներիա',
+              ru: 'Разработка ПО',
+            }),
           },
           {
             path: '/services',
@@ -47,7 +51,11 @@ const footerContent = {
           },
           {
             path: '/services',
-            label: t({ en: 'All 15 services', hy: 'Բոլոր 15 ծառայությունները', ru: 'Все 15 услуг' }),
+            label: t({
+              en: 'All 15 services',
+              hy: 'Բոլոր 15 ծառայությունները',
+              ru: 'Все 15 услуг',
+            }),
           },
         ],
       },
@@ -99,7 +107,10 @@ const footerContent = {
       {
         heading: t({ en: 'Company', hy: 'Ընկերություն', ru: 'Компания' }),
         links: [
-          { path: '/about', label: t({ en: 'About Nexora', hy: 'Nexora-ի մասին', ru: 'О Nexora' }) },
+          {
+            path: '/about',
+            label: t({ en: 'About Nexora', hy: 'Nexora-ի մասին', ru: 'О Nexora' }),
+          },
           {
             path: '/about',
             label: t({
@@ -118,7 +129,10 @@ const footerContent = {
       {
         heading: t({ en: 'Get in touch', hy: 'Կապ հաստատեք', ru: 'Связаться' }),
         links: [
-          { path: '/contact', label: t({ en: 'Start a project', hy: 'Սկսել նախագիծ', ru: 'Начать проект' }) },
+          {
+            path: '/contact',
+            label: t({ en: 'Start a project', hy: 'Սկսել նախագիծ', ru: 'Начать проект' }),
+          },
           {
             path: '/partnerships',
             label: t({ en: 'Become a partner', hy: 'Դառնալ գործընկեր', ru: 'Стать партнёром' }),

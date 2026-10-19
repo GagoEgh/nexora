@@ -34,7 +34,9 @@ test.describe('spacing tokens', () => {
 
   test('the scale is exactly the approved steps', async ({ page }) => {
     for (const step of SCALE) {
-      expect(await rootTokenValue(page, `--nx-space-${step}`), `--nx-space-${step}`).toBe(`${step}px`);
+      expect(await rootTokenValue(page, `--nx-space-${step}`), `--nx-space-${step}`).toBe(
+        `${step}px`,
+      );
     }
     const declared = await page.evaluate(() => {
       const names = new Set<string>();
@@ -101,7 +103,9 @@ test.describe('spacing static guard', () => {
         .forEach((line, index) => {
           const match = SPACING_PROPERTY.exec(line);
           if (match && /\b[1-9]\d*px\b/.test(match[1])) {
-            offenders.push(`${relative(SRC, file).split(sep).join('/')}:${index + 1}: ${line.trim()}`);
+            offenders.push(
+              `${relative(SRC, file).split(sep).join('/')}:${index + 1}: ${line.trim()}`,
+            );
           }
         });
     }

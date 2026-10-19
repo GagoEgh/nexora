@@ -26,7 +26,9 @@ test.describe('icon assets', () => {
       const response = await request.get(`/icons/${name}.svg`);
       expect(response.status(), name).toBe(200);
       expect(response.headers()['content-type'], name).toContain('image/svg+xml');
-      expect(await response.text(), name).toBe(readFileSync(join(ICONS_DIR, `${name}.svg`), 'utf8'));
+      expect(await response.text(), name).toBe(
+        readFileSync(join(ICONS_DIR, `${name}.svg`), 'utf8'),
+      );
     }
   });
 });

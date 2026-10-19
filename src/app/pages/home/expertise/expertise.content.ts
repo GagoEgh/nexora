@@ -14,7 +14,11 @@ const expertiseContent = {
       hy: 'Վեց ուղղություն, որոնք կարող են աշխատել առանձին կամ միասին մեկ նախագծի շրջանակում՝ առաջին ինտերֆեյսի էսքիզից մինչև արտադրական ենթակառուցվածք։',
       ru: 'Шесть направлений, которые работают по отдельности или вместе в рамках одного проекта — от первого эскиза интерфейса до production-инфраструктуры.',
     }),
-    viewAll: t({ en: 'View all 15 services', hy: 'Դիտել բոլոր 15 ծառայությունները', ru: 'Все 15 услуг' }),
+    viewAll: t({
+      en: 'View all 15 services',
+      hy: 'Դիտել բոլոր 15 ծառայությունները',
+      ru: 'Все 15 услуг',
+    }),
     explore: t({ en: 'Explore service', hy: 'Ծանոթանալ ծառայությանը', ru: 'Подробнее об услуге' }),
     services: [
       {
@@ -32,7 +36,11 @@ const expertiseContent = {
       },
       {
         icon: 'smartphone',
-        title: t({ en: 'Mobile Applications', hy: 'Մոբայլ հավելվածներ', ru: 'Мобильные приложения' }),
+        title: t({
+          en: 'Mobile Applications',
+          hy: 'Մոբայլ հավելվածներ',
+          ru: 'Мобильные приложения',
+        }),
         description: t({
           en: 'iOS, Android and cross-platform apps for customers and internal teams, connected to the systems behind them.',
           hy: 'iOS, Android և կրոսպլատֆորմ հավելվածներ հաճախորդների և ներքին թիմերի համար՝ միացված դրանց հետևում գտնվող համակարգերին։',

@@ -14,7 +14,17 @@ const TITLES = [
   'API-Connected Systems',
 ];
 
-const KINDS = ['saas', 'crm-erp', 'web', 'mobile', 'ai', 'automation', 'portal', 'internal-tools', 'api'];
+const KINDS = [
+  'saas',
+  'crm-erp',
+  'web',
+  'mobile',
+  'ai',
+  'automation',
+  'portal',
+  'internal-tools',
+  'api',
+];
 
 describe('WhatWeBuild', () => {
   let fixture: ComponentFixture<WhatWeBuild>;
@@ -38,7 +48,9 @@ describe('WhatWeBuild', () => {
   });
 
   it('renders the section header with one h2 and the intro', () => {
-    expect(root.querySelector('.what-we-build__eyebrow')?.textContent?.trim()).toBe('What we build');
+    expect(root.querySelector('.what-we-build__eyebrow')?.textContent?.trim()).toBe(
+      'What we build',
+    );
     const headings = root.querySelectorAll('h2');
     expect(headings).toHaveLength(1);
     expect(headings[0].textContent?.trim()).toBe('Systems shaped around how your business runs.');
@@ -58,7 +70,9 @@ describe('WhatWeBuild', () => {
     expect(art.map((a) => a?.querySelectorAll('svg').length)).toEqual(Array(9).fill(1));
 
     for (const card of cards) {
-      expect(card.querySelector('.what-we-build__card-desc')?.textContent?.trim().length).toBeGreaterThan(40);
+      expect(
+        card.querySelector('.what-we-build__card-desc')?.textContent?.trim().length,
+      ).toBeGreaterThan(40);
     }
     expect(root.querySelectorAll('a, button')).toHaveLength(0);
   });
@@ -75,6 +89,8 @@ describe('WhatWeBuild', () => {
     expect(root.querySelector('h2')?.textContent?.trim()).toBe(
       'Համակարգեր՝ կառուցված ձեր բիզնեսի աշխատելու ձևի շուրջ։',
     );
-    expect(root.querySelector('.what-we-build__card h3')?.textContent?.trim()).toBe('SaaS հարթակներ');
+    expect(root.querySelector('.what-we-build__card h3')?.textContent?.trim()).toBe(
+      'SaaS հարթակներ',
+    );
   });
 });

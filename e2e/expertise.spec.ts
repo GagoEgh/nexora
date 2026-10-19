@@ -5,13 +5,21 @@ import { expect, test, type Page } from '@playwright/test';
  * in three columns with 24px gutters, Nexora tokens for chrome and typography; one column at 390.
  */
 const style = (page: Page, selector: string, prop: string) =>
-  page.locator(selector).first().evaluate((el, p) => getComputedStyle(el).getPropertyValue(p), prop);
+  page
+    .locator(selector)
+    .first()
+    .evaluate((el, p) => getComputedStyle(el).getPropertyValue(p), prop);
 
 const boxes = (page: Page, selector: string) =>
   page.locator(selector).evaluateAll((els) =>
     els.map((el) => {
       const r = el.getBoundingClientRect();
-      return { x: Math.round(r.left), y: Math.round(r.top), w: Math.round(r.width), h: Math.round(r.height) };
+      return {
+        x: Math.round(r.left),
+        y: Math.round(r.top),
+        w: Math.round(r.width),
+        h: Math.round(r.height),
+      };
     }),
   );
 
@@ -23,7 +31,9 @@ test.describe('expertise at the desktop design width', () => {
     await page.locator('app-expertise').scrollIntoViewIfNeeded();
   });
 
-  test('follows the hero and lays the header out in two columns with the tokens', async ({ page }) => {
+  test('follows the hero and lays the header out in two columns with the tokens', async ({
+    page,
+  }) => {
     await expect(page.locator('app-hero + app-expertise')).toHaveCount(1);
     expect(await style(page, 'app-expertise', 'padding-top')).toBe('96px');
     expect(await style(page, 'app-expertise .expertise__header', 'grid-template-columns')).toMatch(
@@ -32,7 +42,9 @@ test.describe('expertise at the desktop design width', () => {
     expect(await style(page, 'app-expertise .expertise__header', 'margin-bottom')).toBe('64px');
 
     await expect(page.locator('app-expertise .expertise__eyebrow')).toHaveText('What we do');
-    expect(await style(page, 'app-expertise .expertise__eyebrow', 'color')).toBe('rgb(15, 85, 232)');
+    expect(await style(page, 'app-expertise .expertise__eyebrow', 'color')).toBe(
+      'rgb(15, 85, 232)',
+    );
     const title = page.locator('app-expertise h2');
     await expect(title).toHaveText('End-to-end engineering, under one roof.');
     expect(await style(page, 'app-expertise h2', 'font-size')).toBe('40px');
@@ -52,7 +64,9 @@ test.describe('expertise at the desktop design width', () => {
     expect(allBox.h).toBe(48);
   });
 
-  test('six cards in three columns with the card chrome, tiles, typography and links', async ({ page }) => {
+  test('six cards in three columns with the card chrome, tiles, typography and links', async ({
+    page,
+  }) => {
     const cards = await boxes(page, 'app-expertise .expertise__card');
     expect(cards).toHaveLength(6);
     // Three equal columns of (1280 − 2 × 24) / 3 = 410.67px: x 80, 514.67, 949.33.
@@ -63,14 +77,22 @@ test.describe('expertise at the desktop design width', () => {
     expect(cards[3].y - cards[0].y - cards[0].h).toBe(24);
     expect(cards[0].h).toBe(cards[1].h);
 
-    expect(await style(page, 'app-expertise .expertise__card', 'border-top-color')).toBe('rgb(226, 232, 240)');
-    expect(await style(page, 'app-expertise .expertise__card', 'border-top-left-radius')).toBe('16px');
+    expect(await style(page, 'app-expertise .expertise__card', 'border-top-color')).toBe(
+      'rgb(226, 232, 240)',
+    );
+    expect(await style(page, 'app-expertise .expertise__card', 'border-top-left-radius')).toBe(
+      '16px',
+    );
     expect(await style(page, 'app-expertise .expertise__card', 'padding-top')).toBe('32px');
-    expect(await style(page, 'app-expertise .expertise__card', 'background-color')).toBe('rgb(255, 255, 255)');
+    expect(await style(page, 'app-expertise .expertise__card', 'background-color')).toBe(
+      'rgb(255, 255, 255)',
+    );
 
     const [tile] = await boxes(page, 'app-expertise .expertise__card app-icon-tile');
     expect(tile.w).toBe(48);
-    expect(await style(page, 'app-expertise app-icon-tile', 'background-color')).toBe('rgb(238, 244, 255)');
+    expect(await style(page, 'app-expertise app-icon-tile', 'background-color')).toBe(
+      'rgb(238, 244, 255)',
+    );
     expect(await style(page, 'app-expertise .expertise__card-title', 'font-size')).toBe('24px');
     expect(await style(page, 'app-expertise .expertise__card-title', 'font-weight')).toBe('600');
     expect(await style(page, 'app-expertise .expertise__card-text', 'line-height')).toBe('26px');
@@ -105,8 +127,12 @@ test.describe('expertise at narrower widths', () => {
     const cards = await boxes(page, 'app-expertise .expertise__card');
     expect(cards.map((c) => c.x)).toEqual(Array(6).fill(20));
     expect(cards.every((c) => c.w === 350)).toBe(true);
-    expect(await style(page, 'app-expertise .expertise__header', 'grid-template-columns')).toMatch(/^\d+(\.\d+)?px$/);
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    expect(await style(page, 'app-expertise .expertise__header', 'grid-template-columns')).toMatch(
+      /^\d+(\.\d+)?px$/,
+    );
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+    ).toBe(true);
   });
 
   test('two columns at 840px', async ({ page }) => {

@@ -49,7 +49,11 @@ const whatWeBuildContent = {
       },
       {
         illustration: 'mobile',
-        title: t({ en: 'Mobile Applications', hy: 'Մոբայլ հավելվածներ', ru: 'Мобильные приложения' }),
+        title: t({
+          en: 'Mobile Applications',
+          hy: 'Մոբայլ հավելվածներ',
+          ru: 'Мобильные приложения',
+        }),
         description: t({
           en: 'Native and cross-platform apps connected to your backend and services.',
           hy: 'Նեյթիվ և կրոսպլատֆորմ հավելվածներ՝ միացված ձեր backend-ին և ծառայություններին։',
@@ -58,7 +62,11 @@ const whatWeBuildContent = {
       },
       {
         illustration: 'ai',
-        title: t({ en: 'AI Assistants & Agents', hy: 'AI օգնականներ և գործակալներ', ru: 'AI-ассистенты и агенты' }),
+        title: t({
+          en: 'AI Assistants & Agents',
+          hy: 'AI օգնականներ և գործակալներ',
+          ru: 'AI-ассистенты и агенты',
+        }),
         description: t({
           en: 'Assistants and multi-step agents grounded in your own data and tools.',
           hy: 'Օգնականներ և բազմաքայլ գործակալներ՝ հիմնված ձեր սեփական տվյալների և գործիքների վրա։',
@@ -89,7 +97,11 @@ const whatWeBuildContent = {
       },
       {
         illustration: 'internal-tools',
-        title: t({ en: 'Internal Business Tools', hy: 'Ներքին բիզնես գործիքներ', ru: 'Внутренние бизнес-инструменты' }),
+        title: t({
+          en: 'Internal Business Tools',
+          hy: 'Ներքին բիզնես գործիքներ',
+          ru: 'Внутренние бизнес-инструменты',
+        }),
         description: t({
           en: 'Dashboards and back-office tools that replace spreadsheets and email chains.',
           hy: 'Վահանակներ և back-office գործիքներ, որոնք փոխարինում են աղյուսակներին և նամակների շղթաներին։',
@@ -98,7 +110,11 @@ const whatWeBuildContent = {
       },
       {
         illustration: 'api',
-        title: t({ en: 'API-Connected Systems', hy: 'API-ով միացված համակարգեր', ru: 'Системы, связанные через API' }),
+        title: t({
+          en: 'API-Connected Systems',
+          hy: 'API-ով միացված համակարգեր',
+          ru: 'Системы, связанные через API',
+        }),
         description: t({
           en: 'Integrations and middleware that connect the tools you already use.',
           hy: 'Ինտեգրումներ և միջանկյալ ծրագրային ապահովում, որոնք միացնում են ձեր արդեն օգտագործվող գործիքները։',

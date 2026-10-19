@@ -53,7 +53,10 @@ test.describe('logo component', () => {
   }) => {
     const logo = page.locator('app-header').getByRole('img', { name: 'Nexora' });
     const wordmarkFill = () =>
-      logo.locator('svg.app-logo__wordmark path').first().evaluate((p) => getComputedStyle(p).fill);
+      logo
+        .locator('svg.app-logo__wordmark path')
+        .first()
+        .evaluate((p) => getComputedStyle(p).fill);
     const onSurface = await resolveColorToken(page, '--mat-sys-on-surface');
     const inverseOnSurface = await resolveColorToken(page, '--mat-sys-inverse-on-surface');
 

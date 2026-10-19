@@ -17,7 +17,9 @@ export function parseCssColor(value: string): Rgba {
       a: rgb[4] === undefined ? 1 : +rgb[4],
     };
   }
-  const srgb = /^color\(srgb\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s*(?:\/\s*([\d.]+))?\s*\)$/.exec(value);
+  const srgb = /^color\(srgb\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s*(?:\/\s*([\d.]+))?\s*\)$/.exec(
+    value,
+  );
   if (srgb) {
     return { r: +srgb[1], g: +srgb[2], b: +srgb[3], a: srgb[4] === undefined ? 1 : +srgb[4] };
   }

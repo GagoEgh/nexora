@@ -4,7 +4,11 @@
 $plain-family: (Inter, sans-serif);
 $brand-family: $plain-family;
 
-$code-font: 0.75rem #{'/'} 1.25rem ui-monospace, Menlo, Consolas, monospace;
+$code-font:
+  0.75rem #{'/'} 1.25rem ui-monospace,
+  Menlo,
+  Consolas,
+  monospace;
 
 $weight-regular: 400;
 $weight-medium: 500;
@@ -27,7 +31,8 @@ $m3-typescale-overrides: (
   label-large-size: $label-large-size,
   label-large-line-height: $label-large-line-height,
   label-large-weight: $label-large-weight,
-  label-medium: $label-medium-weight $label-medium-size #{'/'} $label-medium-line-height $plain-family,
+  label-medium: $label-medium-weight $label-medium-size #{'/'} $label-medium-line-height
+    $plain-family,
   label-medium-size: $label-medium-size,
   label-medium-line-height: $label-medium-line-height,
   label-medium-weight: $label-medium-weight,
@@ -72,7 +77,9 @@ $body-lead: (
   --nx-sys-#{$name}-font: #{$plain-family};
   --nx-sys-#{$name}-size: #{map.get($sizes, size)};
   --nx-sys-#{$name}-line-height: #{map.get($sizes, line-height)};
-  --nx-sys-#{$name}: #{$weight} #{map.get($sizes, size)} #{'/'} #{map.get($sizes, line-height)} #{$plain-family};
+  $shorthand: #{$weight} #{map.get($sizes, size)} #{'/'} #{map.get($sizes, line-height)}
+    #{$plain-family};
+  --nx-sys-#{$name}: #{$shorthand};
 }
 
 @mixin extended-tokens() {

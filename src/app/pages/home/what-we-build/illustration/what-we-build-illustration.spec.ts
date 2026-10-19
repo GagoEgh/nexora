@@ -10,7 +10,9 @@ describe('WhatWeBuildIllustration', () => {
   let host: HTMLElement;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({ imports: [WhatWeBuildIllustration] }).compileComponents();
+    await TestBed.configureTestingModule({
+      imports: [WhatWeBuildIllustration],
+    }).compileComponents();
     fixture = TestBed.createComponent(WhatWeBuildIllustration);
     host = fixture.nativeElement as HTMLElement;
   });

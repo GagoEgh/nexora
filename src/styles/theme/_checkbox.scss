@@ -15,8 +15,10 @@
 
   @at-root {
     .mat-mdc-checkbox {
+      $inset: calc((var(--mat-checkbox-state-layer-size) - var(--nx-checkbox-size)) / 2);
+
       --nx-checkbox-size: 20px;
-      --nx-checkbox-inset: calc((var(--mat-checkbox-state-layer-size) - var(--nx-checkbox-size)) / 2);
+      --nx-checkbox-inset: #{$inset};
 
       .mdc-checkbox {
         flex-basis: var(--nx-checkbox-size);

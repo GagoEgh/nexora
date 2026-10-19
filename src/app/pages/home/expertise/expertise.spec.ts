@@ -78,7 +78,9 @@ describe('Expertise', () => {
     expect(tiles.map((t) => t?.querySelector('svg')).filter(Boolean)).toHaveLength(6);
 
     for (const card of cards) {
-      expect(card.querySelector('.expertise__card-text')?.textContent?.trim().length).toBeGreaterThan(40);
+      expect(
+        card.querySelector('.expertise__card-text')?.textContent?.trim().length,
+      ).toBeGreaterThan(40);
       const link = card.querySelector<HTMLAnchorElement>('a.expertise__link');
       expect(link?.getAttribute('href')).toBe('/services');
       expect(link?.textContent?.trim()).toBe('Explore service');
@@ -89,8 +91,14 @@ describe('Expertise', () => {
   it('re-renders in another locale', async () => {
     setLocale('hy');
     await fixture.whenStable();
-    expect(root.querySelector('h2')?.textContent?.trim()).toBe('Ամբողջական ինժեներիա՝ մեկ հարկի տակ։');
-    expect(root.querySelector('.expertise__card h3')?.textContent?.trim()).toBe('Ծրագրային և վեբ մշակում');
-    expect(root.querySelector('a.expertise__link')?.textContent?.trim()).toBe('Ծանոթանալ ծառայությանը');
+    expect(root.querySelector('h2')?.textContent?.trim()).toBe(
+      'Ամբողջական ինժեներիա՝ մեկ հարկի տակ։',
+    );
+    expect(root.querySelector('.expertise__card h3')?.textContent?.trim()).toBe(
+      'Ծրագրային և վեբ մշակում',
+    );
+    expect(root.querySelector('a.expertise__link')?.textContent?.trim()).toBe(
+      'Ծանոթանալ ծառայությանը',
+    );
   });
 });

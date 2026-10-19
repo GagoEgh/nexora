@@ -53,7 +53,9 @@ test.describe('chip theme', () => {
     expect(css).toMatch(
       /\.mat-mdc-chip\.mat-mdc-standard-chip\.mdc-evolution-chip--with-primary-graphic \.mdc-evolution-chip__graphic \{ padding-inline-start: var\(--nx-space-12\); \}/,
     );
-    expect(css).toMatch(/button\.mat-mdc-chip \{[^}]*appearance: none;[^}]*border: 0;[^}]*padding: 0;[^}]*font: inherit;/);
+    expect(css).toMatch(
+      /button\.mat-mdc-chip \{[^}]*appearance: none;[^}]*border: 0;[^}]*padding: 0;[^}]*font: inherit;/,
+    );
   });
 
   test('active (highlighted): primary-container with on-primary-container content', async ({

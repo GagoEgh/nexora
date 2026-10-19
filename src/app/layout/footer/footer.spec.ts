@@ -27,7 +27,9 @@ describe('Footer', () => {
 
   it('renders the brand column, four link columns and the pending contact note', () => {
     expect(root.querySelector('app-logo')).not.toBeNull();
-    expect(root.querySelector('.footer__tagline')?.textContent?.trim()).toBe('Engineering the next');
+    expect(root.querySelector('.footer__tagline')?.textContent?.trim()).toBe(
+      'Engineering the next',
+    );
 
     const headings = Array.from(root.querySelectorAll('.footer__heading')).map((h) =>
       h.textContent?.trim(),

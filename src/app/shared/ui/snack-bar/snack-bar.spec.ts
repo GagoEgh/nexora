@@ -50,7 +50,9 @@ describe('SnackBar', () => {
 
   const host = () => overlay.querySelector('app-snack-bar') as HTMLElement;
   const actionButton = () =>
-    overlay.querySelector<HTMLButtonElement>('button.mat-mdc-snack-bar-action') as HTMLButtonElement;
+    overlay.querySelector<HTMLButtonElement>(
+      'button.mat-mdc-snack-bar-action',
+    ) as HTMLButtonElement;
 
   it('renders the message, the catalogue icon and the default "Dismiss" action', async () => {
     await open({ message: 'Changes saved', icon: 'check', tone: 'success' });

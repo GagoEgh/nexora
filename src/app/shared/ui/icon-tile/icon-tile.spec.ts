@@ -53,7 +53,13 @@ describe('IconTile', () => {
   });
 
   it('reflects every tone for the stylesheet', async () => {
-    for (const tone of ['primary', 'secondary', 'neutral', 'inverse', 'inverse-container'] as const) {
+    for (const tone of [
+      'primary',
+      'secondary',
+      'neutral',
+      'inverse',
+      'inverse-container',
+    ] as const) {
       fixture.componentInstance.tone.set(tone);
       await fixture.whenStable();
       expect(tile.getAttribute('data-tone')).toBe(tone);

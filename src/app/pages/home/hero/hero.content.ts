@@ -23,12 +23,28 @@ const heroContent = {
       hy: 'Nexora-ն միավորում է Senior և Senior+ ինժեներական փորձը՝ ստեղծելու անհատական ծրագրային ապահովում, AI լուծումներ, վեբ և մոբայլ հավելվածներ և հուսալի տեխնոլոգիական ենթակառուցվածք։',
       ru: 'Nexora объединяет инженерную экспертизу уровня Senior и Senior+, чтобы создавать заказное ПО, решения на основе AI, веб- и мобильные приложения и надёжную технологическую инфраструктуру.',
     }),
-    primaryCta: t({ en: 'Discuss Your Project', hy: 'Քննարկել ձեր նախագիծը', ru: 'Обсудить ваш проект' }),
-    secondaryCta: t({ en: 'Explore Our Services', hy: 'Ծանոթանալ ծառայություններին', ru: 'Наши услуги' }),
+    primaryCta: t({
+      en: 'Discuss Your Project',
+      hy: 'Քննարկել ձեր նախագիծը',
+      ru: 'Обсудить ваш проект',
+    }),
+    secondaryCta: t({
+      en: 'Explore Our Services',
+      hy: 'Ծանոթանալ ծառայություններին',
+      ru: 'Наши услуги',
+    }),
     trust: [
-      t({ en: 'Senior & Senior+ engineers only', hy: 'Միայն Senior և Senior+ ինժեներներ', ru: 'Только Senior и Senior+ инженеры' }),
+      t({
+        en: 'Senior & Senior+ engineers only',
+        hy: 'Միայն Senior և Senior+ ինժեներներ',
+        ru: 'Только Senior и Senior+ инженеры',
+      }),
       t({ en: 'End-to-end delivery', hy: 'Ամբողջական մատակարարում', ru: 'Полный цикл разработки' }),
-      t({ en: 'Armenia & international', hy: 'Հայաստան և միջազգային', ru: 'Армения и международные проекты' }),
+      t({
+        en: 'Armenia & international',
+        hy: 'Հայաստան և միջազգային',
+        ru: 'Армения и международные проекты',
+      }),
     ],
     illustration: {
       windowTitle: 'nexora / system-architecture',
@@ -77,18 +93,34 @@ const heroContent = {
       ],
       pipeline: ['build', 'test', 'deploy', 'monitor'],
       workflow: {
-        title: t({ en: 'Agent workflow', hy: 'Գործակալի աշխատահոսք', ru: 'Рабочий процесс агента' }),
+        title: t({
+          en: 'Agent workflow',
+          hy: 'Գործակալի աշխատահոսք',
+          ru: 'Рабочий процесс агента',
+        }),
         steps: [
           {
-            label: t({ en: 'Classify inbound request', hy: 'Դասակարգել մուտքային հարցումը', ru: 'Классифицировать входящий запрос' }),
+            label: t({
+              en: 'Classify inbound request',
+              hy: 'Դասակարգել մուտքային հարցումը',
+              ru: 'Классифицировать входящий запрос',
+            }),
             done: true,
           },
           {
-            label: t({ en: 'Retrieve context from CRM', hy: 'Ստանալ համատեքստը CRM-ից', ru: 'Получить контекст из CRM' }),
+            label: t({
+              en: 'Retrieve context from CRM',
+              hy: 'Ստանալ համատեքստը CRM-ից',
+              ru: 'Получить контекст из CRM',
+            }),
             done: true,
           },
           {
-            label: t({ en: 'Draft reply for review', hy: 'Պատրաստել պատասխանի նախագիծը', ru: 'Подготовить черновик ответа' }),
+            label: t({
+              en: 'Draft reply for review',
+              hy: 'Պատրաստել պատասխանի նախագիծը',
+              ru: 'Подготовить черновик ответа',
+            }),
             done: false,
           },
         ],
