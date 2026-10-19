@@ -306,6 +306,34 @@ test.describe('routing', () => {
     await expect(page.locator('html')).toHaveAttribute('lang', 'hy');
   });
 
+  test('scrolling: new pages open at the top, Back restores the position, a language switch keeps it', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    const scrollY = () => page.evaluate(() => Math.round(window.scrollY));
+    await page.goto('/');
+    await expect(page.locator('app-what-we-build .what-we-build__card').first()).toBeAttached();
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    const bottom = await scrollY();
+    expect(bottom).toBeGreaterThan(5000);
+
+    await page
+      .locator('app-footer .footer__column a.footer__link', { hasText: 'Software Engineering' })
+      .click();
+    await expect(page).toHaveURL(/\/services$/);
+    await expect.poll(scrollY).toBe(0);
+
+    await page.goBack();
+    await expect(page).toHaveURL(/\/$/);
+    await expect.poll(scrollY, { timeout: 10000 }).toBeGreaterThan(bottom - 100);
+
+    await page.evaluate(() => window.scrollTo(0, 1500));
+    await page.locator('app-footer .footer__language', { hasText: 'Русский' }).click();
+    await expect(page).toHaveURL(/\/ru$/);
+    await expect(page.locator('app-footer .footer__heading').first()).toHaveText('Услуги');
+    await expect.poll(scrollY).toBe(1500);
+  });
+
   test('document metadata follows the route and the locale', async ({ page }) => {
     const HOME_TITLE = 'Nexora | Technology development and AI solutions partner';
     await page.goto('/');
