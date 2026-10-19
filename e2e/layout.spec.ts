@@ -330,7 +330,10 @@ test.describe('routing', () => {
     await expect.poll(scrollY, { timeout: 10000 }).toBeGreaterThan(bottom - 844);
 
     await page.evaluate(() => window.scrollTo(0, 1500));
-    await page.locator('app-footer .footer__language', { hasText: 'Русский' }).click();
+    // dispatchEvent: a plain click would first scroll the footer button into view.
+    await page
+      .locator('app-footer .footer__language', { hasText: 'Русский' })
+      .dispatchEvent('click');
     await expect(page).toHaveURL(/\/ru$/);
     await expect(page.locator('app-footer .footer__heading').first()).toHaveText('Услуги');
     await expect.poll(scrollY).toBe(1500);

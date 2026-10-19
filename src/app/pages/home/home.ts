@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { WhatWeBuild } from './what-we-build/what-we-build';
 import { Expertise } from './expertise/expertise';
 import { Hero } from './hero/hero';
