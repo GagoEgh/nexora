@@ -1,5 +1,6 @@
 @use 'tokens/spacing';
 @use 'tokens/layout';
+@use 'mixins/eyebrow';
 
 :host {
   display: block;
@@ -34,24 +35,7 @@
 }
 
 .hero__eyebrow {
-  display: flex;
-  align-items: center;
-  gap: spacing.space(8);
-  margin: 0;
-  font: var(--mat-sys-label-medium);
-  letter-spacing: var(--mat-sys-label-medium-tracking);
-  text-transform: uppercase;
-  color: var(--mat-sys-primary);
-
-  &::before {
-    content: '';
-    width: 20px;
-    border-top: 2px solid currentColor;
-
-    @include layout.up(large) {
-      width: 16px;
-    }
-  }
+  @include eyebrow.eyebrow();
 }
 
 .hero__eyebrow-text--full {
@@ -71,7 +55,7 @@
 .hero__title {
   margin: 0;
   font: var(--nx-sys-display-hero);
-  letter-spacing: var(--nx-sys-display-hero-tracking);
+  letter-spacing: var(--nx-sys-display-tracking);
   color: var(--mat-sys-on-surface);
 }
 

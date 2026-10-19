@@ -37,22 +37,26 @@ $m3-typescale-overrides: (
   body-small-weight: $body-small-weight,
 );
 
-$display-hero-tracking: -0.02em;
+$display-tracking: -0.02em;
+
+$display-section: (
+  size: 2.5rem,
+  line-height: 3rem,
+);
+$body-copy: (
+  size: 1rem,
+  line-height: 1.625rem,
+);
+
 $display-hero: (
-  compact: (
-    size: 2.5rem,
-    line-height: 3rem,
-  ),
+  compact: $display-section,
   large: (
     size: 4rem,
     line-height: 4.5rem,
   ),
 );
 $body-lead: (
-  compact: (
-    size: 1rem,
-    line-height: 1.625rem,
-  ),
+  compact: $body-copy,
   large: (
     size: 1.125rem,
     line-height: 1.875rem,
@@ -68,8 +72,10 @@ $body-lead: (
 }
 
 @mixin extended-tokens() {
-  --nx-sys-display-hero-tracking: #{$display-hero-tracking};
+  --nx-sys-display-tracking: #{$display-tracking};
 
+  @include _role(display-section, $weight-semibold, $display-section);
+  @include _role(body-copy, $weight-regular, $body-copy);
   @include _role(display-hero, $weight-semibold, map.get($display-hero, compact));
   @include _role(body-lead, $weight-regular, map.get($body-lead, compact));
 

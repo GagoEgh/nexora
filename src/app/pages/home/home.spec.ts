@@ -8,7 +8,7 @@ import { provideAppIcons } from '../../core/icons/provide-app-icons';
 import { Home } from './home';
 
 describe('Home', () => {
-  it('renders the hero section as its content', async () => {
+  it('renders the hero followed by the expertise section', async () => {
     await TestBed.configureTestingModule({
       imports: [Home],
       providers: [
@@ -27,6 +27,7 @@ describe('Home', () => {
 
     const root = fixture.nativeElement as HTMLElement;
     expect(root.querySelector('app-hero')).not.toBeNull();
+    expect(root.querySelector('app-hero + app-expertise')).not.toBeNull();
     expect(root.querySelectorAll('h1')).toHaveLength(1);
   });
 });

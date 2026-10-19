@@ -1,0 +1,23 @@
+@use '../tokens/spacing';
+@use '../tokens/layout';
+
+@mixin eyebrow() {
+  display: flex;
+  align-items: center;
+  gap: spacing.space(8);
+  margin: 0;
+  font: var(--mat-sys-label-medium);
+  letter-spacing: var(--mat-sys-label-medium-tracking);
+  text-transform: uppercase;
+  color: var(--mat-sys-primary);
+
+  &::before {
+    content: '';
+    width: 20px;
+    border-top: 2px solid currentColor;
+
+    @include layout.up(large) {
+      width: 16px;
+    }
+  }
+}
