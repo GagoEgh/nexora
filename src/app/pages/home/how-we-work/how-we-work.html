@@ -1,0 +1,30 @@
+<section class="how-we-work">
+  <div class="how-we-work__header">
+    <div class="how-we-work__heading">
+      <p class="how-we-work__eyebrow">{{ content().eyebrow }}</p>
+      <h2 class="how-we-work__title">{{ content().title }}</h2>
+    </div>
+
+    <p class="how-we-work__intro">{{ content().intro }}</p>
+  </div>
+
+  <ol class="how-we-work__steps">
+    @for (step of content().steps; track $index; let first = $first, last = $last) {
+      <li
+        class="how-we-work__step"
+        [class.how-we-work__step--first]="first"
+        [class.how-we-work__step--last]="last"
+      >
+        <div class="how-we-work__track">
+          <span class="how-we-work__marker">{{ ordinal($index) }}</span>
+        </div>
+        <h3 class="how-we-work__step-title">{{ step.title }}</h3>
+        <p class="how-we-work__step-text">{{ step.description }}</p>
+        <p class="how-we-work__outcome">
+          <mat-icon class="how-we-work__arrow" [svgIcon]="arrowIcon" />
+          {{ step.outcome }}
+        </p>
+      </li>
+    }
+  </ol>
+</section>

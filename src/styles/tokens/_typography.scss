@@ -56,6 +56,10 @@ $title-card: (
   size: 1.25rem,
   line-height: 1.75rem,
 );
+$title-step: (
+  size: 1.125rem,
+  line-height: 1.625rem,
+);
 
 $display-hero: (
   compact: $display-section,
@@ -88,6 +92,7 @@ $body-lead: (
   @include _role(display-section, $weight-semibold, $display-section);
   @include _role(body-copy, $weight-regular, $body-copy);
   @include _role(title-card, $weight-semibold, $title-card);
+  @include _role(title-step, $weight-semibold, $title-step);
   @include _role(display-hero, $weight-semibold, map.get($display-hero, compact));
   @include _role(body-lead, $weight-regular, map.get($body-lead, compact));
 

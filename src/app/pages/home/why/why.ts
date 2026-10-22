@@ -1,6 +1,7 @@
 import { Component, computed, signal, viewChild } from '@angular/core';
 import { MatChipListbox, type MatChipListboxChange, MatChipOption } from '@angular/material/chips';
 import { useIntlayer } from 'angular-intlayer';
+import { ordinal } from '../../../shared/ordinal';
 import { Logo } from '../../../shared/ui/logo/logo';
 
 @Component({
@@ -25,7 +26,5 @@ export class Why {
     this.listbox().value = this.selected();
   }
 
-  protected ordinal(index: number): string {
-    return String(index + 1).padStart(2, '0');
-  }
+  protected readonly ordinal = ordinal;
 }

@@ -1,0 +1,137 @@
+@use 'tokens/spacing';
+@use 'tokens/layout';
+@use 'tokens/typography';
+@use 'mixins/eyebrow';
+
+:host {
+  display: block;
+  padding-block: spacing.space(96);
+  padding-inline: var(--nx-layout-margin);
+}
+
+.how-we-work {
+  max-width: var(--nx-layout-container-max);
+  margin-inline: auto;
+}
+
+.how-we-work__header {
+  display: grid;
+  gap: spacing.space(24);
+  margin-block-end: spacing.space(64);
+
+  @include layout.up(large) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 440px);
+    gap: spacing.space(48);
+    align-items: start;
+  }
+}
+
+.how-we-work__heading {
+  display: grid;
+  gap: spacing.space(24);
+  justify-items: start;
+}
+
+.how-we-work__eyebrow {
+  @include eyebrow.eyebrow();
+}
+
+.how-we-work__title {
+  margin: 0;
+  font: var(--nx-sys-display-section);
+  letter-spacing: var(--nx-sys-display-tracking);
+  color: var(--mat-sys-on-surface);
+}
+
+.how-we-work__intro {
+  margin: 0;
+  font: var(--nx-sys-body-copy);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.how-we-work__steps {
+  display: grid;
+  gap: spacing.space(24);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @include layout.up(medium) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include layout.up(large) {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    padding-inline-end: spacing.space(24);
+  }
+}
+
+.how-we-work__step {
+  display: grid;
+  align-content: start;
+}
+
+.how-we-work__track {
+  display: flex;
+  align-items: center;
+
+  &::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background-color: var(--mat-sys-outline-variant);
+  }
+}
+
+.how-we-work__step--last .how-we-work__track::after {
+  opacity: 0.25;
+}
+
+.how-we-work__marker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--mat-sys-corner-full);
+  background-color: var(--mat-sys-primary-container);
+  font: typography.$code-font;
+  color: var(--mat-sys-primary);
+}
+
+.how-we-work__step--first .how-we-work__marker {
+  background-color: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+}
+
+.how-we-work__step-title {
+  margin: spacing.space(16) 0 0;
+  font: var(--nx-sys-title-step);
+  letter-spacing: var(--nx-sys-display-tracking);
+  color: var(--mat-sys-on-surface);
+}
+
+.how-we-work__step-text {
+  margin: spacing.space(8) 0 0;
+  font: var(--mat-sys-body-small);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.how-we-work__outcome {
+  display: inline-flex;
+  align-items: center;
+  gap: spacing.space(8);
+  justify-self: start;
+  height: 26px;
+  margin: spacing.space(20) 0 0;
+  padding-inline: spacing.space(8) spacing.space(12);
+  border-radius: var(--mat-sys-corner-small);
+  background-color: var(--mat-sys-surface-container-low);
+  font: typography.$code-font;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.how-we-work__arrow {
+  width: 12px;
+  height: 12px;
+}

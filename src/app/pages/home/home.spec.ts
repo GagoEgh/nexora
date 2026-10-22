@@ -31,6 +31,7 @@ describe('Home', () => {
     expect(root.querySelector('app-expertise + app-why')).not.toBeNull();
     expect(root.querySelector('app-why + app-what-we-build')).not.toBeNull();
     expect(root.querySelector('app-what-we-build + app-ai-automation')).not.toBeNull();
+    expect(root.querySelector('app-ai-automation + app-how-we-work')).not.toBeNull();
     expect(root.querySelectorAll('h1')).toHaveLength(1);
     // Declares the shell layout contract that lets the hero run under the header.
     expect(root.getAttribute('data-layout')).toBe('immersive');
