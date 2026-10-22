@@ -59,6 +59,7 @@ describe('IconTile', () => {
       'neutral',
       'inverse',
       'inverse-container',
+      'filled',
     ] as const) {
       fixture.componentInstance.tone.set(tone);
       await fixture.whenStable();
@@ -66,10 +67,12 @@ describe('IconTile', () => {
     }
   });
 
-  it('defaults to the medium size and reflects the small size', async () => {
+  it('defaults to the medium size and reflects the compact and small sizes', async () => {
     expect(tile.getAttribute('data-size')).toBe('medium');
-    fixture.componentInstance.size.set('small');
-    await fixture.whenStable();
-    expect(tile.getAttribute('data-size')).toBe('small');
+    for (const size of ['compact', 'small'] as const) {
+      fixture.componentInstance.size.set(size);
+      await fixture.whenStable();
+      expect(tile.getAttribute('data-size')).toBe(size);
+    }
   });
 });

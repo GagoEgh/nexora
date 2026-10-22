@@ -36,6 +36,23 @@
   color: var(--mat-sys-inverse-primary);
 }
 
+:host([data-tone='filled']) {
+  background-color: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+}
+
+:host([data-size='compact']) {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: var(--mat-sys-corner-small);
+
+  .mat-icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
 :host([data-size='small']) {
   width: 32px;
   height: 32px;

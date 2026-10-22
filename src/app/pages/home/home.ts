@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AiAutomation } from './ai-automation/ai-automation';
 import { WhatWeBuild } from './what-we-build/what-we-build';
 import { Expertise } from './expertise/expertise';
 import { Hero } from './hero/hero';
@@ -6,12 +7,13 @@ import { Why } from './why/why';
 
 @Component({
   selector: 'app-home',
-  imports: [Hero, Expertise, Why, WhatWeBuild],
+  imports: [Hero, Expertise, Why, WhatWeBuild, AiAutomation],
   template: `
     <app-hero />
     <app-expertise />
     <app-why />
     <app-what-we-build />
+    <app-ai-automation />
   `,
   styles: `
     :host {
@@ -19,7 +21,6 @@ import { Why } from './why/why';
     }
   `,
   host: {
-    // Shell layout contract (app.scss): the page runs under the transparent header.
     'data-layout': 'immersive',
   },
 })

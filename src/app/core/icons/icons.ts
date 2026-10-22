@@ -33,6 +33,7 @@ export const APP_ICON_NAMES = [
   'tag',
   'target',
   'users',
+  'workflow',
   'wrench',
   'x',
 ] as const;

@@ -1,0 +1,43 @@
+<section class="ai">
+  <div class="ai__copy">
+    <p class="ai__eyebrow">{{ content().eyebrow }}</p>
+    <h2 class="ai__title">{{ content().title }}</h2>
+    <p class="ai__lead">{{ content().lead }}</p>
+
+    <div class="ai__actions">
+      <a matButton="filled" [routerLink]="'/services' | localizedPath">
+        {{ content().primaryCta }}
+        <mat-icon iconPositionEnd [svgIcon]="arrowIcon" />
+      </a>
+      <a class="ai__secondary" matButton [routerLink]="'/contact' | localizedPath">
+        {{ content().secondaryCta }}
+      </a>
+    </div>
+  </div>
+
+  <ul class="ai__grid">
+    @for (item of content().capabilities; track $index) {
+      <li class="ai__card">
+        <app-icon-tile [icon]="item.icon.value" tone="filled" size="compact" />
+        <div class="ai__card-copy">
+          <h3 class="ai__card-title">{{ item.title }}</h3>
+          <p class="ai__card-text">{{ item.description }}</p>
+        </div>
+      </li>
+    }
+  </ul>
+
+  <div class="ai__footer">
+    <ol class="ai__pipeline" [attr.aria-label]="content().pipelineLabel.value">
+      @for (step of content().pipeline; track $index; let last = $last) {
+        <li class="ai__step" [class.ai__step--review]="last">
+          <span class="ai__step-label">{{ step }}</span>
+          @if (!last) {
+            <mat-icon class="ai__arrow" [svgIcon]="arrowIcon" />
+          }
+        </li>
+      }
+    </ol>
+    <p class="ai__note">{{ content().note }}</p>
+  </div>
+</section>

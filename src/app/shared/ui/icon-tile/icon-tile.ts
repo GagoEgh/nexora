@@ -2,9 +2,10 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import { MatIcon } from '@angular/material/icon';
 import { appIcon, type AppIconName } from '../../../core/icons/icons';
 
-export type IconTileTone = 'primary' | 'secondary' | 'neutral' | 'inverse' | 'inverse-container';
+export type IconTileTone =
+  'primary' | 'secondary' | 'neutral' | 'inverse' | 'inverse-container' | 'filled';
 
-export type IconTileSize = 'medium' | 'small';
+export type IconTileSize = 'medium' | 'compact' | 'small';
 
 @Component({
   selector: 'app-icon-tile',
