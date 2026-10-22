@@ -1,0 +1,31 @@
+<section class="engagement-models">
+  <div class="engagement-models__header">
+    <div class="engagement-models__heading">
+      <p class="engagement-models__eyebrow">{{ content().eyebrow }}</p>
+      <h2 class="engagement-models__title">{{ content().title }}</h2>
+    </div>
+
+    <div class="engagement-models__intro">
+      <p class="engagement-models__text">{{ content().intro }}</p>
+      <a class="engagement-models__compare" matButton [routerLink]="'/about' | localizedPath">
+        {{ content().compare }}
+        <mat-icon iconPositionEnd [svgIcon]="arrowIcon" />
+      </a>
+    </div>
+  </div>
+
+  <ul class="engagement-models__list">
+    @for (model of content().models; track model.icon.value) {
+      <li class="engagement-models__card">
+        <app-icon-tile [icon]="model.icon.value" tone="primary" />
+        <h3 class="engagement-models__card-title">{{ model.title }}</h3>
+        <p class="engagement-models__description">{{ model.description }}</p>
+
+        <div class="engagement-models__footer">
+          <p class="engagement-models__label">{{ content().bestFor }}</p>
+          <p class="engagement-models__value">{{ model.bestFor }}</p>
+        </div>
+      </li>
+    }
+  </ul>
+</section>
