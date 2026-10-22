@@ -6,6 +6,13 @@ import { expect, test, type Page } from '@playwright/test';
  * Nexora tokens; lazy routes are observed through their chunk requests.
  */
 const HOME_HEADING = 'Engineering Digital Solutions That Move Business Forward.';
+const SERVICES_HEADING = 'Fifteen services across the full software lifecycle.';
+
+/** Pages whose h1 is not simply their nav label. */
+const PAGE_HEADING: Record<string, string> = {
+  '/': HOME_HEADING,
+  '/services': SERVICES_HEADING,
+};
 
 const NAV = [
   ['/', 'Home'],
@@ -246,7 +253,7 @@ test.describe('routing', () => {
 
     await page.locator('app-header nav a.header__link', { hasText: 'Services' }).click();
     await expect(page).toHaveURL(/\/services$/);
-    await expect(page.locator('main h1')).toHaveText('Services');
+    await expect(page.locator('main h1')).toHaveText(SERVICES_HEADING);
     expect(requested.length).toBeGreaterThan(before);
     await expect(page.locator('app-header a.header__link--active')).toHaveText('Services');
   });
@@ -254,7 +261,7 @@ test.describe('routing', () => {
   test('every header and footer route resolves to its page', async ({ page }) => {
     for (const [href, label] of NAV) {
       await page.goto(href);
-      await expect(page.locator('main h1')).toHaveText(href === '/' ? HOME_HEADING : label);
+      await expect(page.locator('main h1')).toHaveText(PAGE_HEADING[href] ?? label);
     }
     await page.goto('/privacy-policy');
     await expect(page.locator('main h1')).toHaveText('Privacy Policy');
@@ -272,7 +279,9 @@ test.describe('routing', () => {
     page,
   }) => {
     await page.goto('/ru/services');
-    await expect(page.locator('main h1')).toHaveText('Услуги');
+    await expect(page.locator('main h1')).toHaveText(
+      'Пятнадцать услуг на всём жизненном цикле программного обеспечения.',
+    );
     await expect(page.locator('html')).toHaveAttribute('lang', 'ru');
     await expect(page).toHaveTitle('Услуги | Nexora');
     await expect(page.locator('app-header nav a.header__link').nth(1)).toHaveAttribute(
@@ -296,7 +305,9 @@ test.describe('routing', () => {
     // Switching keeps the route and moves it under the new prefix.
     await page.locator('app-footer .footer__language', { hasText: 'Հայերեն' }).click();
     await expect(page).toHaveURL(/\/hy\/services$/);
-    await expect(page.locator('main h1')).toHaveText('Ծառայություններ');
+    await expect(page.locator('main h1')).toHaveText(
+      'Տասնհինգ ծառայություն՝ ծրագրային ապահովման ողջ կենսափուլի ընթացքում։',
+    );
 
     // Unknown paths fall back to the root of their locale; a bare entry honours the last choice.
     await page.goto('/hy/does-not-exist');

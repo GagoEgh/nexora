@@ -68,6 +68,14 @@ $display-hero: (
     line-height: 4.5rem,
   ),
 );
+
+$display-page: (
+  compact: $display-section,
+  large: (
+    size: 3.125rem,
+    line-height: 3.75rem,
+  ),
+);
 $body-lead: (
   compact: $body-copy,
   large: (
@@ -94,10 +102,12 @@ $body-lead: (
   @include _role(title-card, $weight-semibold, $title-card);
   @include _role(title-step, $weight-semibold, $title-step);
   @include _role(display-hero, $weight-semibold, map.get($display-hero, compact));
+  @include _role(display-page, $weight-semibold, map.get($display-page, compact));
   @include _role(body-lead, $weight-regular, map.get($body-lead, compact));
 
   @include layout.up(large) {
     @include _role(display-hero, $weight-semibold, map.get($display-hero, large));
+    @include _role(display-page, $weight-semibold, map.get($display-page, large));
     @include _role(body-lead, $weight-regular, map.get($body-lead, large));
   }
 }

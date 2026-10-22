@@ -31,6 +31,11 @@
   color: var(--mat-sys-inverse-on-surface);
 }
 
+:host([data-tone='inverse-accent']) {
+  background-color: var(--mat-sys-inverse-surface);
+  color: var(--mat-sys-inverse-primary);
+}
+
 :host([data-tone='inverse-container']) {
   background-color: var(--nx-sys-inverse-surface-container);
   color: var(--mat-sys-inverse-primary);
@@ -51,6 +56,12 @@
     width: 20px;
     height: 20px;
   }
+}
+
+:host([data-size='dense']) {
+  width: 36px;
+  height: 36px;
+  padding: 0;
 }
 
 :host([data-size='small']) {

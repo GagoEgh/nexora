@@ -3,9 +3,15 @@ import { MatIcon } from '@angular/material/icon';
 import { appIcon, type AppIconName } from '../../../core/icons/icons';
 
 export type IconTileTone =
-  'primary' | 'secondary' | 'neutral' | 'inverse' | 'inverse-container' | 'filled';
+  | 'primary'
+  | 'secondary'
+  | 'neutral'
+  | 'inverse'
+  | 'inverse-accent'
+  | 'inverse-container'
+  | 'filled';
 
-export type IconTileSize = 'medium' | 'compact' | 'small';
+export type IconTileSize = 'medium' | 'compact' | 'dense' | 'small';
 
 @Component({
   selector: 'app-icon-tile',

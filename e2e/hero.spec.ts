@@ -133,7 +133,9 @@ test.describe('hero at the desktop design width', () => {
   test('the calls to action navigate', async ({ page }) => {
     await page.locator('app-hero .hero__actions a').nth(1).click();
     await expect(page).toHaveURL(/\/services$/);
-    await expect(page.locator('main h1')).toHaveText('Services');
+    await expect(page.locator('main h1')).toHaveText(
+      'Fifteen services across the full software lifecycle.',
+    );
   });
 });
 
