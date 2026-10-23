@@ -90,6 +90,50 @@ describe('StartConversation', () => {
     expect(root.querySelectorAll('button')).toHaveLength(0);
   });
 
+  it('renders supplied copy instead of its own, and drops the steps when none are given', async () => {
+    fixture.componentRef.setInput('copy', {
+      eyebrow: 'Start a conversation',
+      title: 'Need several services in one project?',
+      lead: 'Most projects combine disciplines.',
+      primary: { label: 'Discuss Your Project', path: '/contact' },
+      secondary: { label: 'Explore Our Services', path: '/services/ai_agent' },
+    });
+    await fixture.whenStable();
+
+    expect(root.querySelector('.start-conversation__title')?.textContent?.trim()).toBe(
+      'Need several services in one project?',
+    );
+    expect(root.querySelector('.start-conversation__lead')?.textContent?.trim()).toBe(
+      'Most projects combine disciplines.',
+    );
+    // Omitted steps must remove the list element, not render an empty one.
+    expect(root.querySelector('ol.start-conversation__steps')).toBeNull();
+    expect(steps()).toHaveLength(0);
+
+    const links = Array.from(root.querySelectorAll('a'));
+    expect(links.map((a) => a.getAttribute('href'))).toEqual(['/contact', '/services/ai_agent']);
+    expect(links.map((a) => a.textContent?.trim())).toEqual([
+      'Discuss Your Project',
+      'Explore Our Services',
+    ]);
+    // The structure itself is untouched, so the artwork still renders.
+    expect(root.querySelector('.start-conversation__ring')).not.toBeNull();
+  });
+
+  it('keeps its own steps when supplied copy includes them', async () => {
+    fixture.componentRef.setInput('copy', {
+      eyebrow: 'E',
+      title: 'T',
+      lead: 'L',
+      steps: ['One', 'Two'],
+      primary: { label: 'P', path: '/contact' },
+      secondary: { label: 'S', path: '/partnerships' },
+    });
+    await fixture.whenStable();
+
+    expect(steps().map((li) => li.textContent?.trim())).toEqual(['1 One', '2 Two']);
+  });
+
   it('hides the brand-mark artwork from assistive technology', () => {
     const art = root.querySelector('.start-conversation__art');
     expect(art?.getAttribute('aria-hidden')).toBe('true');

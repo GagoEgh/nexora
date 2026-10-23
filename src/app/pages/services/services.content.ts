@@ -55,6 +55,33 @@ const servicesContent = {
       hy: 'Դիտել լուծումները',
       ru: 'Смотреть решения',
     }),
+    conversation: {
+      eyebrow: t({
+        en: 'Start a conversation',
+        hy: 'Սկսենք զրույցը',
+        ru: 'Начнём разговор',
+      }),
+      title: t({
+        en: 'Need several services in one project?',
+        hy: 'Մեկ նախագծում մի քանի ծառայությո՞ւն է անհրաժեշտ։',
+        ru: 'Нужно несколько услуг в одном проекте?',
+      }),
+      lead: t({
+        en: 'Most projects combine disciplines — design, backend, AI and infrastructure. Describe the outcome you need and we’ll suggest the right mix.',
+        hy: 'Նախագծերի մեծ մասը համատեղում է ուղղությունները՝ դիզայն, բեքենդ, AI եւ ենթակառուցվածք։ Նկարագրեք ձեզ անհրաժեշտ արդյունքը, եւ մենք կառաջարկենք ճիշտ համադրությունը։',
+        ru: 'Большинство проектов объединяют дисциплины — дизайн, бэкенд, AI и инфраструктуру. Опишите нужный результат, и мы предложим подходящее сочетание.',
+      }),
+      primaryCta: t({
+        en: 'Discuss Your Project',
+        hy: 'Քննարկենք ձեր նախագիծը',
+        ru: 'Обсудить проект',
+      }),
+      secondaryCta: t({
+        en: 'Explore Our Services',
+        hy: 'Ուսումնասիրել մեր ծառայությունները',
+        ru: 'Изучить наши услуги',
+      }),
+    },
     categories: {
       'design-product': {
         icon: 'pen-tool' satisfies AppIconName,

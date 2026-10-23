@@ -1,29 +1,31 @@
 <section class="start-conversation">
   <div class="start-conversation__copy">
-    <p class="start-conversation__eyebrow">{{ content().eyebrow }}</p>
-    <h2 class="start-conversation__title">{{ content().title }}</h2>
-    <p class="start-conversation__lead">{{ content().lead }}</p>
+    <p class="start-conversation__eyebrow">{{ band().eyebrow }}</p>
+    <h2 class="start-conversation__title">{{ band().title }}</h2>
+    <p class="start-conversation__lead">{{ band().lead }}</p>
 
-    <ol class="start-conversation__steps">
-      @for (step of content().steps; track $index; let i = $index) {
-        <li class="start-conversation__step">
-          <span class="start-conversation__marker" aria-hidden="true">{{ i + 1 }}</span>
-          {{ step }}
-        </li>
-      }
-    </ol>
+    @if (band().steps.length) {
+      <ol class="start-conversation__steps">
+        @for (step of band().steps; track $index; let i = $index) {
+          <li class="start-conversation__step">
+            <span class="start-conversation__marker" aria-hidden="true">{{ i + 1 }}</span>
+            {{ step }}
+          </li>
+        }
+      </ol>
+    }
 
     <div class="start-conversation__actions">
-      <a matButton="filled" [routerLink]="'/contact' | localizedPath">
-        {{ content().primaryCta }}
+      <a matButton="filled" [routerLink]="band().primary.path | localizedPath">
+        {{ band().primary.label }}
         <mat-icon iconPositionEnd [svgIcon]="arrowIcon" />
       </a>
       <a
         class="start-conversation__secondary"
         matButton="outlined"
-        [routerLink]="'/partnerships' | localizedPath"
+        [routerLink]="band().secondary.path | localizedPath"
       >
-        {{ content().secondaryCta }}
+        {{ band().secondary.label }}
       </a>
     </div>
   </div>

@@ -15,6 +15,10 @@ import { MatChipListbox, type MatChipListboxChange, MatChipOption } from '@angul
 import { MatIcon } from '@angular/material/icon';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { useDictionary } from 'angular-intlayer';
+import {
+  type ConversationCopy,
+  StartConversation,
+} from '../home/start-conversation/start-conversation';
 import { LocalizedPathPipe } from '../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../core/icons/icons';
 import { ordinal } from '../../shared/ordinal';
@@ -33,6 +37,7 @@ export type ServiceCategoryId = (typeof SERVICE_CATEGORY_IDS)[number];
 export type ServiceFilter = ServiceCategoryId | 'all';
 
 const CATEGORY_PARAM = 'category';
+const AI_AGENTS_PATH = '/services/ai_agent';
 const ALL = 'all';
 const ACTIVE_LINE = 0.3;
 const ACCENT_CATEGORY: ServiceCategoryId = 'artificial-intelligence';
@@ -69,6 +74,7 @@ function sectionInView(elements: readonly HTMLElement[], line: number): string |
     RouterLink,
     LocalizedPathPipe,
     IconTile,
+    StartConversation,
     MatButton,
     MatChipListbox,
     MatChipOption,
@@ -129,6 +135,17 @@ export class Services {
   protected readonly ctaArrowIcon = appIcon('arrow-right');
 
   protected readonly total = computed(() => this.content().items.length);
+
+  protected readonly conversationCopy = computed<ConversationCopy>(() => {
+    const copy = this.content().conversation;
+    return {
+      eyebrow: copy.eyebrow.value,
+      title: copy.title.value,
+      lead: copy.lead.value,
+      primary: { label: copy.primaryCta.value, path: '/contact' },
+      secondary: { label: copy.secondaryCta.value, path: AI_AGENTS_PATH },
+    };
+  });
 
   protected readonly visibleGroups = computed(() => {
     const filter = this.filter();

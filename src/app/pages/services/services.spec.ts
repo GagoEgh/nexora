@@ -192,8 +192,10 @@ describe('Services', () => {
 
     const cta = root.querySelector('.services__cta');
     expect(cta).not.toBeNull();
-    // It has to be the last thing on the page, after the catalogue.
-    expect(root.lastElementChild).toBe(cta);
+    // It still follows the catalogue, and the conversation band now closes the page.
+    expect(cta?.previousElementSibling?.classList.contains('services__results')).toBe(true);
+    expect(cta?.nextElementSibling?.tagName).toBe('APP-START-CONVERSATION');
+    expect(root.lastElementChild?.tagName).toBe('APP-START-CONVERSATION');
     expect(root.querySelector('.services__cta-title')?.textContent?.trim()).toBe(
       'Not sure which service fits?',
     );
@@ -234,6 +236,59 @@ describe('Services', () => {
     expect(root.querySelector('a.services__cta-action')?.getAttribute('href')).toBe(
       '/hy/solutions',
     );
+  });
+
+  it('closes the page with the conversation band, without the home page steps', async () => {
+    await go('/services');
+
+    const band = root.querySelector('app-start-conversation');
+    expect(band).not.toBeNull();
+    expect(band?.querySelector('.start-conversation__title')?.textContent?.trim()).toBe(
+      'Need several services in one project?',
+    );
+    expect(band?.querySelector('.start-conversation__eyebrow')?.textContent?.trim()).toBe(
+      'Start a conversation',
+    );
+    // The numbered list belongs to the home page placement only.
+    expect(band?.querySelector('.start-conversation__steps')).toBeNull();
+
+    const links = Array.from(band?.querySelectorAll('a') ?? []);
+    expect(links.map((a) => a.textContent?.trim())).toEqual([
+      'Discuss Your Project',
+      'Explore Our Services',
+    ]);
+    expect(links.map((a) => a.getAttribute('href'))).toEqual(['/contact', '/services/ai_agent']);
+
+    // The band must not disturb the page's heading structure or catalogue.
+    expect(root.querySelectorAll('h1')).toHaveLength(1);
+    expect(root.querySelectorAll('.services__group')).toHaveLength(5);
+    expect(root.querySelectorAll('.services__card')).toHaveLength(TOTAL);
+
+    // Filtering narrows the catalogue; both closing blocks stay.
+    await go('/services?category=software-engineering');
+    expect(root.querySelectorAll('.services__group')).toHaveLength(1);
+    expect(root.querySelector('.services__cta')).not.toBeNull();
+    expect(root.querySelector('app-start-conversation')).not.toBeNull();
+  });
+
+  it('localizes the conversation band and keeps the prefix on both of its links', async () => {
+    await go('/ru/services');
+
+    const band = () => root.querySelector('app-start-conversation');
+    expect(band()?.querySelector('.start-conversation__title')?.textContent?.trim()).toBe(
+      'Нужно несколько услуг в одном проекте?',
+    );
+    expect(
+      Array.from(band()?.querySelectorAll('a') ?? []).map((a) => a.getAttribute('href')),
+    ).toEqual(['/ru/contact', '/ru/services/ai_agent']);
+
+    await go('/hy/services');
+    expect(band()?.querySelector('.start-conversation__title')?.textContent?.trim()).toBe(
+      'Մեկ նախագծում մի քանի ծառայությո՞ւն է անհրաժեշտ։',
+    );
+    expect(
+      Array.from(band()?.querySelectorAll('a') ?? []).map((a) => a.getAttribute('href')),
+    ).toEqual(['/hy/contact', '/hy/services/ai_agent']);
   });
 
   it('gives Artificial Intelligence the dark accent tile and the others the primary one', async () => {

@@ -332,7 +332,7 @@
 }
 
 .services__cta {
-  padding-block: spacing.space(32) spacing.space(96);
+  padding-block: spacing.space(32) 0;
   padding-inline: var(--nx-layout-margin);
 }
 
