@@ -122,6 +122,51 @@ test.describe('ai agents page at the desktop design width', () => {
   });
 });
 
+test.describe('ai agents overview band', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/services/ai_agent');
+  });
+
+  test('closes the page with an eyebrow, an h2 and two paragraphs', async ({ page }) => {
+    const overview = page.locator('app-overview');
+    await expect(overview).toHaveCount(1);
+    await expect(overview.locator('.overview__eyebrow')).toHaveText('Overview');
+    expect(await style(page, '.overview__eyebrow', 'text-transform')).toBe('uppercase');
+    await expect(overview.locator('h2.overview__title')).toHaveText(
+      'Automation that understands context, not just rules.',
+    );
+    await expect(page.locator('app-ai-agent h1')).toHaveCount(1);
+
+    // Two paragraphs, the second de-emphasised by colour at the same size.
+    await expect(overview.locator('.overview__body')).toHaveCount(1);
+    await expect(overview.locator('.overview__note')).toHaveCount(1);
+    expect(await style(page, '.overview__body', 'color')).toBe('rgb(11, 19, 36)');
+    expect(await style(page, '.overview__note', 'color')).toBe('rgb(71, 85, 105)');
+    expect(await style(page, '.overview__body', 'font-size')).toBe(
+      await style(page, '.overview__note', 'font-size'),
+    );
+  });
+
+  test('splits into a narrow heading column and a wider copy column', async ({ page }) => {
+    const heading = await box(page, '.overview__heading');
+    const copy = await box(page, '.overview__copy');
+
+    expect(heading.x).toBe(80);
+    expect(heading.w).toBe(480);
+    // The copy column is the wider of the two, unlike the home page section headers.
+    expect(copy.w).toBeGreaterThan(heading.w);
+    expect(copy.x + copy.w).toBe(1360);
+    expect(copy.y).toBe(heading.y);
+  });
+
+  test('sits after the hero band', async ({ page }) => {
+    const intro = await box(page, 'app-page-intro');
+    const overview = await box(page, 'app-overview');
+    expect(overview.y).toBeGreaterThanOrEqual(intro.y + intro.h);
+  });
+});
+
 test.describe('ai agents page in other locales', () => {
   test('renders the whole band in Russian and Armenian', async ({ page }) => {
     await page.goto('/ru/services/ai_agent');
@@ -130,6 +175,7 @@ test.describe('ai agents page in other locales', () => {
       'Искусственный интеллект · Услуга 09',
     );
     await expect(page.locator('.workflow__label').first()).toHaveText('Триггер');
+    await expect(page.locator('.overview__eyebrow')).toHaveText('Обзор');
     await expect(page.locator('.ai-agent__actions a').nth(1)).toHaveAttribute(
       'href',
       '/ru/solutions',
@@ -140,6 +186,7 @@ test.describe('ai agents page in other locales', () => {
       'AI գործակալներ և բիզնես ավտոմատացում',
     );
     await expect(page.locator('.page-intro__crumb').nth(1)).toHaveText('Ծառայություններ');
+    await expect(page.locator('.overview__eyebrow')).toHaveText('Ակնարկ');
     await expect(page.locator('.ai-agent__actions a').nth(0)).toHaveAttribute(
       'href',
       '/hy/contact',
@@ -168,5 +215,10 @@ test.describe('ai agents page at the mobile width', () => {
     const copy = await box(page, '.page-intro__copy');
     expect(card.y).toBeGreaterThan(copy.y);
     expect(card.w).toBeLessThanOrEqual(390);
+
+    // The overview stacks into one column too.
+    const heading = await box(page, '.overview__heading');
+    const overviewCopy = await box(page, '.overview__copy');
+    expect(overviewCopy.y).toBeGreaterThanOrEqual(heading.y + heading.h);
   });
 });

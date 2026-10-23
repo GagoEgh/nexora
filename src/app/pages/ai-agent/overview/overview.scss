@@ -1,0 +1,56 @@
+@use 'tokens/spacing';
+@use 'tokens/layout';
+@use 'mixins/eyebrow';
+
+:host {
+  display: block;
+  padding-block: spacing.space(96);
+  padding-inline: var(--nx-layout-margin);
+}
+
+.overview {
+  display: grid;
+  gap: spacing.space(24);
+  max-width: var(--nx-layout-container-max);
+  margin-inline: auto;
+
+  @include layout.up(large) {
+    grid-template-columns: minmax(0, 480px) minmax(0, 1fr);
+    gap: spacing.space(48);
+    align-items: start;
+  }
+}
+
+.overview__heading {
+  display: grid;
+  gap: spacing.space(20);
+  justify-items: start;
+}
+
+.overview__eyebrow {
+  @include eyebrow.eyebrow();
+}
+
+.overview__title {
+  margin: 0;
+  font: var(--nx-sys-display-section);
+  letter-spacing: var(--nx-sys-display-tracking);
+  color: var(--mat-sys-on-surface);
+}
+
+.overview__copy {
+  display: grid;
+  gap: spacing.space(20);
+}
+
+.overview__body {
+  margin: 0;
+  font: var(--nx-sys-body-lead);
+  color: var(--mat-sys-on-surface);
+}
+
+.overview__note {
+  margin: 0;
+  font: var(--nx-sys-body-lead);
+  color: var(--mat-sys-on-surface-variant);
+}

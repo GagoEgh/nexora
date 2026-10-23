@@ -115,6 +115,29 @@ describe('AiAgent', () => {
     expect(root.querySelector('ol.workflow__steps')).not.toBeNull();
   });
 
+  it('closes the page with the overview band, below the hero', async () => {
+    await go('/services/ai_agent');
+
+    const overview = root.querySelector('app-overview');
+    expect(overview).not.toBeNull();
+    expect(root.lastElementChild?.tagName).toBe('APP-OVERVIEW');
+
+    expect(overview?.querySelector('.overview__eyebrow')?.textContent?.trim()).toBe('Overview');
+    expect(overview?.querySelector('.overview__title')?.textContent?.trim()).toBe(
+      'Automation that understands context, not just rules.',
+    );
+    expect(overview?.querySelector('.overview__body')?.textContent?.trim()).toContain(
+      'too variable for simple rules',
+    );
+    expect(overview?.querySelector('.overview__note')?.textContent?.trim()).toContain(
+      'engineered systems',
+    );
+
+    // It must not introduce a second h1, and its title is the page's second level.
+    expect(root.querySelectorAll('h1')).toHaveLength(1);
+    expect(overview?.querySelector('.overview__title')?.tagName).toBe('H2');
+  });
+
   it('renders every string and both links under a locale prefix', async () => {
     await go('/ru/services/ai_agent');
 
@@ -123,6 +146,9 @@ describe('AiAgent', () => {
       'Искусственный интеллект · Услуга 09',
     );
     expect(text('.workflow__label')[0]).toBe('Триггер');
+    expect(root.querySelector('.overview__title')?.textContent?.trim()).toBe(
+      'Автоматизация, которая понимает контекст, а не только правила.',
+    );
     expect(
       Array.from(root.querySelectorAll<HTMLAnchorElement>('.ai-agent__actions a')).map((a) =>
         a.getAttribute('href'),
@@ -134,6 +160,7 @@ describe('AiAgent', () => {
       'AI գործակալներ և բիզնես ավտոմատացում',
     );
     expect(text('.workflow__label')[1]).toBe('Գործակալ');
+    expect(root.querySelector('.overview__eyebrow')?.textContent?.trim()).toBe('Ակնարկ');
     expect(
       Array.from(root.querySelectorAll('.page-intro__crumb-link')).map((a) =>
         a.getAttribute('href'),
