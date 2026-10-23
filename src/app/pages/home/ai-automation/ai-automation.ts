@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
@@ -12,7 +12,6 @@ import { IconTile } from '../../../shared/ui/icon-tile/icon-tile';
   imports: [RouterLink, LocalizedPathPipe, MatButton, MatIcon, IconTile],
   templateUrl: './ai-automation.html',
   styleUrl: './ai-automation.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AiAutomation {
   protected readonly content = useIntlayer('ai-automation');

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import type { getIntlayer } from 'angular-intlayer';
 import { appIcon } from '../../../../core/icons/icons';
@@ -12,7 +12,6 @@ export type HeroIllustrationContent = ReturnType<typeof getIntlayer<'hero'>>['il
   imports: [MatIcon, IconTile, HeroNotes],
   templateUrl: './hero-illustration.html',
   styleUrl: './hero-illustration.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'aria-hidden': 'true',
   },

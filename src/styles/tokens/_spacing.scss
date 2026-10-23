@@ -1,6 +1,6 @@
 @use 'sass:list';
 
-$scale: (4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96, 128);
+$scale: (4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96);
 
 @function space($step) {
   @if not list.index($scale, $step) {

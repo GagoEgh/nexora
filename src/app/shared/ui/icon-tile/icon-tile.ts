@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { appIcon, type AppIconName } from '../../../core/icons/icons';
 
@@ -18,7 +18,6 @@ export type IconTileSize = 'medium' | 'compact' | 'dense' | 'small';
   imports: [MatIcon],
   template: `<mat-icon [svgIcon]="svgIcon()" />`,
   styleUrl: './icon-tile.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'aria-hidden': 'true',
     '[attr.data-tone]': 'tone()',

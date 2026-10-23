@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 export type LogoVariant = 'mark' | 'lockup';
 
@@ -8,7 +8,6 @@ export type LogoTone = 'auto' | 'light' | 'dark';
   selector: 'app-logo',
   templateUrl: './logo.html',
   styleUrl: './logo.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     role: 'img',
     'aria-label': 'Nexora',

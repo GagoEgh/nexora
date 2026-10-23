@@ -28,7 +28,10 @@ export const syncLocaleWithUrl: CanActivateFn = (_route, state) => {
   return true;
 };
 
-export function localeFromLocation(pathname: string): DeclaredLocales | undefined {
+export function localeFromLocation(pathname: string | undefined): DeclaredLocales | undefined {
+  if (!pathname) {
+    return undefined;
+  }
   const locale = getLocaleFromPath(pathname);
   return locale && locale !== defaultLocale ? locale : undefined;
 }

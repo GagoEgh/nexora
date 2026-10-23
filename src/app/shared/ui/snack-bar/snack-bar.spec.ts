@@ -5,6 +5,7 @@ import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MATERIAL_ANIMATIONS } from '@angular/material/core';
 import { MatSnackBar, type MatSnackBarRef } from '@angular/material/snack-bar';
+import { provideIntlayer, useLocale } from 'angular-intlayer';
 import { firstValueFrom } from 'rxjs';
 import { provideAppIcons } from '../../../core/icons/provide-app-icons';
 import { SnackBar, type SnackBarData } from './snack-bar';
@@ -29,6 +30,7 @@ describe('SnackBar', () => {
         provideHttpClient(),
         provideHttpClientTesting(),
         provideAppIcons(),
+        provideIntlayer(),
         { provide: MATERIAL_ANIMATIONS, useValue: { animationsDisabled: true } },
       ],
     }).compileComponents();
@@ -38,7 +40,13 @@ describe('SnackBar', () => {
     overlay = TestBed.inject(OverlayContainer).getContainerElement();
   });
 
-  afterEach(() => http.verify());
+  const setLocale = (locale: string) =>
+    TestBed.runInInjectionContext(() => useLocale()).setLocale(locale);
+
+  afterEach(() => {
+    http.verify();
+    setLocale('en');
+  });
 
   async function open(data: SnackBarData): Promise<MatSnackBarRef<SnackBar>> {
     const ref = snackBar.openFromComponent(SnackBar, { data });
@@ -64,6 +72,12 @@ describe('SnackBar', () => {
     expect(host().querySelector('mat-icon')?.getAttribute('aria-hidden')).toBe('true');
     expect(actionButton().textContent?.trim()).toBe('Dismiss');
     expect(actionButton().classList.contains('mat-mdc-button')).toBe(true);
+  });
+
+  it('localizes the default action label', async () => {
+    setLocale('hy');
+    await open({ message: 'Փոփոխությունները պահպանված են', icon: 'check', tone: 'success' });
+    expect(actionButton().textContent?.trim()).toBe('Փակել');
   });
 
   it('accepts a custom action label', async () => {

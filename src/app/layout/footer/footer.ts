@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { useIntlayer } from 'angular-intlayer';
 import { useLocaleSwitcher } from '../../core/i18n/locale-switcher';
@@ -10,7 +10,6 @@ import { Logo } from '../../shared/ui/logo/logo';
   imports: [RouterLink, LocalizedPathPipe, Logo],
   templateUrl: './footer.html',
   styleUrl: './footer.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Footer {
   protected readonly content = useIntlayer('footer');

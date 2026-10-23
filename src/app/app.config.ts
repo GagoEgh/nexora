@@ -14,7 +14,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes, withInMemoryScrolling({ scrollPositionRestoration: 'enabled' })),
-    provideIntlayer(localeFromLocation(window.location.pathname)),
+    provideIntlayer(localeFromLocation(globalThis.location?.pathname)),
     provideHttpClient(),
     provideAppIcons(),
     provideDocumentMeta(),

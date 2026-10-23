@@ -1,7 +1,7 @@
 @use 'sass:map';
 @use 'layout';
 
-$plain-family: (Inter, sans-serif);
+$plain-family: (Inter, 'Noto Sans Armenian', sans-serif);
 $brand-family: $plain-family;
 
 $code-font:

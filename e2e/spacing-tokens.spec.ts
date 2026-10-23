@@ -3,7 +3,7 @@ import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 import { rootTokenValue } from './support/contrast';
 
-const SCALE = [4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96, 128];
+const SCALE = [4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96];
 
 interface WindowClass {
   name: string;

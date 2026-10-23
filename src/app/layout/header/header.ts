@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  inject,
-  signal,
-  viewChild,
-} from '@angular/core';
+import { Component, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
@@ -34,7 +27,6 @@ import { Logo } from '../../shared/ui/logo/logo';
   ],
   templateUrl: './header.html',
   styleUrl: './header.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[attr.data-open]': 'menuOpen() ? "" : null',
     '(keydown.escape)': 'onEscape()',
