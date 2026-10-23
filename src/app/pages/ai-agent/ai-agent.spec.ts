@@ -120,7 +120,8 @@ describe('AiAgent', () => {
 
     const overview = root.querySelector('app-overview');
     expect(overview).not.toBeNull();
-    expect(root.lastElementChild?.tagName).toBe('APP-OVERVIEW');
+    expect(overview?.previousElementSibling?.tagName).toBe('APP-PAGE-INTRO');
+    expect(overview?.nextElementSibling?.tagName).toBe('APP-PROBLEMS');
 
     expect(overview?.querySelector('.overview__eyebrow')?.textContent?.trim()).toBe('Overview');
     expect(overview?.querySelector('.overview__title')?.textContent?.trim()).toBe(
@@ -138,6 +139,44 @@ describe('AiAgent', () => {
     expect(overview?.querySelector('.overview__title')?.tagName).toBe('H2');
   });
 
+  it('ends the page with four problem cards under a shared header', async () => {
+    await go('/services/ai_agent');
+
+    const problems = root.querySelector('app-problems');
+    expect(problems).not.toBeNull();
+    expect(root.lastElementChild?.tagName).toBe('APP-PROBLEMS');
+
+    expect(problems?.querySelector('.problems__eyebrow')?.textContent?.trim()).toBe(
+      'Problems we solve',
+    );
+    expect(problems?.querySelector('h2.problems__title')?.textContent?.trim()).toBe(
+      'Where manual work slows the business down.',
+    );
+    expect(problems?.querySelector('.problems__intro')?.textContent?.trim()).toBe(
+      'Typical situations where agents and automation create real leverage.',
+    );
+
+    const cards = Array.from(problems?.querySelectorAll('.problems__card') ?? []);
+    expect(cards).toHaveLength(4);
+    expect(text('.problems__card-title')).toEqual([
+      'Data copied by hand',
+      'Requests wait in inboxes',
+      'Documents in every format',
+      'Reporting by hand',
+    ]);
+    expect(text('.problems__card-text')[0]).toContain('email, CRM and spreadsheets');
+
+    // Every card leads with a neutral-toned tile, decorative by the tile's own host binding.
+    const tiles = Array.from(problems?.querySelectorAll('app-icon-tile') ?? []);
+    expect(tiles).toHaveLength(4);
+    expect(tiles.every((tile) => tile.getAttribute('data-tone') === 'neutral')).toBe(true);
+    expect(tiles.every((tile) => tile.getAttribute('aria-hidden') === 'true')).toBe(true);
+
+    // The section must not disturb the page's heading outline.
+    expect(root.querySelectorAll('h1')).toHaveLength(1);
+    expect(cards[0].querySelector('.problems__card-title')?.tagName).toBe('H3');
+  });
+
   it('renders every string and both links under a locale prefix', async () => {
     await go('/ru/services/ai_agent');
 
@@ -146,6 +185,9 @@ describe('AiAgent', () => {
       'Искусственный интеллект · Услуга 09',
     );
     expect(text('.workflow__label')[0]).toBe('Триггер');
+    expect(root.querySelector('.problems__card-title')?.textContent?.trim()).toBe(
+      'Данные копируются вручную',
+    );
     expect(root.querySelector('.overview__title')?.textContent?.trim()).toBe(
       'Автоматизация, которая понимает контекст, а не только правила.',
     );
@@ -161,6 +203,9 @@ describe('AiAgent', () => {
     );
     expect(text('.workflow__label')[1]).toBe('Գործակալ');
     expect(root.querySelector('.overview__eyebrow')?.textContent?.trim()).toBe('Ակնարկ');
+    expect(root.querySelector('.problems__card-title')?.textContent?.trim()).toBe(
+      'Ձեռքով պատճենվող տվյալներ',
+    );
     expect(
       Array.from(root.querySelectorAll('.page-intro__crumb-link')).map((a) =>
         a.getAttribute('href'),

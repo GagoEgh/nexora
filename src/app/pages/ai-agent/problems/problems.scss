@@ -1,0 +1,92 @@
+@use 'tokens/spacing';
+@use 'tokens/layout';
+@use 'tokens/typography';
+@use 'mixins/eyebrow';
+
+:host {
+  display: block;
+  padding-block: spacing.space(96);
+  padding-inline: var(--nx-layout-margin);
+}
+
+.problems {
+  max-width: var(--nx-layout-container-max);
+  margin-inline: auto;
+}
+
+.problems__header {
+  display: grid;
+  gap: spacing.space(24);
+  margin-block-end: spacing.space(64);
+
+  @include layout.up(large) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 440px);
+    gap: spacing.space(48);
+    align-items: end;
+  }
+}
+
+.problems__heading {
+  display: grid;
+  gap: spacing.space(20);
+  justify-items: start;
+}
+
+.problems__eyebrow {
+  @include eyebrow.eyebrow();
+}
+
+.problems__title {
+  margin: 0;
+  font: var(--nx-sys-display-section);
+  letter-spacing: var(--nx-sys-display-tracking);
+  color: var(--mat-sys-on-surface);
+}
+
+.problems__intro {
+  margin: 0;
+  font: var(--nx-sys-body-copy);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.problems__grid {
+  display: grid;
+  gap: spacing.space(20);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @include layout.up(medium) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include layout.up(large) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.problems__card {
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  gap: spacing.space(12);
+  padding: spacing.space(24);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--mat-sys-corner-large);
+  background-color: var(--mat-sys-surface);
+}
+
+.problems__card-title {
+  margin: spacing.space(8) 0 0;
+  font-size: 0.75rem;
+  line-height: 1.25rem;
+  font-weight: typography.$weight-semibold;
+  letter-spacing: var(--nx-sys-display-tracking);
+  color: var(--mat-sys-on-surface);
+}
+
+.problems__card-text {
+  margin: 0;
+  font: var(--mat-sys-body-small);
+  color: var(--mat-sys-on-surface-variant);
+}

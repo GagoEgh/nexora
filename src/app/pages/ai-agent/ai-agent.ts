@@ -9,11 +9,21 @@ import { appIcon } from '../../core/icons/icons';
 import { PageIntro, type PageIntroCrumb } from '../../shared/ui/page-intro/page-intro';
 import aiAgentContent from './ai-agent.content';
 import { Overview } from './overview/overview';
+import { Problems } from './problems/problems';
 import { Workflow } from './workflow/workflow';
 
 @Component({
   selector: 'app-ai-agent',
-  imports: [RouterLink, LocalizedPathPipe, PageIntro, Overview, Workflow, MatButton, MatIcon],
+  imports: [
+    RouterLink,
+    LocalizedPathPipe,
+    PageIntro,
+    Overview,
+    Problems,
+    Workflow,
+    MatButton,
+    MatIcon,
+  ],
   templateUrl: './ai-agent.html',
   styleUrl: './ai-agent.scss',
   host: { 'data-layout': 'immersive' },

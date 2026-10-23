@@ -1,0 +1,20 @@
+<section class="problems">
+  <div class="problems__header">
+    <div class="problems__heading">
+      <p class="problems__eyebrow">{{ content().eyebrow }}</p>
+      <h2 class="problems__title">{{ content().title }}</h2>
+    </div>
+
+    <p class="problems__intro">{{ content().intro }}</p>
+  </div>
+
+  <ul class="problems__grid">
+    @for (item of content().items; track $index) {
+      <li class="problems__card">
+        <app-icon-tile [icon]="item.icon.value" tone="neutral" />
+        <h3 class="problems__card-title">{{ item.title }}</h3>
+        <p class="problems__card-text">{{ item.text }}</p>
+      </li>
+    }
+  </ul>
+</section>

@@ -24,6 +24,19 @@ const box = (page: Page, selector: string) =>
       };
     });
 
+const boxes = (page: Page, selector: string) =>
+  page.locator(selector).evaluateAll((els) =>
+    els.map((el) => {
+      const r = el.getBoundingClientRect();
+      return {
+        x: Math.round(r.left),
+        y: Math.round(r.top),
+        w: Math.round(r.width),
+        h: Math.round(r.height),
+      };
+    }),
+  );
+
 const noOverflow = (page: Page) =>
   page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth);
 
@@ -167,6 +180,53 @@ test.describe('ai agents overview band', () => {
   });
 });
 
+test.describe('ai agents problems band', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/services/ai_agent');
+  });
+
+  test('ends the page with a header and four cards', async ({ page }) => {
+    const problems = page.locator('app-problems');
+    await expect(problems).toHaveCount(1);
+    await expect(problems.locator('.problems__eyebrow')).toHaveText('Problems we solve');
+    await expect(problems.locator('h2.problems__title')).toHaveText(
+      'Where manual work slows the business down.',
+    );
+    await expect(page.locator('app-ai-agent h1')).toHaveCount(1);
+
+    const cards = problems.locator('.problems__card');
+    await expect(cards).toHaveCount(4);
+    await expect(problems.locator('.problems__card-title')).toHaveText([
+      'Data copied by hand',
+      'Requests wait in inboxes',
+      'Documents in every format',
+      'Reporting by hand',
+    ]);
+    await expect(problems.locator('app-icon-tile[data-tone="neutral"]')).toHaveCount(4);
+  });
+
+  test('lays the header and the cards out on the design grid', async ({ page }) => {
+    const intro = await box(page, '.problems__intro');
+    expect(intro.w).toBe(440);
+    expect(intro.x + intro.w).toBe(1360);
+
+    const cards = await boxes(page, '.problems__card');
+    expect(cards).toHaveLength(4);
+    expect(cards[0].x).toBe(80);
+    expect(cards[3].x + cards[3].w).toBe(1360);
+    // 1280 container, 20px gaps -> (1280 - 3 * 20) / 4
+    for (const card of cards) expect(card.w).toBe(305);
+    expect(cards[1].x - (cards[0].x + cards[0].w)).toBe(20);
+    // One row: every card shares a top edge.
+    for (const card of cards) expect(card.y).toBe(cards[0].y);
+
+    expect(await style(page, '.problems__card', 'border-top-width')).toBe('1px');
+    expect(await style(page, '.problems__card', 'background-color')).toBe('rgb(255, 255, 255)');
+    expect(await style(page, '.problems__card-text', 'font-size')).toBe('14px');
+  });
+});
+
 test.describe('ai agents page in other locales', () => {
   test('renders the whole band in Russian and Armenian', async ({ page }) => {
     await page.goto('/ru/services/ai_agent');
@@ -176,6 +236,7 @@ test.describe('ai agents page in other locales', () => {
     );
     await expect(page.locator('.workflow__label').first()).toHaveText('Триггер');
     await expect(page.locator('.overview__eyebrow')).toHaveText('Обзор');
+    await expect(page.locator('.problems__eyebrow')).toHaveText('Задачи, которые мы решаем');
     await expect(page.locator('.ai-agent__actions a').nth(1)).toHaveAttribute(
       'href',
       '/ru/solutions',
@@ -187,6 +248,9 @@ test.describe('ai agents page in other locales', () => {
     );
     await expect(page.locator('.page-intro__crumb').nth(1)).toHaveText('Ծառայություններ');
     await expect(page.locator('.overview__eyebrow')).toHaveText('Ակնարկ');
+    await expect(page.locator('.problems__card-title').first()).toHaveText(
+      'Ձեռքով պատճենվող տվյալներ',
+    );
     await expect(page.locator('.ai-agent__actions a').nth(0)).toHaveAttribute(
       'href',
       '/hy/contact',
@@ -220,5 +284,11 @@ test.describe('ai agents page at the mobile width', () => {
     const heading = await box(page, '.overview__heading');
     const overviewCopy = await box(page, '.overview__copy');
     expect(overviewCopy.y).toBeGreaterThanOrEqual(heading.y + heading.h);
+
+    // The problem cards collapse to a single column.
+    const cards = await boxes(page, '.problems__card');
+    expect(cards).toHaveLength(4);
+    for (const card of cards) expect(card.w).toBeLessThanOrEqual(390);
+    expect(cards[1].y).toBeGreaterThanOrEqual(cards[0].y + cards[0].h);
   });
 });
