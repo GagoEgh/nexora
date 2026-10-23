@@ -12,7 +12,6 @@ import { HeroIllustration } from './pages/home/hero/illustration/hero-illustrati
 import { HeroNotes } from './pages/home/hero/illustration/notes/hero-notes';
 import { Home } from './pages/home/home';
 import { HowWeWork } from './pages/home/how-we-work/how-we-work';
-import { StartConversation } from './pages/home/start-conversation/start-conversation';
 import { WhatWeBuildIllustration } from './pages/home/what-we-build/illustration/what-we-build-illustration';
 import { WhatWeBuild } from './pages/home/what-we-build/what-we-build';
 import { Why } from './pages/home/why/why';
@@ -25,6 +24,7 @@ import { FieldLabel } from './shared/ui/field-label/field-label';
 import { IconTile } from './shared/ui/icon-tile/icon-tile';
 import { Logo } from './shared/ui/logo/logo';
 import { SnackBar } from './shared/ui/snack-bar/snack-bar';
+import { StartConversation } from './shared/ui/start-conversation/start-conversation';
 
 /**
  * Change detection contract.

@@ -1,5 +1,6 @@
 import { plural, t, type Dictionary } from 'intlayer';
 import type { AppIconName } from '../../core/icons/icons';
+import type { ServiceCategoryId } from './services';
 
 const servicesContent = {
   key: 'services',
@@ -68,7 +69,7 @@ const servicesContent = {
       }),
       lead: t({
         en: 'Most projects combine disciplines — design, backend, AI and infrastructure. Describe the outcome you need and we’ll suggest the right mix.',
-        hy: 'Նախագծերի մեծ մասը համատեղում է ուղղությունները՝ դիզայն, բեքենդ, AI եւ ենթակառուցվածք։ Նկարագրեք ձեզ անհրաժեշտ արդյունքը, եւ մենք կառաջարկենք ճիշտ համադրությունը։',
+        hy: 'Նախագծերի մեծ մասը համատեղում է ուղղությունները՝ դիզայն, բեքենդ, AI և ենթակառուցվածք։ Նկարագրեք ձեզ անհրաժեշտ արդյունքը, և մենք կառաջարկենք ճիշտ համադրությունը։',
         ru: 'Большинство проектов объединяют дисциплины — дизайн, бэкенд, AI и инфраструктуру. Опишите нужный результат, и мы предложим подходящее сочетание.',
       }),
       primaryCta: t({
@@ -143,7 +144,7 @@ const servicesContent = {
     },
     items: [
       {
-        category: 'design-product',
+        category: 'design-product' satisfies ServiceCategoryId,
         title: t({
           en: 'Web Design & UI/UX Design',
           hy: 'Վեբ դիզայն և UI/UX դիզայն',
@@ -161,7 +162,7 @@ const servicesContent = {
         ],
       },
       {
-        category: 'software-engineering',
+        category: 'software-engineering' satisfies ServiceCategoryId,
         title: t({ en: 'Web Development', hy: 'Վեբ մշակում', ru: 'Веб-разработка' }),
         summary: t({
           en: 'Corporate sites, e-commerce, portals and custom dashboards built for performance and integration.',
@@ -175,7 +176,7 @@ const servicesContent = {
         ],
       },
       {
-        category: 'software-engineering',
+        category: 'software-engineering' satisfies ServiceCategoryId,
         title: t({
           en: 'Mobile App Development',
           hy: 'Մոբայլ հավելվածների մշակում',
@@ -193,7 +194,7 @@ const servicesContent = {
         ],
       },
       {
-        category: 'software-engineering',
+        category: 'software-engineering' satisfies ServiceCategoryId,
         title: t({
           en: 'Custom Software Development',
           hy: 'Անհատական ծրագրերի մշակում',
@@ -211,7 +212,7 @@ const servicesContent = {
         ],
       },
       {
-        category: 'software-engineering',
+        category: 'software-engineering' satisfies ServiceCategoryId,
         title: t({ en: 'SaaS Development', hy: 'SaaS մշակում', ru: 'SaaS-разработка' }),
         summary: t({
           en: 'Multi-tenant products with authentication, subscriptions, payments and admin panels.',
@@ -225,7 +226,7 @@ const servicesContent = {
         ],
       },
       {
-        category: 'software-engineering',
+        category: 'software-engineering' satisfies ServiceCategoryId,
         title: t({
           en: 'Backend Development & API Integration',
           hy: 'Backend մշակում և API ինտեգրում',
@@ -243,7 +244,7 @@ const servicesContent = {
         ],
       },
       {
-        category: 'software-engineering',
+        category: 'software-engineering' satisfies ServiceCategoryId,
         title: t({
           en: 'Legacy System Modernization',
           hy: 'Հին համակարգերի արդիականացում',
@@ -261,7 +262,7 @@ const servicesContent = {
         ],
       },
       {
-        category: 'artificial-intelligence',
+        category: 'artificial-intelligence' satisfies ServiceCategoryId,
         title: t({
           en: 'AI Development & Integration',
           hy: 'AI մշակում և ինտեգրում',
@@ -279,7 +280,7 @@ const servicesContent = {
         ],
       },
       {
-        category: 'artificial-intelligence',
+        category: 'artificial-intelligence' satisfies ServiceCategoryId,
         title: t({
           en: 'AI Agents & Business Automation',
           hy: 'AI գործակալներ և բիզնես ավտոմատացում',
@@ -297,7 +298,7 @@ const servicesContent = {
         ],
       },
       {
-        category: 'artificial-intelligence',
+        category: 'artificial-intelligence' satisfies ServiceCategoryId,
         title: t({
           en: 'Claude & AI Workflow Engineering',
           hy: 'Claude և AI աշխատահոսքերի ինժեներիա',
@@ -315,7 +316,7 @@ const servicesContent = {
         ],
       },
       {
-        category: 'infrastructure-operations',
+        category: 'infrastructure-operations' satisfies ServiceCategoryId,
         title: t({
           en: 'Server Management & Cloud Infrastructure',
           hy: 'Սերվերների կառավարում և ամպային ենթակառուցվածք',
@@ -333,7 +334,7 @@ const servicesContent = {
         ],
       },
       {
-        category: 'infrastructure-operations',
+        category: 'infrastructure-operations' satisfies ServiceCategoryId,
         title: t({
           en: 'DevOps & Deployment Automation',
           hy: 'DevOps և տեղակայման ավտոմատացում',
@@ -351,7 +352,7 @@ const servicesContent = {
         ],
       },
       {
-        category: 'infrastructure-operations',
+        category: 'infrastructure-operations' satisfies ServiceCategoryId,
         title: t({
           en: 'Software Maintenance & Technical Support',
           hy: 'Ծրագրերի սպասարկում և տեխնիկական աջակցություն',
@@ -369,7 +370,7 @@ const servicesContent = {
         ],
       },
       {
-        category: 'engineering-partnerships',
+        category: 'engineering-partnerships' satisfies ServiceCategoryId,
         title: t({
           en: 'Dedicated Development Teams',
           hy: 'Նվիրված մշակման թիմեր',
@@ -387,7 +388,7 @@ const servicesContent = {
         ],
       },
       {
-        category: 'engineering-partnerships',
+        category: 'engineering-partnerships' satisfies ServiceCategoryId,
         title: t({
           en: 'White-Label Development',
           hy: 'White-label մշակում',

@@ -6,7 +6,8 @@ import { RouterTestingHarness } from '@angular/router/testing';
 import { provideIntlayer, useLocale } from 'angular-intlayer';
 import { routes } from '../../app.routes';
 import { provideAppIcons } from '../../core/icons/provide-app-icons';
-import { SERVICE_CATEGORY_IDS, Services, serviceSectionId } from './services';
+import { SERVICE_CATEGORY_IDS, Services, isServiceCategoryId, serviceSectionId } from './services';
+import servicesContent from './services.content';
 
 const ICON_SVG =
   '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"></svg>';
@@ -83,6 +84,24 @@ describe('Services', () => {
     expect(COUNTS.reduce((sum, count) => sum + count, 0)).toBe(TOTAL);
     expect(root.querySelectorAll('.services__group')).toHaveLength(5);
     expect(root.querySelectorAll('.services__card')).toHaveLength(TOTAL);
+  });
+
+  it('declares every service against a category the page actually groups by', () => {
+    const items = servicesContent.content.items;
+    expect(items).toHaveLength(TOTAL);
+
+    // `satisfies ServiceCategoryId` guards this at compile time; assert it at runtime too,
+    // because an unknown category silently drops the service out of every group.
+    for (const item of items) {
+      expect(isServiceCategoryId(item.category)).toBe(true);
+    }
+
+    const grouped = SERVICE_CATEGORY_IDS.map(
+      (id) => items.filter((item) => item.category === id).length,
+    );
+    expect(grouped).toEqual(COUNTS);
+    // No service may be stranded outside the five rendered groups.
+    expect(grouped.reduce((sum, count) => sum + count, 0)).toBe(items.length);
   });
 
   it('numbers every service once across the whole catalogue', async () => {

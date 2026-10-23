@@ -7,6 +7,7 @@ import {
   effect,
   inject,
   signal,
+  viewChild,
   viewChildren,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -15,14 +16,14 @@ import { MatChipListbox, type MatChipListboxChange, MatChipOption } from '@angul
 import { MatIcon } from '@angular/material/icon';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { useDictionary } from 'angular-intlayer';
-import {
-  type ConversationCopy,
-  StartConversation,
-} from '../home/start-conversation/start-conversation';
 import { LocalizedPathPipe } from '../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../core/icons/icons';
 import { ordinal } from '../../shared/ordinal';
 import { IconTile, type IconTileTone } from '../../shared/ui/icon-tile/icon-tile';
+import {
+  type ConversationCopy,
+  StartConversation,
+} from '../../shared/ui/start-conversation/start-conversation';
 import servicesContent from './services.content';
 
 export const SERVICE_CATEGORY_IDS = [
@@ -96,7 +97,7 @@ export class Services {
   protected readonly chevronIcon = appIcon('chevron-down');
 
   private readonly sections = viewChildren<ElementRef<HTMLElement>>('sectionRef');
-  private readonly chips = viewChildren(MatChipListbox);
+  private readonly chipListbox = viewChild(MatChipListbox);
   private readonly scrolled = signal<ServiceCategoryId>(SERVICE_CATEGORY_IDS[0]);
   private readonly params = toSignal(this.route.queryParamMap, { requireSync: true });
 
@@ -196,7 +197,7 @@ export class Services {
       return;
     }
 
-    const listbox = this.chips()[0];
+    const listbox = this.chipListbox();
     if (listbox) {
       listbox.value = this.filter();
     }

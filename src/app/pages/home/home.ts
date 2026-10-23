@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
+import { StartConversation } from '../../shared/ui/start-conversation/start-conversation';
 import { AiAutomation } from './ai-automation/ai-automation';
 import { EngagementModels } from './engagement-models/engagement-models';
 import { WhatWeBuild } from './what-we-build/what-we-build';
 import { Expertise } from './expertise/expertise';
 import { Hero } from './hero/hero';
 import { HowWeWork } from './how-we-work/how-we-work';
-import { StartConversation } from './start-conversation/start-conversation';
 import { Why } from './why/why';
 
 @Component({
