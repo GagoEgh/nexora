@@ -1,43 +1,30 @@
-<section class="services__intro">
-  <div class="services__header">
-    <div class="services__copy">
-      <nav class="services__breadcrumb" [attr.aria-label]="content().breadcrumbLabel.value">
-        <ol class="services__crumbs">
-          <li class="services__crumb">
-            <a class="services__crumb-link" [routerLink]="'/' | localizedPath">
-              {{ content().breadcrumbHome }}
-            </a>
-          </li>
-          <li class="services__crumb" aria-current="page">{{ content().title }}</li>
-        </ol>
-      </nav>
-
-      <p class="services__eyebrow">{{ content().eyebrow }}</p>
-      <h1 class="services__title">{{ content().heading }}</h1>
-      <p class="services__lead">{{ content().lead }}</p>
-    </div>
-
-    <nav class="services__categories" [attr.aria-label]="content().categoryNavLabel.value">
-      <ul class="services__category-list">
-        @for (category of categories(); track category.id) {
-          <li>
-            <a
-              class="services__category"
-              [class.services__category--active]="category.id === active()"
-              [attr.aria-current]="category.id === active() ? 'true' : null"
-              [href]="'#' + sectionId(category.id)"
-              (click)="onCategoryClick($event, category.id)"
-            >
-              <app-icon-tile [icon]="category.icon" tone="primary" size="dense" />
-              <span class="services__category-label">{{ category.label }}</span>
-              <span class="services__category-count">{{ category.count }}</span>
-            </a>
-          </li>
-        }
-      </ul>
-    </nav>
-  </div>
-</section>
+<app-page-intro
+  [crumbs]="crumbs()"
+  [breadcrumbLabel]="content().breadcrumbLabel.value"
+  [eyebrow]="content().eyebrow.value"
+  [heading]="content().heading.value"
+  [lead]="content().lead.value"
+>
+  <nav class="services__categories" [attr.aria-label]="content().categoryNavLabel.value">
+    <ul class="services__category-list">
+      @for (category of categories(); track category.id) {
+        <li>
+          <a
+            class="services__category"
+            [class.services__category--active]="category.id === active()"
+            [attr.aria-current]="category.id === active() ? 'true' : null"
+            [href]="'#' + sectionId(category.id)"
+            (click)="onCategoryClick($event, category.id)"
+          >
+            <app-icon-tile [icon]="category.icon" tone="primary" size="dense" />
+            <span class="services__category-label">{{ category.label }}</span>
+            <span class="services__category-count">{{ category.count }}</span>
+          </a>
+        </li>
+      }
+    </ul>
+  </nav>
+</app-page-intro>
 
 <div class="services__filter">
   <div class="services__filter-inner">

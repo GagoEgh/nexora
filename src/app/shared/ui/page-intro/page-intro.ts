@@ -1,0 +1,22 @@
+import { Component, input } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { LocalizedPathPipe } from '../../../core/i18n/localized-path.pipe';
+
+export interface PageIntroCrumb {
+  readonly label: string;
+  readonly path?: string;
+}
+
+@Component({
+  selector: 'app-page-intro',
+  imports: [RouterLink, LocalizedPathPipe],
+  templateUrl: './page-intro.html',
+  styleUrl: './page-intro.scss',
+})
+export class PageIntro {
+  readonly crumbs = input.required<readonly PageIntroCrumb[]>();
+  readonly breadcrumbLabel = input.required<string>();
+  readonly eyebrow = input.required<string>();
+  readonly heading = input.required<string>();
+  readonly lead = input.required<string>();
+}

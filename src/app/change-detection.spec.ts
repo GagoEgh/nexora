@@ -4,6 +4,7 @@ import { Footer } from './layout/footer/footer';
 import { Header } from './layout/header/header';
 import { About } from './pages/about/about';
 import { AiAgent } from './pages/ai-agent/ai-agent';
+import { Workflow } from './pages/ai-agent/workflow/workflow';
 import { Contact } from './pages/contact/contact';
 import { AiAutomation } from './pages/home/ai-automation/ai-automation';
 import { EngagementModels } from './pages/home/engagement-models/engagement-models';
@@ -24,6 +25,7 @@ import { TermsOfUse } from './pages/terms-of-use/terms-of-use';
 import { FieldLabel } from './shared/ui/field-label/field-label';
 import { IconTile } from './shared/ui/icon-tile/icon-tile';
 import { Logo } from './shared/ui/logo/logo';
+import { PageIntro } from './shared/ui/page-intro/page-intro';
 import { SnackBar } from './shared/ui/snack-bar/snack-bar';
 import { StartConversation } from './shared/ui/start-conversation/start-conversation';
 
@@ -61,6 +63,7 @@ const COMPONENTS: readonly [string, Type<unknown>][] = [
   ['Services', Services],
   ['About', About],
   ['AiAgent', AiAgent],
+  ['Workflow', Workflow],
   ['Solutions', Solutions],
   ['Partnerships', Partnerships],
   ['Contact', Contact],
@@ -68,6 +71,7 @@ const COMPONENTS: readonly [string, Type<unknown>][] = [
   ['TermsOfUse', TermsOfUse],
   ['Logo', Logo],
   ['IconTile', IconTile],
+  ['PageIntro', PageIntro],
   ['FieldLabel', FieldLabel],
   ['SnackBar', SnackBar],
 ];
@@ -84,7 +88,7 @@ describe('change detection', () => {
   });
 
   it('every component in the application resolves to OnPush', () => {
-    expect(COMPONENTS).toHaveLength(27);
+    expect(COMPONENTS).toHaveLength(29);
     const eager = COMPONENTS.filter(([, component]) => !isOnPush(component)).map(([name]) => name);
     expect(eager, 'these components are checked eagerly').toEqual([]);
   });

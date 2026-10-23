@@ -1,0 +1,108 @@
+@use 'tokens/spacing';
+@use 'tokens/typography';
+
+:host {
+  display: block;
+}
+
+.workflow {
+  display: grid;
+  gap: spacing.space(24);
+  box-sizing: border-box;
+  padding: spacing.space(24);
+  border-radius: var(--mat-sys-corner-extra-large);
+  background-color: var(--mat-sys-surface);
+}
+
+.workflow__head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: spacing.space(12);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.workflow__caption {
+  margin: 0;
+  font: typography.$code-font;
+  color: var(--nx-sys-on-surface-muted);
+}
+
+.workflow__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: spacing.space(4);
+  height: 22px;
+  margin: 0;
+  padding-inline: spacing.space(8);
+  border-radius: var(--mat-sys-corner-full);
+  background-color: var(--nx-sys-success-container);
+  font: typography.$code-font;
+  color: var(--nx-sys-success);
+
+  &::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: var(--mat-sys-corner-full);
+    background-color: currentcolor;
+  }
+}
+
+.workflow__steps {
+  display: grid;
+  gap: spacing.space(20);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.workflow__step {
+  position: relative;
+  display: flex;
+  gap: spacing.space(12);
+  align-items: center;
+  padding: spacing.space(12);
+  border-radius: var(--mat-sys-corner-large);
+  background-color: var(--mat-sys-surface-container-low);
+
+  & + &::before {
+    content: '';
+    position: absolute;
+    inset-block-start: calc(#{spacing.space(20)} * -1);
+    inset-inline-start: spacing.space(24);
+    width: 2px;
+    height: spacing.space(20);
+    background-color: var(--mat-sys-primary);
+  }
+}
+
+.workflow__step[data-tone='dark'] {
+  background-color: var(--mat-sys-on-surface);
+}
+
+.workflow__step[data-tone='accent'] {
+  background-color: var(--mat-sys-primary-container);
+}
+
+.workflow__text {
+  display: grid;
+  gap: spacing.space(4);
+  min-width: 0;
+}
+
+.workflow__label {
+  font: var(--mat-sys-label-medium);
+  letter-spacing: var(--mat-sys-label-medium-tracking);
+  text-transform: uppercase;
+  color: var(--mat-sys-primary);
+}
+
+.workflow__detail {
+  font: var(--mat-sys-body-small);
+  color: var(--mat-sys-on-surface);
+}
+
+.workflow__step[data-tone='dark'] .workflow__detail {
+  color: var(--mat-sys-inverse-on-surface);
+}

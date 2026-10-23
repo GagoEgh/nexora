@@ -21,6 +21,7 @@ import { LocalizedPathPipe } from '../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../core/icons/icons';
 import { ordinal } from '../../shared/ordinal';
 import { IconTile, type IconTileTone } from '../../shared/ui/icon-tile/icon-tile';
+import { PageIntro, type PageIntroCrumb } from '../../shared/ui/page-intro/page-intro';
 import {
   type ConversationCopy,
   StartConversation,
@@ -75,6 +76,7 @@ function sectionInView(elements: readonly HTMLElement[], line: number): string |
     RouterLink,
     LocalizedPathPipe,
     IconTile,
+    PageIntro,
     StartConversation,
     MatButton,
     MatChipListbox,
@@ -119,6 +121,11 @@ export class Services {
         item.category.value === id ? [{ ...item, number: ordinal(order) }] : [],
       ),
     }));
+  });
+
+  protected readonly crumbs = computed<readonly PageIntroCrumb[]>(() => {
+    const copy = this.content();
+    return [{ label: copy.breadcrumbHome.value, path: '/' }, { label: copy.title.value }];
   });
 
   protected readonly categoryTotal = ordinal(SERVICE_CATEGORY_IDS.length - 1);

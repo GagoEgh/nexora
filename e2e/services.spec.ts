@@ -56,21 +56,19 @@ test.describe('services page at the desktop design width', () => {
 
   test('runs the header gradient under the shell header', async ({ page }) => {
     await expect(page.locator('app-services')).toHaveAttribute('data-layout', 'immersive');
-    expect(await style(page, '.services__intro', 'background-image')).toContain(
-      'rgb(238, 244, 255)',
-    );
+    expect(await style(page, '.page-intro', 'background-image')).toContain('rgb(238, 244, 255)');
     // The immersive contract pulls the main region up behind the header.
     expect(await style(page, 'app-header', 'border-bottom-width')).toBe('0px');
   });
 
   test('renders the breadcrumb, eyebrow, one h1 and the lead', async ({ page }) => {
-    await expect(page.locator('.services__crumb')).toHaveText(['Home', 'Services']);
-    await expect(page.locator('.services__crumb-link')).toHaveAttribute('href', '/');
-    await expect(page.locator('.services__crumb').nth(1)).toHaveAttribute('aria-current', 'page');
+    await expect(page.locator('.page-intro__crumb')).toHaveText(['Home', 'Services']);
+    await expect(page.locator('.page-intro__crumb-link')).toHaveAttribute('href', '/');
+    await expect(page.locator('.page-intro__crumb').nth(1)).toHaveAttribute('aria-current', 'page');
 
-    await expect(page.locator('.services__eyebrow')).toHaveText('Services');
-    expect(await style(page, '.services__eyebrow', 'color')).toBe('rgb(15, 85, 232)');
-    expect(await style(page, '.services__eyebrow', 'text-transform')).toBe('uppercase');
+    await expect(page.locator('.page-intro__eyebrow')).toHaveText('Services');
+    expect(await style(page, '.page-intro__eyebrow', 'color')).toBe('rgb(15, 85, 232)');
+    expect(await style(page, '.page-intro__eyebrow', 'text-transform')).toBe('uppercase');
 
     const h1 = page.locator('app-services h1');
     await expect(h1).toHaveCount(1);
@@ -80,9 +78,9 @@ test.describe('services page at the desktop design width', () => {
     expect(await style(page, 'app-services h1', 'line-height')).toBe('60px');
     expect(await style(page, 'app-services h1', 'color')).toBe('rgb(11, 19, 36)');
 
-    expect(await style(page, '.services__lead', 'font-size')).toBe('18px');
-    expect(await style(page, '.services__lead', 'line-height')).toBe('30px');
-    expect(await style(page, '.services__lead', 'color')).toBe('rgb(71, 85, 105)');
+    expect(await style(page, '.page-intro__lead', 'font-size')).toBe('18px');
+    expect(await style(page, '.page-intro__lead', 'line-height')).toBe('30px');
+    expect(await style(page, '.page-intro__lead', 'color')).toBe('rgb(71, 85, 105)');
   });
 
   test('places the category card on the design grid', async ({ page }) => {
@@ -362,7 +360,7 @@ test.describe('services page at the desktop design width', () => {
     await expect(page.locator('app-services h1')).toHaveText(
       'Пятнадцать услуг на всём жизненном цикле программного обеспечения.',
     );
-    await expect(page.locator('.services__crumb-link')).toHaveAttribute('href', '/ru');
+    await expect(page.locator('.page-intro__crumb-link')).toHaveAttribute('href', '/ru');
     await expect(page.locator('.services__card')).toHaveCount(1);
 
     await page.locator('mat-chip-option').first().click();
@@ -409,7 +407,7 @@ test.describe('services page below the chip breakpoint', () => {
     await page.goto('/services');
     await expect(page.locator('.services__categories')).toBeVisible();
 
-    const [copy] = await boxes(page, '.services__copy');
+    const [copy] = await boxes(page, '.page-intro__copy');
     const [card] = await boxes(page, '.services__categories');
     expect(copy.x).toBe(card.x);
     expect(card.y).toBeGreaterThan(copy.y + copy.h - 1);

@@ -20,6 +20,8 @@ describe('Header', () => {
   let router: Router;
 
   const links = () => Array.from(root.querySelectorAll<HTMLAnchorElement>('nav a.header__link'));
+  /** Services is a menu trigger, so it is a <button> rather than one of the anchors. */
+  const servicesTrigger = () => root.querySelector<HTMLButtonElement>('nav button.header__link');
   const flushIcons = () => http.match(() => true).forEach((req) => req.flush(ICON_SVG));
   const setLocale = (locale: string) =>
     TestBed.runInInjectionContext(() => useLocale()).setLocale(locale);
@@ -50,9 +52,9 @@ describe('Header', () => {
   });
 
   it('renders the primary navigation in order with routes from the configuration', () => {
+    // Services is the only entry that opens a menu, so it is a button among the anchors.
     expect(links().map((a) => a.getAttribute('href'))).toEqual([
       '/',
-      '/services',
       '/solutions',
       '/about',
       '/partnerships',
@@ -60,19 +62,20 @@ describe('Header', () => {
     ]);
     expect(links().map((a) => a.textContent?.trim())).toEqual([
       'Home',
-      'Services',
       'Solutions',
       'About',
       'Partnerships',
       'Contact',
     ]);
-    // The chevron sits beside Services as a menu trigger, not inside the label link.
-    const chevron = root.querySelector<HTMLButtonElement>('button.header__chevron-trigger');
-    expect(chevron?.querySelector('mat-icon.header__chevron')).not.toBeNull();
-    expect(chevron?.getAttribute('aria-label')).toBe('Services menu');
-    expect(chevron?.getAttribute('aria-haspopup')).toBe('menu');
-    expect(links()[1].querySelector('mat-icon.header__chevron')).toBeNull();
-    expect(root.querySelectorAll('button.header__chevron-trigger')).toHaveLength(1);
+
+    const trigger = servicesTrigger();
+    expect(trigger?.textContent?.trim()).toBe('Services');
+    expect(trigger?.querySelector('mat-icon.header__chevron')).not.toBeNull();
+    expect(trigger?.getAttribute('aria-haspopup')).toBe('menu');
+    // It is the second entry in the nav, where the Services link used to sit.
+    const entries = Array.from(root.querySelectorAll('nav .header__link'));
+    expect(entries.findIndex((el) => el === trigger)).toBe(1);
+    expect(root.querySelectorAll('nav button.header__link')).toHaveLength(1);
     expect(root.querySelector('a.header__cta')?.getAttribute('href')).toBe('/contact');
     expect(root.querySelector('a.header__cta')?.textContent?.trim()).toBe("Let's Talk");
   });
@@ -83,10 +86,18 @@ describe('Header', () => {
     const active = () => links().filter((a) => a.classList.contains('header__link--active'));
     expect(active().map((a) => a.getAttribute('href'))).toEqual(['/']);
     expect(active()[0].getAttribute('aria-current')).toBe('page');
+    expect(servicesTrigger()?.classList.contains('header__link--active')).toBe(false);
 
+    // The trigger cannot use routerLinkActive, so the component matches the path itself.
     await router.navigateByUrl('/services');
     await fixture.whenStable();
-    expect(active().map((a) => a.getAttribute('href'))).toEqual(['/services']);
+    expect(active()).toHaveLength(0);
+    expect(servicesTrigger()?.classList.contains('header__link--active')).toBe(true);
+
+    // It stays lit on the child route too.
+    await router.navigateByUrl('/services/ai_agent');
+    await fixture.whenStable();
+    expect(servicesTrigger()?.classList.contains('header__link--active')).toBe(true);
   });
 
   it('shows the current locale and re-renders labels when it changes', async () => {
@@ -95,29 +106,39 @@ describe('Header', () => {
     setLocale('hy');
     await fixture.whenStable();
     expect(root.querySelector('.header__lang-code')?.textContent?.trim()).toBe('HY');
-    expect(links()[1].textContent?.trim()).toBe('Ծառայություններ');
+    expect(servicesTrigger()?.textContent?.trim()).toBe('Ծառայություններ');
 
     setLocale('ru');
     await fixture.whenStable();
-    expect(links()[1].textContent?.trim()).toBe('Услуги');
+    expect(servicesTrigger()?.textContent?.trim()).toBe('Услуги');
   });
 
-  it('opens the services menu from the chevron and routes to the AI agents page', async () => {
+  it('opens the services menu from the Services entry and routes to both pages', async () => {
     const overlay = TestBed.inject(OverlayContainer).getContainerElement();
     const items = () => Array.from(overlay.querySelectorAll<HTMLAnchorElement>('a[mat-menu-item]'));
 
-    // Closed until the chevron is used.
+    // Closed until the Services entry is used.
     expect(items()).toHaveLength(0);
 
-    root.querySelector<HTMLButtonElement>('button.header__chevron-trigger')?.click();
+    servicesTrigger()?.click();
     await fixture.whenStable();
 
-    expect(items().map((a) => a.textContent?.trim())).toEqual(['AI Agents & Business Automation']);
-    expect(items()[0].getAttribute('href')).toBe('/services/ai_agent');
+    expect(items().map((a) => a.textContent?.trim())).toEqual([
+      'Services',
+      'AI Agents & Business Automation',
+    ]);
+    expect(items().map((a) => a.getAttribute('href'))).toEqual(['/services', '/services/ai_agent']);
 
-    items()[0].click();
+    items()[1].click();
     await fixture.whenStable();
     expect(router.url).toBe('/services/ai_agent');
+
+    // The first item still reaches the catalogue itself.
+    servicesTrigger()?.click();
+    await fixture.whenStable();
+    items()[0].click();
+    await fixture.whenStable();
+    expect(router.url).toBe('/services');
   });
 
   it('keeps the services menu item on the active locale prefix', async () => {
@@ -125,11 +146,13 @@ describe('Header', () => {
     await fixture.whenStable();
     const overlay = TestBed.inject(OverlayContainer).getContainerElement();
 
-    root.querySelector<HTMLButtonElement>('button.header__chevron-trigger')?.click();
+    servicesTrigger()?.click();
     await fixture.whenStable();
 
-    const item = overlay.querySelector<HTMLAnchorElement>('a[mat-menu-item]');
-    expect(item?.getAttribute('href')).toBe('/hy/services/ai_agent');
+    const hrefs = Array.from(overlay.querySelectorAll<HTMLAnchorElement>('a[mat-menu-item]')).map(
+      (a) => a.getAttribute('href'),
+    );
+    expect(hrefs).toEqual(['/hy/services', '/hy/services/ai_agent']);
   });
 
   it('switches the locale from the language menu and re-renders', async () => {
@@ -147,10 +170,9 @@ describe('Header', () => {
     await fixture.whenStable();
     expect(router.url).toBe('/ru');
     expect(root.querySelector('.header__lang-code')?.textContent?.trim()).toBe('RU');
-    expect(links()[1].textContent?.trim()).toBe('Услуги');
+    expect(servicesTrigger()?.textContent?.trim()).toBe('Услуги');
     expect(links().map((a) => a.getAttribute('href'))).toEqual([
       '/ru',
-      '/ru/services',
       '/ru/solutions',
       '/ru/about',
       '/ru/partnerships',

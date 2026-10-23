@@ -1,0 +1,29 @@
+<section class="page-intro">
+  <div class="page-intro__header">
+    <div class="page-intro__copy">
+      <nav class="page-intro__breadcrumb" [attr.aria-label]="breadcrumbLabel()">
+        <ol class="page-intro__crumbs">
+          @for (crumb of crumbs(); track crumb.label) {
+            <li class="page-intro__crumb" [attr.aria-current]="crumb.path ? null : 'page'">
+              @if (crumb.path; as path) {
+                <a class="page-intro__crumb-link" [routerLink]="path | localizedPath">
+                  {{ crumb.label }}
+                </a>
+              } @else {
+                {{ crumb.label }}
+              }
+            </li>
+          }
+        </ol>
+      </nav>
+
+      <p class="page-intro__eyebrow">{{ eyebrow() }}</p>
+      <h1 class="page-intro__title">{{ heading() }}</h1>
+      <p class="page-intro__lead">{{ lead() }}</p>
+
+      <ng-content select="[intro-actions]" />
+    </div>
+
+    <ng-content />
+  </div>
+</section>

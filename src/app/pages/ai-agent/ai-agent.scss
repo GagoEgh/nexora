@@ -1,0 +1,21 @@
+@use 'tokens/spacing';
+@use 'tokens/layout';
+
+:host {
+  display: block;
+  --nx-page-intro-aside: 520px;
+}
+
+.ai-agent__actions {
+  display: grid;
+  gap: spacing.space(12);
+  width: 100%;
+  margin-block-start: spacing.space(4);
+
+  @include layout.up(medium) {
+    display: flex;
+    align-items: center;
+    gap: spacing.space(24);
+    width: auto;
+  }
+}

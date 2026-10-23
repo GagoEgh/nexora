@@ -1,18 +1,33 @@
-import { Component } from '@angular/core';
+import { Component, computed } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { RouterLink } from '@angular/router';
 import { useDictionary } from 'angular-intlayer';
+import { SERVICES_PATH } from '../../app.routes';
+import { LocalizedPathPipe } from '../../core/i18n/localized-path.pipe';
+import { appIcon } from '../../core/icons/icons';
+import { PageIntro, type PageIntroCrumb } from '../../shared/ui/page-intro/page-intro';
 import aiAgentContent from './ai-agent.content';
+import { Workflow } from './workflow/workflow';
 
 @Component({
   selector: 'app-ai-agent',
-  template: `<h1>{{ content().title }}</h1>`,
-  styles: `
-    @use 'mixins/container';
-
-    :host {
-      @include container.page();
-    }
-  `,
+  imports: [RouterLink, LocalizedPathPipe, PageIntro, Workflow, MatButton, MatIcon],
+  templateUrl: './ai-agent.html',
+  styleUrl: './ai-agent.scss',
+  host: { 'data-layout': 'immersive' },
 })
 export class AiAgent {
   protected readonly content = useDictionary(aiAgentContent);
+  protected readonly arrowIcon = appIcon('arrow-right');
+  protected readonly servicesPath = SERVICES_PATH;
+
+  protected readonly crumbs = computed<readonly PageIntroCrumb[]>(() => {
+    const copy = this.content();
+    return [
+      { label: copy.breadcrumbHome.value, path: '/' },
+      { label: copy.breadcrumbServices.value, path: SERVICES_PATH },
+      { label: copy.title.value },
+    ];
+  });
 }

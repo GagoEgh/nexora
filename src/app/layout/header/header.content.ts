@@ -32,7 +32,7 @@ const headerContent = {
     }),
     aiAgentLink: t({
       en: 'AI Agents & Business Automation',
-      hy: 'AI գործակալներ եւ բիզնես ավտոմատացում',
+      hy: 'AI գործակալներ և բիզնես ավտոմատացում',
       ru: 'AI-агенты и автоматизация бизнеса',
     }),
     language: t({ en: 'Change language', hy: 'Փոխել լեզուն', ru: 'Сменить язык' }),

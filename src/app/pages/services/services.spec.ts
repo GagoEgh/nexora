@@ -61,17 +61,19 @@ describe('Services', () => {
   it('renders the breadcrumb, eyebrow, a single h1 and the lead copy', async () => {
     await go('/services');
 
-    expect(text('.services__crumb')).toEqual(['Home', 'Services']);
-    expect(root.querySelector('.services__crumb-link')?.getAttribute('href')).toBe('/');
-    expect(root.querySelectorAll('.services__crumb')[1].getAttribute('aria-current')).toBe('page');
+    expect(text('.page-intro__crumb')).toEqual(['Home', 'Services']);
+    expect(root.querySelector('.page-intro__crumb-link')?.getAttribute('href')).toBe('/');
+    expect(root.querySelectorAll('.page-intro__crumb')[1].getAttribute('aria-current')).toBe(
+      'page',
+    );
 
-    expect(root.querySelector('.services__eyebrow')?.textContent?.trim()).toBe('Services');
+    expect(root.querySelector('.page-intro__eyebrow')?.textContent?.trim()).toBe('Services');
     const headings = root.querySelectorAll('h1');
     expect(headings).toHaveLength(1);
     expect(headings[0].textContent?.trim()).toBe(
       'Fifteen services across the full software lifecycle.',
     );
-    expect(root.querySelector('.services__lead')?.textContent?.trim()).toContain(
+    expect(root.querySelector('.page-intro__lead')?.textContent?.trim()).toContain(
       'From interface design to AI agents and production infrastructure.',
     );
   });
@@ -382,8 +384,8 @@ describe('Services', () => {
     expect(root.querySelector('h1')?.textContent?.trim()).toBe(
       'Пятнадцать услуг на всём жизненном цикле программного обеспечения.',
     );
-    expect(text('.services__crumb')).toEqual(['Главная', 'Услуги']);
-    expect(root.querySelector('.services__crumb-link')?.getAttribute('href')).toBe('/ru');
+    expect(text('.page-intro__crumb')).toEqual(['Главная', 'Услуги']);
+    expect(root.querySelector('.page-intro__crumb-link')?.getAttribute('href')).toBe('/ru');
     expect(text('.services__category-label')).toEqual([
       'Дизайн и продукт',
       'Разработка ПО',

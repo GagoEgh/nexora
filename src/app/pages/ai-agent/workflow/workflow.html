@@ -1,0 +1,18 @@
+<div class="workflow">
+  <div class="workflow__head">
+    <p class="workflow__caption">{{ content().caption }}</p>
+    <p class="workflow__badge">{{ content().badge }}</p>
+  </div>
+
+  <ol class="workflow__steps">
+    @for (step of content().steps; track $index) {
+      <li class="workflow__step" [attr.data-tone]="step.tone.value">
+        <app-icon-tile size="small" [icon]="step.icon.value" [tone]="tileTone(step.tone.value)" />
+        <div class="workflow__text">
+          <span class="workflow__label">{{ step.label }}</span>
+          <span class="workflow__detail">{{ step.text }}</span>
+        </div>
+      </li>
+    }
+  </ol>
+</div>

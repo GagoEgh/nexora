@@ -31,12 +31,12 @@ const documentMetaContent = {
       'services/ai_agent': {
         title: t({
           en: 'AI Agents & Business Automation | Nexora',
-          hy: 'AI գործակալներ եւ բիզնես ավտոմատացում | Nexora',
+          hy: 'AI գործակալներ և բիզնես ավտոմատացում | Nexora',
           ru: 'AI-агенты и автоматизация бизнеса | Nexora',
         }),
         description: t({
           en: 'AI agents, assistants and workflow automation built into the systems your business already runs on.',
-          hy: 'AI գործակալներ, օգնականներ եւ աշխատանքային հոսքերի ավտոմատացում՝ ներդրված այն համակարգերի մեջ, որոնց վրա արդեն աշխատում է ձեր բիզնեսը։',
+          hy: 'AI գործակալներ, օգնականներ և աշխատանքային հոսքերի ավտոմատացում՝ ներդրված այն համակարգերի մեջ, որոնց վրա արդեն աշխատում է ձեր բիզնեսը։',
           ru: 'AI-агенты, ассистенты и автоматизация процессов, встроенные в системы, на которых уже работает ваш бизнес.',
         }),
       },

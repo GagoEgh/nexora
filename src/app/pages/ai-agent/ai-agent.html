@@ -1,0 +1,19 @@
+<app-page-intro
+  [crumbs]="crumbs()"
+  [breadcrumbLabel]="content().breadcrumbLabel.value"
+  [eyebrow]="content().eyebrow.value"
+  [heading]="content().title.value"
+  [lead]="content().lead.value"
+>
+  <div class="ai-agent__actions" intro-actions>
+    <a matButton="filled" [routerLink]="'/contact' | localizedPath">
+      {{ content().primaryCta }}
+      <mat-icon iconPositionEnd [svgIcon]="arrowIcon" />
+    </a>
+    <a class="ai-agent__secondary" matButton [routerLink]="'/solutions' | localizedPath">
+      {{ content().secondaryCta }}
+    </a>
+  </div>
+
+  <app-workflow [content]="content().workflow" />
+</app-page-intro>
