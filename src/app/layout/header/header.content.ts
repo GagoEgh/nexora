@@ -25,6 +25,16 @@ const headerContent = {
       },
       { path: '/contact', label: t({ en: 'Contact', hy: 'Կապ', ru: 'Контакты' }), chevron: false },
     ],
+    servicesMenu: t({
+      en: 'Services menu',
+      hy: 'Ծառայությունների ընտրացանկ',
+      ru: 'Меню услуг',
+    }),
+    aiAgentLink: t({
+      en: 'AI Agents & Business Automation',
+      hy: 'AI գործակալներ եւ բիզնես ավտոմատացում',
+      ru: 'AI-агенты и автоматизация бизнеса',
+    }),
     language: t({ en: 'Change language', hy: 'Փոխել լեզուն', ru: 'Сменить язык' }),
     cta: t({ en: "Let's Talk", hy: 'Եկեք խոսենք', ru: 'Давайте обсудим' }),
     openMenu: t({ en: 'Open menu', hy: 'Բացել ընտրացանկը', ru: 'Открыть меню' }),

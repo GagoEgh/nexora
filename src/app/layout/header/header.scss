@@ -81,16 +81,23 @@
   gap: spacing.space(4);
   height: 40px;
   padding-inline: spacing.space(12);
+  border: 0;
   border-radius: var(--mat-sys-corner-full);
+  background-color: transparent;
   font: var(--mat-sys-label-large);
   font-weight: typography.$weight-medium;
   color: var(--mat-sys-on-surface);
   text-decoration: none;
+  cursor: pointer;
 }
 
 .header__link--active {
   background-color: var(--mat-sys-primary-container);
   color: var(--mat-sys-on-primary-container);
+}
+
+.header__menu-item--active {
+  color: var(--mat-sys-primary);
 }
 
 .header__chevron {

@@ -3,6 +3,7 @@ import { App } from './app';
 import { Footer } from './layout/footer/footer';
 import { Header } from './layout/header/header';
 import { About } from './pages/about/about';
+import { AiAgent } from './pages/ai-agent/ai-agent';
 import { Contact } from './pages/contact/contact';
 import { AiAutomation } from './pages/home/ai-automation/ai-automation';
 import { EngagementModels } from './pages/home/engagement-models/engagement-models';
@@ -59,6 +60,7 @@ const COMPONENTS: readonly [string, Type<unknown>][] = [
   ['StartConversation', StartConversation],
   ['Services', Services],
   ['About', About],
+  ['AiAgent', AiAgent],
   ['Solutions', Solutions],
   ['Partnerships', Partnerships],
   ['Contact', Contact],
@@ -82,7 +84,7 @@ describe('change detection', () => {
   });
 
   it('every component in the application resolves to OnPush', () => {
-    expect(COMPONENTS).toHaveLength(26);
+    expect(COMPONENTS).toHaveLength(27);
     const eager = COMPONENTS.filter(([, component]) => !isOnPush(component)).map(([name]) => name);
     expect(eager, 'these components are checked eagerly').toEqual([]);
   });

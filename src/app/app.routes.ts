@@ -2,6 +2,11 @@ import { Routes } from '@angular/router';
 import { matchLocalePrefix, syncLocaleWithUrl } from './core/i18n/locale-routing';
 import type { DocumentMetaRouteData } from './core/seo/document-meta';
 
+const AI_AGENT_SEGMENT = 'ai_agent';
+
+export const SERVICES_PATH = '/services';
+export const AI_AGENT_PATH = `${SERVICES_PATH}/${AI_AGENT_SEGMENT}`;
+
 const pages: Routes = [
   {
     path: '',
@@ -10,8 +15,18 @@ const pages: Routes = [
   },
   {
     path: 'services',
-    loadComponent: () => import('./pages/services/services').then((m) => m.Services),
-    data: { meta: 'services' } satisfies DocumentMetaRouteData,
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./pages/services/services').then((m) => m.Services),
+        data: { meta: 'services' } satisfies DocumentMetaRouteData,
+      },
+      {
+        path: AI_AGENT_SEGMENT,
+        loadComponent: () => import('./pages/ai-agent/ai-agent').then((m) => m.AiAgent),
+        data: { meta: 'services/ai_agent' } satisfies DocumentMetaRouteData,
+      },
+    ],
   },
   {
     path: 'solutions',

@@ -66,7 +66,13 @@ describe('Header', () => {
       'Partnerships',
       'Contact',
     ]);
-    expect(links()[1].querySelector('mat-icon.header__chevron')).not.toBeNull();
+    // The chevron sits beside Services as a menu trigger, not inside the label link.
+    const chevron = root.querySelector<HTMLButtonElement>('button.header__chevron-trigger');
+    expect(chevron?.querySelector('mat-icon.header__chevron')).not.toBeNull();
+    expect(chevron?.getAttribute('aria-label')).toBe('Services menu');
+    expect(chevron?.getAttribute('aria-haspopup')).toBe('menu');
+    expect(links()[1].querySelector('mat-icon.header__chevron')).toBeNull();
+    expect(root.querySelectorAll('button.header__chevron-trigger')).toHaveLength(1);
     expect(root.querySelector('a.header__cta')?.getAttribute('href')).toBe('/contact');
     expect(root.querySelector('a.header__cta')?.textContent?.trim()).toBe("Let's Talk");
   });
@@ -94,6 +100,36 @@ describe('Header', () => {
     setLocale('ru');
     await fixture.whenStable();
     expect(links()[1].textContent?.trim()).toBe('Услуги');
+  });
+
+  it('opens the services menu from the chevron and routes to the AI agents page', async () => {
+    const overlay = TestBed.inject(OverlayContainer).getContainerElement();
+    const items = () => Array.from(overlay.querySelectorAll<HTMLAnchorElement>('a[mat-menu-item]'));
+
+    // Closed until the chevron is used.
+    expect(items()).toHaveLength(0);
+
+    root.querySelector<HTMLButtonElement>('button.header__chevron-trigger')?.click();
+    await fixture.whenStable();
+
+    expect(items().map((a) => a.textContent?.trim())).toEqual(['AI Agents & Business Automation']);
+    expect(items()[0].getAttribute('href')).toBe('/services/ai_agent');
+
+    items()[0].click();
+    await fixture.whenStable();
+    expect(router.url).toBe('/services/ai_agent');
+  });
+
+  it('keeps the services menu item on the active locale prefix', async () => {
+    setLocale('hy');
+    await fixture.whenStable();
+    const overlay = TestBed.inject(OverlayContainer).getContainerElement();
+
+    root.querySelector<HTMLButtonElement>('button.header__chevron-trigger')?.click();
+    await fixture.whenStable();
+
+    const item = overlay.querySelector<HTMLAnchorElement>('a[mat-menu-item]');
+    expect(item?.getAttribute('href')).toBe('/hy/services/ai_agent');
   });
 
   it('switches the locale from the language menu and re-renders', async () => {

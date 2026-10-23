@@ -1,11 +1,13 @@
-import { Component, ElementRef, inject, signal, viewChild } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Component, ElementRef, computed, inject, signal, viewChild } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { useDictionary } from 'angular-intlayer';
+import { getPathWithoutLocale } from 'intlayer';
 import { filter } from 'rxjs';
+import { AI_AGENT_PATH, SERVICES_PATH } from '../../app.routes';
 import { useLocaleSwitcher } from '../../core/i18n/locale-switcher';
 import { LocalizedPathPipe } from '../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../core/icons/icons';
@@ -34,6 +36,8 @@ import headerContent from './header.content';
   },
 })
 export class Header {
+  private readonly router = inject(Router);
+
   protected readonly content = useDictionary(headerContent);
   protected readonly i18n = useLocaleSwitcher();
   private readonly menuButton = viewChild.required('menuButton', { read: ElementRef });
@@ -41,13 +45,24 @@ export class Header {
   protected readonly menuOpen = signal(false);
   protected readonly exact = { exact: true } as const;
   protected readonly chevronIcon = appIcon('chevron-down');
+  protected readonly aiAgentPath = AI_AGENT_PATH;
   protected readonly globeIcon = appIcon('globe');
   protected readonly menuIcon = appIcon('menu');
   protected readonly closeIcon = appIcon('x');
 
+  private readonly navigated = toSignal(
+    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)),
+  );
+
+  protected readonly servicesActive = computed(() => {
+    this.navigated();
+    const path = getPathWithoutLocale(this.router.url.split(/[?#]/)[0]);
+    return path === SERVICES_PATH || path.startsWith(`${SERVICES_PATH}/`);
+  });
+
   constructor() {
-    inject(Router)
-      .events.pipe(
+    this.router.events
+      .pipe(
         filter((event) => event instanceof NavigationEnd),
         takeUntilDestroyed(),
       )

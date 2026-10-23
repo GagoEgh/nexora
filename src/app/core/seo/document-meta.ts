@@ -13,6 +13,7 @@ import { SITE_ORIGIN } from './site-origin';
 export const DOCUMENT_META_PAGES = [
   'home',
   'services',
+  'services/ai_agent',
   'solutions',
   'about',
   'partnerships',

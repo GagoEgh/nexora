@@ -66,8 +66,15 @@ test.describe('header at the desktop design width', () => {
       await expect(links.nth(index)).toHaveAttribute('href', href);
       await expect(links.nth(index)).toHaveText(label);
     }
-    await expect(links.nth(1).locator('mat-icon.header__chevron')).toBeVisible();
-    expect((await box(page, 'app-header nav a.header__link mat-icon.header__chevron')).w).toBe(20);
+    // The chevron beside Services is a menu trigger, closed until it is used.
+    const chevron = page.locator('app-header nav button.header__chevron-trigger');
+    await expect(chevron).toHaveCount(1);
+    await expect(chevron).toHaveAttribute('aria-haspopup', 'menu');
+    await expect(chevron.locator('mat-icon.header__chevron')).toBeVisible();
+    expect(
+      (await box(page, 'app-header nav button.header__chevron-trigger mat-icon.header__chevron')).w,
+    ).toBe(20);
+    await expect(page.locator('.mat-mdc-menu-panel')).toHaveCount(0);
 
     const home = links.first();
     await expect(home).toHaveClass(/header__link--active/);
@@ -256,6 +263,36 @@ test.describe('routing', () => {
     await expect(page.locator('main h1')).toHaveText(SERVICES_HEADING);
     expect(requested.length).toBeGreaterThan(before);
     await expect(page.locator('app-header a.header__link--active')).toHaveText('Services');
+  });
+
+  test('the chevron opens a services menu that routes to the AI agents page', async ({ page }) => {
+    await page.goto('/');
+    const trigger = page.locator('app-header nav button.header__chevron-trigger');
+    const item = page.locator('.mat-mdc-menu-panel a[mat-menu-item]');
+
+    await trigger.click();
+    await expect(item).toHaveCount(1);
+    await expect(item).toHaveText('AI Agents & Business Automation');
+    await expect(item).toHaveAttribute('href', '/services/ai_agent');
+
+    await item.click();
+    await expect(page).toHaveURL(/\/services\/ai_agent$/);
+    await expect(page.locator('main h1')).toHaveText('AI Agents & Business Automation');
+    // The label beside the chevron still goes to the services catalogue.
+    await expect(
+      page.locator('app-header nav a.header__link', { hasText: 'Services' }),
+    ).toHaveAttribute('href', '/services');
+  });
+
+  test('the services menu keeps the locale prefix on its item', async ({ page }) => {
+    await page.goto('/ru');
+    await page.locator('app-header nav button.header__chevron-trigger').click();
+    const item = page.locator('.mat-mdc-menu-panel a[mat-menu-item]');
+    await expect(item).toHaveAttribute('href', '/ru/services/ai_agent');
+
+    await item.click();
+    await expect(page).toHaveURL(/\/ru\/services\/ai_agent$/);
+    await expect(page.locator('main h1')).toHaveText('AI-агенты и автоматизация бизнеса');
   });
 
   test('every header and footer route resolves to its page', async ({ page }) => {
