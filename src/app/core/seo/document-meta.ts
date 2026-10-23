@@ -7,6 +7,7 @@ import { useIntlayer, useLocale } from 'angular-intlayer';
 import { defaultLocale, getMultilingualUrls, getPathWithoutLocale } from 'intlayer';
 import { filter, map } from 'rxjs';
 import type { AppLocale } from '../i18n/locale-labels';
+import { SITE_ORIGIN } from './site-origin';
 
 export const DOCUMENT_META_PAGES = [
   'home',
@@ -28,6 +29,8 @@ export function isDocumentMetaPage(value: unknown): value is DocumentMetaPage {
   return typeof value === 'string' && (DOCUMENT_META_PAGES as readonly string[]).includes(value);
 }
 
+const PARSE_BASE = 'http://nexora.invalid';
+
 const OG_LOCALES: Readonly<Record<AppLocale, string>> = { en: 'en_US', hy: 'hy_AM', ru: 'ru_RU' };
 
 function activePage(root: ActivatedRouteSnapshot): DocumentMetaPage | undefined {
@@ -46,6 +49,7 @@ export function provideDocumentMeta(): EnvironmentProviders {
     const title = inject(Title);
     const meta = inject(Meta);
     const document = inject(DOCUMENT);
+    const origin = inject(SITE_ORIGIN);
     const content = useIntlayer('document-meta');
     const locale = useLocale().locale;
     const route = toSignal(
@@ -53,7 +57,7 @@ export function provideDocumentMeta(): EnvironmentProviders {
         filter((event) => event instanceof NavigationEnd),
         map(() => ({
           page: activePage(router.routerState.snapshot.root),
-          path: new URL(router.url, document.location.origin).pathname,
+          path: new URL(router.url, PARSE_BASE).pathname,
         })),
       ),
     );
@@ -69,7 +73,7 @@ export function provideDocumentMeta(): EnvironmentProviders {
         if (hreflang) {
           element.hreflang = hreflang;
         }
-        document.head.append(element);
+        document.head.appendChild(element);
       }
       return element;
     };
@@ -80,7 +84,6 @@ export function provideDocumentMeta(): EnvironmentProviders {
         return;
       }
       const entry = content().pages[current.page];
-      const origin = document.location.origin;
       const alternates = getMultilingualUrls(getPathWithoutLocale(current.path));
       const canonical = origin + alternates[locale()];
 

@@ -4,11 +4,14 @@ import { Router, provideRouter } from '@angular/router';
 import { provideIntlayer, useLocale } from 'angular-intlayer';
 import { routes } from '../../app.routes';
 import { isDocumentMetaPage, provideDocumentMeta } from './document-meta';
+import { SITE_ORIGIN } from './site-origin';
 
 describe('provideDocumentMeta', () => {
   const metaContent = (selector: string) =>
     document.head.querySelector<HTMLMetaElement>(`meta[${selector}]`)?.content;
   const settle = () => TestBed.inject(ApplicationRef).whenStable();
+  /** The configured production origin, not the test host: canonical URLs are absolute. */
+  const origin = () => TestBed.inject(SITE_ORIGIN);
   const setLocale = (locale: string) =>
     TestBed.runInInjectionContext(() => useLocale()).setLocale(locale);
 
@@ -31,7 +34,7 @@ describe('provideDocumentMeta', () => {
     expect(metaContent('property="og:title"')).toBe('Services | Nexora');
     expect(metaContent('property="og:description"')).toContain('Software and web development');
     expect(metaContent('property="og:locale"')).toBe('en_US');
-    expect(metaContent('property="og:url"')).toBe(`${location.origin}/services`);
+    expect(metaContent('property="og:url"')).toBe(`${origin()}/services`);
   });
 
   it('publishes the canonical URL and one hreflang alternate per locale', async () => {
@@ -40,11 +43,11 @@ describe('provideDocumentMeta', () => {
     await TestBed.inject(Router).navigateByUrl('/hy/services');
     await settle();
 
-    expect(href('rel="canonical"')).toBe(`${location.origin}/hy/services`);
-    expect(href('rel="alternate"][hreflang="en"')).toBe(`${location.origin}/services`);
-    expect(href('rel="alternate"][hreflang="hy"')).toBe(`${location.origin}/hy/services`);
-    expect(href('rel="alternate"][hreflang="ru"')).toBe(`${location.origin}/ru/services`);
-    expect(href('rel="alternate"][hreflang="x-default"')).toBe(`${location.origin}/services`);
+    expect(href('rel="canonical"')).toBe(`${origin()}/hy/services`);
+    expect(href('rel="alternate"][hreflang="en"')).toBe(`${origin()}/services`);
+    expect(href('rel="alternate"][hreflang="hy"')).toBe(`${origin()}/hy/services`);
+    expect(href('rel="alternate"][hreflang="ru"')).toBe(`${origin()}/ru/services`);
+    expect(href('rel="alternate"][hreflang="x-default"')).toBe(`${origin()}/services`);
     expect(document.title).toBe('Ծառայություններ | Nexora');
     expect(document.head.querySelectorAll('link[rel="canonical"]')).toHaveLength(1);
   });

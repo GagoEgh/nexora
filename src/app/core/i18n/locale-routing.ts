@@ -1,4 +1,5 @@
-import { inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { PLATFORM_ID, inject } from '@angular/core';
 import { CanActivateFn, CanMatchFn, Router } from '@angular/router';
 import { useLocale } from 'angular-intlayer';
 import {
@@ -18,8 +19,13 @@ export const syncLocaleWithUrl: CanActivateFn = (_route, state) => {
   const router = inject(Router);
   const i18n = useLocale();
   const target: DeclaredLocales = getLocaleFromPath(state.url) ?? defaultLocale;
-
-  if (!router.navigated && target === defaultLocale && i18n.locale() !== defaultLocale) {
+  const inBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+  if (
+    inBrowser &&
+    !router.navigated &&
+    target === defaultLocale &&
+    i18n.locale() !== defaultLocale
+  ) {
     return router.parseUrl(getLocalizedUrl(state.url, i18n.locale()));
   }
   if (i18n.locale() !== target) {
