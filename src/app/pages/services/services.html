@@ -126,3 +126,20 @@
     </section>
   }
 </div>
+
+<section class="services__cta">
+  <div class="services__cta-inner">
+    <div class="services__cta-main">
+      <app-icon-tile icon="compass" tone="primary" />
+      <div class="services__cta-copy">
+        <h2 class="services__cta-title">{{ content().ctaTitle }}</h2>
+        <p class="services__cta-text">{{ content().ctaText }}</p>
+      </div>
+    </div>
+
+    <a class="services__cta-action" matButton="tonal" [routerLink]="'/solutions' | localizedPath">
+      {{ content().ctaLabel }}
+      <mat-icon iconPositionEnd [svgIcon]="ctaArrowIcon" />
+    </a>
+  </div>
+</section>

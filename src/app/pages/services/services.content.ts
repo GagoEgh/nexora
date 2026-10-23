@@ -40,6 +40,21 @@ const servicesContent = {
         other: '{{count}} услуги',
       }),
     }),
+    ctaTitle: t({
+      en: 'Not sure which service fits?',
+      hy: 'Վստահ չե՞ք, թե որ ծառայությունն է հարմար։',
+      ru: 'Не уверены, какая услуга подойдёт?',
+    }),
+    ctaText: t({
+      en: 'Start from the business problem instead — each solution maps to the services that address it.',
+      hy: 'Փոխարենը սկսեք բիզնես խնդրից՝ յուրաքանչյուր լուծում կապված է այն ծառայությունների հետ, որոնք անդրադառնում են դրան։',
+      ru: 'Начните с бизнес-задачи — каждое решение связано с услугами, которые её закрывают.',
+    }),
+    ctaLabel: t({
+      en: 'Browse solutions',
+      hy: 'Դիտել լուծումները',
+      ru: 'Смотреть решения',
+    }),
     categories: {
       'design-product': {
         icon: 'pen-tool' satisfies AppIconName,

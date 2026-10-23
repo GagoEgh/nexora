@@ -176,14 +176,64 @@ describe('Services', () => {
   it('hides the decorative category icons from assistive technology', async () => {
     await go('/services');
 
+    // 5 in the category nav, 5 heading the catalogue groups, 1 in the closing CTA band.
     const tiles = Array.from(root.querySelectorAll('app-icon-tile'));
-    expect(tiles).toHaveLength(10);
+    expect(tiles).toHaveLength(11);
     expect(tiles.every((tile) => tile.getAttribute('aria-hidden') === 'true')).toBe(true);
     // The header card uses the 36px tile; the catalogue uses the default 48px one.
     const card = Array.from(root.querySelectorAll('.services__category app-icon-tile'));
     expect(card.every((tile) => tile.getAttribute('data-size') === 'dense')).toBe(true);
     const catalogue = Array.from(root.querySelectorAll('.services__group-head app-icon-tile'));
     expect(catalogue.every((tile) => tile.getAttribute('data-size') === 'medium')).toBe(true);
+  });
+
+  it('closes the page with a solutions CTA that survives category filtering', async () => {
+    await go('/services');
+
+    const cta = root.querySelector('.services__cta');
+    expect(cta).not.toBeNull();
+    // It has to be the last thing on the page, after the catalogue.
+    expect(root.lastElementChild).toBe(cta);
+    expect(root.querySelector('.services__cta-title')?.textContent?.trim()).toBe(
+      'Not sure which service fits?',
+    );
+    expect(root.querySelector('.services__cta-text')?.textContent?.trim()).toBe(
+      'Start from the business problem instead — each solution maps to the services that address it.',
+    );
+
+    const action = root.querySelector('a.services__cta-action');
+    expect(action?.textContent?.trim()).toContain('Browse solutions');
+    expect(action?.getAttribute('href')).toBe('/solutions');
+    // The heading hierarchy must stay intact: the band adds an h2, never a second h1.
+    expect(root.querySelectorAll('h1')).toHaveLength(1);
+    expect(root.querySelector('.services__cta-title')?.tagName).toBe('H2');
+
+    // Filtering hides four of the five groups; the band is outside that loop and stays.
+    await go('/services?category=software-engineering');
+    expect(root.querySelectorAll('.services__group')).toHaveLength(1);
+    expect(root.querySelector('.services__cta')).not.toBeNull();
+  });
+
+  it('localizes the CTA copy and its link under a locale prefix', async () => {
+    await go('/ru/services');
+
+    expect(root.querySelector('.services__cta-title')?.textContent?.trim()).toBe(
+      'Не уверены, какая услуга подойдёт?',
+    );
+    expect(root.querySelector('a.services__cta-action')?.textContent?.trim()).toContain(
+      'Смотреть решения',
+    );
+    expect(root.querySelector('a.services__cta-action')?.getAttribute('href')).toBe(
+      '/ru/solutions',
+    );
+
+    await go('/hy/services');
+    expect(root.querySelector('.services__cta-title')?.textContent?.trim()).toBe(
+      'Վստահ չե՞ք, թե որ ծառայությունն է հարմար։',
+    );
+    expect(root.querySelector('a.services__cta-action')?.getAttribute('href')).toBe(
+      '/hy/solutions',
+    );
   });
 
   it('gives Artificial Intelligence the dark accent tile and the others the primary one', async () => {

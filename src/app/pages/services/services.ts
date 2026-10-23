@@ -10,6 +10,7 @@ import {
   viewChildren,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { MatButton } from '@angular/material/button';
 import { MatChipListbox, type MatChipListboxChange, MatChipOption } from '@angular/material/chips';
 import { MatIcon } from '@angular/material/icon';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -64,7 +65,15 @@ function sectionInView(elements: readonly HTMLElement[], line: number): string |
 
 @Component({
   selector: 'app-services',
-  imports: [RouterLink, LocalizedPathPipe, IconTile, MatChipListbox, MatChipOption, MatIcon],
+  imports: [
+    RouterLink,
+    LocalizedPathPipe,
+    IconTile,
+    MatButton,
+    MatChipListbox,
+    MatChipOption,
+    MatIcon,
+  ],
   templateUrl: './services.html',
   styleUrl: './services.scss',
   host: { 'data-layout': 'immersive' },
@@ -117,6 +126,7 @@ export class Services {
   );
 
   protected readonly arrowIcon = appIcon('arrow-up-right');
+  protected readonly ctaArrowIcon = appIcon('arrow-right');
 
   protected readonly total = computed(() => this.content().items.length);
 
@@ -149,8 +159,6 @@ export class Services {
         }
       };
 
-      // The observer wakes us on scroll. Resize is listened to separately because a section
-      // can keep its intersection ratio while reflowing under a new column count.
       const observer = new view.IntersectionObserver(sync, { threshold: [0, 0.5, 1] });
       for (const element of elements) {
         observer.observe(element);
