@@ -14,7 +14,7 @@ const footerContent = {
         heading: t({ en: 'Services', hy: 'Ծառայություններ', ru: 'Услуги' }),
         links: [
           {
-            path: '/services',
+            path: '/services?category=software-engineering',
             label: t({
               en: 'Software Engineering',
               hy: 'Ծրագրային ինժեներիա',
@@ -22,7 +22,7 @@ const footerContent = {
             }),
           },
           {
-            path: '/services',
+            path: '/services?category=artificial-intelligence',
             label: t({
               en: 'Artificial Intelligence',
               hy: 'Արհեստական բանականություն',
@@ -30,11 +30,11 @@ const footerContent = {
             }),
           },
           {
-            path: '/services',
+            path: '/services?category=design-product',
             label: t({ en: 'Design & Product', hy: 'Դիզայն և պրոդուկտ', ru: 'Дизайн и продукт' }),
           },
           {
-            path: '/services',
+            path: '/services?category=infrastructure-operations',
             label: t({
               en: 'Infrastructure & Operations',
               hy: 'Ենթակառուցվածք և շահագործում',
@@ -42,7 +42,7 @@ const footerContent = {
             }),
           },
           {
-            path: '/services',
+            path: '/services?category=engineering-partnerships',
             label: t({
               en: 'Engineering Partnerships',
               hy: 'Ինժեներական գործընկերություն',

@@ -331,7 +331,7 @@ test.describe('routing', () => {
     await page
       .locator('app-footer .footer__column a.footer__link', { hasText: 'Software Engineering' })
       .click();
-    await expect(page).toHaveURL(/\/services$/);
+    await expect(page).toHaveURL(/\/services\?category=software-engineering$/);
     await expect.poll(scrollY).toBe(0);
 
     // The router restores the stored position as soon as the view exists; late layout of the long

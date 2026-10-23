@@ -12,7 +12,7 @@
         <ul class="footer__list">
           @for (link of column.links; track $index) {
             <li>
-              <a class="footer__link" [routerLink]="link.path.value | localizedPath">
+              <a class="footer__link" [routerLink]="toUrl(link.path.value | localizedPath)">
                 {{ link.label }}
               </a>
             </li>
@@ -30,7 +30,7 @@
 
     <div class="footer__legal">
       @for (link of content().legal; track link.path.value) {
-        <a class="footer__link" [routerLink]="link.path.value | localizedPath">
+        <a class="footer__link" [routerLink]="toUrl(link.path.value | localizedPath)">
           {{ link.label }}
         </a>
       }
