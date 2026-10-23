@@ -86,6 +86,6 @@ const howWeWorkContent = {
       },
     ],
   },
-} satisfies Dictionary;
+} as const satisfies Dictionary;
 
 export default howWeWorkContent;

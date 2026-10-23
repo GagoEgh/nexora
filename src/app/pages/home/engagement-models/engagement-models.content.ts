@@ -118,6 +118,6 @@ const engagementModelsContent = {
       },
     ],
   },
-} satisfies Dictionary;
+} as const satisfies Dictionary;
 
 export default engagementModelsContent;

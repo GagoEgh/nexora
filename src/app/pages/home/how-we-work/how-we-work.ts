@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import { useIntlayer } from 'angular-intlayer';
+import { useDictionary } from 'angular-intlayer';
 import { appIcon } from '../../../core/icons/icons';
 import { ordinal } from '../../../shared/ordinal';
+import howWeWorkContent from './how-we-work.content';
 
 @Component({
   selector: 'app-how-we-work',
@@ -11,7 +12,7 @@ import { ordinal } from '../../../shared/ordinal';
   styleUrl: './how-we-work.scss',
 })
 export class HowWeWork {
-  protected readonly content = useIntlayer('how-we-work');
+  protected readonly content = useDictionary(howWeWorkContent);
   protected readonly arrowIcon = appIcon('arrow-right');
   protected readonly ordinal = ordinal;
 }

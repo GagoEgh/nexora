@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
-import { useIntlayer } from 'angular-intlayer';
+import { useDictionary } from 'angular-intlayer';
 import { LocalizedPathPipe } from '../../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../../core/icons/icons';
 import { IconTile } from '../../../shared/ui/icon-tile/icon-tile';
+import aiAutomationContent from './ai-automation.content';
 
 @Component({
   selector: 'app-ai-automation',
@@ -14,6 +15,6 @@ import { IconTile } from '../../../shared/ui/icon-tile/icon-tile';
   styleUrl: './ai-automation.scss',
 })
 export class AiAutomation {
-  protected readonly content = useIntlayer('ai-automation');
+  protected readonly content = useDictionary(aiAutomationContent);
   protected readonly arrowIcon = appIcon('arrow-right');
 }

@@ -166,6 +166,6 @@ const footerContent = {
     }),
     language: t({ en: 'Language', hy: 'Լեզու', ru: 'Язык' }),
   },
-} satisfies Dictionary;
+} as const satisfies Dictionary;
 
 export default footerContent;

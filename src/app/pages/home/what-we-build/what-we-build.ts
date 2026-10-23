@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { useIntlayer } from 'angular-intlayer';
+import { useDictionary } from 'angular-intlayer';
 import { WhatWeBuildIllustration } from './illustration/what-we-build-illustration';
+import whatWeBuildContent from './what-we-build.content';
 
 @Component({
   selector: 'app-what-we-build',
@@ -9,5 +10,5 @@ import { WhatWeBuildIllustration } from './illustration/what-we-build-illustrati
   styleUrl: './what-we-build.scss',
 })
 export class WhatWeBuild {
-  protected readonly content = useIntlayer('what-we-build');
+  protected readonly content = useDictionary(whatWeBuildContent);
 }

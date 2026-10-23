@@ -1,8 +1,9 @@
 import { Component, computed, signal, viewChild } from '@angular/core';
 import { MatChipListbox, type MatChipListboxChange, MatChipOption } from '@angular/material/chips';
-import { useIntlayer } from 'angular-intlayer';
+import { useDictionary } from 'angular-intlayer';
 import { ordinal } from '../../../shared/ordinal';
 import { Logo } from '../../../shared/ui/logo/logo';
+import whyContent from './why.content';
 
 @Component({
   selector: 'app-why',
@@ -11,7 +12,7 @@ import { Logo } from '../../../shared/ui/logo/logo';
   styleUrl: './why.scss',
 })
 export class Why {
-  protected readonly content = useIntlayer('why');
+  protected readonly content = useDictionary(whyContent);
   private readonly listbox = viewChild.required(MatChipListbox);
   protected readonly selected = signal(0);
 

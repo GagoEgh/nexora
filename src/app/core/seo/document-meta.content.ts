@@ -90,6 +90,6 @@ const documentMetaContent = {
       },
     },
   },
-} satisfies Dictionary;
+} as const satisfies Dictionary;
 
 export default documentMetaContent;

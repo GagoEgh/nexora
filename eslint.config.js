@@ -34,6 +34,21 @@ module.exports = defineConfig([
     },
   },
   {
+    // Node ESM tooling (scripts/*.mjs). Angular's rules are template/decorator specific and
+    // typescript-eslint's need a TS program, so the core recommended set is the applicable one.
+    files: ['**/*.mjs'],
+    extends: [eslint.configs.recommended],
+    languageOptions: {
+      sourceType: 'module',
+    },
+    rules: {
+      // tsconfig.scripts.json type-checks these files against @types/node, which resolves
+      // Node's globals properly; leaving no-undef on would need a hand-maintained globals
+      // list here to do the same job less well.
+      'no-undef': 'off',
+    },
+  },
+  {
     files: ['**/*.html'],
     extends: [angular.configs.templateRecommended, angular.configs.templateAccessibility],
     rules: {},

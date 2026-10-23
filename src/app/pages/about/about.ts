@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { useIntlayer } from 'angular-intlayer';
+import { useDictionary } from 'angular-intlayer';
+import aboutContent from './about.content';
 
 @Component({
   selector: 'app-about',
@@ -13,5 +14,5 @@ import { useIntlayer } from 'angular-intlayer';
   `,
 })
 export class About {
-  protected readonly content = useIntlayer('about');
+  protected readonly content = useDictionary(aboutContent);
 }

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { useIntlayer } from 'angular-intlayer';
+import { useDictionary } from 'angular-intlayer';
+import privacyPolicyContent from './privacy-policy.content';
 
 @Component({
   selector: 'app-privacy-policy',
@@ -13,5 +14,5 @@ import { useIntlayer } from 'angular-intlayer';
   `,
 })
 export class PrivacyPolicy {
-  protected readonly content = useIntlayer('privacy-policy');
+  protected readonly content = useDictionary(privacyPolicyContent);
 }

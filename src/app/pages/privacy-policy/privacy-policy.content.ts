@@ -9,6 +9,6 @@ const privacyPolicyContent = {
       ru: 'Политика конфиденциальности',
     }),
   },
-} satisfies Dictionary;
+} as const satisfies Dictionary;
 
 export default privacyPolicyContent;

@@ -5,11 +5,14 @@ import {
   MAT_SNACK_BAR_DATA,
   MatSnackBarAction,
   MatSnackBarActions,
+  type MatSnackBarConfig,
   MatSnackBarLabel,
   MatSnackBarRef,
 } from '@angular/material/snack-bar';
-import { useIntlayer } from 'angular-intlayer';
+import { useDictionary } from 'angular-intlayer';
 import { appIcon, type AppIconName } from '../../../core/icons/icons';
+import snackBarContent from './snack-bar.content';
+export const SNACK_BAR_CONFIG = { verticalPosition: 'top' } as const satisfies MatSnackBarConfig;
 
 export type SnackBarTone = 'neutral' | 'success' | 'error';
 
@@ -32,7 +35,7 @@ export interface SnackBarData {
 export class SnackBar {
   protected readonly data = inject<SnackBarData>(MAT_SNACK_BAR_DATA);
   private readonly snackBarRef = inject<MatSnackBarRef<SnackBar>>(MatSnackBarRef);
-  private readonly content = useIntlayer('snack-bar');
+  private readonly content = useDictionary(snackBarContent);
 
   protected readonly svgIcon = appIcon(this.data.icon);
   protected readonly action = this.data.action ?? this.content().dismiss.value;

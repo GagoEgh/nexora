@@ -5,6 +5,6 @@ const partnershipsContent = {
   content: {
     title: t({ en: 'Partnerships', hy: 'Գործընկերություն', ru: 'Партнёрство' }),
   },
-} satisfies Dictionary;
+} as const satisfies Dictionary;
 
 export default partnershipsContent;

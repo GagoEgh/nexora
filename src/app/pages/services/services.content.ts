@@ -364,6 +364,6 @@ const servicesContent = {
       },
     ],
   },
-} satisfies Dictionary;
+} as const satisfies Dictionary;
 
 export default servicesContent;

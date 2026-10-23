@@ -98,6 +98,6 @@ const expertiseContent = {
       },
     ],
   },
-} satisfies Dictionary;
+} as const satisfies Dictionary;
 
 export default expertiseContent;

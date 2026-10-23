@@ -134,6 +134,6 @@ const heroContent = {
       },
     },
   },
-} satisfies Dictionary;
+} as const satisfies Dictionary;
 
 export default heroContent;

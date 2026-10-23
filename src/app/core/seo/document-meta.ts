@@ -3,10 +3,11 @@ import { EnvironmentProviders, effect, inject, provideEnvironmentInitializer } f
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Meta, Title } from '@angular/platform-browser';
 import { ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
-import { useIntlayer, useLocale } from 'angular-intlayer';
+import { useDictionary, useLocale } from 'angular-intlayer';
 import { defaultLocale, getMultilingualUrls, getPathWithoutLocale } from 'intlayer';
 import { filter, map } from 'rxjs';
 import type { AppLocale } from '../i18n/locale-labels';
+import documentMetaContent from './document-meta.content';
 import { SITE_ORIGIN } from './site-origin';
 
 export const DOCUMENT_META_PAGES = [
@@ -50,7 +51,7 @@ export function provideDocumentMeta(): EnvironmentProviders {
     const meta = inject(Meta);
     const document = inject(DOCUMENT);
     const origin = inject(SITE_ORIGIN);
-    const content = useIntlayer('document-meta');
+    const content = useDictionary(documentMetaContent);
     const locale = useLocale().locale;
     const route = toSignal(
       router.events.pipe(

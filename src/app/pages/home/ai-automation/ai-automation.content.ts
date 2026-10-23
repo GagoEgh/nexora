@@ -105,6 +105,6 @@ const aiAutomationContent = {
       ru: 'Спроектировано так, чтобы быть наблюдаемым и тестируемым, с проверкой человеком там, где важны решения.',
     }),
   },
-} satisfies Dictionary;
+} as const satisfies Dictionary;
 
 export default aiAutomationContent;

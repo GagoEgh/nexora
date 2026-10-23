@@ -431,6 +431,6 @@ const whyContent = {
       },
     ],
   },
-} satisfies Dictionary;
+} as const satisfies Dictionary;
 
 export default whyContent;

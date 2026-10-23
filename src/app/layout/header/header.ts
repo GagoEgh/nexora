@@ -4,12 +4,13 @@ import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { useIntlayer } from 'angular-intlayer';
+import { useDictionary } from 'angular-intlayer';
 import { filter } from 'rxjs';
 import { useLocaleSwitcher } from '../../core/i18n/locale-switcher';
 import { LocalizedPathPipe } from '../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../core/icons/icons';
 import { Logo } from '../../shared/ui/logo/logo';
+import headerContent from './header.content';
 
 @Component({
   selector: 'app-header',
@@ -33,7 +34,7 @@ import { Logo } from '../../shared/ui/logo/logo';
   },
 })
 export class Header {
-  protected readonly content = useIntlayer('header');
+  protected readonly content = useDictionary(headerContent);
   protected readonly i18n = useLocaleSwitcher();
   private readonly menuButton = viewChild.required('menuButton', { read: ElementRef });
 

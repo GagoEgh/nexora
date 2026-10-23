@@ -1,11 +1,14 @@
 import { Component, input } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import type { getIntlayer } from 'angular-intlayer';
+import type { DeepTransformContent } from 'angular-intlayer';
 import { appIcon } from '../../../../core/icons/icons';
 import { IconTile } from '../../../../shared/ui/icon-tile/icon-tile';
+import type heroContent from '../hero.content';
 import { HeroNotes } from './notes/hero-notes';
 
-export type HeroIllustrationContent = ReturnType<typeof getIntlayer<'hero'>>['illustration'];
+export type HeroIllustrationContent = DeepTransformContent<
+  (typeof heroContent)['content']
+>['illustration'];
 
 @Component({
   selector: 'app-hero-illustration',

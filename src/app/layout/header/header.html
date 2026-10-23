@@ -40,28 +40,41 @@
   </nav>
 
   <div class="header__actions">
-    <button
-      class="header__lang"
-      type="button"
-      [matMenuTriggerFor]="langMenu"
-      [attr.aria-label]="content().language.value"
-    >
-      <mat-icon class="header__lang-icon" [svgIcon]="globeIcon" />
-      <span class="header__lang-code">{{ i18n.locale().toUpperCase() }}</span>
-      <mat-icon class="header__lang-icon" [svgIcon]="chevronIcon" />
-    </button>
-    <mat-menu #langMenu="matMenu">
-      @for (code of i18n.locales; track code) {
-        <button
-          mat-menu-item
-          [attr.lang]="code"
-          [attr.aria-current]="code === i18n.locale() ? 'true' : null"
-          (click)="i18n.switchTo(code)"
-        >
-          {{ i18n.names[code] }}
-        </button>
-      }
-    </mat-menu>
+    @defer (on immediate) {
+      <button
+        class="header__lang"
+        type="button"
+        [matMenuTriggerFor]="langMenu"
+        [attr.aria-label]="content().language.value"
+      >
+        <mat-icon class="header__lang-icon" [svgIcon]="globeIcon" />
+        <span class="header__lang-code">{{ i18n.locale().toUpperCase() }}</span>
+        <mat-icon class="header__lang-icon" [svgIcon]="chevronIcon" />
+      </button>
+      <mat-menu #langMenu="matMenu">
+        @for (code of i18n.locales; track code) {
+          <button
+            mat-menu-item
+            [attr.lang]="code"
+            [attr.aria-current]="code === i18n.locale() ? 'true' : null"
+            (click)="i18n.switchTo(code)"
+          >
+            {{ i18n.names[code] }}
+          </button>
+        }
+      </mat-menu>
+    } @placeholder {
+      <button
+        class="header__lang"
+        type="button"
+        data-lang-pending
+        [attr.aria-label]="content().language.value"
+      >
+        <mat-icon class="header__lang-icon" [svgIcon]="globeIcon" />
+        <span class="header__lang-code">{{ i18n.locale().toUpperCase() }}</span>
+        <mat-icon class="header__lang-icon" [svgIcon]="chevronIcon" />
+      </button>
+    }
 
     <a
       class="header__cta"

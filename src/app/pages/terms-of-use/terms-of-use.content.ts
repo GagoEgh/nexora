@@ -5,6 +5,6 @@ const termsOfUseContent = {
   content: {
     title: t({ en: 'Terms of Use', hy: 'Օգտագործման պայմաններ', ru: 'Условия использования' }),
   },
-} satisfies Dictionary;
+} as const satisfies Dictionary;
 
 export default termsOfUseContent;

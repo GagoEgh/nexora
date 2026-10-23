@@ -5,6 +5,6 @@ const snackBarContent = {
   content: {
     dismiss: t({ en: 'Dismiss', hy: 'Փակել', ru: 'Закрыть' }),
   },
-} satisfies Dictionary;
+} as const satisfies Dictionary;
 
 export default snackBarContent;

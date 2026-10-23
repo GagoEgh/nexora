@@ -5,6 +5,6 @@ const solutionsContent = {
   content: {
     title: t({ en: 'Solutions', hy: 'Լուծումներ', ru: 'Решения' }),
   },
-} satisfies Dictionary;
+} as const satisfies Dictionary;
 
 export default solutionsContent;

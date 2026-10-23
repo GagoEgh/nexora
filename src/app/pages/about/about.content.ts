@@ -5,6 +5,6 @@ const aboutContent = {
   content: {
     title: t({ en: 'About', hy: 'Մեր մասին', ru: 'О нас' }),
   },
-} satisfies Dictionary;
+} as const satisfies Dictionary;
 
 export default aboutContent;

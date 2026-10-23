@@ -13,11 +13,12 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { MatChipListbox, type MatChipListboxChange, MatChipOption } from '@angular/material/chips';
 import { MatIcon } from '@angular/material/icon';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { useIntlayer } from 'angular-intlayer';
+import { useDictionary } from 'angular-intlayer';
 import { LocalizedPathPipe } from '../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../core/icons/icons';
 import { ordinal } from '../../shared/ordinal';
 import { IconTile, type IconTileTone } from '../../shared/ui/icon-tile/icon-tile';
+import servicesContent from './services.content';
 
 export const SERVICE_CATEGORY_IDS = [
   'design-product',
@@ -74,7 +75,7 @@ export class Services {
   private readonly app = inject(ApplicationRef);
   private readonly document = inject(DOCUMENT);
 
-  protected readonly content = useIntlayer('services');
+  protected readonly content = useDictionary(servicesContent);
   protected readonly all = ALL;
   protected readonly sectionId = serviceSectionId;
   protected readonly chevronIcon = appIcon('chevron-down');

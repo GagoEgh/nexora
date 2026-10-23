@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { useIntlayer } from 'angular-intlayer';
+import { useDictionary } from 'angular-intlayer';
+import contactContent from './contact.content';
 
 @Component({
   selector: 'app-contact',
@@ -13,5 +14,5 @@ import { useIntlayer } from 'angular-intlayer';
   `,
 })
 export class Contact {
-  protected readonly content = useIntlayer('contact');
+  protected readonly content = useDictionary(contactContent);
 }

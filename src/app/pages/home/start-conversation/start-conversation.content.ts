@@ -46,6 +46,6 @@ const startConversationContent = {
       ru: 'Стать партнёром',
     }),
   },
-} satisfies Dictionary;
+} as const satisfies Dictionary;
 
 export default startConversationContent;

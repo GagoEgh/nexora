@@ -124,6 +124,6 @@ const whatWeBuildContent = {
       },
     ],
   },
-} satisfies Dictionary;
+} as const satisfies Dictionary;
 
 export default whatWeBuildContent;

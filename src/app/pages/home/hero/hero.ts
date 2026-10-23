@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
-import { useIntlayer } from 'angular-intlayer';
+import { useDictionary } from 'angular-intlayer';
 import { LocalizedPathPipe } from '../../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../../core/icons/icons';
+import heroContent from './hero.content';
 import { HeroIllustration } from './illustration/hero-illustration';
 
 @Component({
@@ -14,7 +15,7 @@ import { HeroIllustration } from './illustration/hero-illustration';
   styleUrl: './hero.scss',
 })
 export class Hero {
-  protected readonly content = useIntlayer('hero');
+  protected readonly content = useDictionary(heroContent);
   protected readonly arrowIcon = appIcon('arrow-right');
   protected readonly checkIcon = appIcon('check');
 }

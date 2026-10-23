@@ -5,6 +5,6 @@ const contactContent = {
   content: {
     title: t({ en: 'Contact', hy: 'Կապ', ru: 'Контакты' }),
   },
-} satisfies Dictionary;
+} as const satisfies Dictionary;
 
 export default contactContent;

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { useIntlayer } from 'angular-intlayer';
+import { useDictionary } from 'angular-intlayer';
+import termsOfUseContent from './terms-of-use.content';
 
 @Component({
   selector: 'app-terms-of-use',
@@ -13,5 +14,5 @@ import { useIntlayer } from 'angular-intlayer';
   `,
 })
 export class TermsOfUse {
-  protected readonly content = useIntlayer('terms-of-use');
+  protected readonly content = useDictionary(termsOfUseContent);
 }

@@ -30,6 +30,6 @@ const headerContent = {
     openMenu: t({ en: 'Open menu', hy: 'Բացել ընտրացանկը', ru: 'Открыть меню' }),
     closeMenu: t({ en: 'Close menu', hy: 'Փակել ընտրացանկը', ru: 'Закрыть меню' }),
   },
-} satisfies Dictionary;
+} as const satisfies Dictionary;
 
 export default headerContent;
