@@ -1,0 +1,25 @@
+<section class="capabilities">
+  <div class="capabilities__heading">
+    <p class="capabilities__eyebrow">{{ content().eyebrow }}</p>
+    <h2 class="capabilities__title">{{ content().title }}</h2>
+  </div>
+
+  <ul class="capabilities__panels">
+    @for (panel of content().panels; track $index) {
+      <li class="capabilities__panel" [attr.data-tone]="panel.tone.value">
+        <h3 class="capabilities__panel-title">{{ panel.title }}</h3>
+
+        <ul class="capabilities__list">
+          @for (item of panel.items; track $index) {
+            <li class="capabilities__item">
+              <span class="capabilities__check" aria-hidden="true">
+                <mat-icon [svgIcon]="checkIcon" />
+              </span>
+              <span class="capabilities__label">{{ item }}</span>
+            </li>
+          }
+        </ul>
+      </li>
+    }
+  </ul>
+</section>

@@ -1,0 +1,122 @@
+@use 'tokens/spacing';
+@use 'tokens/layout';
+@use 'mixins/eyebrow';
+
+:host {
+  display: block;
+  padding-block: spacing.space(96);
+  padding-inline: var(--nx-layout-margin);
+}
+
+.capabilities {
+  max-width: var(--nx-layout-container-max);
+  margin-inline: auto;
+}
+
+.capabilities__heading {
+  display: grid;
+  gap: spacing.space(20);
+  justify-items: start;
+  margin-block-end: spacing.space(64);
+}
+
+.capabilities__eyebrow {
+  @include eyebrow.eyebrow();
+}
+
+.capabilities__title {
+  margin: 0;
+  font: var(--nx-sys-display-section);
+  letter-spacing: var(--nx-sys-display-tracking);
+  color: var(--mat-sys-on-surface);
+}
+
+.capabilities__panels {
+  display: grid;
+  gap: spacing.space(24);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @include layout.up(large) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.capabilities__panel {
+  box-sizing: border-box;
+  min-height: 446px;
+  padding: calc(#{spacing.space(24)} + #{spacing.space(4)}) spacing.space(32) spacing.space(16);
+  border-radius: 24px;
+}
+
+.capabilities__panel[data-tone='neutral'] {
+  background-color: var(--mat-sys-surface-container-low);
+}
+
+.capabilities__panel[data-tone='accent'] {
+  background-color: var(--mat-sys-primary-container);
+}
+
+.capabilities__panel-title {
+  margin: 0;
+  font: var(--nx-sys-title-card);
+  letter-spacing: var(--nx-sys-display-tracking);
+  color: var(--mat-sys-on-surface);
+}
+
+.capabilities__panel[data-tone='accent'] .capabilities__panel-title {
+  color: var(--mat-sys-primary);
+}
+
+.capabilities__list {
+  margin: spacing.space(24) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.capabilities__item {
+  display: flex;
+  gap: spacing.space(12);
+  align-items: center;
+  padding-block: spacing.space(12);
+
+  & + & {
+    border-block-start: 1px solid var(--mat-sys-outline-variant);
+  }
+}
+
+.capabilities__panel[data-tone='accent'] .capabilities__item + .capabilities__item {
+  border-block-start-color: var(--mat-sys-primary);
+}
+
+.capabilities__check {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: var(--mat-sys-primary);
+
+  .mat-icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.capabilities__panel[data-tone='accent'] .capabilities__check {
+  border-radius: var(--mat-sys-corner-full);
+  background-color: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+
+  .mat-icon {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+.capabilities__label {
+  font: var(--nx-sys-body-copy);
+  color: var(--mat-sys-on-surface);
+}

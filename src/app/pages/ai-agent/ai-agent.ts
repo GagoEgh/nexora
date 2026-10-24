@@ -8,6 +8,7 @@ import { LocalizedPathPipe } from '../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../core/icons/icons';
 import { PageIntro, type PageIntroCrumb } from '../../shared/ui/page-intro/page-intro';
 import aiAgentContent from './ai-agent.content';
+import { Capabilities } from './capabilities/capabilities';
 import { Overview } from './overview/overview';
 import { Problems } from './problems/problems';
 import { Workflow } from './workflow/workflow';
@@ -18,6 +19,7 @@ import { Workflow } from './workflow/workflow';
     RouterLink,
     LocalizedPathPipe,
     PageIntro,
+    Capabilities,
     Overview,
     Problems,
     Workflow,

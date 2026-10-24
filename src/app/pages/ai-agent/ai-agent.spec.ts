@@ -144,7 +144,8 @@ describe('AiAgent', () => {
 
     const problems = root.querySelector('app-problems');
     expect(problems).not.toBeNull();
-    expect(root.lastElementChild?.tagName).toBe('APP-PROBLEMS');
+    expect(problems?.previousElementSibling?.tagName).toBe('APP-OVERVIEW');
+    expect(problems?.nextElementSibling?.tagName).toBe('APP-CAPABILITIES');
 
     expect(problems?.querySelector('.problems__eyebrow')?.textContent?.trim()).toBe(
       'Problems we solve',
@@ -177,6 +178,41 @@ describe('AiAgent', () => {
     expect(cards[0].querySelector('.problems__card-title')?.tagName).toBe('H3');
   });
 
+  it('closes the page with the capabilities and deliverables panels', async () => {
+    await go('/services/ai_agent');
+
+    const capabilities = root.querySelector('app-capabilities');
+    expect(capabilities).not.toBeNull();
+    expect(root.lastElementChild?.tagName).toBe('APP-CAPABILITIES');
+
+    expect(capabilities?.querySelector('.capabilities__eyebrow')?.textContent?.trim()).toBe(
+      'Capabilities & deliverables',
+    );
+    expect(capabilities?.querySelector('h2.capabilities__title')?.textContent?.trim()).toBe(
+      'What we build, and what you receive.',
+    );
+
+    const panels = Array.from(capabilities?.querySelectorAll('.capabilities__panel') ?? []);
+    expect(panels).toHaveLength(2);
+    expect(panels.map((panel) => panel.getAttribute('data-tone'))).toEqual(['neutral', 'accent']);
+    expect(text('.capabilities__panel-title')).toEqual(['Capabilities', 'Deliverables']);
+
+    // Seven capabilities on the left, six deliverables on the right.
+    expect(panels[0].querySelectorAll('.capabilities__item')).toHaveLength(7);
+    expect(panels[1].querySelectorAll('.capabilities__item')).toHaveLength(6);
+    expect(text('.capabilities__label')[0]).toBe('Lead handling and qualification');
+    expect(text('.capabilities__label').at(-1)).toBe('Monitoring and iteration plan');
+
+    // Every row leads with a decorative check.
+    const checks = Array.from(capabilities?.querySelectorAll('.capabilities__check') ?? []);
+    expect(checks).toHaveLength(13);
+    expect(checks.every((check) => check.getAttribute('aria-hidden') === 'true')).toBe(true);
+
+    // The section must not disturb the page outline.
+    expect(root.querySelectorAll('h1')).toHaveLength(1);
+    expect(panels[0].querySelector('.capabilities__panel-title')?.tagName).toBe('H3');
+  });
+
   it('renders every string and both links under a locale prefix', async () => {
     await go('/ru/services/ai_agent');
 
@@ -185,6 +221,7 @@ describe('AiAgent', () => {
       'Искусственный интеллект · Услуга 09',
     );
     expect(text('.workflow__label')[0]).toBe('Триггер');
+    expect(text('.capabilities__panel-title')).toEqual(['Возможности', 'Результаты']);
     expect(root.querySelector('.problems__card-title')?.textContent?.trim()).toBe(
       'Данные копируются вручную',
     );
@@ -206,6 +243,7 @@ describe('AiAgent', () => {
     expect(root.querySelector('.problems__card-title')?.textContent?.trim()).toBe(
       'Ձեռքով պատճենվող տվյալներ',
     );
+    expect(text('.capabilities__panel-title')).toEqual(['Հնարավորություններ', 'Արդյունքներ']);
     expect(
       Array.from(root.querySelectorAll('.page-intro__crumb-link')).map((a) =>
         a.getAttribute('href'),

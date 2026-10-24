@@ -227,6 +227,68 @@ test.describe('ai agents problems band', () => {
   });
 });
 
+test.describe('ai agents capabilities band', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/services/ai_agent');
+  });
+
+  test('closes the page with two checklist panels', async ({ page }) => {
+    const capabilities = page.locator('app-capabilities');
+    await expect(capabilities).toHaveCount(1);
+    await expect(capabilities.locator('.capabilities__eyebrow')).toHaveText(
+      'Capabilities & deliverables',
+    );
+    await expect(capabilities.locator('h2.capabilities__title')).toHaveText(
+      'What we build, and what you receive.',
+    );
+    await expect(page.locator('app-ai-agent h1')).toHaveCount(1);
+
+    await expect(capabilities.locator('.capabilities__panel')).toHaveCount(2);
+    await expect(capabilities.locator('.capabilities__panel-title')).toHaveText([
+      'Capabilities',
+      'Deliverables',
+    ]);
+    await expect(
+      capabilities.locator('.capabilities__panel[data-tone="neutral"] .capabilities__item'),
+    ).toHaveCount(7);
+    await expect(
+      capabilities.locator('.capabilities__panel[data-tone="accent"] .capabilities__item'),
+    ).toHaveCount(6);
+  });
+
+  test('matches the panel geometry and fills from the design', async ({ page }) => {
+    const panels = await boxes(page, '.capabilities__panel');
+    expect(panels).toHaveLength(2);
+    expect(panels[0].x).toBe(80);
+    expect(panels[1].x + panels[1].w).toBe(1360);
+    for (const panel of panels) expect(panel.w).toBe(628);
+    expect(panels[1].x - (panels[0].x + panels[0].w)).toBe(24);
+    expect(panels[0].y).toBe(panels[1].y);
+    expect(panels[0].h).toBe(panels[1].h);
+
+    expect(await style(page, '.capabilities__panel', 'border-top-left-radius')).toBe('24px');
+    expect(await style(page, '.capabilities__panel', 'padding-top')).toBe('28px');
+    expect(await style(page, '.capabilities__panel', 'padding-left')).toBe('32px');
+    expect(await style(page, '.capabilities__panel', 'padding-bottom')).toBe('16px');
+
+    expect(await style(page, '.capabilities__panel[data-tone="neutral"]', 'background-color')).toBe(
+      'rgb(246, 248, 251)',
+    );
+    expect(await style(page, '.capabilities__panel[data-tone="accent"]', 'background-color')).toBe(
+      'rgb(238, 244, 255)',
+    );
+    // The deliverables title is the accent one.
+    expect(
+      await style(
+        page,
+        '.capabilities__panel[data-tone="accent"] .capabilities__panel-title',
+        'color',
+      ),
+    ).toBe('rgb(15, 85, 232)');
+  });
+});
+
 test.describe('ai agents page in other locales', () => {
   test('renders the whole band in Russian and Armenian', async ({ page }) => {
     await page.goto('/ru/services/ai_agent');
@@ -237,6 +299,10 @@ test.describe('ai agents page in other locales', () => {
     await expect(page.locator('.workflow__label').first()).toHaveText('Триггер');
     await expect(page.locator('.overview__eyebrow')).toHaveText('Обзор');
     await expect(page.locator('.problems__eyebrow')).toHaveText('Задачи, которые мы решаем');
+    await expect(page.locator('.capabilities__panel-title')).toHaveText([
+      'Возможности',
+      'Результаты',
+    ]);
     await expect(page.locator('.ai-agent__actions a').nth(1)).toHaveAttribute(
       'href',
       '/ru/solutions',
@@ -250,6 +316,9 @@ test.describe('ai agents page in other locales', () => {
     await expect(page.locator('.overview__eyebrow')).toHaveText('Ակնարկ');
     await expect(page.locator('.problems__card-title').first()).toHaveText(
       'Ձեռքով պատճենվող տվյալներ',
+    );
+    await expect(page.locator('.capabilities__panel-title').first()).toHaveText(
+      'Հնարավորություններ',
     );
     await expect(page.locator('.ai-agent__actions a').nth(0)).toHaveAttribute(
       'href',
@@ -290,5 +359,11 @@ test.describe('ai agents page at the mobile width', () => {
     expect(cards).toHaveLength(4);
     for (const card of cards) expect(card.w).toBeLessThanOrEqual(390);
     expect(cards[1].y).toBeGreaterThanOrEqual(cards[0].y + cards[0].h);
+
+    // The checklist panels stack as well.
+    const panels = await boxes(page, '.capabilities__panel');
+    expect(panels).toHaveLength(2);
+    for (const panel of panels) expect(panel.w).toBeLessThanOrEqual(390);
+    expect(panels[1].y).toBeGreaterThanOrEqual(panels[0].y + panels[0].h);
   });
 });
