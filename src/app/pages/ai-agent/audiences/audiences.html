@@ -1,0 +1,40 @@
+<section class="audiences">
+  <div class="audiences__column">
+    <div class="audiences__heading">
+      <p class="audiences__eyebrow">{{ content().projects.eyebrow }}</p>
+      <h2 class="audiences__title">{{ content().projects.title }}</h2>
+    </div>
+
+    <ol class="audiences__list">
+      @for (item of content().projects.items; track $index) {
+        <li class="audiences__row">
+          <span class="audiences__number">{{ ordinal($index) }}</span>
+          <span class="audiences__label">{{ item }}</span>
+          <mat-icon class="audiences__arrow" aria-hidden="true" [svgIcon]="arrowIcon" />
+        </li>
+      }
+    </ol>
+  </div>
+
+  <div class="audiences__column">
+    <div class="audiences__heading">
+      <p class="audiences__eyebrow">{{ content().fit.eyebrow }}</p>
+      <h2 class="audiences__title">{{ content().fit.title }}</h2>
+    </div>
+
+    <ul class="audiences__chips">
+      @for (chip of content().fit.chips; track $index) {
+        <li class="audiences__chip">
+          <mat-icon
+            class="audiences__chip-icon"
+            aria-hidden="true"
+            [svgIcon]="chipIcon(chip.icon.value)"
+          />
+          {{ chip.label }}
+        </li>
+      }
+    </ul>
+
+    <p class="audiences__note">{{ content().fit.note }}</p>
+  </div>
+</section>

@@ -15,6 +15,7 @@ export const APP_ICON_NAMES = [
   'git-branch',
   'globe',
   'handshake',
+  'layers',
   'layout-dashboard',
   'mail',
   'menu',

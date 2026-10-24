@@ -183,7 +183,8 @@ describe('AiAgent', () => {
 
     const capabilities = root.querySelector('app-capabilities');
     expect(capabilities).not.toBeNull();
-    expect(root.lastElementChild?.tagName).toBe('APP-CAPABILITIES');
+    expect(capabilities?.previousElementSibling?.tagName).toBe('APP-PROBLEMS');
+    expect(capabilities?.nextElementSibling?.tagName).toBe('APP-AUDIENCES');
 
     expect(capabilities?.querySelector('.capabilities__eyebrow')?.textContent?.trim()).toBe(
       'Capabilities & deliverables',
@@ -213,6 +214,48 @@ describe('AiAgent', () => {
     expect(panels[0].querySelector('.capabilities__panel-title')?.tagName).toBe('H3');
   });
 
+  it('closes the page with the typical projects and audience fit columns', async () => {
+    await go('/services/ai_agent');
+
+    const audiences = root.querySelector('app-audiences');
+    expect(audiences).not.toBeNull();
+    expect(root.lastElementChild?.tagName).toBe('APP-AUDIENCES');
+
+    expect(text('.audiences__eyebrow')).toEqual(['Typical projects', "Who it's for"]);
+    expect(text('h2.audiences__title')).toEqual([
+      'What these engagements usually look like.',
+      'Built for teams that run on repeatable processes.',
+    ]);
+
+    // Six numbered projects. The arrows are decoration, so nothing here navigates.
+    expect(audiences?.querySelectorAll('.audiences__row')).toHaveLength(6);
+    expect(text('.audiences__number')).toEqual(['01', '02', '03', '04', '05', '06']);
+    expect(text('.audiences__label')[0]).toBe('Inbound lead triage and enrichment');
+    expect(text('.audiences__label').at(-1)).toBe('Internal approval workflows');
+    expect(audiences?.querySelectorAll('a, button')).toHaveLength(0);
+    const arrows = Array.from(audiences?.querySelectorAll('.audiences__arrow') ?? []);
+    expect(arrows).toHaveLength(6);
+    expect(arrows.every((arrow) => arrow.getAttribute('aria-hidden') === 'true')).toBe(true);
+
+    // Six chips, the fourth carrying the layers icon supplied with the design.
+    const chips = Array.from(audiences?.querySelectorAll('.audiences__chip') ?? []);
+    expect(chips).toHaveLength(6);
+    expect(chips.map((chip) => chip.textContent?.trim())).toEqual([
+      'Operations teams',
+      'Sales & customer success',
+      'Growing SMEs',
+      'Enterprises with CRM/ERP',
+      'SaaS companies',
+      'Digital agencies',
+    ]);
+    expect(audiences?.querySelector('.audiences__note')?.textContent?.trim()).toBe(
+      'Also relevant for software companies that want to add automation features to their own products.',
+    );
+
+    // The section must not disturb the page outline.
+    expect(root.querySelectorAll('h1')).toHaveLength(1);
+  });
+
   it('renders every string and both links under a locale prefix', async () => {
     await go('/ru/services/ai_agent');
 
@@ -222,6 +265,7 @@ describe('AiAgent', () => {
     );
     expect(text('.workflow__label')[0]).toBe('Триггер');
     expect(text('.capabilities__panel-title')).toEqual(['Возможности', 'Результаты']);
+    expect(text('.audiences__eyebrow')).toEqual(['Типичные проекты', 'Для кого это']);
     expect(root.querySelector('.problems__card-title')?.textContent?.trim()).toBe(
       'Данные копируются вручную',
     );
@@ -244,6 +288,7 @@ describe('AiAgent', () => {
       'Ձեռքով պատճենվող տվյալներ',
     );
     expect(text('.capabilities__panel-title')).toEqual(['Հնարավորություններ', 'Արդյունքներ']);
+    expect(text('.audiences__eyebrow')).toEqual(['Բնորոշ նախագծեր', 'Ում համար է']);
     expect(
       Array.from(root.querySelectorAll('.page-intro__crumb-link')).map((a) =>
         a.getAttribute('href'),

@@ -289,6 +289,92 @@ test.describe('ai agents capabilities band', () => {
   });
 });
 
+test.describe('ai agents audiences band', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/services/ai_agent');
+  });
+
+  test('closes the page with a numbered project list and an audience chip set', async ({
+    page,
+  }) => {
+    const audiences = page.locator('app-audiences');
+    await expect(audiences).toHaveCount(1);
+    await expect(audiences.locator('.audiences__eyebrow')).toHaveText([
+      'Typical projects',
+      "Who it's for",
+    ]);
+    await expect(audiences.locator('h2.audiences__title')).toHaveText([
+      'What these engagements usually look like.',
+      'Built for teams that run on repeatable processes.',
+    ]);
+    await expect(page.locator('app-ai-agent h1')).toHaveCount(1);
+
+    await expect(audiences.locator('.audiences__number')).toHaveText([
+      '01',
+      '02',
+      '03',
+      '04',
+      '05',
+      '06',
+    ]);
+    await expect(audiences.locator('.audiences__label').first()).toHaveText(
+      'Inbound lead triage and enrichment',
+    );
+
+    // The arrows are decoration: the rows must not be interactive.
+    await expect(audiences.locator('.audiences__arrow')).toHaveCount(6);
+    await expect(audiences.locator('a, button')).toHaveCount(0);
+
+    await expect(audiences.locator('.audiences__chip')).toHaveCount(6);
+    await expect(audiences.locator('.audiences__chip').nth(3)).toHaveText(
+      'Enterprises with CRM/ERP',
+    );
+    await expect(audiences.locator('.audiences__chip').nth(3).locator('svg')).toHaveCount(1);
+  });
+
+  test('matches the two-column geometry and row rules from the design', async ({ page }) => {
+    const columns = await boxes(page, '.audiences__column');
+    expect(columns).toHaveLength(2);
+    expect(columns[0].x).toBe(80);
+    expect(columns[0].w).toBe(696);
+    expect(columns[1].w).toBe(520);
+    expect(columns[1].x - (columns[0].x + columns[0].w)).toBe(64);
+    expect(columns[1].x + columns[1].w).toBe(1360);
+    expect(columns[0].y).toBe(columns[1].y);
+
+    // 26/34 heading, which sits off the token scale and is therefore set explicitly.
+    expect(await style(page, '.audiences__title', 'font-size')).toBe('26px');
+    expect(await style(page, '.audiences__title', 'line-height')).toBe('34px');
+    expect(await style(page, '.audiences__title', 'font-weight')).toBe('600');
+    expect(await style(page, '.audiences__title', 'letter-spacing')).toBe('-0.5px');
+    expect(await style(page, '.audiences__title', 'font-family')).toContain('Inter');
+
+    // Each row carries a single rule, so six rows draw seven lines with no doubling.
+    expect(await style(page, '.audiences__row', 'padding-top')).toBe('16px');
+    expect(await style(page, '.audiences__row', 'padding-bottom')).toBe('16px');
+    expect(await style(page, '.audiences__row', 'border-top-width')).toBe('1px');
+    expect(await style(page, '.audiences__row', 'border-bottom-width')).toBe('0px');
+    expect(await style(page, '.audiences__row', 'border-top-color')).toBe('rgb(226, 232, 240)');
+    expect(await style(page, '.audiences__row', 'column-gap')).toBe('16px');
+
+    const rows = await boxes(page, '.audiences__row');
+    expect(rows).toHaveLength(6);
+    const pitch = rows[1].y - rows[0].y;
+    for (let i = 1; i < rows.length; i += 1) {
+      expect(rows[i].y - rows[i - 1].y).toBe(pitch);
+      // Rows are flush: the rule between them is shared, never stacked.
+      expect(rows[i].y).toBe(rows[i - 1].y + rows[i - 1].h);
+    }
+    expect(
+      await page
+        .locator('.audiences__row')
+        .last()
+        .evaluate((el) => getComputedStyle(el).borderBottomWidth),
+    ).toBe('1px');
+  });
+});
+
 test.describe('ai agents page in other locales', () => {
   test('renders the whole band in Russian and Armenian', async ({ page }) => {
     await page.goto('/ru/services/ai_agent');
@@ -302,6 +388,10 @@ test.describe('ai agents page in other locales', () => {
     await expect(page.locator('.capabilities__panel-title')).toHaveText([
       'Возможности',
       'Результаты',
+    ]);
+    await expect(page.locator('.audiences__eyebrow')).toHaveText([
+      'Типичные проекты',
+      'Для кого это',
     ]);
     await expect(page.locator('.ai-agent__actions a').nth(1)).toHaveAttribute(
       'href',
@@ -320,6 +410,7 @@ test.describe('ai agents page in other locales', () => {
     await expect(page.locator('.capabilities__panel-title').first()).toHaveText(
       'Հնարավորություններ',
     );
+    await expect(page.locator('.audiences__eyebrow').first()).toHaveText('Բնորոշ նախագծեր');
     await expect(page.locator('.ai-agent__actions a').nth(0)).toHaveAttribute(
       'href',
       '/hy/contact',
@@ -365,5 +456,16 @@ test.describe('ai agents page at the mobile width', () => {
     expect(panels).toHaveLength(2);
     for (const panel of panels) expect(panel.w).toBeLessThanOrEqual(390);
     expect(panels[1].y).toBeGreaterThanOrEqual(panels[0].y + panels[0].h);
+
+    // The audiences columns stack and the chips wrap instead of scrolling sideways.
+    const columns = await boxes(page, '.audiences__column');
+    expect(columns).toHaveLength(2);
+    for (const column of columns) expect(column.w).toBeLessThanOrEqual(390);
+    expect(columns[1].y).toBeGreaterThanOrEqual(columns[0].y + columns[0].h);
+
+    const chips = await boxes(page, '.audiences__chip');
+    expect(chips).toHaveLength(6);
+    for (const chip of chips) expect(chip.x + chip.w).toBeLessThanOrEqual(390);
+    expect(new Set(chips.map((chip) => chip.y)).size).toBeGreaterThan(1);
   });
 });

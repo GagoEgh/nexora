@@ -1,0 +1,115 @@
+@use 'tokens/spacing';
+@use 'tokens/layout';
+@use 'tokens/typography';
+@use 'mixins/eyebrow';
+
+:host {
+  display: block;
+  padding-block: spacing.space(96);
+  padding-inline: var(--nx-layout-margin);
+}
+
+.audiences {
+  display: grid;
+  gap: spacing.space(48);
+  max-width: var(--nx-layout-container-max);
+  margin-inline: auto;
+
+  @include layout.up(large) {
+    grid-template-columns: minmax(0, 696fr) minmax(0, 520fr);
+    gap: spacing.space(64);
+    align-items: start;
+  }
+}
+
+.audiences__column {
+  display: grid;
+  gap: spacing.space(24);
+  align-content: start;
+}
+
+.audiences__heading {
+  display: grid;
+  gap: spacing.space(20);
+  justify-items: start;
+}
+
+.audiences__eyebrow {
+  @include eyebrow.eyebrow();
+}
+
+.audiences__title {
+  margin: 0;
+  font: #{typography.$weight-semibold} 26px #{'/'} 34px #{typography.$plain-family};
+  letter-spacing: -0.5px;
+  color: var(--mat-sys-on-surface);
+}
+
+.audiences__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.audiences__row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: spacing.space(16);
+  align-items: center;
+  padding-block: spacing.space(16);
+  border-block-start: 1px solid var(--mat-sys-outline-variant);
+
+  &:last-child {
+    border-block-end: 1px solid var(--mat-sys-outline-variant);
+  }
+}
+
+.audiences__number {
+  font: typography.$code-font;
+  color: var(--mat-sys-primary);
+}
+
+.audiences__label {
+  font: var(--nx-sys-body-copy);
+  font-weight: typography.$weight-semibold;
+  color: var(--mat-sys-on-surface);
+}
+
+.audiences__arrow {
+  width: 20px;
+  height: 20px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.audiences__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: spacing.space(12);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.audiences__chip {
+  display: inline-flex;
+  gap: spacing.space(8);
+  align-items: center;
+  padding: spacing.space(8) spacing.space(16);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--mat-sys-corner-full);
+  background-color: var(--mat-sys-surface);
+  font: var(--mat-sys-label-large);
+  color: var(--mat-sys-on-surface);
+}
+
+.audiences__chip-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--mat-sys-primary);
+}
+
+.audiences__note {
+  margin: 0;
+  font: var(--mat-sys-body-small);
+  color: var(--mat-sys-on-surface-variant);
+}

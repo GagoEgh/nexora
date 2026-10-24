@@ -4,6 +4,7 @@ import { Footer } from './layout/footer/footer';
 import { Header } from './layout/header/header';
 import { About } from './pages/about/about';
 import { AiAgent } from './pages/ai-agent/ai-agent';
+import { Audiences } from './pages/ai-agent/audiences/audiences';
 import { Capabilities } from './pages/ai-agent/capabilities/capabilities';
 import { Overview } from './pages/ai-agent/overview/overview';
 import { Problems } from './pages/ai-agent/problems/problems';
@@ -66,6 +67,7 @@ const COMPONENTS: readonly [string, Type<unknown>][] = [
   ['Services', Services],
   ['About', About],
   ['AiAgent', AiAgent],
+  ['Audiences', Audiences],
   ['Capabilities', Capabilities],
   ['Overview', Overview],
   ['Problems', Problems],
@@ -94,7 +96,7 @@ describe('change detection', () => {
   });
 
   it('every component in the application resolves to OnPush', () => {
-    expect(COMPONENTS).toHaveLength(32);
+    expect(COMPONENTS).toHaveLength(33);
     const eager = COMPONENTS.filter(([, component]) => !isOnPush(component)).map(([name]) => name);
     expect(eager, 'these components are checked eagerly').toEqual([]);
   });
