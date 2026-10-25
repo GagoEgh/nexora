@@ -16,6 +16,8 @@ const HEADING = 'A senior engineering partner for businesses that build with tec
 
 const LABELS = ['Focus', 'Team', 'Markets', 'Clients', 'Engagement'];
 
+const STEPS = ['Business goal', 'Constraints', 'Architecture', 'Delivery', 'Evolution'];
+
 const PRINCIPLES = [
   'Understand before building',
   'Architecture is a business decision',
@@ -290,6 +292,99 @@ describe('About', () => {
     );
     expect(text('.senior__panel-label')).toEqual(['Обычная пирамида', 'Модель Nexora']);
     expect(text('.senior__point-text')[2]).toBe('Меньше команды, яснее зона ответственности');
+  });
+
+  it('closes the page with the business flow header', async () => {
+    await go('/about');
+
+    const section = root.querySelector('app-business-flow .flow');
+    expect(section).not.toBeNull();
+
+    expect(section?.querySelector('.flow__eyebrow')?.textContent?.trim()).toBe(
+      'Business-first approach',
+    );
+
+    const title = section?.querySelector('.flow__title');
+    expect(title?.tagName).toBe('H2');
+    expect(title?.textContent?.trim()).toBe(
+      'We start with the outcome, then choose the technology.',
+    );
+    expect(section?.getAttribute('aria-labelledby')).toBe(title?.id);
+    expect(section?.querySelector('.flow__intro')?.textContent?.trim()).toContain(
+      'A business goal and its constraints shape the architecture',
+    );
+  });
+
+  it('renders the five steps as an ordered list, the first one accented', async () => {
+    await go('/about');
+
+    // The arrows are decorative, so the sequence has to come from the markup.
+    expect(root.querySelector('.flow__steps')?.tagName).toBe('OL');
+
+    const steps = Array.from(root.querySelectorAll('.flow__step'));
+    expect(steps).toHaveLength(5);
+    steps.forEach((step) => expect(step.tagName).toBe('LI'));
+    expect(steps.map((step) => step.getAttribute('data-tone'))).toEqual([
+      'accent',
+      'plain',
+      'plain',
+      'plain',
+      'plain',
+    ]);
+
+    expect(text('.flow__step-title')).toEqual(STEPS);
+    root.querySelectorAll('.flow__step-title').forEach((el) => expect(el.tagName).toBe('H3'));
+    expect(text('.flow__step-text')[0]).toBe('What must change, for whom');
+    expect(text('.flow__step-text')[4]).toBe('Support, measure, improve');
+  });
+
+  it('places a decorative connector before every step but the first', async () => {
+    await go('/about');
+
+    const arrows = Array.from(root.querySelectorAll('.flow__arrow'));
+    expect(arrows).toHaveLength(4);
+    arrows.forEach((arrow) => expect(arrow.getAttribute('aria-hidden')).toBe('true'));
+
+    // The first step carries no connector.
+    expect(root.querySelectorAll('.flow__step')[0].querySelector('.flow__arrow')).toBeNull();
+
+    const icons = Array.from(root.querySelectorAll('.flow__icon'));
+    expect(icons).toHaveLength(5);
+    icons.forEach((icon) => expect(icon.getAttribute('aria-hidden')).toBe('true'));
+  });
+
+  it('translates the business flow into Armenian and Russian', async () => {
+    setLocale('hy');
+    await go('/hy/about');
+    expect(root.querySelector('.flow__title')?.textContent?.trim()).toBe(
+      'Մենք սկսում ենք արդյունքից, հետո ընտրում տեխնոլոգիան։',
+    );
+    expect(text('.flow__step-title')[0]).toBe('Բիզնես նպատակ');
+
+    setLocale('ru');
+    await go('/ru/about');
+    expect(root.querySelector('.flow__title')?.textContent?.trim()).toBe(
+      'Мы начинаем с результата, а технологию выбираем потом.',
+    );
+    expect(text('.flow__step-title')).toEqual([
+      'Бизнес-цель',
+      'Ограничения',
+      'Архитектура',
+      'Поставка',
+      'Развитие',
+    ]);
+  });
+
+  it('keeps the business flow dictionary complete: five steps with known icons', () => {
+    const { steps } = aboutContent.content.businessFlow;
+    expect(steps).toHaveLength(5);
+    expect(steps.map((step) => step.icon)).toEqual([
+      'target',
+      'compass',
+      'git-branch',
+      'code',
+      'refresh-cw',
+    ]);
   });
 
   it('keeps the philosophy dictionary complete: four cards, two paragraphs', () => {

@@ -1,0 +1,24 @@
+<section class="flow" aria-labelledby="flow-title">
+  <div class="flow__header">
+    <div class="flow__heading">
+      <p class="flow__eyebrow">{{ content().businessFlow.eyebrow }}</p>
+      <h2 class="flow__title" id="flow-title">{{ content().businessFlow.title }}</h2>
+    </div>
+
+    <p class="flow__intro">{{ content().businessFlow.intro }}</p>
+  </div>
+
+  <ol class="flow__steps">
+    @for (step of content().businessFlow.steps; track $index; let first = $first) {
+      <li class="flow__step" [attr.data-tone]="first ? 'accent' : 'plain'">
+        @if (!first) {
+          <mat-icon class="flow__arrow" aria-hidden="true" [svgIcon]="arrowIcon" />
+        }
+
+        <mat-icon class="flow__icon" aria-hidden="true" [svgIcon]="icon(step.icon.value)" />
+        <h3 class="flow__step-title">{{ step.title }}</h3>
+        <p class="flow__step-text">{{ step.text }}</p>
+      </li>
+    }
+  </ol>
+</section>

@@ -436,3 +436,156 @@ test.describe('about senior model responsiveness', () => {
     });
   }
 });
+
+test.describe('about business flow at the desktop design width', () => {
+  test.use({ viewport: { width: 1440, height: 2200 } });
+
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/about');
+    await expect(page.locator('.flow__step')).toHaveCount(5);
+  });
+
+  test('sits last on the page with the measured two-column header', async ({ page }) => {
+    const senior = await box(page, '.senior');
+    const section = await box(page, '.flow');
+    expect(section.y).toBeGreaterThan(senior.y + senior.h - 1);
+    expect(section.x).toBe(80);
+    expect(section.w).toBe(1280);
+
+    const heading = await box(page, '.flow__heading');
+    const intro = await box(page, '.flow__intro');
+    expect(heading.w).toBe(513);
+    expect(intro.x).toBe(657);
+    expect(intro.x + intro.w).toBe(1360);
+
+    expect(await style(page, '.flow__title', 'font-size')).toBe('32px');
+    expect(await style(page, '.flow__title', 'line-height')).toBe('40px');
+    expect(await style(page, '.flow__intro', 'font-size')).toBe('18px');
+  });
+
+  test('lays five equal cards across the container on the grid gutter', async ({ page }) => {
+    const steps = await boxes(page, '.flow__step');
+    expect(steps).toHaveLength(5);
+
+    for (const step of steps) expect(step.w).toBe(230);
+    expect(steps[0].x).toBe(80);
+    expect(steps[4].x + steps[4].w).toBe(1360);
+    expect(new Set(steps.map((s) => s.h)).size).toBe(1);
+
+    // 32px grid gutter; sub-pixel track widths round to 32 or 33.
+    for (let i = 1; i < steps.length; i++) {
+      const gutter = steps[i].x - (steps[i - 1].x + steps[i - 1].w);
+      expect(gutter).toBeGreaterThanOrEqual(32);
+      expect(gutter).toBeLessThanOrEqual(33);
+    }
+  });
+
+  test('centres a connector in each gutter, on the card mid-line', async ({ page }) => {
+    const steps = await boxes(page, '.flow__step');
+    const arrows = await boxes(page, '.flow__arrow');
+    expect(arrows).toHaveLength(4);
+
+    arrows.forEach((arrow, i) => {
+      const gutterMid = (steps[i].x + steps[i].w + steps[i + 1].x) / 2;
+      expect(Math.abs(arrow.x + arrow.w / 2 - gutterMid)).toBeLessThanOrEqual(1);
+      const cardMid = steps[i + 1].y + steps[i + 1].h / 2;
+      expect(Math.abs(arrow.y + arrow.h / 2 - cardMid)).toBeLessThanOrEqual(1);
+    });
+
+    expect(await style(page, '.flow__arrow', 'color')).toBe('rgb(100, 116, 139)');
+  });
+
+  test('accents the first step and tints the rest', async ({ page }) => {
+    const accent = '.flow__step[data-tone="accent"]';
+    const plain = '.flow__step[data-tone="plain"]';
+
+    await expect(page.locator(accent)).toHaveCount(1);
+    await expect(page.locator(plain)).toHaveCount(4);
+
+    expect(await style(page, accent, 'background-color')).toBe('rgb(15, 85, 232)');
+    expect(await style(page, `${accent} .flow__step-title`, 'color')).toBe('rgb(255, 255, 255)');
+    expect(await style(page, `${accent} .flow__icon`, 'color')).toBe('rgb(255, 255, 255)');
+
+    expect(await style(page, plain, 'background-color')).toBe('rgb(246, 248, 251)');
+    expect(await style(page, `${plain} .flow__step-title`, 'color')).toBe('rgb(11, 19, 36)');
+    expect(await style(page, `${plain} .flow__step-text`, 'color')).toBe('rgb(71, 85, 105)');
+    expect(await style(page, `${plain} .flow__icon`, 'color')).toBe('rgb(15, 85, 232)');
+  });
+
+  test('matches the card chrome and type from the design', async ({ page }) => {
+    expect(await style(page, '.flow__step', 'border-top-left-radius')).toBe('16px');
+    expect(await style(page, '.flow__step', 'padding-top')).toBe('24px');
+    expect(await style(page, '.flow__step', 'padding-left')).toBe('20px');
+
+    const icon = await box(page, '.flow__icon');
+    expect(icon.w).toBe(20);
+    expect(icon.h).toBe(20);
+
+    // Measured from Business.png: 16px semibold titles over 14/22 body text.
+    expect(await style(page, '.flow__step-title', 'font-size')).toBe('16px');
+    expect(await style(page, '.flow__step-title', 'font-weight')).toBe('600');
+    expect(await style(page, '.flow__step-text', 'font-size')).toBe('14px');
+    expect(await style(page, '.flow__step-text', 'line-height')).toBe('22px');
+
+    await expect(page.locator('.flow__step-title')).toHaveText([
+      'Business goal',
+      'Constraints',
+      'Architecture',
+      'Delivery',
+      'Evolution',
+    ]);
+  });
+});
+
+test.describe('about business flow responsiveness', () => {
+  for (const [width, columns, arrows] of [
+    [320, 1, 0],
+    [375, 1, 0],
+    [768, 2, 0],
+    [1024, 2, 0],
+    [1199, 2, 0],
+    [1200, 5, 4],
+    [1920, 5, 4],
+  ] as const) {
+    test(`shows ${columns} column(s) and ${arrows} connectors at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 2200 });
+      await page.goto('/about');
+      await expect(page.locator('.flow__step')).toHaveCount(5);
+
+      expect(await noOverflow(page)).toBeLessThanOrEqual(0);
+
+      const steps = await boxes(page, '.flow__step');
+      expect(new Set(steps.map((s) => s.x)).size).toBe(columns);
+
+      // Connectors only read as connectors while the steps sit in one row.
+      const shown = await page
+        .locator('.flow__arrow')
+        .evaluateAll((els) => els.filter((el) => getComputedStyle(el).display !== 'none').length);
+      expect(shown).toBe(arrows);
+    });
+  }
+
+  for (const locale of ['hy', 'ru']) {
+    test(`does not clip ${locale} business flow copy at 320px or 1440px`, async ({ page }) => {
+      for (const width of [320, 1440]) {
+        await page.setViewportSize({ width, height: 2200 });
+        await page.goto(`/${locale}/about`);
+        await expect(page.locator('.flow__step')).toHaveCount(5);
+
+        expect(await noOverflow(page)).toBeLessThanOrEqual(0);
+
+        const clipped = await page.evaluate(
+          () =>
+            [
+              ...document.querySelectorAll(
+                '.flow__title,.flow__intro,.flow__step-title,.flow__step-text',
+              ),
+            ].filter(
+              (el) => el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1,
+            ).length,
+        );
+        expect(clipped, `${locale} at ${width}`).toBe(0);
+      }
+    });
+  }
+});
