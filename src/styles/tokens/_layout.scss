@@ -10,6 +10,7 @@ $breakpoints: (
 );
 
 $container-max: 1280px;
+$corner-panel: 24px;
 
 $header-height: (
   compact: 64px,
@@ -70,6 +71,7 @@ $grid: (
 
 @mixin tokens() {
   --nx-layout-container-max: #{$container-max};
+  --nx-sys-corner-panel: #{$corner-panel};
   --nx-layout-header-height: #{map.get($header-height, compact)};
 
   @include up(large) {

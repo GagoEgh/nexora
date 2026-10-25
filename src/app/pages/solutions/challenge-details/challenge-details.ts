@@ -6,7 +6,8 @@ import { LocalizedPathPipe } from '../../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../../core/icons/icons';
 import { IconTile, type IconTileTone } from '../../../shared/ui/icon-tile/icon-tile';
 import { ordinal } from '../../../shared/ordinal';
-import challengesContent, { type ChallengeTone } from '../challenges.content';
+import type { ChallengeTone } from '../challenge';
+import challengesContent from '../challenges.content';
 
 const TILE_TONES: Readonly<Record<ChallengeTone, IconTileTone>> = {
   plain: 'primary',

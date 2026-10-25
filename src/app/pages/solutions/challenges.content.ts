@@ -1,7 +1,6 @@
 import { t, type Dictionary } from 'intlayer';
 import type { AppIconName } from '../../core/icons/icons';
-
-export type ChallengeTone = 'plain' | 'accent';
+import type { ChallengeTone } from './challenge';
 
 const challengesContent = {
   key: 'solutions-challenges',

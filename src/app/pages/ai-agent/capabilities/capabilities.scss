@@ -43,7 +43,7 @@
   box-sizing: border-box;
   min-height: 446px;
   padding: calc(#{spacing.space(24)} + #{spacing.space(4)}) spacing.space(32) spacing.space(16);
-  border-radius: 24px;
+  border-radius: var(--nx-sys-corner-panel);
 }
 
 .capabilities__panel[data-tone='neutral'] {

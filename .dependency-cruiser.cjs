@@ -72,7 +72,8 @@ module.exports = {
       from: { path: '\\.content\\.ts$' },
       to: {
         path: '^src/app/(pages|layout|shared)/.+\\.ts$',
-        pathNot: '\\.content\\.ts$|/service-category\\.ts$|/what-we-build-illustration\\.ts$',
+        pathNot:
+          '\\.content\\.ts$|/challenge\\.ts$|/service-category\\.ts$|/what-we-build-illustration\\.ts$',
       },
     },
   ],

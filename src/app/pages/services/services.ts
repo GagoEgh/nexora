@@ -14,7 +14,7 @@ import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { useDictionary } from 'angular-intlayer';
-import { AI_AGENT_PATH } from '../../core/routing/paths';
+import { AI_AGENT_PATH, CONTACT_PATH } from '../../core/routing/paths';
 import { LocalizedPathPipe } from '../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../core/icons/icons';
 import { ordinal } from '../../shared/ordinal';
@@ -147,7 +147,7 @@ export class Services {
       eyebrow: copy.eyebrow.value,
       title: copy.title.value,
       lead: copy.lead.value,
-      primary: { label: copy.primaryCta.value, path: '/contact' },
+      primary: { label: copy.primaryCta.value, path: CONTACT_PATH },
       secondary: { label: copy.secondaryCta.value, path: AI_AGENT_PATH },
     };
   });

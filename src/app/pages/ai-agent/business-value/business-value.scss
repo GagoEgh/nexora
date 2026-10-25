@@ -47,17 +47,13 @@
   }
 }
 
-// No height: the grid stretches every card to the tallest, so longer hy/ru copy
-// lengthens the row instead of being clipped.
 .business-value__card {
   display: grid;
   align-content: start;
   justify-items: start;
   gap: spacing.space(12);
   padding: calc(#{spacing.space(24)} + #{spacing.space(4)});
-  // 24px измерены из макета и не лежат на шкале Material
-  // (corner-large 16, corner-extra-large 28). Значение закреплено e2e-проверкой.
-  border-radius: 24px;
+  border-radius: var(--nx-sys-corner-panel);
   background-color: var(--nx-sys-inverse-surface-container);
 }
 

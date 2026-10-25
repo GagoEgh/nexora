@@ -1,6 +1,6 @@
 import { Component, computed } from '@angular/core';
 import { useDictionary } from 'angular-intlayer';
-import { SERVICES_PATH } from '../../core/routing/paths';
+import { CONTACT_PATH, SERVICES_PATH } from '../../core/routing/paths';
 import { PageIntro, type PageIntroCrumb } from '../../shared/ui/page-intro/page-intro';
 import {
   type ConversationCopy,
@@ -31,7 +31,7 @@ export class Solutions {
       eyebrow: copy.eyebrow.value,
       title: copy.title.value,
       lead: copy.lead.value,
-      primary: { label: copy.primaryCta.value, path: '/contact' },
+      primary: { label: copy.primaryCta.value, path: CONTACT_PATH },
       secondary: { label: copy.secondaryCta.value, path: SERVICES_PATH },
     };
   });

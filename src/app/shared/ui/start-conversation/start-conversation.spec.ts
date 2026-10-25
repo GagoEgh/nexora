@@ -134,6 +134,15 @@ describe('StartConversation', () => {
     expect(steps().map((li) => li.textContent?.trim())).toEqual(['1 One', '2 Two']);
   });
 
+  it('defaults to the wide variant and exposes the compact one as a host attribute', async () => {
+    // The variant only switches two custom properties, so the attribute is the contract.
+    expect(root.getAttribute('data-variant')).toBe('wide');
+
+    fixture.componentRef.setInput('variant', 'compact');
+    await fixture.whenStable();
+    expect(root.getAttribute('data-variant')).toBe('compact');
+  });
+
   it('hides the brand-mark artwork from assistive technology', () => {
     const art = root.querySelector('.start-conversation__art');
     expect(art?.getAttribute('aria-hidden')).toBe('true');

@@ -3,7 +3,7 @@ import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { useDictionary } from 'angular-intlayer';
-import { SERVICES_PATH } from '../../core/routing/paths';
+import { CONTACT_PATH, SERVICES_PATH } from '../../core/routing/paths';
 import { LocalizedPathPipe } from '../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../core/icons/icons';
 import { PageIntro, type PageIntroCrumb } from '../../shared/ui/page-intro/page-intro';
@@ -51,7 +51,7 @@ export class AiAgent {
       eyebrow: copy.eyebrow.value,
       title: copy.title.value,
       lead: copy.lead.value,
-      primary: { label: copy.primaryCta.value, path: '/contact' },
+      primary: { label: copy.primaryCta.value, path: CONTACT_PATH },
       secondary: { label: copy.secondaryCta.value, path: SERVICES_PATH },
     };
   });

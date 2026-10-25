@@ -146,6 +146,12 @@ describe('Solutions', () => {
     const ctas = Array.from(root.querySelectorAll('.challenge-details__cta'));
     expect(ctas).toHaveLength(8);
     ctas.forEach((cta) => expect(cta.getAttribute('href')).toBe('/contact'));
+
+    // The visible label repeats, so each CTA names its own challenge for screen readers.
+    expect(ctas.map((cta) => cta.getAttribute('aria-label'))).toEqual(
+      TITLES.map((title) => `Discuss this challenge: ${title}`),
+    );
+    expect(new Set(ctas.map((cta) => cta.getAttribute('aria-label'))).size).toBe(8);
   });
 
   it('gives the AI challenge the inverse tile and leaves the rest on the primary tone', async () => {

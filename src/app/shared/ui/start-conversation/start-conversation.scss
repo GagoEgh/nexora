@@ -8,6 +8,11 @@
   padding-inline: var(--nx-layout-margin);
 }
 
+:host([data-variant='compact']) {
+  --nx-conversation-aside: 316px;
+  --nx-conversation-art-bleed: 60px;
+}
+
 .start-conversation {
   display: grid;
   gap: spacing.space(48);

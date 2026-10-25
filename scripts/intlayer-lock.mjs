@@ -22,7 +22,6 @@ const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const LOCK_DIR = join(ROOT, 'node_modules', '.cache', 'intlayer-task.lock');
 const OWNER_FILE = join(LOCK_DIR, 'owner');
 const POLL_MS = 250;
-/** A lock older than this is assumed to be a crashed run and is taken over. */
 const STALE_MS = 20 * 60 * 1000;
 
 /** @param {number} pid */
@@ -31,21 +30,26 @@ const isRunning = (pid) => {
     process.kill(pid, 0);
     return true;
   } catch (error) {
-    // EPERM means the process exists but belongs to another user, so the lock is still held.
     return /** @type {NodeJS.ErrnoException} */ (error).code === 'EPERM';
   }
 };
 
-/** Whether the current lock was left behind by a process that is gone or wedged. */
 const isStale = () => {
+  let pid = Number.NaN;
   try {
-    if (Date.now() - statSync(LOCK_DIR).mtimeMs > STALE_MS) {
-      return true;
-    }
-    const pid = Number.parseInt(readFileSync(OWNER_FILE, 'utf8'), 10);
-    return Number.isInteger(pid) && !isRunning(pid);
+    pid = Number.parseInt(readFileSync(OWNER_FILE, 'utf8'), 10);
   } catch {
-    // The lock vanished or was half-written while we looked: treat it as free.
+    // Unreadable owner: fall through to the age fallback below.
+  }
+
+  if (Number.isInteger(pid)) {
+    return !isRunning(pid);
+  }
+
+  try {
+    return Date.now() - statSync(LOCK_DIR).mtimeMs > STALE_MS;
+  } catch {
+    // The lock vanished while we looked: treat it as free.
     return true;
   }
 };

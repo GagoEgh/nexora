@@ -31,7 +31,11 @@
           }
         </ul>
 
-        <a class="challenge-details__cta" [routerLink]="'/contact' | localizedPath">
+        <a
+          class="challenge-details__cta"
+          [attr.aria-label]="content().discuss.value + ': ' + item.title.value"
+          [routerLink]="'/contact' | localizedPath"
+        >
           {{ content().discuss }}
           <mat-icon aria-hidden="true" [svgIcon]="arrowIcon" />
         </a>
