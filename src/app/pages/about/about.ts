@@ -4,10 +4,11 @@ import { PageIntro, type PageIntroCrumb } from '../../shared/ui/page-intro/page-
 import aboutContent from './about.content';
 import { AboutGlance } from './glance/about-glance';
 import { Philosophy } from './philosophy/philosophy';
+import { SeniorModel } from './senior-model/senior-model';
 
 @Component({
   selector: 'app-about',
-  imports: [PageIntro, AboutGlance, Philosophy],
+  imports: [PageIntro, AboutGlance, Philosophy, SeniorModel],
   templateUrl: './about.html',
   styleUrl: './about.scss',
   host: { 'data-layout': 'immersive' },

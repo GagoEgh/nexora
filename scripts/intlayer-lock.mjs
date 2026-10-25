@@ -1,18 +1,3 @@
-/**
- * Runs a command under an exclusive, cross-process lock.
- *
- * `ng build`, `ng test` and `ng serve` all load the Intlayer esbuild plugin, which regenerates
- * the dictionaries and the type declarations in `intlayer-types/` before the first build. The
- * plugin offers no way to skip that step, so two of these tasks running at once each rewrite the
- * module augmentation while the other's compiler is reading it: `DeclaredLocales` widens from the
- * three declared locales to Intlayer's full locale union and the dictionaries degrade to `any`,
- * which surfaces as type errors that look like defects in `src`.
- *
- * Holding a lock for the whole command serializes the tasks instead, so running them in parallel
- * is slower but correct rather than fast and wrong.
- *
- * Usage: node scripts/intlayer-lock.mjs <command> [args...]
- */
 import { spawn } from 'node:child_process';
 import { mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';

@@ -305,3 +305,134 @@ test.describe('about philosophy responsiveness', () => {
     });
   }
 });
+
+test.describe('about senior model section at the desktop design width', () => {
+  test.use({ viewport: { width: 1440, height: 1600 } });
+
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/about');
+    await expect(page.locator('.senior__panel')).toHaveCount(2);
+  });
+
+  test('sits last on the page and splits into the measured two columns', async ({ page }) => {
+    const philosophy = await box(page, '.philosophy');
+    const section = await box(page, '.senior');
+    expect(section.y).toBeGreaterThan(philosophy.y + philosophy.h - 1);
+    expect(section.x).toBe(80);
+    expect(section.w).toBe(1280);
+
+    // Senior.png: copy column 513, gap 64, models column 703 ending on the container edge.
+    const copy = await box(page, '.senior__copy');
+    const models = await box(page, '.senior__models');
+    expect(copy.w).toBe(513);
+    expect(models.x).toBe(657);
+    expect(models.x + models.w).toBe(1360);
+  });
+
+  test('places two equal panels 20px apart', async ({ page }) => {
+    const panels = await boxes(page, '.senior__panel');
+    expect(panels).toHaveLength(2);
+    expect(panels[1].x - (panels[0].x + panels[0].w)).toBe(20);
+    expect(panels[0].w).toBe(panels[1].w);
+    expect(panels[0].h).toBe(panels[1].h);
+    expect(panels[0].x).toBe(657);
+    expect(panels[1].x + panels[1].w).toBe(1360);
+  });
+
+  test('uses the inverse palette for the Nexora panel and a bordered surface for the pyramid', async ({
+    page,
+  }) => {
+    const plain = '.senior__panel[data-tone="plain"]';
+    const inverse = '.senior__panel[data-tone="inverse"]';
+
+    expect(await style(page, plain, 'background-color')).toBe('rgb(255, 255, 255)');
+    expect(await style(page, plain, 'border-top-color')).toBe('rgb(226, 232, 240)');
+    // navy-950 / blue-300 / slate-400 from the project palette.
+    expect(await style(page, inverse, 'background-color')).toBe('rgb(6, 11, 23)');
+    expect(await style(page, `${inverse} .senior__panel-label`, 'color')).toBe(
+      'rgb(134, 173, 255)',
+    );
+    expect(await style(page, `${inverse} .senior__key`, 'color')).toBe('rgb(148, 163, 184)');
+    expect(await style(page, `${inverse} .senior__block`, 'background-color')).toBe(
+      'rgb(134, 173, 255)',
+    );
+  });
+
+  test('draws 1/2/3/5 with one highlighted apex and a 3x2 Nexora grid', async ({ page }) => {
+    const rows = (selector: string) =>
+      page
+        .locator(selector)
+        .evaluateAll((els) => els.map((el) => el.querySelectorAll('.senior__block').length));
+
+    expect(await rows('.senior__panel[data-tone="plain"] .senior__row')).toEqual([1, 2, 3, 5]);
+    expect(await rows('.senior__panel[data-tone="inverse"] .senior__row')).toEqual([3, 3]);
+
+    await expect(page.locator('.senior__block--apex')).toHaveCount(1);
+    expect(await style(page, '.senior__block--apex', 'background-color')).toBe('rgb(15, 85, 232)');
+    expect(
+      await style(page, '.senior__panel[data-tone="plain"] .senior__block', 'background-color'),
+    ).toBe('rgb(226, 232, 240)');
+
+    // Blocks measured 29-30px on a 38px pitch.
+    const blocks = await boxes(
+      page,
+      '.senior__panel[data-tone="inverse"] .senior__row:first-child .senior__block',
+    );
+    expect(blocks).toHaveLength(3);
+    for (const block of blocks) expect(block.w).toBe(30);
+    expect(blocks[1].x - blocks[0].x).toBe(38);
+  });
+
+  test('lists three points with 22px badges beside them', async ({ page }) => {
+    await expect(page.locator('.senior__point')).toHaveCount(3);
+    const badge = await box(page, '.senior__badge');
+    expect(badge.w).toBe(22);
+    expect(badge.h).toBe(22);
+    expect(await style(page, '.senior__badge', 'background-color')).toBe('rgb(238, 244, 255)');
+    expect(await style(page, '.senior__point-text', 'font-size')).toBe('16px');
+  });
+});
+
+test.describe('about senior model responsiveness', () => {
+  for (const width of [320, 375, 768, 1024, 1199, 1200, 1920]) {
+    test(`fits ${width}px without horizontal scroll`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 1600 });
+      await page.goto('/about');
+      await expect(page.locator('.senior__panel')).toHaveCount(2);
+
+      expect(await noOverflow(page)).toBeLessThanOrEqual(0);
+
+      const panels = await boxes(page, '.senior__panel');
+      // Panels sit side by side from `medium` up and stack below it.
+      if (width >= 600) {
+        expect(panels[0].y).toBe(panels[1].y);
+      } else {
+        expect(panels[1].y).toBeGreaterThan(panels[0].y);
+      }
+    });
+  }
+
+  for (const locale of ['hy', 'ru']) {
+    test(`does not clip ${locale} senior model copy at 320px or 1440px`, async ({ page }) => {
+      for (const width of [320, 1440]) {
+        await page.setViewportSize({ width, height: 1600 });
+        await page.goto(`/${locale}/about`);
+        await expect(page.locator('.senior__panel')).toHaveCount(2);
+
+        expect(await noOverflow(page)).toBeLessThanOrEqual(0);
+
+        const clipped = await page.evaluate(
+          () =>
+            [
+              ...document.querySelectorAll(
+                '.senior__title,.senior__lead,.senior__point-text,.senior__panel-label,.senior__key',
+              ),
+            ].filter(
+              (el) => el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1,
+            ).length,
+        );
+        expect(clipped, `${locale} at ${width}`).toBe(0);
+      }
+    });
+  }
+});

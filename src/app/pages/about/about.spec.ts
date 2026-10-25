@@ -205,6 +205,93 @@ describe('About', () => {
     expect(text('.philosophy__card-title')[0]).toBe('Понять до того, как строить');
   });
 
+  it('closes the page with the senior model section and its three points', async () => {
+    await go('/about');
+
+    const section = root.querySelector('app-senior-model .senior');
+    expect(section).not.toBeNull();
+
+    expect(section?.querySelector('.senior__eyebrow')?.textContent?.trim()).toBe(
+      'Senior & Senior+ only',
+    );
+
+    const title = section?.querySelector('.senior__title');
+    expect(title?.tagName).toBe('H2');
+    expect(title?.textContent?.trim()).toBe('Experience where the decisions are made.');
+    expect(section?.getAttribute('aria-labelledby')).toBe(title?.id);
+    expect(section?.querySelector('.senior__lead')?.textContent?.trim()).toContain(
+      'Many delivery models put a few senior people on top of a large junior team.',
+    );
+
+    expect(text('.senior__point-text')).toEqual([
+      'Fewer hand-offs between planning and implementation',
+      'Architecture decisions made by people who build',
+      'Smaller teams, clearer ownership',
+    ]);
+
+    // Badges repeat the same arrow, so they stay out of the accessibility tree.
+    const badges = Array.from(root.querySelectorAll('.senior__badge'));
+    expect(badges).toHaveLength(3);
+    badges.forEach((badge) => expect(badge.getAttribute('aria-hidden')).toBe('true'));
+  });
+
+  it('compares the two staffing models as labelled figures', async () => {
+    await go('/about');
+
+    const panels = Array.from(root.querySelectorAll('.senior__panel'));
+    expect(panels).toHaveLength(2);
+    panels.forEach((panel) => expect(panel.tagName).toBe('FIGURE'));
+    expect(panels.map((panel) => panel.getAttribute('data-tone'))).toEqual(['plain', 'inverse']);
+
+    expect(text('.senior__panel-label')).toEqual(['Common pyramid', 'Nexora model']);
+    root
+      .querySelectorAll('.senior__panel-label')
+      .forEach((el) => expect(el.tagName).toBe('FIGCAPTION'));
+
+    // The diagrams are decorative; the legends carry the meaning in text.
+    root
+      .querySelectorAll('.senior__diagram')
+      .forEach((el) => expect(el.getAttribute('aria-hidden')).toBe('true'));
+    expect(text('.senior__key')).toEqual(['Senior', 'Junior / mid', 'Senior & Senior+']);
+  });
+
+  it('draws the pyramid as 1/2/3/5 with a single apex, and the Nexora grid as 3x2', async () => {
+    await go('/about');
+
+    const [pyramid, nexora] = Array.from(root.querySelectorAll('.senior__diagram'));
+
+    expect(
+      Array.from(pyramid.querySelectorAll('.senior__row')).map(
+        (row) => row.querySelectorAll('.senior__block').length,
+      ),
+    ).toEqual([1, 2, 3, 5]);
+    expect(pyramid.querySelectorAll('.senior__block--apex')).toHaveLength(1);
+
+    expect(
+      Array.from(nexora.querySelectorAll('.senior__row')).map(
+        (row) => row.querySelectorAll('.senior__block').length,
+      ),
+    ).toEqual([3, 3]);
+    expect(nexora.querySelectorAll('.senior__block--apex')).toHaveLength(0);
+  });
+
+  it('translates the senior model section into Armenian and Russian', async () => {
+    setLocale('hy');
+    await go('/hy/about');
+    expect(root.querySelector('.senior__title')?.textContent?.trim()).toBe(
+      'Փորձառություն այնտեղ, որտեղ կայացվում են որոշումները։',
+    );
+    expect(text('.senior__panel-label')).toEqual(['Սովորական բուրգ', 'Nexora-ի մոդել']);
+
+    setLocale('ru');
+    await go('/ru/about');
+    expect(root.querySelector('.senior__title')?.textContent?.trim()).toBe(
+      'Опыт там, где принимаются решения.',
+    );
+    expect(text('.senior__panel-label')).toEqual(['Обычная пирамида', 'Модель Nexora']);
+    expect(text('.senior__point-text')[2]).toBe('Меньше команды, яснее зона ответственности');
+  });
+
   it('keeps the philosophy dictionary complete: four cards, two paragraphs', () => {
     const { cards, intro } = aboutContent.content.philosophy;
     expect(cards).toHaveLength(4);

@@ -1,0 +1,208 @@
+@use 'mixins/container';
+@use 'mixins/eyebrow';
+@use 'tokens/layout';
+@use 'tokens/spacing';
+
+:host {
+  @include container.section();
+}
+
+.senior {
+  @include container.container();
+
+  display: grid;
+  gap: spacing.space(48);
+
+  @include layout.up(large) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 703px);
+    column-gap: spacing.space(64);
+    align-items: center;
+  }
+}
+
+.senior__copy {
+  display: grid;
+  gap: spacing.space(20);
+  align-content: start;
+  min-width: 0;
+}
+
+.senior__heading {
+  @include container.heading(20);
+}
+
+.senior__eyebrow {
+  @include eyebrow.eyebrow();
+}
+
+.senior__title {
+  min-width: 0;
+  margin: 0;
+  font: var(--nx-sys-display-feature);
+  letter-spacing: var(--nx-sys-display-feature-tracking);
+  color: var(--mat-sys-on-surface);
+  overflow-wrap: anywhere;
+}
+
+.senior__lead {
+  min-width: 0;
+  margin: 0;
+  font: var(--nx-sys-body-lead);
+  color: var(--mat-sys-on-surface-variant);
+  overflow-wrap: anywhere;
+}
+
+.senior__points {
+  display: grid;
+  gap: spacing.space(20);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.senior__point {
+  display: flex;
+  gap: spacing.space(12);
+  align-items: center;
+}
+
+.senior__badge {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--mat-sys-corner-full);
+  background-color: var(--mat-sys-primary-container);
+  color: var(--mat-sys-primary);
+
+  .mat-icon {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+.senior__point-text {
+  min-width: 0;
+  font: var(--mat-sys-body-large);
+  color: var(--mat-sys-on-surface);
+  overflow-wrap: anywhere;
+}
+
+.senior__models {
+  display: grid;
+  gap: spacing.space(20);
+  min-width: 0;
+
+  @include layout.up(medium) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.senior__panel {
+  display: grid;
+  gap: spacing.space(12);
+  align-content: start;
+  justify-items: center;
+  box-sizing: border-box;
+  margin: 0;
+  padding: spacing.space(32) spacing.space(24);
+  border-radius: var(--nx-sys-corner-panel);
+}
+
+.senior__panel[data-tone='plain'] {
+  border: 1px solid var(--mat-sys-outline-variant);
+  background-color: var(--mat-sys-surface);
+}
+
+.senior__panel[data-tone='inverse'] {
+  background-color: var(--mat-sys-inverse-surface);
+}
+
+.senior__panel-label {
+  margin: 0;
+  font: var(--mat-sys-label-medium);
+  letter-spacing: var(--mat-sys-label-medium-tracking);
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.senior__panel[data-tone='plain'] .senior__panel-label {
+  color: var(--nx-sys-on-surface-muted);
+}
+
+.senior__panel[data-tone='inverse'] .senior__panel-label {
+  color: var(--mat-sys-inverse-primary);
+}
+
+.senior__diagram {
+  display: grid;
+  gap: spacing.space(8);
+  justify-items: center;
+}
+
+.senior__row {
+  display: flex;
+  gap: spacing.space(8);
+}
+
+.senior__block {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--mat-sys-corner-small);
+}
+
+.senior__panel[data-tone='plain'] .senior__block {
+  background-color: var(--mat-sys-outline-variant);
+}
+
+.senior__panel[data-tone='plain'] .senior__block--apex {
+  background-color: var(--mat-sys-primary);
+}
+
+.senior__panel[data-tone='inverse'] .senior__block {
+  background-color: var(--mat-sys-inverse-primary);
+}
+
+.senior__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: spacing.space(16);
+  justify-content: center;
+  margin: 0;
+}
+
+.senior__key {
+  display: inline-flex;
+  gap: spacing.space(8);
+  align-items: center;
+  font: var(--mat-sys-body-small);
+}
+
+.senior__panel[data-tone='plain'] .senior__key {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.senior__panel[data-tone='inverse'] .senior__key {
+  color: var(--nx-sys-inverse-on-surface-variant);
+}
+
+.senior__dot {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: var(--mat-sys-corner-full);
+}
+
+.senior__panel[data-tone='plain'] .senior__dot {
+  background-color: var(--mat-sys-outline-variant);
+}
+
+.senior__panel[data-tone='plain'] .senior__dot--apex {
+  background-color: var(--mat-sys-primary);
+}
+
+.senior__panel[data-tone='inverse'] .senior__dot {
+  background-color: var(--mat-sys-inverse-primary);
+}
