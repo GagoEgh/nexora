@@ -1,0 +1,40 @@
+<section class="quality">
+  <article class="quality__panel" data-tone="plain" aria-labelledby="quality-practices">
+    <p class="quality__eyebrow">{{ content().qualityCapability.practices.eyebrow }}</p>
+    <h2 class="quality__title" id="quality-practices">
+      {{ content().qualityCapability.practices.title }}
+    </h2>
+
+    <ul class="quality__chips">
+      @for (item of content().qualityCapability.practices.items; track $index) {
+        <li class="quality__chip">
+          <mat-icon
+            class="quality__chip-icon"
+            aria-hidden="true"
+            [svgIcon]="icon(item.icon.value)"
+          />
+          <span class="quality__chip-label">{{ item.label }}</span>
+        </li>
+      }
+    </ul>
+
+    <p class="quality__note">{{ content().qualityCapability.practices.note }}</p>
+  </article>
+
+  <article class="quality__panel" data-tone="accent" aria-labelledby="quality-disciplines">
+    <p class="quality__eyebrow">{{ content().qualityCapability.disciplines.eyebrow }}</p>
+    <h2 class="quality__title" id="quality-disciplines">
+      {{ content().qualityCapability.disciplines.title }}
+    </h2>
+
+    <ul class="quality__chips">
+      @for (discipline of content().qualityCapability.disciplines.items; track $index) {
+        <li class="quality__chip">
+          <span class="quality__chip-label">{{ discipline }}</span>
+        </li>
+      }
+    </ul>
+
+    <p class="quality__note">{{ content().qualityCapability.disciplines.note }}</p>
+  </article>
+</section>

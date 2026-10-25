@@ -7,6 +7,7 @@ import { AboutGlance } from './pages/about/glance/about-glance';
 import { Philosophy } from './pages/about/philosophy/philosophy';
 import { BusinessFlow } from './pages/about/business-flow/business-flow';
 import { SeniorModel } from './pages/about/senior-model/senior-model';
+import { QualityCapability } from './pages/about/quality-capability/quality-capability';
 import { AiAgent } from './pages/ai-agent/ai-agent';
 import { Audiences } from './pages/ai-agent/audiences/audiences';
 import { BusinessValue } from './pages/ai-agent/business-value/business-value';
@@ -84,6 +85,7 @@ const COMPONENTS: readonly [string, Type<unknown>][] = [
   ['Philosophy', Philosophy],
   ['SeniorModel', SeniorModel],
   ['BusinessFlow', BusinessFlow],
+  ['QualityCapability', QualityCapability],
   ['AiAgent', AiAgent],
   ['Audiences', Audiences],
   ['BusinessValue', BusinessValue],
@@ -120,7 +122,7 @@ describe('change detection', () => {
   });
 
   it('every component in the application resolves to OnPush', () => {
-    expect(COMPONENTS).toHaveLength(45);
+    expect(COMPONENTS).toHaveLength(46);
     const eager = COMPONENTS.filter(([, component]) => !isOnPush(component)).map(([name]) => name);
     expect(eager, 'these components are checked eagerly').toEqual([]);
   });

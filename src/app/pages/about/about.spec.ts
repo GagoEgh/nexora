@@ -16,6 +16,28 @@ const HEADING = 'A senior engineering partner for businesses that build with tec
 
 const LABELS = ['Focus', 'Team', 'Markets', 'Clients', 'Engagement'];
 
+const PRACTICES = [
+  'Architecture reviews',
+  'Code review on every change',
+  'Automated testing',
+  'Living documentation',
+  'Security by default',
+  'Observability',
+];
+
+const DISCIPLINES = [
+  'UI/UX design',
+  'Frontend',
+  'Backend & APIs',
+  'Mobile',
+  'AI engineering',
+  'Cloud & DevOps',
+  'QA',
+  'Solution architecture',
+  'Technical leadership',
+  'Maintenance',
+];
+
 const STEPS = ['Business goal', 'Constraints', 'Architecture', 'Delivery', 'Evolution'];
 
 const PRINCIPLES = [
@@ -384,6 +406,89 @@ describe('About', () => {
       'git-branch',
       'code',
       'refresh-cw',
+    ]);
+  });
+
+  it('closes the page with two labelled capability panels', async () => {
+    await go('/about');
+
+    const panels = Array.from(root.querySelectorAll('.quality__panel'));
+    expect(panels).toHaveLength(2);
+    panels.forEach((panel) => expect(panel.tagName).toBe('ARTICLE'));
+    expect(panels.map((panel) => panel.getAttribute('data-tone'))).toEqual(['plain', 'accent']);
+
+    // Each panel names itself; the section has no heading of its own.
+    panels.forEach((panel) => {
+      const heading = panel.querySelector('h2.quality__title');
+      expect(heading).not.toBeNull();
+      expect(panel.getAttribute('aria-labelledby')).toBe(heading?.id);
+    });
+
+    expect(text('.quality__eyebrow')).toEqual(['Quality mindset', 'End-to-end capability']);
+    expect(text('.quality__title')).toEqual([
+      'Practices built into the work.',
+      'Every discipline a project needs, in one team.',
+    ]);
+    expect(text('.quality__note')[0]).toBe(
+      'Applied in proportion to each project’s size and risk.',
+    );
+    expect(text('.quality__note')[1]).toContain('Disciplines are combined per project');
+  });
+
+  it('lists six practice chips with decorative icons', async () => {
+    await go('/about');
+
+    const panel = root.querySelector('.quality__panel[data-tone="plain"]');
+    const chips = Array.from(panel?.querySelectorAll('.quality__chip') ?? []);
+    expect(chips).toHaveLength(6);
+    chips.forEach((chip) => expect(chip.tagName).toBe('LI'));
+
+    expect(chips.map((chip) => chip.textContent?.trim())).toEqual(PRACTICES);
+
+    const icons = Array.from(panel?.querySelectorAll('.quality__chip-icon') ?? []);
+    expect(icons).toHaveLength(6);
+    icons.forEach((icon) => expect(icon.getAttribute('aria-hidden')).toBe('true'));
+  });
+
+  it('lists ten discipline chips, without icons', async () => {
+    await go('/about');
+
+    const panel = root.querySelector('.quality__panel[data-tone="accent"]');
+    const chips = Array.from(panel?.querySelectorAll('.quality__chip') ?? []);
+    expect(chips).toHaveLength(10);
+    expect(chips.map((chip) => chip.textContent?.trim())).toEqual(DISCIPLINES);
+    expect(panel?.querySelectorAll('.quality__chip-icon')).toHaveLength(0);
+  });
+
+  it('translates both capability panels into Armenian and Russian', async () => {
+    setLocale('hy');
+    await go('/hy/about');
+    expect(text('.quality__title')[0]).toBe('Պրակտիկաներ, որոնք ներդրված են հենց աշխատանքի մեջ։');
+    expect(text('.quality__chip-label')[0]).toBe('Ճարտարապետության վերանայումներ');
+
+    setLocale('ru');
+    await go('/ru/about');
+    expect(text('.quality__title')[1]).toBe(
+      'Все дисциплины, которые нужны проекту, в одной команде.',
+    );
+    expect(text('.quality__chip-label').slice(6, 9)).toEqual([
+      'UI/UX-дизайн',
+      'Frontend',
+      'Backend и API',
+    ]);
+  });
+
+  it('keeps the capability dictionary complete: six practices, ten disciplines', () => {
+    const { practices, disciplines } = aboutContent.content.qualityCapability;
+    expect(practices.items).toHaveLength(6);
+    expect(disciplines.items).toHaveLength(10);
+    expect(practices.items.map((item) => item.icon)).toEqual([
+      'git-branch',
+      'code',
+      'shield-check',
+      'file-text',
+      'shield-check',
+      'server',
     ]);
   });
 

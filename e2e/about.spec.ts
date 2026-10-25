@@ -589,3 +589,149 @@ test.describe('about business flow responsiveness', () => {
     });
   }
 });
+
+test.describe('about quality and capability panels at the desktop design width', () => {
+  test.use({ viewport: { width: 1440, height: 2600 } });
+
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/about');
+    await expect(page.locator('.quality__panel')).toHaveCount(2);
+  });
+
+  test('sits last on the page as two 628px panels 24px apart', async ({ page }) => {
+    const flow = await box(page, '.flow');
+    const section = await box(page, '.quality');
+    expect(section.y).toBeGreaterThan(flow.y + flow.h - 1);
+    expect(section.x).toBe(80);
+    expect(section.w).toBe(1280);
+
+    const panels = await boxes(page, '.quality__panel');
+    expect(panels).toHaveLength(2);
+    for (const panel of panels) expect(panel.w).toBe(628);
+    expect(panels[1].x - (panels[0].x + panels[0].w)).toBe(24);
+    expect(panels[0].x).toBe(80);
+    expect(panels[1].x + panels[1].w).toBe(1360);
+
+    // Quality.png shows the panels top-aligned with independent heights.
+    expect(panels[0].y).toBe(panels[1].y);
+    expect(panels[0].h).not.toBe(panels[1].h);
+  });
+
+  test('gives each panel its own tone, radius and padding', async ({ page }) => {
+    const plain = '.quality__panel[data-tone="plain"]';
+    const accent = '.quality__panel[data-tone="accent"]';
+
+    expect(await style(page, plain, 'background-color')).toBe('rgb(255, 255, 255)');
+    expect(await style(page, plain, 'border-top-color')).toBe('rgb(226, 232, 240)');
+    // blue-50 / blue-900 from the project palette.
+    expect(await style(page, accent, 'background-color')).toBe('rgb(238, 244, 255)');
+    expect(await style(page, `${accent} .quality__chip-label`, 'color')).toBe('rgb(14, 44, 107)');
+
+    expect(await style(page, plain, 'border-top-left-radius')).toBe('24px');
+    expect(await style(page, plain, 'padding-top')).toBe('40px');
+    expect(await style(page, '.quality__title', 'font-size')).toBe('26px');
+    expect(await style(page, '.quality__title', 'line-height')).toBe('34px');
+  });
+
+  test('renders six practice chips and ten discipline chips at the measured sizes', async ({
+    page,
+  }) => {
+    const plain = '.quality__panel[data-tone="plain"]';
+    const accent = '.quality__panel[data-tone="accent"]';
+
+    await expect(page.locator(`${plain} .quality__chip`)).toHaveCount(6);
+    await expect(page.locator(`${accent} .quality__chip`)).toHaveCount(10);
+
+    const practice = await box(page, `${plain} .quality__chip`);
+    const discipline = await box(page, `${accent} .quality__chip`);
+    expect(practice.h).toBe(40);
+    expect(discipline.h).toBe(36);
+
+    expect(await style(page, `${plain} .quality__chip`, 'border-top-left-radius')).toBe('12px');
+    expect(await style(page, `${plain} .quality__chip`, 'background-color')).toBe(
+      'rgb(246, 248, 251)',
+    );
+    expect(await style(page, `${accent} .quality__chip`, 'background-color')).toBe(
+      'rgb(255, 255, 255)',
+    );
+    // A pill: the radius resolves far larger than half the height.
+    expect(
+      parseInt(await style(page, `${accent} .quality__chip`, 'border-top-left-radius'), 10),
+    ).toBeGreaterThan(discipline.h);
+
+    const icon = await box(page, '.quality__chip-icon');
+    expect(icon.w).toBe(16);
+    expect(await style(page, '.quality__chip-icon', 'color')).toBe('rgb(15, 85, 232)');
+    // Only the practices panel carries icons.
+    await expect(page.locator(`${accent} .quality__chip-icon`)).toHaveCount(0);
+  });
+
+  test('keeps both chip lists in the order the design shows', async ({ page }) => {
+    await expect(
+      page.locator('.quality__panel[data-tone="plain"] .quality__chip-label'),
+    ).toHaveText([
+      'Architecture reviews',
+      'Code review on every change',
+      'Automated testing',
+      'Living documentation',
+      'Security by default',
+      'Observability',
+    ]);
+    await expect(
+      page.locator('.quality__panel[data-tone="accent"] .quality__chip-label'),
+    ).toHaveText([
+      'UI/UX design',
+      'Frontend',
+      'Backend & APIs',
+      'Mobile',
+      'AI engineering',
+      'Cloud & DevOps',
+      'QA',
+      'Solution architecture',
+      'Technical leadership',
+      'Maintenance',
+    ]);
+  });
+});
+
+test.describe('about quality and capability responsiveness', () => {
+  for (const width of [320, 375, 768, 1024, 1199, 1200, 1920]) {
+    test(`fits ${width}px without horizontal scroll`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 2600 });
+      await page.goto('/about');
+      await expect(page.locator('.quality__chip')).toHaveCount(16);
+
+      expect(await noOverflow(page)).toBeLessThanOrEqual(0);
+
+      const panels = await boxes(page, '.quality__panel');
+      // Side by side from `large` up, stacked below.
+      if (width >= 1200) {
+        expect(panels[0].y).toBe(panels[1].y);
+      } else {
+        expect(panels[1].y).toBeGreaterThan(panels[0].y);
+      }
+    });
+  }
+
+  for (const locale of ['hy', 'ru']) {
+    test(`does not clip ${locale} capability copy at 320px or 1440px`, async ({ page }) => {
+      for (const width of [320, 1440]) {
+        await page.setViewportSize({ width, height: 2600 });
+        await page.goto(`/${locale}/about`);
+        await expect(page.locator('.quality__chip')).toHaveCount(16);
+
+        expect(await noOverflow(page)).toBeLessThanOrEqual(0);
+
+        const clipped = await page.evaluate(
+          () =>
+            [
+              ...document.querySelectorAll('.quality__title,.quality__note,.quality__chip-label'),
+            ].filter(
+              (el) => el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1,
+            ).length,
+        );
+        expect(clipped, `${locale} at ${width}`).toBe(0);
+      }
+    });
+  }
+});
