@@ -16,6 +16,13 @@ const HEADING = 'A senior engineering partner for businesses that build with tec
 
 const LABELS = ['Focus', 'Team', 'Markets', 'Clients', 'Engagement'];
 
+const PRINCIPLES = [
+  'Understand before building',
+  'Architecture is a business decision',
+  'Quality is designed in',
+  'Leave systems better',
+];
+
 const VALUES = [
   'Software engineering & AI solutions',
   'Senior and Senior+ engineers only',
@@ -135,6 +142,78 @@ describe('About', () => {
       'Рынки',
       'Клиенты',
       'Форматы работы',
+    ]);
+  });
+
+  it('closes the page with the philosophy section: eyebrow, heading and two paragraphs', async () => {
+    await go('/about');
+
+    const section = root.querySelector('app-philosophy .philosophy');
+    expect(section).not.toBeNull();
+
+    expect(section?.querySelector('.philosophy__eyebrow')?.textContent?.trim()).toBe(
+      'Engineering philosophy',
+    );
+
+    const title = section?.querySelector('.philosophy__title');
+    expect(title?.tagName).toBe('H2');
+    expect(title?.textContent?.trim()).toBe('Good software is mostly good decisions.');
+    expect(section?.getAttribute('aria-labelledby')).toBe(title?.id);
+
+    const paragraphs = text('.philosophy__text');
+    expect(paragraphs).toHaveLength(2);
+    expect(paragraphs[0]).toContain('Frameworks change every year.');
+    expect(paragraphs[1]).toBe('These principles guide every project, whatever the stack.');
+  });
+
+  it('renders four principle cards with ordinals, icon tiles and copy', async () => {
+    await go('/about');
+
+    expect(root.querySelectorAll('.philosophy__card')).toHaveLength(4);
+    expect(text('.philosophy__number')).toEqual(['01', '02', '03', '04']);
+
+    // The section h2 precedes them, so the cards are h3.
+    root.querySelectorAll('.philosophy__card-title').forEach((el) => expect(el.tagName).toBe('H3'));
+    expect(text('.philosophy__card-title')).toEqual(PRINCIPLES);
+    expect(text('.philosophy__card-text')[0]).toBe(
+      'We clarify the problem, users and constraints before committing to an approach.',
+    );
+
+    // Tiles come from the shared component and stay decorative.
+    const tiles = Array.from(root.querySelectorAll('.philosophy__card app-icon-tile'));
+    expect(tiles).toHaveLength(4);
+    tiles.forEach((tile) => {
+      expect(tile.getAttribute('tone') ?? tile.getAttribute('data-tone')).toBe('primary');
+      expect(tile.getAttribute('aria-hidden')).toBe('true');
+    });
+  });
+
+  it('translates the philosophy section into Armenian and Russian', async () => {
+    setLocale('hy');
+    await go('/hy/about');
+    expect(root.querySelector('.philosophy__title')?.textContent?.trim()).toBe(
+      'Լավ ծրագրակազմը հիմնականում լավ որոշումներ են։',
+    );
+    expect(text('.philosophy__card-title')[0]).toBe('Հասկանալ նախքան կառուցելը');
+    expect(text('.philosophy__number')).toEqual(['01', '02', '03', '04']);
+
+    setLocale('ru');
+    await go('/ru/about');
+    expect(root.querySelector('.philosophy__title')?.textContent?.trim()).toBe(
+      'Хорошее ПО — это прежде всего хорошие решения.',
+    );
+    expect(text('.philosophy__card-title')[0]).toBe('Понять до того, как строить');
+  });
+
+  it('keeps the philosophy dictionary complete: four cards, two paragraphs', () => {
+    const { cards, intro } = aboutContent.content.philosophy;
+    expect(cards).toHaveLength(4);
+    expect(intro).toHaveLength(2);
+    expect(cards.map((card) => card.icon)).toEqual([
+      'search',
+      'layers',
+      'shield-check',
+      'refresh-cw',
     ]);
   });
 

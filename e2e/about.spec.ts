@@ -176,3 +176,132 @@ test.describe('about responsiveness', () => {
     });
   }
 });
+
+test.describe('about philosophy section at the desktop design width', () => {
+  test.use({ viewport: { width: 1440, height: 1400 } });
+
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/about');
+    await expect(page.locator('.philosophy__card')).toHaveCount(4);
+  });
+
+  test('sits below the intro band and spans the container', async ({ page }) => {
+    const intro = await box(page, 'app-page-intro');
+    const section = await box(page, '.philosophy');
+    expect(section.y).toBeGreaterThan(intro.y + intro.h - 1);
+    expect(section.x).toBe(80);
+    expect(section.w).toBe(1280);
+  });
+
+  test('lays the header out as two columns with the measured origin', async ({ page }) => {
+    const heading = await box(page, '.philosophy__heading');
+    const intro = await box(page, '.philosophy__intro');
+    expect(heading.y).toBe(intro.y);
+    // philosophy.png puts the right column at x=657 and runs it to the container edge.
+    expect(intro.x).toBe(657);
+    expect(intro.x + intro.w).toBe(1360);
+
+    await expect(page.locator('h2.philosophy__title')).toHaveText(
+      'Good software is mostly good decisions.',
+    );
+    expect(await style(page, '.philosophy__title', 'font-size')).toBe('32px');
+    expect(await style(page, '.philosophy__title', 'line-height')).toBe('40px');
+    expect(await style(page, '.philosophy__text', 'font-size')).toBe('18px');
+    expect(await style(page, '.philosophy__text', 'line-height')).toBe('30px');
+  });
+
+  test('places four 305px cards on a 20px gutter across the container', async ({ page }) => {
+    const cards = await boxes(page, '.philosophy__card');
+    expect(cards).toHaveLength(4);
+
+    // 4 x 305 + 3 x 20 lands exactly on the 1280px container.
+    for (const card of cards) expect(card.w).toBe(305);
+    for (let i = 1; i < cards.length; i++) {
+      expect(cards[i].x - (cards[i - 1].x + cards[i - 1].w)).toBe(20);
+    }
+    expect(cards[0].x).toBe(80);
+    expect(cards[3].x + cards[3].w).toBe(1360);
+
+    // The grid stretches every card to the tallest.
+    const heights = new Set(cards.map((c) => c.h));
+    expect(heights.size).toBe(1);
+    expect(cards[0].y).toBe(cards[3].y);
+  });
+
+  test('matches the card chrome and internals from the design', async ({ page }) => {
+    expect(await style(page, '.philosophy__card', 'background-color')).toBe('rgb(246, 248, 251)');
+    expect(await style(page, '.philosophy__card', 'padding-left')).toBe('28px');
+
+    const card = await box(page, '.philosophy__card');
+    const tile = await box(page, '.philosophy__card app-icon-tile');
+    expect(tile.w).toBe(48);
+    expect(tile.h).toBe(48);
+    expect(tile.x - card.x).toBe(28);
+    expect(tile.y - card.y).toBe(28);
+    expect(await style(page, '.philosophy__card app-icon-tile', 'background-color')).toBe(
+      'rgb(238, 244, 255)',
+    );
+
+    await expect(page.locator('.philosophy__number')).toHaveText(['01', '02', '03', '04']);
+    expect(await style(page, '.philosophy__card-title', 'font-size')).toBe('18px');
+    expect(await style(page, '.philosophy__card-title', 'line-height')).toBe('26px');
+    expect(await style(page, '.philosophy__card-text', 'font-size')).toBe('14px');
+    expect(await style(page, '.philosophy__card-text', 'line-height')).toBe('22px');
+  });
+
+  test('keeps the four principles in the order the design shows', async ({ page }) => {
+    await expect(page.locator('.philosophy__card-title')).toHaveText([
+      'Understand before building',
+      'Architecture is a business decision',
+      'Quality is designed in',
+      'Leave systems better',
+    ]);
+  });
+});
+
+test.describe('about philosophy responsiveness', () => {
+  for (const [width, columns] of [
+    [320, 1],
+    [375, 1],
+    [768, 2],
+    [1024, 2],
+    [1199, 2],
+    [1200, 4],
+    [1920, 4],
+  ] as const) {
+    test(`stacks the cards into ${columns} column(s) at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 1400 });
+      await page.goto('/about');
+      await expect(page.locator('.philosophy__card')).toHaveCount(4);
+
+      expect(await noOverflow(page)).toBeLessThanOrEqual(0);
+
+      const cards = await boxes(page, '.philosophy__card');
+      expect(new Set(cards.map((c) => c.x)).size).toBe(columns);
+    });
+  }
+
+  for (const locale of ['hy', 'ru']) {
+    test(`does not clip ${locale} philosophy copy at 320px or 1440px`, async ({ page }) => {
+      for (const width of [320, 1440]) {
+        await page.setViewportSize({ width, height: 1400 });
+        await page.goto(`/${locale}/about`);
+        await expect(page.locator('.philosophy__card')).toHaveCount(4);
+
+        expect(await noOverflow(page)).toBeLessThanOrEqual(0);
+
+        const clipped = await page.evaluate(
+          () =>
+            [
+              ...document.querySelectorAll(
+                '.philosophy__title,.philosophy__text,.philosophy__card-title,.philosophy__card-text',
+              ),
+            ].filter(
+              (el) => el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1,
+            ).length,
+        );
+        expect(clipped, `${locale} at ${width}`).toBe(0);
+      }
+    });
+  }
+});

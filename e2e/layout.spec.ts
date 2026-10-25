@@ -165,9 +165,10 @@ test.describe('header at the mobile design width', () => {
     expect(await style(page, 'app-header button.header__menu mat-icon', 'color')).toBe(
       'rgb(11, 19, 36)',
     );
-    // Home runs its hero behind the bar, so the hairline is dropped there and kept elsewhere.
+    // Pages with an immersive intro run it behind the bar, so the hairline is dropped there
+    // and kept on the ordinary pages.
     expect(await style(page, 'app-header', 'border-bottom-width')).toBe('0px');
-    await page.goto('/about');
+    await page.goto('/contact');
     expect(await style(page, 'app-header', 'border-bottom-width')).toBe('1px');
     expect(await style(page, 'app-header', 'border-bottom-color')).toBe('rgb(226, 232, 240)');
   });

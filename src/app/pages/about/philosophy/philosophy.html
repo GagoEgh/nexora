@@ -1,0 +1,28 @@
+<section class="philosophy" aria-labelledby="philosophy-title">
+  <div class="philosophy__header">
+    <div class="philosophy__heading">
+      <p class="philosophy__eyebrow">{{ content().philosophy.eyebrow }}</p>
+      <h2 class="philosophy__title" id="philosophy-title">{{ content().philosophy.title }}</h2>
+    </div>
+
+    <div class="philosophy__intro">
+      @for (paragraph of content().philosophy.intro; track $index) {
+        <p class="philosophy__text">{{ paragraph }}</p>
+      }
+    </div>
+  </div>
+
+  <ul class="philosophy__grid">
+    @for (card of content().philosophy.cards; track $index) {
+      <li class="philosophy__card">
+        <div class="philosophy__card-head">
+          <app-icon-tile [icon]="card.icon.value" tone="primary" />
+          <span class="philosophy__number">{{ ordinal($index) }}</span>
+        </div>
+
+        <h3 class="philosophy__card-title">{{ card.title }}</h3>
+        <p class="philosophy__card-text">{{ card.text }}</p>
+      </li>
+    }
+  </ul>
+</section>
