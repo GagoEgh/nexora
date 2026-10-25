@@ -1,0 +1,10 @@
+:host {
+  display: block;
+  --nx-page-intro-aside: 440px;
+}
+
+.solutions__lead {
+  margin: 0;
+  font: var(--nx-sys-body-lead);
+  color: var(--mat-sys-on-surface-variant);
+}

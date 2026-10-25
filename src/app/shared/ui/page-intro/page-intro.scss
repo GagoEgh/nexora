@@ -30,6 +30,7 @@
   display: grid;
   gap: spacing.space(20);
   justify-items: start;
+  min-width: 0;
 }
 
 .page-intro__breadcrumb {
@@ -69,6 +70,7 @@
 
 .page-intro__title {
   margin: 0;
+  overflow-wrap: anywhere;
   font: var(--nx-sys-display-page);
   letter-spacing: var(--nx-sys-display-tracking);
   color: var(--mat-sys-on-surface);

@@ -1,0 +1,8 @@
+<ul class="challenge-index">
+  @for (item of content().items; track $index) {
+    <li class="challenge-index__card">
+      <span class="challenge-index__number">{{ ordinal($index) }}</span>
+      <span class="challenge-index__title">{{ item.title }}</span>
+    </li>
+  }
+</ul>

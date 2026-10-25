@@ -1,0 +1,58 @@
+<ul class="challenge-details">
+  @for (item of content().items; track $index) {
+    <li class="challenge-details__panel">
+      <div class="challenge-details__summary">
+        <div class="challenge-details__head">
+          <app-icon-tile [icon]="item.icon.value" [tone]="tileTone(item.tone.value)" />
+          <span class="challenge-details__counter">{{ ordinal($index) }} / {{ total() }}</span>
+        </div>
+
+        <h2 class="challenge-details__title">{{ item.title }}</h2>
+
+        <div class="challenge-details__block">
+          <p class="challenge-details__label">{{ content().challengeLabel }}</p>
+          <p class="challenge-details__text">{{ item.challenge }}</p>
+        </div>
+      </div>
+
+      <div class="challenge-details__help">
+        <p class="challenge-details__label challenge-details__label--accent">
+          {{ content().helpLabel }}
+        </p>
+
+        <ul class="challenge-details__points">
+          @for (point of item.help; track $index) {
+            <li class="challenge-details__point">
+              <span class="challenge-details__check" aria-hidden="true">
+                <mat-icon [svgIcon]="checkIcon" />
+              </span>
+              <span class="challenge-details__point-text">{{ point }}</span>
+            </li>
+          }
+        </ul>
+
+        <a class="challenge-details__cta" [routerLink]="'/contact' | localizedPath">
+          {{ content().discuss }}
+          <mat-icon aria-hidden="true" [svgIcon]="arrowIcon" />
+        </a>
+      </div>
+
+      <div class="challenge-details__services">
+        <p class="challenge-details__label">{{ content().servicesLabel }}</p>
+
+        <ul class="challenge-details__service-list">
+          @for (service of item.services; track $index) {
+            <li class="challenge-details__service">
+              <span class="challenge-details__service-name">{{ service }}</span>
+              <mat-icon
+                class="challenge-details__service-arrow"
+                aria-hidden="true"
+                [svgIcon]="linkIcon"
+              />
+            </li>
+          }
+        </ul>
+      </div>
+    </li>
+  }
+</ul>

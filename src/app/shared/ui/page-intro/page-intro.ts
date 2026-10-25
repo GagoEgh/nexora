@@ -18,5 +18,5 @@ export class PageIntro {
   readonly breadcrumbLabel = input.required<string>();
   readonly eyebrow = input.required<string>();
   readonly heading = input.required<string>();
-  readonly lead = input.required<string>();
+  readonly lead = input<string>();
 }

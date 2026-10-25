@@ -1,0 +1,12 @@
+<app-page-intro
+  [crumbs]="crumbs()"
+  [breadcrumbLabel]="content().breadcrumbLabel.value"
+  [eyebrow]="content().eyebrow.value"
+  [heading]="content().heading.value"
+>
+  <p class="solutions__lead">{{ content().lead }}</p>
+</app-page-intro>
+
+<app-challenge-index />
+
+<app-challenge-details />

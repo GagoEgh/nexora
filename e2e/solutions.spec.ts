@@ -1,0 +1,209 @@
+import { expect, test, type Page } from '@playwright/test';
+
+/**
+ * Solutions page contract.
+ *
+ * hero.png fixes the opening band at 1440: the shared page intro with its lead in the
+ * aside, then an index of eight 305px cards on a 20px column / 12px row rhythm that
+ * lands exactly on the 1280px container (4 x 305 + 3 x 20). Solutions.png fixes the
+ * eight detail panels below it: full container width, 20px apart, each a three-column
+ * grid of 488px / fluid / 300px separated by a hairline.
+ */
+const box = (page: Page, selector: string) =>
+  page
+    .locator(selector)
+    .first()
+    .evaluate((el) => {
+      const r = el.getBoundingClientRect();
+      return {
+        x: Math.round(r.left),
+        y: Math.round(r.top),
+        w: Math.round(r.width),
+        h: Math.round(r.height),
+      };
+    });
+
+const boxes = (page: Page, selector: string) =>
+  page.locator(selector).evaluateAll((els) =>
+    els.map((el) => {
+      const r = el.getBoundingClientRect();
+      return {
+        x: Math.round(r.left),
+        y: Math.round(r.top),
+        w: Math.round(r.width),
+        h: Math.round(r.height),
+      };
+    }),
+  );
+
+const style = (page: Page, selector: string, prop: string) =>
+  page
+    .locator(selector)
+    .first()
+    .evaluate((el, p) => getComputedStyle(el).getPropertyValue(p), prop);
+
+const noOverflow = (page: Page) =>
+  page.evaluate(() => {
+    const de = document.documentElement;
+    return de.scrollWidth - de.clientWidth;
+  });
+
+test.describe('solutions at the desktop design width', () => {
+  test.use({ viewport: { width: 1440, height: 1000 } });
+
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/solutions');
+    await expect(page.locator('.challenge-details__panel')).toHaveCount(8);
+  });
+
+  test('opens with the shared intro and carries the lead in a 440px aside', async ({ page }) => {
+    await expect(page.locator('h1')).toHaveCount(1);
+    await expect(page.locator('h1')).toHaveText('Start from the problem, not the technology.');
+
+    // The lead sits in the aside column, not under the heading.
+    await expect(page.locator('.page-intro__lead')).toHaveCount(0);
+    const lead = await box(page, '.solutions__lead');
+    expect(lead.w).toBe(440);
+    expect(lead.x + lead.w).toBe(1360);
+
+    const title = await box(page, '.page-intro__title');
+    expect(title.x).toBe(80);
+  });
+
+  test('indexes eight cards on the measured grid', async ({ page }) => {
+    const cards = await boxes(page, '.challenge-index__card');
+    expect(cards).toHaveLength(8);
+
+    // Four equal columns that fill the container exactly.
+    for (const card of cards) expect(card.w).toBe(305);
+    expect(cards[0].x).toBe(80);
+    expect(cards[3].x + cards[3].w).toBe(1360);
+    expect(cards[1].x - (cards[0].x + cards[0].w)).toBe(20);
+    expect(cards[2].x - (cards[1].x + cards[1].w)).toBe(20);
+    expect(cards[4].y - (cards[0].y + cards[0].h)).toBe(12);
+
+    // Two rows of four, every card the same height.
+    expect(new Set(cards.map((c) => c.y)).size).toBe(2);
+    expect(new Set(cards.map((c) => c.h))).toEqual(new Set([70]));
+  });
+
+  test('card titles wrap exactly as the design does', async ({ page }) => {
+    const lines = await page
+      .locator('.challenge-index__title')
+      .evaluateAll((els) => els.map((el) => Math.round(el.getBoundingClientRect().height / 20)));
+    expect(lines).toEqual([1, 2, 2, 2, 2, 1, 1, 2]);
+  });
+
+  test('stacks eight detail panels at container width, 20px apart', async ({ page }) => {
+    const panels = await boxes(page, '.challenge-details__panel');
+    expect(panels).toHaveLength(8);
+    for (const panel of panels) {
+      expect(panel.x).toBe(80);
+      expect(panel.w).toBe(1280);
+    }
+    for (let i = 1; i < panels.length; i++) {
+      expect(panels[i].y - (panels[i - 1].y + panels[i - 1].h)).toBe(20);
+    }
+    expect(await style(page, '.challenge-details__panel', 'border-top-left-radius')).toBe('24px');
+  });
+
+  test('lays each panel out as 488 / fluid / 300 with a hairline between the first two', async ({
+    page,
+  }) => {
+    const summary = await box(page, '.challenge-details__summary');
+    const help = await box(page, '.challenge-details__help');
+    const services = await box(page, '.challenge-details__services');
+
+    expect(summary.x).toBe(121);
+    expect(summary.w).toBe(488);
+    expect(help.x).toBe(649);
+    expect(services.x).toBe(1019);
+    expect(services.w).toBe(300);
+
+    // 40px column gap either side of the fluid middle column.
+    expect(help.x - (summary.x + summary.w)).toBe(40);
+    expect(services.x - (help.x + help.w)).toBe(40);
+
+    // The hairline is the summary column's trailing border.
+    expect(await style(page, '.challenge-details__summary', 'border-right-width')).toBe('1px');
+    expect(await style(page, '.challenge-details__summary', 'border-right-color')).toBe(
+      'rgb(226, 232, 240)',
+    );
+  });
+
+  test('renders the panel contents: tiles, counters, checklists and service rows', async ({
+    page,
+  }) => {
+    await expect(page.locator('.challenge-details__counter').first()).toHaveText('01 / 08');
+    await expect(page.locator('.challenge-details__counter').last()).toHaveText('08 / 08');
+
+    // Only the AI challenge uses the inverted tile.
+    await expect(page.locator('app-icon-tile[data-tone="inverse-container"]')).toHaveCount(1);
+    await expect(page.locator('app-icon-tile[data-tone="primary"]')).toHaveCount(7);
+
+    const first = page.locator('.challenge-details__panel').first();
+    await expect(first.locator('.challenge-details__point')).toHaveCount(3);
+    await expect(first.locator('.challenge-details__service')).toHaveCount(4);
+    await expect(first.locator('.challenge-details__cta')).toHaveAttribute('href', '/contact');
+
+    expect(await style(page, '.challenge-details__services', 'background-color')).toBe(
+      'rgb(246, 248, 251)',
+    );
+    expect(await style(page, '.challenge-details__check', 'background-color')).toBe(
+      'rgb(238, 244, 255)',
+    );
+  });
+
+  test('joins the intro and the index into one tinted band', async ({ page }) => {
+    // page-intro's gradient ends on --mat-sys-background; the index continues it, so
+    // there is no step where the two meet.
+    expect(await style(page, 'app-challenge-index', 'background-color')).toBe('rgb(250, 251, 253)');
+  });
+});
+
+test.describe('solutions responsiveness', () => {
+  for (const width of [320, 375, 768, 1024, 1199, 1200, 1920]) {
+    test(`fits ${width}px without horizontal scroll`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/solutions');
+      await expect(page.locator('.challenge-details__panel')).toHaveCount(8);
+
+      expect(await noOverflow(page)).toBeLessThanOrEqual(0);
+
+      const cards = await boxes(page, '.challenge-index__card');
+      const columns = new Set(cards.map((c) => c.x)).size;
+      expect(columns).toBe(width >= 1200 ? 4 : width >= 600 ? 2 : 1);
+
+      // Panels stack into a single column below the large breakpoint.
+      const summary = await box(page, '.challenge-details__summary');
+      const services = await box(page, '.challenge-details__services');
+      if (width >= 1200) {
+        expect(summary.y).toBe(services.y);
+      } else {
+        expect(services.y).toBeGreaterThan(summary.y);
+      }
+    });
+  }
+
+  for (const locale of ['hy', 'ru']) {
+    test(`does not clip ${locale} copy at 320px`, async ({ page }) => {
+      await page.setViewportSize({ width: 320, height: 900 });
+      await page.goto(`/${locale}/solutions`);
+      await expect(page.locator('.challenge-details__panel')).toHaveCount(8);
+
+      expect(await noOverflow(page)).toBeLessThanOrEqual(0);
+
+      const clipped = await page.evaluate(
+        () =>
+          [
+            ...document.querySelectorAll(
+              '.challenge-index__title,.challenge-details__title,.challenge-details__text,.challenge-details__point-text,.challenge-details__service-name',
+            ),
+          ].filter(
+            (el) => el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1,
+          ).length,
+      );
+      expect(clipped).toBe(0);
+    });
+  }
+});
