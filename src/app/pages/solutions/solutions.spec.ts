@@ -188,6 +188,54 @@ describe('Solutions', () => {
     expect(text('.challenge-index__title')[0]).toBe('Запустить новый цифровой продукт');
   });
 
+  it('closes with the shared conversation band, overridden copy and no step list', async () => {
+    await go('/solutions');
+
+    const band = root.querySelector('app-start-conversation');
+    expect(band).not.toBeNull();
+
+    expect(band?.querySelector('.start-conversation__eyebrow')?.textContent?.trim()).toBe(
+      'Start a conversation',
+    );
+    expect(band?.querySelector('.start-conversation__title')?.textContent?.trim()).toBe(
+      'Facing a challenge that isn’t listed?',
+    );
+    expect(band?.querySelector('.start-conversation__lead')?.textContent?.trim()).toBe(
+      'These are common starting points, not a complete list. Describe your situation and we’ll tell you honestly whether and how we can help.',
+    );
+
+    // The page omits `steps`, so the shared band must render no numbered list.
+    expect(band?.querySelector('.start-conversation__steps')).toBeNull();
+
+    const actions = Array.from(band?.querySelectorAll('.start-conversation__actions a') ?? []);
+    expect(actions.map((el) => el.textContent?.trim())).toEqual([
+      'Discuss Your Project',
+      'Explore Our Services',
+    ]);
+    expect(actions.map((el) => el.getAttribute('href'))).toEqual(['/contact', '/services']);
+  });
+
+  it('translates the conversation band and keeps the locale prefix on both actions', async () => {
+    const hrefs = () =>
+      Array.from(
+        root.querySelectorAll('app-start-conversation .start-conversation__actions a'),
+      ).map((el) => el.getAttribute('href'));
+
+    setLocale('hy');
+    await go('/hy/solutions');
+    expect(root.querySelector('.start-conversation__title')?.textContent?.trim()).toBe(
+      'Ձեր մարտահրավերը ցանկում չկա՞։',
+    );
+    expect(hrefs()).toEqual(['/hy/contact', '/hy/services']);
+
+    setLocale('ru');
+    await go('/ru/solutions');
+    expect(root.querySelector('.start-conversation__title')?.textContent?.trim()).toBe(
+      'Не нашли свою задачу в списке?',
+    );
+    expect(hrefs()).toEqual(['/ru/contact', '/ru/services']);
+  });
+
   it('keeps the dictionary complete: eight challenges, each fully populated', () => {
     const items = challengesContent.content.items;
     expect(items).toHaveLength(8);

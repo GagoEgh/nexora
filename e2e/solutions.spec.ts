@@ -197,7 +197,7 @@ test.describe('solutions responsiveness', () => {
         () =>
           [
             ...document.querySelectorAll(
-              '.challenge-index__title,.challenge-details__title,.challenge-details__text,.challenge-details__point-text,.challenge-details__service-name',
+              '.challenge-index__title,.challenge-details__title,.challenge-details__text,.challenge-details__point-text,.challenge-details__service-name,.start-conversation__title,.start-conversation__lead,.start-conversation__actions a',
             ),
           ].filter(
             (el) => el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1,
@@ -206,4 +206,87 @@ test.describe('solutions responsiveness', () => {
       expect(clipped).toBe(0);
     });
   }
+});
+
+test.describe('solutions conversation band', () => {
+  test.use({ viewport: { width: 1440, height: 1000 } });
+
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/solutions');
+    await expect(page.locator('app-start-conversation')).toHaveCount(1);
+  });
+
+  test('closes the page with the shared band, no steps and two working links', async ({ page }) => {
+    const band = page.locator('app-start-conversation');
+    await expect(band.locator('.start-conversation__eyebrow')).toHaveText('Start a conversation');
+    await expect(band.locator('h2.start-conversation__title')).toHaveText(
+      'Facing a challenge that isn’t listed?',
+    );
+    await expect(band.locator('.start-conversation__lead')).toHaveText(
+      'These are common starting points, not a complete list. Describe your situation and we’ll tell you honestly whether and how we can help.',
+    );
+    await expect(page.locator('app-solutions h1')).toHaveCount(1);
+
+    // CTA.png shows no numbered list.
+    await expect(band.locator('.start-conversation__step')).toHaveCount(0);
+
+    const links = band.locator('a');
+    await expect(links).toHaveCount(2);
+    await expect(links).toHaveText(['Discuss Your Project', 'Explore Our Services']);
+    await expect(links.nth(0)).toHaveAttribute('href', '/contact');
+    await expect(links.nth(1)).toHaveAttribute('href', '/services');
+    await expect(band.locator('.start-conversation__art')).toHaveAttribute('aria-hidden', 'true');
+
+    // The secondary link actually resolves.
+    await links.nth(1).click();
+    await expect(page).toHaveURL(/\/services$/);
+  });
+
+  test('sits below the last panel and matches the design geometry', async ({ page }) => {
+    const panels = await boxes(page, '.challenge-details__panel');
+    const panel = await box(page, '.start-conversation');
+
+    // The band is the last section on the page, under all eight panels.
+    expect(panel.y).toBeGreaterThan(panels[7].y + panels[7].h);
+    expect(panel.x).toBe(80);
+    expect(panel.w).toBe(1280);
+
+    expect(await style(page, '.start-conversation', 'border-radius')).toBe('28px');
+    expect(await style(page, '.start-conversation', 'background-color')).toBe('rgb(238, 244, 255)');
+
+    const buttons = await boxes(page, '.start-conversation__actions a');
+    expect(buttons).toHaveLength(2);
+    for (const button of buttons) expect(button.h).toBe(48);
+
+    // This page narrows the shared artwork column and lets the ring bleed past the
+    // grid row, reproducing CTA.png's 380px ring inset 4px inside a 388px panel.
+    const ring = await box(page, '.start-conversation__ring');
+    expect(ring.w).toBe(380);
+    expect(ring.h).toBe(380);
+    expect(panel.h).toBe(388);
+    expect(ring.y - panel.y).toBe(4);
+    expect(panel.y + panel.h - (ring.y + ring.h)).toBe(4);
+
+    const titleLines = await page
+      .locator('.start-conversation__title')
+      .evaluate((el) =>
+        Math.round(el.getBoundingClientRect().height / parseFloat(getComputedStyle(el).lineHeight)),
+      );
+    expect(titleLines).toBe(1);
+  });
+
+  test('stacks the band and keeps it inside the viewport at 320px', async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 900 });
+    await page.goto('/solutions');
+    await expect(page.locator('app-start-conversation')).toHaveCount(1);
+
+    expect(await noOverflow(page)).toBeLessThanOrEqual(0);
+
+    const copy = await box(page, '.start-conversation__copy');
+    const art = await box(page, '.start-conversation__art');
+    expect(art.y).toBeGreaterThan(copy.y);
+
+    const buttons = await boxes(page, '.start-conversation__actions a');
+    expect(buttons[0].x).toBe(buttons[1].x);
+  });
 });
