@@ -9,6 +9,7 @@ import { appIcon } from '../../core/icons/icons';
 import { PageIntro, type PageIntroCrumb } from '../../shared/ui/page-intro/page-intro';
 import aiAgentContent from './ai-agent.content';
 import { Audiences } from './audiences/audiences';
+import { BusinessValue } from './business-value/business-value';
 import { Capabilities } from './capabilities/capabilities';
 import { Overview } from './overview/overview';
 import { Problems } from './problems/problems';
@@ -21,6 +22,7 @@ import { Workflow } from './workflow/workflow';
     LocalizedPathPipe,
     PageIntro,
     Audiences,
+    BusinessValue,
     Capabilities,
     Overview,
     Problems,

@@ -1,0 +1,87 @@
+@use 'tokens/spacing';
+@use 'tokens/layout';
+@use 'tokens/typography';
+@use 'mixins/eyebrow';
+
+:host {
+  display: block;
+  padding-block: spacing.space(96);
+  padding-inline: var(--nx-layout-margin);
+  background-color: var(--mat-sys-inverse-surface);
+}
+
+.business-value {
+  max-width: var(--nx-layout-container-max);
+  margin-inline: auto;
+}
+
+.business-value__heading {
+  display: grid;
+  gap: spacing.space(20);
+  justify-items: start;
+  margin-block-end: spacing.space(40);
+}
+
+.business-value__eyebrow {
+  @include eyebrow.eyebrow();
+
+  color: var(--mat-sys-inverse-primary);
+}
+
+.business-value__title {
+  margin: 0;
+  font: #{typography.$weight-semibold} 32px #{'/'} 40px #{typography.$plain-family};
+  letter-spacing: -1px;
+  color: var(--mat-sys-inverse-on-surface);
+}
+
+.business-value__grid {
+  display: grid;
+  gap: spacing.space(20);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @include layout.up(medium) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include layout.up(large) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+// No height: the grid stretches every card to the tallest, so longer hy/ru copy
+// lengthens the row instead of being clipped.
+.business-value__card {
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  gap: spacing.space(12);
+  padding: calc(#{spacing.space(24)} + #{spacing.space(4)});
+  border-radius: 24px;
+  background-color: var(--nx-sys-inverse-surface-container);
+}
+
+.business-value__icon {
+  color: var(--mat-sys-inverse-primary);
+}
+
+.business-value__card-title {
+  margin: 0;
+  font: var(--nx-sys-title-step);
+  letter-spacing: var(--nx-sys-display-tracking);
+  color: var(--mat-sys-inverse-on-surface);
+}
+
+.business-value__card-text {
+  margin: 0;
+  font: var(--mat-sys-body-small);
+  color: var(--nx-sys-inverse-on-surface-variant);
+}
+
+.business-value__note {
+  margin: spacing.space(48) 0 0;
+  font: var(--mat-sys-body-small);
+  color: var(--nx-sys-inverse-on-surface-variant);
+}

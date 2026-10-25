@@ -1,0 +1,22 @@
+<section class="business-value">
+  <div class="business-value__heading">
+    <p class="business-value__eyebrow">{{ content().eyebrow }}</p>
+    <h2 class="business-value__title">{{ content().title }}</h2>
+  </div>
+
+  <ul class="business-value__grid">
+    @for (item of content().items; track $index) {
+      <li class="business-value__card">
+        <mat-icon
+          class="business-value__icon"
+          aria-hidden="true"
+          [svgIcon]="cardIcon(item.icon.value)"
+        />
+        <h3 class="business-value__card-title">{{ item.title }}</h3>
+        <p class="business-value__card-text">{{ item.text }}</p>
+      </li>
+    }
+  </ul>
+
+  <p class="business-value__note">{{ content().note }}</p>
+</section>

@@ -375,6 +375,68 @@ test.describe('ai agents audiences band', () => {
   });
 });
 
+test.describe('ai agents business value band', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/services/ai_agent');
+  });
+
+  test('closes the page with four outcome cards', async ({ page }) => {
+    const business = page.locator('app-business-value');
+    await expect(business).toHaveCount(1);
+    await expect(business.locator('.business-value__eyebrow')).toHaveText('Business value');
+    await expect(business.locator('h2.business-value__title')).toHaveText(
+      'What changes when the routine runs itself.',
+    );
+    await expect(page.locator('app-ai-agent h1')).toHaveCount(1);
+
+    await expect(business.locator('.business-value__card')).toHaveCount(4);
+    await expect(business.locator('.business-value__card-title')).toHaveText([
+      'Less manual work',
+      'Faster response',
+      'Consistent processes',
+      'Visibility and control',
+    ]);
+
+    // Bare decorative icons rather than app-icon-tile.
+    await expect(business.locator('.business-value__icon')).toHaveCount(4);
+    await expect(business.locator('app-icon-tile')).toHaveCount(0);
+    await expect(business.locator('.business-value__icon svg')).toHaveCount(4);
+  });
+
+  test('matches the dark band geometry and palette from the design', async ({ page }) => {
+    // The dark band is full-bleed, unlike the contained panel on the home page.
+    const band = await box(page, 'app-business-value');
+    expect(band.x).toBe(0);
+    expect(band.w).toBe(1440);
+    expect(band.h).toBe(576);
+
+    const cards = await boxes(page, '.business-value__card');
+    expect(cards).toHaveLength(4);
+    expect(cards.map((card) => card.x)).toEqual([80, 405, 730, 1055]);
+    for (const card of cards) expect(card.w).toBe(305);
+    expect(cards[1].x - (cards[0].x + cards[0].w)).toBe(20);
+    expect(cards[3].x + cards[3].w).toBe(1360);
+    for (const card of cards) expect(card.h).toBe(cards[0].h);
+
+    expect(await style(page, 'app-business-value', 'background-color')).toBe('rgb(6, 11, 23)');
+    expect(await style(page, '.business-value__card', 'background-color')).toBe('rgb(26, 37, 64)');
+    expect(await style(page, '.business-value__eyebrow', 'color')).toBe('rgb(134, 173, 255)');
+    expect(await style(page, '.business-value__title', 'color')).toBe('rgb(246, 248, 251)');
+    expect(await style(page, '.business-value__card-text', 'color')).toBe('rgb(148, 163, 184)');
+
+    // Cards are borderless with a 24px radius and 28px padding.
+    expect(await style(page, '.business-value__card', 'border-top-width')).toBe('0px');
+    expect(await style(page, '.business-value__card', 'border-top-left-radius')).toBe('24px');
+    expect(await style(page, '.business-value__card', 'padding-top')).toBe('28px');
+
+    expect(await style(page, '.business-value__title', 'font-size')).toBe('32px');
+    expect(await style(page, '.business-value__title', 'line-height')).toBe('40px');
+    expect(await style(page, '.business-value__title', 'font-weight')).toBe('600');
+    expect(await style(page, '.business-value__title', 'letter-spacing')).toBe('-1px');
+  });
+});
+
 test.describe('ai agents page in other locales', () => {
   test('renders the whole band in Russian and Armenian', async ({ page }) => {
     await page.goto('/ru/services/ai_agent');
@@ -393,6 +455,9 @@ test.describe('ai agents page in other locales', () => {
       'Типичные проекты',
       'Для кого это',
     ]);
+    await expect(page.locator('.business-value__card-title').first()).toHaveText(
+      'Меньше ручной работы',
+    );
     await expect(page.locator('.ai-agent__actions a').nth(1)).toHaveAttribute(
       'href',
       '/ru/solutions',
@@ -411,6 +476,7 @@ test.describe('ai agents page in other locales', () => {
       'Հնարավորություններ',
     );
     await expect(page.locator('.audiences__eyebrow').first()).toHaveText('Բնորոշ նախագծեր');
+    await expect(page.locator('.business-value__eyebrow')).toHaveText('Բիզնես արժեք');
     await expect(page.locator('.ai-agent__actions a').nth(0)).toHaveAttribute(
       'href',
       '/hy/contact',
@@ -467,5 +533,15 @@ test.describe('ai agents page at the mobile width', () => {
     expect(chips).toHaveLength(6);
     for (const chip of chips) expect(chip.x + chip.w).toBeLessThanOrEqual(390);
     expect(new Set(chips.map((chip) => chip.y)).size).toBeGreaterThan(1);
+
+    // The outcome cards collapse to one column, and none of them clips its copy.
+    const outcomes = await boxes(page, '.business-value__card');
+    expect(outcomes).toHaveLength(4);
+    for (const card of outcomes) expect(card.w).toBeLessThanOrEqual(390);
+    expect(new Set(outcomes.map((card) => card.x)).size).toBe(1);
+    const spill = await page
+      .locator('.business-value__card')
+      .evaluateAll((els) => els.map((el) => el.scrollHeight > el.clientHeight + 1));
+    expect(spill).toEqual([false, false, false, false]);
   });
 });

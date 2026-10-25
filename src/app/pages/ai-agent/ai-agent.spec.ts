@@ -219,7 +219,8 @@ describe('AiAgent', () => {
 
     const audiences = root.querySelector('app-audiences');
     expect(audiences).not.toBeNull();
-    expect(root.lastElementChild?.tagName).toBe('APP-AUDIENCES');
+    expect(audiences?.previousElementSibling?.tagName).toBe('APP-CAPABILITIES');
+    expect(audiences?.nextElementSibling?.tagName).toBe('APP-BUSINESS-VALUE');
 
     expect(text('.audiences__eyebrow')).toEqual(['Typical projects', "Who it's for"]);
     expect(text('h2.audiences__title')).toEqual([
@@ -256,6 +257,46 @@ describe('AiAgent', () => {
     expect(root.querySelectorAll('h1')).toHaveLength(1);
   });
 
+  it('closes the page with the business value cards', async () => {
+    await go('/services/ai_agent');
+
+    const business = root.querySelector('app-business-value');
+    expect(business).not.toBeNull();
+    expect(root.lastElementChild?.tagName).toBe('APP-BUSINESS-VALUE');
+
+    expect(business?.querySelector('.business-value__eyebrow')?.textContent?.trim()).toBe(
+      'Business value',
+    );
+    expect(business?.querySelector('h2.business-value__title')?.textContent?.trim()).toBe(
+      'What changes when the routine runs itself.',
+    );
+
+    const cards = Array.from(business?.querySelectorAll('.business-value__card') ?? []);
+    expect(cards).toHaveLength(4);
+    expect(text('.business-value__card-title')).toEqual([
+      'Less manual work',
+      'Faster response',
+      'Consistent processes',
+      'Visibility and control',
+    ]);
+    expect(text('.business-value__card-text')[0]).toBe(
+      'People spend time on judgement and relationships instead of copying data.',
+    );
+    expect(business?.querySelector('.business-value__note')?.textContent?.trim()).toBe(
+      "Outcomes depend on each process and are agreed per project \u2014 we don't promise generic percentages.",
+    );
+
+    // Bare decorative icons, not tiles.
+    const icons = Array.from(business?.querySelectorAll('.business-value__icon') ?? []);
+    expect(icons).toHaveLength(4);
+    expect(icons.every((icon) => icon.getAttribute('aria-hidden') === 'true')).toBe(true);
+    expect(business?.querySelectorAll('app-icon-tile')).toHaveLength(0);
+
+    // The section must not disturb the page outline.
+    expect(root.querySelectorAll('h1')).toHaveLength(1);
+    expect(cards[0].querySelector('.business-value__card-title')?.tagName).toBe('H3');
+  });
+
   it('renders every string and both links under a locale prefix', async () => {
     await go('/ru/services/ai_agent');
 
@@ -266,6 +307,9 @@ describe('AiAgent', () => {
     expect(text('.workflow__label')[0]).toBe('Триггер');
     expect(text('.capabilities__panel-title')).toEqual(['Возможности', 'Результаты']);
     expect(text('.audiences__eyebrow')).toEqual(['Типичные проекты', 'Для кого это']);
+    expect(root.querySelector('.business-value__title')?.textContent?.trim()).toBe(
+      'Что меняется, когда рутина выполняется сама.',
+    );
     expect(root.querySelector('.problems__card-title')?.textContent?.trim()).toBe(
       'Данные копируются вручную',
     );
@@ -289,6 +333,9 @@ describe('AiAgent', () => {
     );
     expect(text('.capabilities__panel-title')).toEqual(['Հնարավորություններ', 'Արդյունքներ']);
     expect(text('.audiences__eyebrow')).toEqual(['Բնորոշ նախագծեր', 'Ում համար է']);
+    expect(root.querySelector('.business-value__title')?.textContent?.trim()).toBe(
+      'Ինչ է փոխվում, երբ առօրյա գործընթացներն ինքնաշխատ են դառնում։',
+    );
     expect(
       Array.from(root.querySelectorAll('.page-intro__crumb-link')).map((a) =>
         a.getAttribute('href'),
