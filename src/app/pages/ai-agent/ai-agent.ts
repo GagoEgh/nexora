@@ -44,7 +44,6 @@ import { Workflow } from './workflow/workflow';
 export class AiAgent {
   protected readonly content = useDictionary(aiAgentContent);
   protected readonly arrowIcon = appIcon('arrow-right');
-  protected readonly servicesPath = SERVICES_PATH;
 
   protected readonly conversationCopy = computed<ConversationCopy>(() => {
     const copy = this.content().conversation;

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { useDictionary } from 'angular-intlayer';
-import { appIcon, type AppIconName } from '../../../core/icons/icons';
+import { appIcon } from '../../../core/icons/icons';
 import { ordinal } from '../../../shared/ordinal';
 import audiencesContent from './audiences.content';
 
@@ -15,5 +15,5 @@ export class Audiences {
   protected readonly content = useDictionary(audiencesContent);
   protected readonly arrowIcon = appIcon('arrow-right');
   protected readonly ordinal = ordinal;
-  protected readonly chipIcon = (icon: AppIconName) => appIcon(icon);
+  protected readonly chipIcon = appIcon;
 }

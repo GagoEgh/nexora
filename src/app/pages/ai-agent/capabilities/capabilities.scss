@@ -12,9 +12,7 @@
 }
 
 .capabilities__heading {
-  display: grid;
-  gap: spacing.space(20);
-  justify-items: start;
+  @include container.heading(20);
   margin-block-end: spacing.space(64);
 }
 

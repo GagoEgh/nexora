@@ -21,3 +21,9 @@
   max-width: var(--nx-layout-container-max);
   margin-inline: auto;
 }
+
+@mixin heading($gap) {
+  display: grid;
+  gap: spacing.space($gap);
+  justify-items: start;
+}
