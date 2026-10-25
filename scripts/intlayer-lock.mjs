@@ -6,7 +6,10 @@ import { fileURLToPath } from 'node:url';
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const LOCK_DIR = join(ROOT, 'node_modules', '.cache', 'intlayer-task.lock');
 const OWNER_FILE = join(LOCK_DIR, 'owner');
+const TASK_FILE = join(LOCK_DIR, 'task');
 const POLL_MS = 250;
+/** How often the wait notice repeats, so a long block stays visible. */
+const NOTICE_MS = 30 * 1000;
 const STALE_MS = 20 * 60 * 1000;
 
 /** @param {number} pid */
@@ -39,14 +42,41 @@ const isStale = () => {
   }
 };
 
-const acquire = async () => {
+/**
+ * Describes the current holder for the wait notice. Without this the message names no task, so
+ * a blocked dev server looks like a hang rather than a queue.
+ */
+const describeHolder = () => {
+  const read = (/** @type {string} */ file) => {
+    try {
+      return readFileSync(file, 'utf8').trim();
+    } catch {
+      return '';
+    }
+  };
+
+  const task = read(TASK_FILE) || 'another build or test task';
+  const pid = read(OWNER_FILE) || '?';
+  let held = '';
+  try {
+    const minutes = Math.floor((Date.now() - statSync(LOCK_DIR).mtimeMs) / 60000);
+    held = minutes > 0 ? `, held ${minutes}m` : '';
+  } catch {
+    // The lock vanished while we looked; the next poll will take it.
+  }
+  return `${task} (pid ${pid}${held})`;
+};
+
+/** @param {string} task */
+const acquire = async (task) => {
   mkdirSync(dirname(LOCK_DIR), { recursive: true });
-  let waiting = false;
+  let waiting = 0;
   for (;;) {
     try {
       // mkdir is atomic across processes, which is what makes this a lock.
       mkdirSync(LOCK_DIR);
       writeFileSync(OWNER_FILE, String(process.pid));
+      writeFileSync(TASK_FILE, task);
       return;
     } catch (error) {
       if (/** @type {NodeJS.ErrnoException} */ (error).code !== 'EEXIST') {
@@ -56,9 +86,10 @@ const acquire = async () => {
         rmSync(LOCK_DIR, { recursive: true, force: true });
         continue;
       }
-      if (!waiting) {
-        waiting = true;
-        process.stderr.write('[intlayer-lock] another build or test task is running, waiting…\n');
+      const now = Date.now();
+      if (now - waiting >= NOTICE_MS) {
+        waiting = now;
+        process.stderr.write(`[intlayer-lock] waiting for ${describeHolder()}…\n`);
       }
       await new Promise((resolve) => setTimeout(resolve, POLL_MS));
     }
@@ -73,7 +104,7 @@ if (!command) {
   process.exit(2);
 }
 
-await acquire();
+await acquire([command, ...args].join(' '));
 
 let released = false;
 const releaseOnce = () => {

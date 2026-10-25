@@ -53,15 +53,19 @@ let owner = /** @type {import('node:child_process').ChildProcess | undefined} */
 
 /**
  * Puts the sandbox lock into a given state.
- * @param {{ owner?: number | string, age?: 'fresh' | 'aged' }} state
+ * @param {{ owner?: number | string, task?: string, age?: 'fresh' | 'aged' }} state
  *   `owner` omitted leaves the owner file absent, as it is between the script's mkdir and its
- *   write. `age: 'aged'` backdates the directory past the staleness fallback.
+ *   write. `task` omitted leaves the task file absent, as an older lock would.
+ *   `age: 'aged'` backdates the directory past the staleness fallback.
  */
-const placeLock = ({ owner: pid, age = 'fresh' } = {}) => {
+const placeLock = ({ owner: pid, task, age = 'fresh' } = {}) => {
   rmSync(lockDir, { recursive: true, force: true });
   mkdirSync(lockDir, { recursive: true });
   if (pid !== undefined) {
     writeFileSync(ownerFile, String(pid));
+  }
+  if (task !== undefined) {
+    writeFileSync(join(lockDir, 'task'), task);
   }
   if (age === 'aged') {
     utimesSync(lockDir, AGED, AGED);
@@ -90,10 +94,20 @@ const attempt = (timeoutMs) => {
   const output = `${result.stdout ?? ''}${result.stderr ?? ''}`;
   assert.match(
     output,
-    /another build or test task is running/,
+    /\[intlayer-lock\] waiting for /,
     `the command never ran and no wait was announced; output was: ${output}`,
   );
   return 'waited';
+};
+
+/** Raw output from an attempt, for asserting what the wait notice says. */
+const noticeFor = (/** @type {number} */ timeoutMs) => {
+  rmSync(flagFile, { force: true });
+  const result = spawnSync(process.execPath, [script, 'node', `"${runner}"`], {
+    encoding: 'utf8',
+    timeout: timeoutMs,
+  });
+  return `${result.stdout ?? ''}${result.stderr ?? ''}`;
 };
 
 before(async () => {
@@ -136,6 +150,18 @@ describe('intlayer-lock', () => {
     // the case that previously stole the lock and let two Intlayer builds overlap.
     placeLock({ owner: owner?.pid, age: 'aged' });
     assert.equal(attempt(WAIT_MS), 'waited');
+  });
+
+  it('names the holding task and its pid while waiting', () => {
+    placeLock({ owner: owner?.pid, task: 'ng e2e' });
+    const notice = noticeFor(2500);
+    assert.match(notice, /waiting for ng e2e/);
+    assert.match(notice, new RegExp(`pid ${owner?.pid}`));
+  });
+
+  it('falls back to a generic description when the task file is absent', () => {
+    placeLock({ owner: owner?.pid });
+    assert.match(noticeFor(2500), /waiting for another build or test task/);
   });
 
   it('takes over when the owner is gone', () => {
