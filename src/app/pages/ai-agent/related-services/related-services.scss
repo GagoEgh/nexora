@@ -1,17 +1,16 @@
-@use 'tokens/spacing';
-@use 'tokens/layout';
+@use 'mixins/container';
 @use 'mixins/eyebrow';
+@use 'tokens/layout';
+@use 'tokens/spacing';
 
 :host {
-  display: block;
-  padding-block: spacing.space(96);
-  padding-inline: var(--nx-layout-margin);
+  @include container.section();
+
   background-color: var(--mat-sys-surface);
 }
 
 .related {
-  max-width: var(--nx-layout-container-max);
-  margin-inline: auto;
+  @include container.container();
 }
 
 .related__heading {

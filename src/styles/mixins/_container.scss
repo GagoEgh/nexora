@@ -10,3 +10,14 @@
     margin-inline: auto;
   }
 }
+
+@mixin section() {
+  display: block;
+  padding-block: spacing.space(96);
+  padding-inline: var(--nx-layout-margin);
+}
+
+@mixin container() {
+  max-width: var(--nx-layout-container-max);
+  margin-inline: auto;
+}

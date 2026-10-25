@@ -1,17 +1,15 @@
-@use 'tokens/spacing';
-@use 'tokens/layout';
-@use 'tokens/typography';
+@use 'mixins/container';
 @use 'mixins/eyebrow';
+@use 'tokens/layout';
+@use 'tokens/spacing';
+@use 'tokens/typography';
 
 :host {
-  display: block;
-  padding-block: spacing.space(96);
-  padding-inline: var(--nx-layout-margin);
+  @include container.section();
 }
 
 .problems {
-  max-width: var(--nx-layout-container-max);
-  margin-inline: auto;
+  @include container.container();
 }
 
 .problems__header {

@@ -1,19 +1,18 @@
-@use 'tokens/spacing';
-@use 'tokens/layout';
-@use 'tokens/typography';
+@use 'mixins/container';
 @use 'mixins/eyebrow';
+@use 'tokens/layout';
+@use 'tokens/spacing';
+@use 'tokens/typography';
 
 :host {
-  display: block;
-  padding-block: spacing.space(96);
-  padding-inline: var(--nx-layout-margin);
+  @include container.section();
 }
 
 .audiences {
+  @include container.container();
+
   display: grid;
   gap: spacing.space(48);
-  max-width: var(--nx-layout-container-max);
-  margin-inline: auto;
 
   @include layout.up(large) {
     grid-template-columns: minmax(0, 696fr) minmax(0, 520fr);
