@@ -398,6 +398,33 @@ const aboutContent = {
         }),
       },
     ],
+    conversation: {
+      eyebrow: t({
+        en: 'Collaborate with Nexora',
+        hy: 'Համագործակցեք Nexora-ի հետ',
+        ru: 'Сотрудничайте с Nexora',
+      }),
+      title: t({
+        en: 'Let’s talk about working together.',
+        hy: 'Եկեք խոսենք համատեղ աշխատանքի մասին։',
+        ru: 'Давайте обсудим совместную работу.',
+      }),
+      lead: t({
+        en: 'Whether it’s a single project, a dedicated team or a long-term partnership, the first step is a conversation about what you need.',
+        hy: 'Անկախ նրանից՝ դա առանձին նախագիծ է, նվիրված թիմ, թե երկարաժամկետ գործընկերություն, առաջին քայլը զրույցն է այն մասին, թե ինչ է ձեզ անհրաժեշտ։',
+        ru: 'Будь то отдельный проект, выделенная команда или долгосрочное партнёрство — первый шаг это разговор о том, что вам нужно.',
+      }),
+      primaryCta: t({
+        en: 'Discuss Your Project',
+        hy: 'Քննարկենք ձեր նախագիծը',
+        ru: 'Обсудить проект',
+      }),
+      secondaryCta: t({
+        en: 'Engagement models',
+        hy: 'Համագործակցության մոդելներ',
+        ru: 'Форматы сотрудничества',
+      }),
+    },
   },
 } as const satisfies Dictionary;
 

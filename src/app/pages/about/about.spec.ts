@@ -584,6 +584,62 @@ describe('About', () => {
     expect(markets.map((market) => market.icon)).toEqual(['globe', 'globe']);
   });
 
+  it('closes the page with the shared conversation band, compact and step-less', async () => {
+    await go('/about');
+
+    const band = root.querySelector('app-start-conversation');
+    expect(band).not.toBeNull();
+    // The compact variant is what produces the design’s 380px ring in a 388px panel.
+    expect(band?.getAttribute('data-variant')).toBe('compact');
+
+    expect(band?.querySelector('.start-conversation__eyebrow')?.textContent?.trim()).toBe(
+      'Collaborate with Nexora',
+    );
+    expect(band?.querySelector('.start-conversation__title')?.textContent?.trim()).toBe(
+      'Let’s talk about working together.',
+    );
+    expect(band?.querySelector('.start-conversation__lead')?.textContent?.trim()).toContain(
+      'Whether it’s a single project, a dedicated team or a long-term partnership',
+    );
+
+    // CTA.png shows no numbered list, so the page omits the optional steps input.
+    expect(band?.querySelector('.start-conversation__steps')).toBeNull();
+  });
+
+  it('points the conversation band at contact and partnerships', async () => {
+    await go('/about');
+
+    const actions = Array.from(
+      root.querySelectorAll('app-start-conversation .start-conversation__actions a'),
+    );
+    expect(actions.map((a) => a.textContent?.trim())).toEqual([
+      'Discuss Your Project',
+      'Engagement models',
+    ]);
+    expect(actions.map((a) => a.getAttribute('href'))).toEqual(['/contact', '/partnerships']);
+  });
+
+  it('translates the conversation band and keeps the locale prefix on both actions', async () => {
+    const hrefs = () =>
+      Array.from(
+        root.querySelectorAll('app-start-conversation .start-conversation__actions a'),
+      ).map((a) => a.getAttribute('href'));
+
+    setLocale('hy');
+    await go('/hy/about');
+    expect(root.querySelector('.start-conversation__title')?.textContent?.trim()).toBe(
+      'Եկեք խոսենք համատեղ աշխատանքի մասին։',
+    );
+    expect(hrefs()).toEqual(['/hy/contact', '/hy/partnerships']);
+
+    setLocale('ru');
+    await go('/ru/about');
+    expect(root.querySelector('.start-conversation__title')?.textContent?.trim()).toBe(
+      'Давайте обсудим совместную работу.',
+    );
+    expect(hrefs()).toEqual(['/ru/contact', '/ru/partnerships']);
+  });
+
   it('keeps the philosophy dictionary complete: four cards, two paragraphs', () => {
     const { cards, intro } = aboutContent.content.philosophy;
     expect(cards).toHaveLength(4);

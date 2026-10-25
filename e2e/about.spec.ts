@@ -936,3 +936,95 @@ test.describe('about markets responsiveness', () => {
     });
   }
 });
+
+test.describe('about conversation band at the desktop design width', () => {
+  test.use({ viewport: { width: 1440, height: 4200 } });
+
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/about');
+    await expect(page.locator('app-about app-start-conversation')).toHaveCount(1);
+  });
+
+  test('closes the page with the compact band in its design geometry', async ({ page }) => {
+    const markets = await box(page, '.markets');
+    const panel = await box(page, 'app-about .start-conversation');
+    expect(panel.y).toBeGreaterThan(markets.y + markets.h - 1);
+    expect(panel.x).toBe(80);
+    expect(panel.w).toBe(1280);
+
+    // CTA.png: a 380px ring inset 4px inside a 388px panel - the compact variant.
+    expect(panel.h).toBe(388);
+    const ring = await box(page, 'app-about .start-conversation__ring');
+    expect(ring.w).toBe(380);
+    expect(ring.h).toBe(380);
+    expect(ring.y - panel.y).toBe(4);
+    expect(panel.y + panel.h - (ring.y + ring.h)).toBe(4);
+
+    expect(await style(page, 'app-about .start-conversation', 'background-color')).toBe(
+      'rgb(238, 244, 255)',
+    );
+    expect(await style(page, 'app-about .start-conversation', 'border-radius')).toBe('28px');
+  });
+
+  test('carries the about copy, no steps, and two working links', async ({ page }) => {
+    const band = page.locator('app-about app-start-conversation');
+    await expect(band.locator('.start-conversation__eyebrow')).toHaveText(
+      'Collaborate with Nexora',
+    );
+    await expect(band.locator('h2.start-conversation__title')).toHaveText(
+      'Let’s talk about working together.',
+    );
+    await expect(band.locator('.start-conversation__step')).toHaveCount(0);
+
+    const links = band.locator('.start-conversation__actions a');
+    await expect(links).toHaveCount(2);
+    await expect(links).toHaveText(['Discuss Your Project', 'Engagement models']);
+    await expect(links.nth(0)).toHaveAttribute('href', '/contact');
+    await expect(links.nth(1)).toHaveAttribute('href', '/partnerships');
+
+    await links.nth(1).click();
+    await expect(page).toHaveURL(/\/partnerships$/);
+  });
+});
+
+test.describe('about conversation band responsiveness', () => {
+  for (const width of [320, 375, 768, 1024, 1199, 1200, 1920]) {
+    test(`fits ${width}px without horizontal scroll`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 4200 });
+      await page.goto('/about');
+      await expect(page.locator('app-about app-start-conversation')).toHaveCount(1);
+
+      expect(await noOverflow(page)).toBeLessThanOrEqual(0);
+      await expect(page.locator('app-about .start-conversation__actions a')).toHaveCount(2);
+    });
+  }
+
+  for (const locale of ['hy', 'ru']) {
+    test(`keeps the ${locale} prefix on both actions and does not clip`, async ({ page }) => {
+      for (const width of [320, 1440]) {
+        await page.setViewportSize({ width, height: 4200 });
+        await page.goto(`/${locale}/about`);
+        await expect(page.locator('app-about app-start-conversation')).toHaveCount(1);
+
+        expect(await noOverflow(page)).toBeLessThanOrEqual(0);
+
+        const hrefs = await page
+          .locator('app-about .start-conversation__actions a')
+          .evaluateAll((els) => els.map((el) => el.getAttribute('href')));
+        expect(hrefs).toEqual([`/${locale}/contact`, `/${locale}/partnerships`]);
+
+        const clipped = await page.evaluate(
+          () =>
+            [
+              ...document.querySelectorAll(
+                'app-about .start-conversation__title, app-about .start-conversation__lead',
+              ),
+            ].filter(
+              (el) => el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1,
+            ).length,
+        );
+        expect(clipped, `${locale} at ${width}`).toBe(0);
+      }
+    });
+  }
+});
