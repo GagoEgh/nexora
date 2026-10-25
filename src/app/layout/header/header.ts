@@ -7,7 +7,7 @@ import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/ro
 import { useDictionary } from 'angular-intlayer';
 import { getPathWithoutLocale } from 'intlayer';
 import { filter } from 'rxjs';
-import { AI_AGENT_PATH, SERVICES_PATH } from '../../app.routes';
+import { AI_AGENT_PATH, SERVICES_PATH } from '../../core/routing/paths';
 import { useLocaleSwitcher } from '../../core/i18n/locale-switcher';
 import { LocalizedPathPipe } from '../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../core/icons/icons';

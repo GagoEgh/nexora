@@ -14,7 +14,7 @@ import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { useDictionary } from 'angular-intlayer';
-import { AI_AGENT_PATH } from '../../app.routes';
+import { AI_AGENT_PATH } from '../../core/routing/paths';
 import { LocalizedPathPipe } from '../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../core/icons/icons';
 import { ordinal } from '../../shared/ordinal';

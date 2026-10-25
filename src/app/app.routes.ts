@@ -1,11 +1,7 @@
 import { Routes } from '@angular/router';
 import { matchLocalePrefix, syncLocaleWithUrl } from './core/i18n/locale-routing';
+import { AI_AGENT_SEGMENT } from './core/routing/paths';
 import type { DocumentMetaRouteData } from './core/seo/document-meta';
-
-const AI_AGENT_SEGMENT = 'ai_agent';
-
-export const SERVICES_PATH = '/services';
-export const AI_AGENT_PATH = `${SERVICES_PATH}/${AI_AGENT_SEGMENT}`;
 
 const pages: Routes = [
   {
