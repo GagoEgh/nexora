@@ -1,0 +1,12 @@
+<section class="long-term" aria-labelledby="long-term-title">
+  <div class="long-term__heading">
+    <p class="long-term__eyebrow">{{ content().longTerm.eyebrow }}</p>
+    <h2 class="long-term__title" id="long-term-title">{{ content().longTerm.title }}</h2>
+  </div>
+
+  <div class="long-term__copy">
+    @for (paragraph of content().longTerm.body; track $index) {
+      <p class="long-term__text">{{ paragraph }}</p>
+    }
+  </div>
+</section>

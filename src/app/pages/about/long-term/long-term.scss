@@ -1,0 +1,57 @@
+@use 'mixins/container';
+@use 'mixins/eyebrow';
+@use 'tokens/layout';
+@use 'tokens/spacing';
+
+:host {
+  @include container.section();
+
+  background-color: var(--mat-sys-inverse-surface);
+}
+
+.long-term {
+  @include container.container();
+
+  display: grid;
+  gap: spacing.space(40);
+
+  @include layout.up(large) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 440px);
+    column-gap: spacing.space(64);
+    align-items: start;
+  }
+}
+
+.long-term__heading {
+  @include container.heading(20);
+}
+
+.long-term__eyebrow {
+  @include eyebrow.eyebrow();
+
+  color: var(--mat-sys-inverse-primary);
+}
+
+.long-term__title {
+  min-width: 0;
+  max-width: 720px;
+  margin: 0;
+  font: var(--nx-sys-display-section);
+  color: var(--mat-sys-inverse-on-surface);
+  overflow-wrap: anywhere;
+}
+
+.long-term__copy {
+  display: grid;
+  gap: spacing.space(16);
+  align-content: start;
+  min-width: 0;
+}
+
+.long-term__text {
+  min-width: 0;
+  margin: 0;
+  font: var(--nx-sys-body-lead);
+  color: var(--nx-sys-inverse-on-surface-variant);
+  overflow-wrap: anywhere;
+}

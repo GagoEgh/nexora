@@ -492,6 +492,53 @@ describe('About', () => {
     ]);
   });
 
+  it('closes the page with the long-term band', async () => {
+    await go('/about');
+
+    const section = root.querySelector('app-long-term .long-term');
+    expect(section).not.toBeNull();
+
+    expect(section?.querySelector('.long-term__eyebrow')?.textContent?.trim()).toBe(
+      'Long-term partnership',
+    );
+
+    const title = section?.querySelector('.long-term__title');
+    expect(title?.tagName).toBe('H2');
+    expect(title?.textContent?.trim()).toBe(
+      'We build systems we’d be comfortable maintaining ourselves.',
+    );
+    expect(section?.getAttribute('aria-labelledby')).toBe(title?.id);
+
+    const paragraphs = text('.long-term__text');
+    expect(paragraphs).toHaveLength(2);
+    expect(paragraphs[0]).toContain('Most software lives far longer than its first release.');
+    expect(paragraphs[1]).toBe(
+      'Engagements can continue as ongoing partnerships, with the same engineers evolving the product as the business changes.',
+    );
+  });
+
+  it('translates the long-term band into Armenian and Russian', async () => {
+    setLocale('hy');
+    await go('/hy/about');
+    expect(root.querySelector('.long-term__title')?.textContent?.trim()).toBe(
+      'Մենք կառուցում ենք համակարգեր, որոնք հարմար կլինեին մեզ՝ ինքներս սպասարկելու համար։',
+    );
+    expect(text('.long-term__text')).toHaveLength(2);
+
+    setLocale('ru');
+    await go('/ru/about');
+    expect(root.querySelector('.long-term__eyebrow')?.textContent?.trim()).toBe(
+      'Долгосрочное партнёрство',
+    );
+    expect(root.querySelector('.long-term__title')?.textContent?.trim()).toBe(
+      'Мы строим системы, которые нам самим было бы комфортно поддерживать.',
+    );
+  });
+
+  it('keeps the long-term dictionary complete: two body paragraphs', () => {
+    expect(aboutContent.content.longTerm.body).toHaveLength(2);
+  });
+
   it('keeps the philosophy dictionary complete: four cards, two paragraphs', () => {
     const { cards, intro } = aboutContent.content.philosophy;
     expect(cards).toHaveLength(4);

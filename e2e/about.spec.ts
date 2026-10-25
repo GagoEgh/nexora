@@ -735,3 +735,101 @@ test.describe('about quality and capability responsiveness', () => {
     });
   }
 });
+
+test.describe('about long-term band at the desktop design width', () => {
+  test.use({ viewport: { width: 1440, height: 3200 } });
+
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/about');
+    await expect(page.locator('.long-term')).toHaveCount(1);
+  });
+
+  test('closes the page as a full-bleed dark band', async ({ page }) => {
+    const quality = await box(page, '.quality');
+    const host = await box(page, 'app-long-term');
+    const inner = await box(page, '.long-term');
+
+    expect(host.y).toBeGreaterThan(quality.y + quality.h - 1);
+    // The band runs edge to edge; only its contents are contained.
+    expect(host.x).toBe(0);
+    expect(host.w).toBe(1440);
+    expect(inner.x).toBe(80);
+    expect(inner.w).toBe(1280);
+
+    expect(await style(page, 'app-long-term', 'background-color')).toBe('rgb(6, 11, 23)');
+  });
+
+  test('uses the inverse palette throughout', async ({ page }) => {
+    // navy-950 ground with blue-300 / slate-50 / slate-400 on top.
+    expect(await style(page, '.long-term__eyebrow', 'color')).toBe('rgb(134, 173, 255)');
+    expect(await style(page, '.long-term__title', 'color')).toBe('rgb(246, 248, 251)');
+    expect(await style(page, '.long-term__text', 'color')).toBe('rgb(148, 163, 184)');
+  });
+
+  test('splits into a heading column and a 440px copy column', async ({ page }) => {
+    const heading = await box(page, '.long-term__heading');
+    const copy = await box(page, '.long-term__copy');
+    expect(heading.y).toBe(copy.y);
+    expect(copy.x).toBe(920);
+    expect(copy.w).toBe(440);
+    expect(copy.x + copy.w).toBe(1360);
+
+    expect(await style(page, '.long-term__title', 'font-size')).toBe('40px');
+    expect(await style(page, '.long-term__title', 'line-height')).toBe('48px');
+    expect(await style(page, '.long-term__text', 'font-size')).toBe('18px');
+    expect(await style(page, '.long-term__text', 'line-height')).toBe('30px');
+    await expect(page.locator('.long-term__text')).toHaveCount(2);
+  });
+
+  test('breaks the heading after "be", as the design does', async ({ page }) => {
+    const lines = await page.locator('.long-term__title').evaluate((el) => {
+      const r = document.createRange();
+      r.selectNodeContents(el);
+      return [...r.getClientRects()].length;
+    });
+    expect(lines).toBe(2);
+  });
+});
+
+test.describe('about long-term responsiveness', () => {
+  for (const width of [320, 375, 768, 1024, 1199, 1200, 1920]) {
+    test(`stays full bleed and fits ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 3200 });
+      await page.goto('/about');
+      await expect(page.locator('.long-term')).toHaveCount(1);
+
+      expect(await noOverflow(page)).toBeLessThanOrEqual(0);
+
+      const host = await box(page, 'app-long-term');
+      expect(host.w).toBe(width);
+
+      const heading = await box(page, '.long-term__heading');
+      const copy = await box(page, '.long-term__copy');
+      if (width >= 1200) {
+        expect(heading.y).toBe(copy.y);
+      } else {
+        expect(copy.y).toBeGreaterThan(heading.y);
+      }
+    });
+  }
+
+  for (const locale of ['hy', 'ru']) {
+    test(`does not clip ${locale} long-term copy at 320px or 1440px`, async ({ page }) => {
+      for (const width of [320, 1440]) {
+        await page.setViewportSize({ width, height: 3200 });
+        await page.goto(`/${locale}/about`);
+        await expect(page.locator('.long-term')).toHaveCount(1);
+
+        expect(await noOverflow(page)).toBeLessThanOrEqual(0);
+
+        const clipped = await page.evaluate(
+          () =>
+            [...document.querySelectorAll('.long-term__title,.long-term__text')].filter(
+              (el) => el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1,
+            ).length,
+        );
+        expect(clipped, `${locale} at ${width}`).toBe(0);
+      }
+    });
+  }
+});

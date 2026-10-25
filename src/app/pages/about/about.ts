@@ -6,11 +6,20 @@ import { AboutGlance } from './glance/about-glance';
 import { Philosophy } from './philosophy/philosophy';
 import { BusinessFlow } from './business-flow/business-flow';
 import { SeniorModel } from './senior-model/senior-model';
+import { LongTerm } from './long-term/long-term';
 import { QualityCapability } from './quality-capability/quality-capability';
 
 @Component({
   selector: 'app-about',
-  imports: [PageIntro, AboutGlance, Philosophy, SeniorModel, BusinessFlow, QualityCapability],
+  imports: [
+    PageIntro,
+    AboutGlance,
+    Philosophy,
+    SeniorModel,
+    BusinessFlow,
+    QualityCapability,
+    LongTerm,
+  ],
   templateUrl: './about.html',
   styleUrl: './about.scss',
   host: { 'data-layout': 'immersive' },
