@@ -51,7 +51,7 @@ test.describe('services page at the desktop design width', () => {
 
   test.beforeEach(async ({ page }) => {
     await page.goto('/services');
-    await expect(page.locator('.services__categories')).toBeVisible();
+    await expect(page.locator('.category-nav')).toBeVisible();
   });
 
   test('runs the header gradient under the shell header', async ({ page }) => {
@@ -84,27 +84,23 @@ test.describe('services page at the desktop design width', () => {
   });
 
   test('places the category card on the design grid', async ({ page }) => {
-    const [card] = await boxes(page, '.services__categories');
+    const [card] = await boxes(page, '.category-nav');
     // Pag.png: a 420px card whose left edge lands at x=940 on the 1280px container.
     expect([card.x, card.w]).toEqual([940, 420]);
     expect(card.h).toBe(318);
 
-    expect(await style(page, '.services__categories', 'background-color')).toBe(
-      'rgb(255, 255, 255)',
-    );
-    expect(await style(page, '.services__categories', 'border-top-color')).toBe(
-      'rgb(226, 232, 240)',
-    );
-    expect(await style(page, '.services__categories', 'border-top-width')).toBe('1px');
-    expect(await style(page, '.services__categories', 'padding-top')).toBe('8px');
-    expect(await style(page, '.services__categories', 'border-top-left-radius')).toBe('28px');
+    expect(await style(page, '.category-nav', 'background-color')).toBe('rgb(255, 255, 255)');
+    expect(await style(page, '.category-nav', 'border-top-color')).toBe('rgb(226, 232, 240)');
+    expect(await style(page, '.category-nav', 'border-top-width')).toBe('1px');
+    expect(await style(page, '.category-nav', 'padding-top')).toBe('8px');
+    expect(await style(page, '.category-nav', 'border-top-left-radius')).toBe('28px');
   });
 
   test('renders five 60px rows with a 36px tile, a label and a muted count', async ({ page }) => {
-    await expect(page.locator('.services__category-label')).toHaveText(CATEGORIES);
-    await expect(page.locator('.services__category-count')).toHaveText(COUNTS);
+    await expect(page.locator('.category-nav__label')).toHaveText(CATEGORIES);
+    await expect(page.locator('.category-nav__count')).toHaveText(COUNTS);
 
-    const rows = await boxes(page, '.services__category');
+    const rows = await boxes(page, '.category-nav__item');
     expect(rows).toHaveLength(5);
     expect(rows.every((row) => row.h === 60)).toBe(true);
     expect(rows.every((row) => row.w === 402)).toBe(true);
@@ -113,17 +109,17 @@ test.describe('services page at the desktop design width', () => {
       expect(rows[i].y - rows[i - 1].y).toBe(60);
     }
 
-    const tiles = await boxes(page, '.services__category app-icon-tile');
+    const tiles = await boxes(page, '.category-nav__item app-icon-tile');
     expect(tiles).toHaveLength(5);
     expect(tiles.every((tile) => tile.w === 36 && tile.h === 36)).toBe(true);
     expect(tiles[0].x - rows[0].x).toBe(16);
-    expect(await style(page, '.services__category app-icon-tile', 'background-color')).toBe(
+    expect(await style(page, '.category-nav__item app-icon-tile', 'background-color')).toBe(
       'rgb(238, 244, 255)',
     );
 
-    expect(await style(page, '.services__category-label', 'font-size')).toBe('16px');
-    expect(await style(page, '.services__category-label', 'font-weight')).toBe('600');
-    expect(await style(page, '.services__category-count', 'color')).toBe('rgb(100, 116, 139)');
+    expect(await style(page, '.category-nav__label', 'font-size')).toBe('16px');
+    expect(await style(page, '.category-nav__label', 'font-weight')).toBe('600');
+    expect(await style(page, '.category-nav__count', 'color')).toBe('rgb(100, 116, 139)');
   });
 
   test('matches Filter.png: six 36px chips, 8px apart, all services selected', async ({ page }) => {
@@ -158,23 +154,23 @@ test.describe('services page at the desktop design width', () => {
         .locator('.mdc-evolution-chip__text-label')
         .evaluate((el) => getComputedStyle(el).color),
     ).toBe('rgb(11, 19, 36)');
-    expect(await style(page, '.services__filter', 'border-top-color')).toBe('rgb(226, 232, 240)');
-    expect(await style(page, '.services__filter', 'border-top-width')).toBe('1px');
-    expect(await style(page, '.services__filter', 'padding-top')).toBe('0px');
-    expect(await style(page, '.services__filter-inner', 'padding-top')).toBe('16px');
+    expect(await style(page, 'app-filter-bar', 'border-top-color')).toBe('rgb(226, 232, 240)');
+    expect(await style(page, 'app-filter-bar', 'border-top-width')).toBe('1px');
+    expect(await style(page, 'app-filter-bar', 'padding-top')).toBe('0px');
+    expect(await style(page, '.filter-bar__inner', 'padding-top')).toBe('16px');
 
-    await expect(page.locator('select.services__select')).toBeHidden();
+    await expect(page.locator('select.filter-bar__select')).toBeHidden();
   });
 
   test('lists all fifteen services grouped under the five categories', async ({ page }) => {
-    await expect(page.locator('.services__card')).toHaveCount(15);
+    await expect(page.locator('app-service-card')).toHaveCount(15);
     await expect(page.locator('.services__group')).toHaveCount(5);
     await expect(page.locator('.services__group-title')).toHaveText(CATEGORIES);
     expect(
       await page.locator('.services__group').evaluateAll((els) => els.map((el) => el.id)),
     ).toEqual(IDS);
-    await expect(page.locator('.services__number').first()).toHaveText('01');
-    await expect(page.locator('.services__number').last()).toHaveText('15');
+    await expect(page.locator('.service-card__number').first()).toHaveText('01');
+    await expect(page.locator('.service-card__number').last()).toHaveText('15');
   });
 
   test('Catalog.png: an info column beside a two-up card grid, divided by hairlines', async ({
@@ -184,7 +180,7 @@ test.describe('services page at the desktop design width', () => {
     const [head] = await boxes(page, '.services__group-head');
     expect([head.x, head.w]).toEqual([80, 340]);
 
-    const cards = await boxes(page, '.services__card');
+    const cards = await boxes(page, 'app-service-card');
     expect(cards).toHaveLength(15);
     // Paired cards share a 430px column with a 16px gutter; the row gap matches it.
     expect([cards[1].x, cards[1].w]).toEqual([484, 430]);
@@ -213,7 +209,7 @@ test.describe('services page at the desktop design width', () => {
     expect(tiles).toHaveLength(5);
     expect(tiles.every((tile) => tile.w === 48 && tile.h === 48)).toBe(true);
     // The tile top lines up with the first card of the row.
-    const [firstCard] = await boxes(page, '.services__card');
+    const [firstCard] = await boxes(page, 'app-service-card');
     expect(tiles[0].y).toBe(firstCard.y);
 
     await expect(page.locator('.services__group-position')).toHaveText([
@@ -251,50 +247,50 @@ test.describe('services page at the desktop design width', () => {
   });
 
   test('builds each card from a number, an arrow, copy and three tags', async ({ page }) => {
-    const card = page.locator('.services__card').first();
-    expect(await style(page, '.services__card', 'padding-top')).toBe('24px');
-    expect(await style(page, '.services__card', 'background-color')).toBe('rgb(255, 255, 255)');
-    expect(await style(page, '.services__card', 'border-top-color')).toBe('rgb(226, 232, 240)');
+    const card = page.locator('app-service-card').first();
+    expect(await style(page, 'app-service-card', 'padding-top')).toBe('24px');
+    expect(await style(page, 'app-service-card', 'background-color')).toBe('rgb(255, 255, 255)');
+    expect(await style(page, 'app-service-card', 'border-top-color')).toBe('rgb(226, 232, 240)');
 
-    await expect(card.locator('.services__number')).toHaveText('01');
-    expect(await style(page, '.services__number', 'color')).toBe('rgb(15, 85, 232)');
-    await expect(card.locator('.services__card-title')).toHaveText('Web Design & UI/UX Design');
-    expect(await style(page, '.services__card-title', 'font-size')).toBe('18px');
-    expect(await style(page, '.services__card-summary', 'font-size')).toBe('14px');
-    expect(await style(page, '.services__card-summary', 'line-height')).toBe('22px');
+    await expect(card.locator('.service-card__number')).toHaveText('01');
+    expect(await style(page, '.service-card__number', 'color')).toBe('rgb(15, 85, 232)');
+    await expect(card.locator('.service-card__title')).toHaveText('Web Design & UI/UX Design');
+    expect(await style(page, '.service-card__title', 'font-size')).toBe('18px');
+    expect(await style(page, '.service-card__summary', 'font-size')).toBe('14px');
+    expect(await style(page, '.service-card__summary', 'line-height')).toBe('22px');
 
-    const [arrow] = await boxes(page, '.services__card-arrow');
+    const [arrow] = await boxes(page, '.service-card__arrow');
     expect([arrow.w, arrow.h]).toEqual([32, 32]);
-    expect(await style(page, '.services__card-arrow', 'background-color')).toBe(
+    expect(await style(page, '.service-card__arrow', 'background-color')).toBe(
       'rgb(238, 242, 247)',
     );
-    await expect(page.locator('.services__card-arrow').first()).toHaveAttribute(
+    await expect(page.locator('.service-card__arrow').first()).toHaveAttribute(
       'aria-hidden',
       'true',
     );
     // No per-service page exists, so the card carries no link.
-    await expect(page.locator('.services__card a, .services__card button')).toHaveCount(0);
+    await expect(page.locator('app-service-card a, app-service-card button')).toHaveCount(0);
 
-    await expect(card.locator('.services__tag')).toHaveText([
+    await expect(card.locator('.service-card__tag')).toHaveText([
       'Wireframes',
       'Prototypes',
       'Design systems',
     ]);
-    await expect(page.locator('.services__tag')).toHaveCount(45);
-    expect(await style(page, '.services__tag', 'background-color')).toBe('rgb(246, 248, 251)');
-    expect(await style(page, '.services__tag', 'border-top-color')).toBe('rgb(226, 232, 240)');
-    expect(await style(page, '.services__tag', 'font-size')).toBe('13px');
-    expect(await style(page, '.services__tag', 'color')).toBe('rgb(71, 85, 105)');
+    await expect(page.locator('.service-card__tag')).toHaveCount(45);
+    expect(await style(page, '.service-card__tag', 'background-color')).toBe('rgb(246, 248, 251)');
+    expect(await style(page, '.service-card__tag', 'border-top-color')).toBe('rgb(226, 232, 240)');
+    expect(await style(page, '.service-card__tag', 'font-size')).toBe('13px');
+    expect(await style(page, '.service-card__tag', 'color')).toBe('rgb(71, 85, 105)');
   });
 
   test('highlights the category of the section being read', async ({ page }) => {
-    const row = (index: number) => page.locator('.services__category').nth(index);
+    const row = (index: number) => page.locator('.category-nav__item').nth(index);
     await expect(row(0)).toHaveAttribute('aria-current', 'true');
 
     for (const [index, id] of IDS.entries()) {
       await page.locator(`#${id}`).evaluate((el) => el.scrollIntoView());
       await expect(row(index)).toHaveAttribute('aria-current', 'true');
-      await expect(page.locator('.services__category[aria-current="true"]')).toHaveCount(1);
+      await expect(page.locator('.category-nav__item[aria-current="true"]')).toHaveCount(1);
     }
     // Scroll position alone never touches the filter or the URL.
     await expect(page).toHaveURL(/\/services$/);
@@ -303,7 +299,7 @@ test.describe('services page at the desktop design width', () => {
   test('scrolls to a section when its card row is clicked, without changing the URL', async ({
     page,
   }) => {
-    await page.locator('.services__category').nth(3).click();
+    await page.locator('.category-nav__item').nth(3).click();
     await expect
       .poll(async () => {
         const [section] = await boxes(page, '#services-infrastructure-operations');
@@ -311,7 +307,7 @@ test.describe('services page at the desktop design width', () => {
       })
       .toBeLessThanOrEqual(40);
     await expect(page).toHaveURL(/\/services$/);
-    await expect(page.locator('.services__category').nth(3)).toHaveAttribute(
+    await expect(page.locator('.category-nav__item').nth(3)).toHaveAttribute(
       'aria-current',
       'true',
     );
@@ -321,28 +317,28 @@ test.describe('services page at the desktop design width', () => {
     await page.locator('mat-chip-option', { hasText: 'Artificial Intelligence' }).click();
     await expect(page).toHaveURL(/\?category=artificial-intelligence$/);
     await expect(page.locator('.services__group')).toHaveCount(1);
-    await expect(page.locator('.services__card')).toHaveCount(3);
-    await expect(page.locator('.services__category').nth(2)).toHaveAttribute(
+    await expect(page.locator('app-service-card')).toHaveCount(3);
+    await expect(page.locator('.category-nav__item').nth(2)).toHaveAttribute(
       'aria-current',
       'true',
     );
 
     await page.locator('mat-chip-option').first().click();
     await expect(page).toHaveURL(/\/services$/);
-    await expect(page.locator('.services__card')).toHaveCount(15);
+    await expect(page.locator('app-service-card')).toHaveCount(15);
 
     await page.goBack();
     await expect(page).toHaveURL(/\?category=artificial-intelligence$/);
-    await expect(page.locator('.services__card')).toHaveCount(3);
+    await expect(page.locator('app-service-card')).toHaveCount(3);
 
     await page.goForward();
     await expect(page).toHaveURL(/\/services$/);
-    await expect(page.locator('.services__card')).toHaveCount(15);
+    await expect(page.locator('app-service-card')).toHaveCount(15);
   });
 
   test('restores the filter when a link is opened directly', async ({ page }) => {
     await page.goto('/services?category=engineering-partnerships');
-    await expect(page.locator('.services__card')).toHaveCount(2);
+    await expect(page.locator('app-service-card')).toHaveCount(2);
     await expect(page.locator(OPTION).nth(5)).toHaveAttribute('aria-selected', 'true');
     await expect(page.locator('.services__group-title')).toHaveText('Engineering Partnerships');
     await expect(page.locator('.services__group-position')).toHaveText('05 / 05');
@@ -351,7 +347,7 @@ test.describe('services page at the desktop design width', () => {
 
   test('ignores an unknown category and shows everything', async ({ page }) => {
     await page.goto('/services?category=nope');
-    await expect(page.locator('.services__card')).toHaveCount(15);
+    await expect(page.locator('app-service-card')).toHaveCount(15);
     await expect(page.locator(OPTION).first()).toHaveAttribute('aria-selected', 'true');
   });
 
@@ -361,11 +357,11 @@ test.describe('services page at the desktop design width', () => {
       'Пятнадцать услуг на всём жизненном цикле программного обеспечения.',
     );
     await expect(page.locator('.page-intro__crumb-link')).toHaveAttribute('href', '/ru');
-    await expect(page.locator('.services__card')).toHaveCount(1);
+    await expect(page.locator('app-service-card')).toHaveCount(1);
 
     await page.locator('mat-chip-option').first().click();
     await expect(page).toHaveURL(/\/ru\/services$/);
-    await expect(page.locator('.services__card')).toHaveCount(15);
+    await expect(page.locator('app-service-card')).toHaveCount(15);
   });
 
   test('moves through the chips with the keyboard', async ({ page }) => {
@@ -373,7 +369,7 @@ test.describe('services page at the desktop design width', () => {
     await page.keyboard.press('ArrowRight');
     await page.keyboard.press('Enter');
     await expect(page).toHaveURL(/\?category=design-product$/);
-    await expect(page.locator('.services__card')).toHaveCount(1);
+    await expect(page.locator('app-service-card')).toHaveCount(1);
   });
 
   test('lays out without horizontal overflow', async ({ page }) => {
@@ -386,16 +382,16 @@ test.describe('services page below the chip breakpoint', () => {
     test(`swaps the chips for a select at ${width}px`, async ({ page }) => {
       await page.setViewportSize({ width, height: 900 });
       await page.goto('/services');
-      await expect(page.locator('select.services__select')).toBeVisible();
+      await expect(page.locator('select.filter-bar__select')).toBeVisible();
       await expect(page.locator('mat-chip-listbox')).toBeHidden();
 
-      const select = page.locator('select.services__select');
+      const select = page.locator('select.filter-bar__select');
       await expect(select.locator('option')).toHaveCount(6);
       await expect(select).toHaveValue('all');
 
       await select.selectOption('software-engineering');
       await expect(page).toHaveURL(/\?category=software-engineering$/);
-      await expect(page.locator('.services__card')).toHaveCount(6);
+      await expect(page.locator('app-service-card')).toHaveCount(6);
       await expect(select).toHaveValue('software-engineering');
 
       expect(await noOverflow(page)).toBe(true);
@@ -405,10 +401,10 @@ test.describe('services page below the chip breakpoint', () => {
   test('stacks the header and keeps the card full width at 390px', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/services');
-    await expect(page.locator('.services__categories')).toBeVisible();
+    await expect(page.locator('.category-nav')).toBeVisible();
 
     const [copy] = await boxes(page, '.page-intro__copy');
-    const [card] = await boxes(page, '.services__categories');
+    const [card] = await boxes(page, '.category-nav');
     expect(copy.x).toBe(card.x);
     expect(card.y).toBeGreaterThan(copy.y + copy.h - 1);
     expect(await noOverflow(page)).toBe(true);

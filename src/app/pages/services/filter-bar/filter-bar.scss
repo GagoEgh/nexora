@@ -1,0 +1,67 @@
+@use '@angular/material' as mat;
+@use 'tokens/spacing';
+@use 'tokens/layout';
+
+.filter-bar__inner {
+  max-width: var(--nx-layout-container-max);
+  margin-inline: auto;
+  padding-block: spacing.space(16);
+}
+
+:host {
+  padding-inline: var(--nx-layout-margin);
+  border-block: 1px solid var(--mat-sys-outline-variant);
+  background-color: var(--mat-sys-surface);
+}
+
+.filter-bar__chips-wrap {
+  display: none;
+
+  @include layout.up(large) {
+    display: block;
+  }
+}
+
+.filter-bar__count::before {
+  content: '·';
+  margin-inline-end: spacing.space(4);
+}
+
+.filter-bar__chips {
+  @include mat.chips-overrides(
+    (
+      label-text-tracking: normal,
+    )
+  );
+}
+
+.filter-bar__select-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  max-width: 320px;
+
+  @include layout.up(large) {
+    display: none;
+  }
+}
+
+.filter-bar__select-icon {
+  position: absolute;
+  inset-inline-end: spacing.space(16);
+  color: var(--nx-sys-on-surface-muted);
+  pointer-events: none;
+}
+
+.filter-bar__select {
+  box-sizing: border-box;
+  width: 100%;
+  height: 52px;
+  padding-inline: spacing.space(16) spacing.space(40);
+  border: 1px solid var(--mat-sys-outline);
+  border-radius: var(--mat-sys-corner-medium);
+  background-color: var(--mat-sys-surface);
+  font: var(--nx-sys-body-copy);
+  color: var(--mat-sys-on-surface);
+  appearance: none;
+}

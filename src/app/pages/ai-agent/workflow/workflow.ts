@@ -2,8 +2,7 @@ import { Component, input } from '@angular/core';
 import type { DeepTransformContent } from 'angular-intlayer';
 import { IconTile, type IconTileTone } from '../../../shared/ui/icon-tile/icon-tile';
 import type aiAgentContent from '../ai-agent.content';
-
-export type WorkflowTone = 'plain' | 'dark' | 'accent';
+import type { WorkflowTone } from '../ai-agent.content';
 export type WorkflowContent = DeepTransformContent<(typeof aiAgentContent)['content']>['workflow'];
 
 const TILE_TONES: Readonly<Record<WorkflowTone, IconTileTone>> = {

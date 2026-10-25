@@ -118,7 +118,7 @@ describe('AiAgent', () => {
     expect(root.querySelector('ol.workflow__steps')).not.toBeNull();
   });
 
-  it('closes the page with the overview band, below the hero', async () => {
+  it('renders the overview band directly below the hero', async () => {
     await go('/services/ai_agent');
 
     const overview = root.querySelector('app-overview');
@@ -142,7 +142,7 @@ describe('AiAgent', () => {
     expect(overview?.querySelector('.overview__title')?.tagName).toBe('H2');
   });
 
-  it('ends the page with four problem cards under a shared header', async () => {
+  it('renders four problem cards under a shared header', async () => {
     await go('/services/ai_agent');
 
     const problems = root.querySelector('app-problems');
@@ -181,7 +181,7 @@ describe('AiAgent', () => {
     expect(cards[0].querySelector('.problems__card-title')?.tagName).toBe('H3');
   });
 
-  it('closes the page with the capabilities and deliverables panels', async () => {
+  it('renders the capabilities and deliverables panels', async () => {
     await go('/services/ai_agent');
 
     const capabilities = root.querySelector('app-capabilities');
@@ -217,7 +217,7 @@ describe('AiAgent', () => {
     expect(panels[0].querySelector('.capabilities__panel-title')?.tagName).toBe('H3');
   });
 
-  it('closes the page with the typical projects and audience fit columns', async () => {
+  it('renders the typical projects and audience fit columns', async () => {
     await go('/services/ai_agent');
 
     const audiences = root.querySelector('app-audiences');
@@ -260,7 +260,7 @@ describe('AiAgent', () => {
     expect(root.querySelectorAll('h1')).toHaveLength(1);
   });
 
-  it('closes the page with the business value cards', async () => {
+  it('renders the four business value cards', async () => {
     await go('/services/ai_agent');
 
     const business = root.querySelector('app-business-value');
@@ -301,7 +301,7 @@ describe('AiAgent', () => {
     expect(cards[0].querySelector('.business-value__card-title')?.tagName).toBe('H3');
   });
 
-  it('closes the page with the related services band', async () => {
+  it('renders the related services band and its engagement panel', async () => {
     await go('/services/ai_agent');
 
     const related = root.querySelector('app-related-services');
@@ -316,35 +316,35 @@ describe('AiAgent', () => {
       'Often combined with this service.',
     );
 
-    expect(related?.querySelectorAll('.related__card')).toHaveLength(3);
-    expect(text('.related__number')).toEqual(['08', '06', '10']);
-    expect(text('.related__card-title')).toEqual([
+    expect(related?.querySelectorAll('app-service-card')).toHaveLength(3);
+    expect(text('.service-card__number')).toEqual(['08', '06', '10']);
+    expect(text('.service-card__title')).toEqual([
       'AI Development & Integration',
       'Backend Development & API Integration',
       'Claude & AI Workflow Engineering',
     ]);
-    expect(related?.querySelectorAll('.related__tag')).toHaveLength(9);
-    expect(text('.related__tag').slice(0, 3)).toEqual(['RAG', 'Assistants', 'Document AI']);
+    expect(related?.querySelectorAll('.service-card__tag')).toHaveLength(9);
+    expect(text('.service-card__tag').slice(0, 3)).toEqual(['RAG', 'Assistants', 'Document AI']);
 
     // The arrows are decoration: nothing in this band navigates.
-    const arrows = Array.from(related?.querySelectorAll('.related__card-arrow') ?? []);
+    const arrows = Array.from(related?.querySelectorAll('.service-card__arrow') ?? []);
     expect(arrows).toHaveLength(3);
     expect(arrows.every((a) => a.getAttribute('aria-hidden') === 'true')).toBe(true);
     expect(related?.querySelectorAll('a, button')).toHaveLength(0);
 
     // Engagement panel.
-    expect(related?.querySelector('.related__engage-eyebrow')?.textContent?.trim()).toBe(
+    expect(related?.querySelector('.engagement__eyebrow')?.textContent?.trim()).toBe(
       'How to engage',
     );
-    expect(related?.querySelector('h3.related__engage-title')?.textContent?.trim()).toBe(
+    expect(related?.querySelector('h3.engagement__title')?.textContent?.trim()).toBe(
       'Usually delivered as',
     );
-    expect(text('.related__model-title')).toEqual([
+    expect(text('.engagement__model-title')).toEqual([
       'Project-Based',
       'Long-Term Partnership',
       'Maintenance & Support',
     ]);
-    expect(text('.related__model-text')).toEqual([
+    expect(text('.engagement__model-text')).toEqual([
       'Scoped first automation',
       'Expanding automation over time',
       'Monitoring and improvements',
@@ -353,7 +353,7 @@ describe('AiAgent', () => {
 
     // The section must not disturb the page outline.
     expect(root.querySelectorAll('h1')).toHaveLength(1);
-    expect(related?.querySelector('.related__card-title')?.tagName).toBe('H3');
+    expect(related?.querySelector('.service-card__title')?.tagName).toBe('H3');
   });
 
   it('keeps the three cards identical to the services dictionary in every locale', () => {
@@ -424,7 +424,7 @@ describe('AiAgent', () => {
       'Что меняется, когда рутина выполняется сама.',
     );
     expect(root.querySelector('.related__eyebrow')?.textContent?.trim()).toBe('Смежные услуги');
-    expect(text('.related__card-title')[1]).toBe('Backend-разработка и интеграция API');
+    expect(text('.service-card__title')[1]).toBe('Backend-разработка и интеграция API');
     expect(root.querySelector('.start-conversation__eyebrow')?.textContent?.trim()).toBe(
       'Обсудим эту услугу',
     );

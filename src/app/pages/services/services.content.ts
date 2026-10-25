@@ -1,6 +1,6 @@
 import { plural, t, type Dictionary } from 'intlayer';
 import type { AppIconName } from '../../core/icons/icons';
-import type { ServiceCategoryId } from './services';
+import type { ServiceCategoryId } from './service-category';
 
 const servicesContent = {
   key: 'services',

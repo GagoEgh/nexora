@@ -6,7 +6,8 @@ import { RouterTestingHarness } from '@angular/router/testing';
 import { provideIntlayer, useLocale } from 'angular-intlayer';
 import { routes } from '../../app.routes';
 import { provideAppIcons } from '../../core/icons/provide-app-icons';
-import { SERVICE_CATEGORY_IDS, Services, isServiceCategoryId, serviceSectionId } from './services';
+import { SERVICE_CATEGORY_IDS, isServiceCategoryId, serviceSectionId } from './service-category';
+import { Services } from './services';
 import servicesContent from './services.content';
 
 const ICON_SVG =
@@ -81,11 +82,11 @@ describe('Services', () => {
   it('lists the five categories with counts derived from the catalogue', async () => {
     await go('/services');
 
-    expect(text('.services__category-label')).toEqual(CATEGORY_LABELS);
-    expect(text('.services__category-count').map(Number)).toEqual(COUNTS);
+    expect(text('.category-nav__label')).toEqual(CATEGORY_LABELS);
+    expect(text('.category-nav__count').map(Number)).toEqual(COUNTS);
     expect(COUNTS.reduce((sum, count) => sum + count, 0)).toBe(TOTAL);
     expect(root.querySelectorAll('.services__group')).toHaveLength(5);
-    expect(root.querySelectorAll('.services__card')).toHaveLength(TOTAL);
+    expect(root.querySelectorAll('app-service-card')).toHaveLength(TOTAL);
   });
 
   it('declares every service against a category the page actually groups by', () => {
@@ -109,7 +110,7 @@ describe('Services', () => {
   it('numbers every service once across the whole catalogue', async () => {
     await go('/services');
 
-    const numbers = text('.services__number');
+    const numbers = text('.service-card__number');
     expect(numbers).toHaveLength(TOTAL);
     expect(numbers).toEqual(
       Array.from({ length: TOTAL }, (_, i) => String(i + 1).padStart(2, '0')),
@@ -122,7 +123,7 @@ describe('Services', () => {
     const ids = Array.from(root.querySelectorAll('.services__group')).map((el) => el.id);
     expect(ids).toEqual(SERVICE_CATEGORY_IDS.map(serviceSectionId));
 
-    const hrefs = Array.from(root.querySelectorAll('.services__category')).map((el) =>
+    const hrefs = Array.from(root.querySelectorAll('.category-nav__item')).map((el) =>
       el.getAttribute('href'),
     );
     expect(hrefs).toEqual(ids.map((id) => `#${id}`));
@@ -133,7 +134,7 @@ describe('Services', () => {
 
     expect(root.querySelectorAll('.services__group')).toHaveLength(1);
     expect(root.querySelector('.services__group')?.id).toBe('services-software-engineering');
-    expect(root.querySelectorAll('.services__card')).toHaveLength(6);
+    expect(root.querySelectorAll('app-service-card')).toHaveLength(6);
     expect(root.querySelector('.services__group-title')?.textContent?.trim()).toBe(
       'Software Engineering',
     );
@@ -141,54 +142,54 @@ describe('Services', () => {
 
   it('falls back to the whole catalogue for a missing or unknown category', async () => {
     await go('/services');
-    expect(root.querySelectorAll('.services__card')).toHaveLength(TOTAL);
+    expect(root.querySelectorAll('app-service-card')).toHaveLength(TOTAL);
 
     await go('/services?category=not-a-category');
-    expect(root.querySelectorAll('.services__card')).toHaveLength(TOTAL);
+    expect(root.querySelectorAll('app-service-card')).toHaveLength(TOTAL);
     expect(root.querySelectorAll('.services__group')).toHaveLength(5);
   });
 
   it('marks the filtered category as current in the card', async () => {
     await go('/services?category=artificial-intelligence');
 
-    const current = Array.from(root.querySelectorAll('.services__category')).map((el) =>
+    const current = Array.from(root.querySelectorAll('.category-nav__item')).map((el) =>
       el.getAttribute('aria-current'),
     );
     expect(current).toEqual([null, null, 'true', null, null]);
-    expect(root.querySelectorAll('.services__category--active')).toHaveLength(1);
+    expect(root.querySelectorAll('.category-nav__item--active')).toHaveLength(1);
   });
 
   it('writes the selected category into the URL and clears it for all services', async () => {
     await go('/services');
     const router = TestBed.inject(Router);
-    const select = root.querySelector('select.services__select');
+    const select = root.querySelector('select.filter-bar__select');
     expect(select).not.toBeNull();
 
     (select as HTMLSelectElement).value = 'engineering-partnerships';
     select?.dispatchEvent(new Event('change'));
     await harness.fixture.whenStable();
     expect(router.url).toBe('/services?category=engineering-partnerships');
-    expect(root.querySelectorAll('.services__card')).toHaveLength(2);
+    expect(root.querySelectorAll('app-service-card')).toHaveLength(2);
 
     (select as HTMLSelectElement).value = 'all';
     select?.dispatchEvent(new Event('change'));
     await harness.fixture.whenStable();
     expect(router.url).toBe('/services');
-    expect(root.querySelectorAll('.services__card')).toHaveLength(TOTAL);
+    expect(root.querySelectorAll('app-service-card')).toHaveLength(TOTAL);
   });
 
   it('offers one filter option per category plus all services', async () => {
     await go('/services');
 
     expect(root.querySelectorAll('mat-chip-option')).toHaveLength(6);
-    expect(text('select.services__select option')).toEqual([
+    expect(text('select.filter-bar__select option')).toEqual([
       `All services (${TOTAL})`,
       ...CATEGORY_LABELS.map((label, i) => `${label} (${COUNTS[i]})`),
     ]);
     expect(root.querySelector('mat-chip-listbox')?.getAttribute('aria-label')).toBe(
       'Filter services by category',
     );
-    expect(root.querySelector('.services__categories')?.getAttribute('aria-label')).toBe(
+    expect(root.querySelector('.category-nav')?.getAttribute('aria-label')).toBe(
       'Service categories',
     );
     expect(root.querySelector('.services__results')?.getAttribute('aria-live')).toBe('polite');
@@ -202,7 +203,7 @@ describe('Services', () => {
     expect(tiles).toHaveLength(11);
     expect(tiles.every((tile) => tile.getAttribute('aria-hidden') === 'true')).toBe(true);
     // The header card uses the 36px tile; the catalogue uses the default 48px one.
-    const card = Array.from(root.querySelectorAll('.services__category app-icon-tile'));
+    const card = Array.from(root.querySelectorAll('.category-nav__item app-icon-tile'));
     expect(card.every((tile) => tile.getAttribute('data-size') === 'dense')).toBe(true);
     const catalogue = Array.from(root.querySelectorAll('.services__group-head app-icon-tile'));
     expect(catalogue.every((tile) => tile.getAttribute('data-size') === 'medium')).toBe(true);
@@ -283,7 +284,7 @@ describe('Services', () => {
     // The band must not disturb the page's heading structure or catalogue.
     expect(root.querySelectorAll('h1')).toHaveLength(1);
     expect(root.querySelectorAll('.services__group')).toHaveLength(5);
-    expect(root.querySelectorAll('.services__card')).toHaveLength(TOTAL);
+    expect(root.querySelectorAll('app-service-card')).toHaveLength(TOTAL);
 
     // Filtering narrows the catalogue; both closing blocks stay.
     await go('/services?category=software-engineering');
@@ -349,32 +350,36 @@ describe('Services', () => {
   it('renders every service card with a number, title, summary and three tags', async () => {
     await go('/services');
 
-    const cards = Array.from(root.querySelectorAll('.services__card'));
+    const cards = Array.from(root.querySelectorAll('app-service-card'));
     expect(cards).toHaveLength(TOTAL);
-    expect(cards.every((card) => card.querySelectorAll('.services__tag').length === 3)).toBe(true);
+    expect(cards.every((card) => card.querySelectorAll('.service-card__tag').length === 3)).toBe(
+      true,
+    );
 
     const first = cards[0];
-    expect(first.querySelector('.services__number')?.textContent?.trim()).toBe('01');
-    expect(first.querySelector('.services__card-title')?.textContent?.trim()).toBe(
+    expect(first.querySelector('.service-card__number')?.textContent?.trim()).toBe('01');
+    expect(first.querySelector('.service-card__title')?.textContent?.trim()).toBe(
       'Web Design & UI/UX Design',
     );
-    expect(first.querySelector('.services__card-summary')?.textContent?.trim()).toBe(
+    expect(first.querySelector('.service-card__summary')?.textContent?.trim()).toBe(
       'Research-led interfaces, prototypes and design systems for websites, SaaS products and ' +
         'dashboards.',
     );
     expect(
-      Array.from(first.querySelectorAll('.services__tag')).map((tag) => tag.textContent?.trim()),
+      Array.from(first.querySelectorAll('.service-card__tag')).map((tag) =>
+        tag.textContent?.trim(),
+      ),
     ).toEqual(['Wireframes', 'Prototypes', 'Design systems']);
-    expect(root.querySelectorAll('.services__tag')).toHaveLength(TOTAL * 3);
+    expect(root.querySelectorAll('.service-card__tag')).toHaveLength(TOTAL * 3);
   });
 
   it('keeps the card arrow decorative, since no per-service page exists yet', async () => {
     await go('/services');
 
-    const arrows = Array.from(root.querySelectorAll('.services__card-arrow'));
+    const arrows = Array.from(root.querySelectorAll('.service-card__arrow'));
     expect(arrows).toHaveLength(TOTAL);
     expect(arrows.every((arrow) => arrow.getAttribute('aria-hidden') === 'true')).toBe(true);
-    expect(root.querySelectorAll('.services__card a, .services__card button')).toHaveLength(0);
+    expect(root.querySelectorAll('app-service-card a, app-service-card button')).toHaveLength(0);
   });
 
   it('renders localized copy and keeps the locale prefix on the breadcrumb', async () => {
@@ -386,26 +391,26 @@ describe('Services', () => {
     );
     expect(text('.page-intro__crumb')).toEqual(['Главная', 'Услуги']);
     expect(root.querySelector('.page-intro__crumb-link')?.getAttribute('href')).toBe('/ru');
-    expect(text('.services__category-label')).toEqual([
+    expect(text('.category-nav__label')).toEqual([
       'Дизайн и продукт',
       'Разработка ПО',
       'Искусственный интеллект',
       'Инфраструктура и эксплуатация',
       'Инженерное партнёрство',
     ]);
-    expect(root.querySelectorAll('.services__card')).toHaveLength(TOTAL);
+    expect(root.querySelectorAll('app-service-card')).toHaveLength(TOTAL);
   });
 
   it('keeps the filter through a locale-prefixed URL', async () => {
     setLocale('hy');
     await go('/hy/services?category=design-product');
 
-    expect(root.querySelectorAll('.services__card')).toHaveLength(1);
-    expect(root.querySelector('.services__card-title')?.textContent?.trim()).toBe(
+    expect(root.querySelectorAll('app-service-card')).toHaveLength(1);
+    expect(root.querySelector('.service-card__title')?.textContent?.trim()).toBe(
       'Վեբ դիզայն և UI/UX դիզայն',
     );
     expect(
-      Array.from(root.querySelectorAll('.services__tag')).map((tag) => tag.textContent?.trim()),
+      Array.from(root.querySelectorAll('.service-card__tag')).map((tag) => tag.textContent?.trim()),
     ).toEqual(['Վայրֆրեյմներ', 'Նախատիպեր', 'Դիզայն համակարգեր']);
   });
 });

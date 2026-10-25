@@ -1,0 +1,95 @@
+@use 'tokens/spacing';
+@use 'tokens/layout';
+@use 'tokens/typography';
+
+:host {
+  display: grid;
+  gap: spacing.space(24);
+  box-sizing: border-box;
+  margin-block-start: spacing.space(48);
+  padding: calc(#{spacing.space(24)} + #{spacing.space(4)}) spacing.space(20);
+  border-radius: var(--mat-sys-corner-large);
+  background-color: var(--mat-sys-surface-container-low);
+
+  @include layout.up(medium) {
+    padding-inline: spacing.space(32);
+  }
+
+  @include layout.up(large) {
+    grid-template-columns: minmax(0, 312fr) minmax(0, 894fr);
+    gap: spacing.space(12);
+    align-items: center;
+  }
+}
+
+.engagement__copy {
+  display: grid;
+  gap: spacing.space(4);
+  min-width: 0;
+}
+
+.engagement__eyebrow {
+  margin: 0;
+  font: var(--mat-sys-label-medium);
+  letter-spacing: var(--mat-sys-label-medium-tracking);
+  text-transform: uppercase;
+  color: var(--mat-sys-primary);
+}
+
+.engagement__title {
+  margin: 0;
+  font: var(--mat-sys-title-large);
+  font-weight: typography.$weight-semibold;
+  letter-spacing: var(--nx-sys-display-tracking);
+  color: var(--mat-sys-on-surface);
+}
+
+.engagement__models {
+  display: grid;
+  gap: spacing.space(12);
+  align-items: start;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @include layout.up(medium) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include layout.up(large) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.engagement__model {
+  display: flex;
+  gap: spacing.space(12);
+  align-items: center;
+  box-sizing: border-box;
+  min-width: 0;
+  padding: spacing.space(16);
+  border-radius: var(--mat-sys-corner-large);
+  background-color: var(--mat-sys-surface);
+
+  app-icon-tile {
+    flex-shrink: 0;
+  }
+}
+
+.engagement__model-copy {
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+.engagement__model-title {
+  margin: 0;
+  font: var(--mat-sys-title-medium);
+  font-weight: typography.$weight-semibold;
+  color: var(--mat-sys-on-surface);
+}
+
+.engagement__model-text {
+  margin: 0;
+  font: var(--mat-sys-body-small);
+  color: var(--mat-sys-on-surface-variant);
+}

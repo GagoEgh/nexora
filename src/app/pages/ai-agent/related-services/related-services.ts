@@ -1,9 +1,8 @@
-import { Component, input } from '@angular/core';
-import { MatIcon } from '@angular/material/icon';
+import { Component, computed, input } from '@angular/core';
 import type { DeepTransformContent } from 'angular-intlayer';
-import { appIcon } from '../../../core/icons/icons';
-import { IconTile } from '../../../shared/ui/icon-tile/icon-tile';
+import { ServiceCard, type ServiceCardCopy } from '../../../shared/ui/service-card/service-card';
 import type aiAgentContent from '../ai-agent.content';
+import { EngagementPanel } from './engagement-panel/engagement-panel';
 
 export type RelatedServicesContent = DeepTransformContent<
   (typeof aiAgentContent)['content']
@@ -11,11 +10,19 @@ export type RelatedServicesContent = DeepTransformContent<
 
 @Component({
   selector: 'app-related-services',
-  imports: [MatIcon, IconTile],
+  imports: [ServiceCard, EngagementPanel],
   templateUrl: './related-services.html',
   styleUrl: './related-services.scss',
 })
 export class RelatedServices {
   readonly content = input.required<RelatedServicesContent>();
-  protected readonly arrowIcon = appIcon('arrow-up-right');
+
+  protected readonly cards = computed<readonly ServiceCardCopy[]>(() =>
+    this.content().items.map((item) => ({
+      number: item.number.value,
+      title: item.title.value,
+      summary: item.summary.value,
+      tags: item.tags.map((tag) => tag.value),
+    })),
+  );
 }

@@ -1,7 +1,8 @@
 import { t, type Dictionary } from 'intlayer';
 import type { AppIconName } from '../../core/icons/icons';
-import type { CapabilitiesTone } from './capabilities/capabilities';
-import type { WorkflowTone } from './workflow/workflow';
+
+export type CapabilitiesTone = 'neutral' | 'accent';
+export type WorkflowTone = 'plain' | 'dark' | 'accent';
 
 const aiAgentContent = {
   key: 'ai-agent',

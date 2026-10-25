@@ -1,0 +1,19 @@
+<nav class="category-nav" [attr.aria-label]="label()">
+  <ul class="category-nav__list">
+    @for (category of categories(); track category.id) {
+      <li>
+        <a
+          class="category-nav__item"
+          [class.category-nav__item--active]="category.id === active()"
+          [attr.aria-current]="category.id === active() ? 'true' : null"
+          [href]="'#' + sectionId(category.id)"
+          (click)="onSelect($event, category.id)"
+        >
+          <app-icon-tile [icon]="category.icon" tone="primary" size="dense" />
+          <span class="category-nav__label">{{ category.label }}</span>
+          <span class="category-nav__count">{{ category.count }}</span>
+        </a>
+      </li>
+    }
+  </ul>
+</nav>

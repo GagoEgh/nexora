@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
 import { provideIntlayer, useLocale } from 'angular-intlayer';
 import { routes } from '../../app.routes';
-import { isServiceCategoryId } from '../../pages/services/services';
+import { isServiceCategoryId } from '../../pages/services/service-category';
 import { Footer } from './footer';
 
 describe('Footer', () => {

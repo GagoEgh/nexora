@@ -5,68 +5,22 @@
   [heading]="content().heading.value"
   [lead]="content().lead.value"
 >
-  <nav class="services__categories" [attr.aria-label]="content().categoryNavLabel.value">
-    <ul class="services__category-list">
-      @for (category of categories(); track category.id) {
-        <li>
-          <a
-            class="services__category"
-            [class.services__category--active]="category.id === active()"
-            [attr.aria-current]="category.id === active() ? 'true' : null"
-            [href]="'#' + sectionId(category.id)"
-            (click)="onCategoryClick($event, category.id)"
-          >
-            <app-icon-tile [icon]="category.icon" tone="primary" size="dense" />
-            <span class="services__category-label">{{ category.label }}</span>
-            <span class="services__category-count">{{ category.count }}</span>
-          </a>
-        </li>
-      }
-    </ul>
-  </nav>
+  <app-category-nav
+    [categories]="categories()"
+    [active]="active()"
+    [label]="content().categoryNavLabel.value"
+    (categorySelect)="onCategorySelect($event)"
+  />
 </app-page-intro>
 
-<div class="services__filter">
-  <div class="services__filter-inner">
-    <div class="services__chips-wrap">
-      <mat-chip-listbox
-        class="services__chips"
-        [value]="filter()"
-        [attr.aria-label]="content().filterLabel.value"
-        (change)="onChipChange($event)"
-      >
-        <mat-chip-option [value]="all">
-          {{ content().allServices }}
-          <span class="services__chip-count">{{ total() }}</span>
-        </mat-chip-option>
-        @for (category of categories(); track category.id) {
-          <mat-chip-option [value]="category.id">
-            {{ category.label }}
-            <span class="services__chip-count">{{ category.count }}</span>
-          </mat-chip-option>
-        }
-      </mat-chip-listbox>
-    </div>
-
-    <div class="services__select-wrap">
-      <select
-        class="services__select"
-        [attr.aria-label]="content().filterLabel.value"
-        (change)="onSelectChange($event)"
-      >
-        <option [value]="all" [selected]="filter() === all">
-          {{ content().allServices }} ({{ total() }})
-        </option>
-        @for (category of categories(); track category.id) {
-          <option [value]="category.id" [selected]="filter() === category.id">
-            {{ category.label }} ({{ category.count }})
-          </option>
-        }
-      </select>
-      <mat-icon class="services__select-icon" [svgIcon]="chevronIcon" />
-    </div>
-  </div>
-</div>
+<app-filter-bar
+  [categories]="categories()"
+  [total]="total()"
+  [value]="filter()"
+  [label]="content().filterLabel.value"
+  [allLabel]="content().allServices.value"
+  (filterChange)="onFilterChange($event)"
+/>
 
 <div
   class="services__results"
@@ -92,22 +46,8 @@
       </div>
 
       <ul class="services__list">
-        @for (service of group.services; track service.title.value) {
-          <li class="services__card">
-            <div class="services__card-head">
-              <p class="services__number">{{ service.number }}</p>
-              <span class="services__card-arrow" aria-hidden="true">
-                <mat-icon [svgIcon]="arrowIcon" />
-              </span>
-            </div>
-            <h3 class="services__card-title">{{ service.title }}</h3>
-            <p class="services__card-summary">{{ service.summary }}</p>
-            <ul class="services__tags">
-              @for (tag of service.tags; track $index) {
-                <li class="services__tag">{{ tag }}</li>
-              }
-            </ul>
-          </li>
+        @for (service of group.services; track service.number) {
+          <li><app-service-card [copy]="service" /></li>
         }
       </ul>
     </section>

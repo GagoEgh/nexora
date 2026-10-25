@@ -1,6 +1,5 @@
 @use 'tokens/spacing';
 @use 'tokens/layout';
-@use 'tokens/typography';
 @use 'mixins/eyebrow';
 
 :host {
@@ -30,8 +29,8 @@
 
 .business-value__title {
   margin: 0;
-  font: #{typography.$weight-semibold} 32px #{'/'} 40px #{typography.$plain-family};
-  letter-spacing: -1px;
+  font: var(--nx-sys-display-feature);
+  letter-spacing: var(--nx-sys-display-feature-tracking);
   color: var(--mat-sys-inverse-on-surface);
 }
 

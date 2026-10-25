@@ -40,8 +40,8 @@
 
 .audiences__title {
   margin: 0;
-  font: #{typography.$weight-semibold} 26px #{'/'} 34px #{typography.$plain-family};
-  letter-spacing: -0.5px;
+  font: var(--nx-sys-display-band);
+  letter-spacing: var(--nx-sys-display-band-tracking);
   color: var(--mat-sys-on-surface);
 }
 

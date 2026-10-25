@@ -1,0 +1,16 @@
+<div class="engagement__copy">
+  <p class="engagement__eyebrow">{{ content().eyebrow }}</p>
+  <h3 class="engagement__title">{{ content().title }}</h3>
+</div>
+
+<ul class="engagement__models">
+  @for (model of content().models; track $index) {
+    <li class="engagement__model">
+      <app-icon-tile [icon]="model.icon.value" tone="primary" size="compact" />
+      <div class="engagement__model-copy">
+        <p class="engagement__model-title">{{ model.title }}</p>
+        <p class="engagement__model-text">{{ model.text }}</p>
+      </div>
+    </li>
+  }
+</ul>

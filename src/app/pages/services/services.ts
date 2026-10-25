@@ -7,12 +7,10 @@ import {
   effect,
   inject,
   signal,
-  viewChild,
   viewChildren,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButton } from '@angular/material/button';
-import { MatChipListbox, type MatChipListboxChange, MatChipOption } from '@angular/material/chips';
 import { MatIcon } from '@angular/material/icon';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { useDictionary } from 'angular-intlayer';
@@ -22,42 +20,32 @@ import { appIcon } from '../../core/icons/icons';
 import { ordinal } from '../../shared/ordinal';
 import { IconTile, type IconTileTone } from '../../shared/ui/icon-tile/icon-tile';
 import { PageIntro, type PageIntroCrumb } from '../../shared/ui/page-intro/page-intro';
+import { ServiceCard, type ServiceCardCopy } from '../../shared/ui/service-card/service-card';
 import {
   type ConversationCopy,
   StartConversation,
 } from '../../shared/ui/start-conversation/start-conversation';
+import {
+  ALL_SERVICES,
+  SERVICE_CATEGORY_IDS,
+  type ServiceCategoryId,
+  type ServiceCategorySummary,
+  type ServiceFilter,
+  isServiceCategoryId,
+  isServiceFilter,
+  serviceSectionId,
+} from './service-category';
+import { CategoryNav } from './category-nav/category-nav';
+import { FilterBar } from './filter-bar/filter-bar';
 import servicesContent from './services.content';
 
-export const SERVICE_CATEGORY_IDS = [
-  'design-product',
-  'software-engineering',
-  'artificial-intelligence',
-  'infrastructure-operations',
-  'engineering-partnerships',
-] as const;
-
-export type ServiceCategoryId = (typeof SERVICE_CATEGORY_IDS)[number];
-export type ServiceFilter = ServiceCategoryId | 'all';
-
 const CATEGORY_PARAM = 'category';
-const ALL = 'all';
+const ALL = ALL_SERVICES;
 const ACTIVE_LINE = 0.3;
 const ACCENT_CATEGORY: ServiceCategoryId = 'artificial-intelligence';
 
 function categoryTone(category: ServiceCategoryId): IconTileTone {
   return category === ACCENT_CATEGORY ? 'inverse-accent' : 'primary';
-}
-
-export function isServiceCategoryId(value: unknown): value is ServiceCategoryId {
-  return typeof value === 'string' && (SERVICE_CATEGORY_IDS as readonly string[]).includes(value);
-}
-
-export function isServiceFilter(value: unknown): value is ServiceFilter {
-  return value === ALL || isServiceCategoryId(value);
-}
-
-export function serviceSectionId(category: ServiceCategoryId): string {
-  return `services-${category}`;
 }
 
 function sectionInView(elements: readonly HTMLElement[], line: number): string | undefined {
@@ -77,10 +65,11 @@ function sectionInView(elements: readonly HTMLElement[], line: number): string |
     LocalizedPathPipe,
     IconTile,
     PageIntro,
+    ServiceCard,
     StartConversation,
+    CategoryNav,
+    FilterBar,
     MatButton,
-    MatChipListbox,
-    MatChipOption,
     MatIcon,
   ],
   templateUrl: './services.html',
@@ -94,12 +83,9 @@ export class Services {
   private readonly document = inject(DOCUMENT);
 
   protected readonly content = useDictionary(servicesContent);
-  protected readonly all = ALL;
   protected readonly sectionId = serviceSectionId;
-  protected readonly chevronIcon = appIcon('chevron-down');
 
   private readonly sections = viewChildren<ElementRef<HTMLElement>>('sectionRef');
-  private readonly chipListbox = viewChild(MatChipListbox);
   private readonly scrolled = signal<ServiceCategoryId>(SERVICE_CATEGORY_IDS[0]);
   private readonly params = toSignal(this.route.queryParamMap, { requireSync: true });
 
@@ -118,7 +104,16 @@ export class Services {
       tone: categoryTone(id),
       position: ordinal(index),
       services: items.flatMap((item, order) =>
-        item.category.value === id ? [{ ...item, number: ordinal(order) }] : [],
+        item.category.value === id
+          ? [
+              {
+                number: ordinal(order),
+                title: item.title.value,
+                summary: item.summary.value,
+                tags: item.tags.map((tag) => tag.value),
+              } satisfies ServiceCardCopy,
+            ]
+          : [],
       ),
     }));
   });
@@ -130,16 +125,15 @@ export class Services {
 
   protected readonly categoryTotal = ordinal(SERVICE_CATEGORY_IDS.length - 1);
 
-  protected readonly categories = computed(() =>
+  protected readonly categories = computed<readonly ServiceCategorySummary[]>(() =>
     this.groups().map(({ id, icon, label, services }) => ({
       id,
       icon,
-      label,
+      label: label.value,
       count: services.length,
     })),
   );
 
-  protected readonly arrowIcon = appIcon('arrow-up-right');
   protected readonly ctaArrowIcon = appIcon('arrow-right');
 
   protected readonly total = computed(() => this.content().items.length);
@@ -198,27 +192,11 @@ export class Services {
     });
   }
 
-  protected onChipChange(change: MatChipListboxChange): void {
-    if (isServiceFilter(change.value)) {
-      void this.applyFilter(change.value);
-      return;
-    }
-
-    const listbox = this.chipListbox();
-    if (listbox) {
-      listbox.value = this.filter();
-    }
+  protected onFilterChange(value: ServiceFilter): void {
+    void this.applyFilter(value);
   }
 
-  protected onSelectChange(event: Event): void {
-    const target = event.target;
-    if (target instanceof HTMLSelectElement && isServiceFilter(target.value)) {
-      void this.applyFilter(target.value);
-    }
-  }
-
-  protected async onCategoryClick(event: Event, category: ServiceCategoryId): Promise<void> {
-    event.preventDefault();
+  protected async onCategorySelect(category: ServiceCategoryId): Promise<void> {
     if (this.filter() !== ALL && this.filter() !== category) {
       await this.applyFilter(ALL);
       await this.app.whenStable();

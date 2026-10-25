@@ -9,6 +9,7 @@ import { BusinessValue } from './pages/ai-agent/business-value/business-value';
 import { Capabilities } from './pages/ai-agent/capabilities/capabilities';
 import { Overview } from './pages/ai-agent/overview/overview';
 import { Problems } from './pages/ai-agent/problems/problems';
+import { EngagementPanel } from './pages/ai-agent/related-services/engagement-panel/engagement-panel';
 import { RelatedServices } from './pages/ai-agent/related-services/related-services';
 import { Workflow } from './pages/ai-agent/workflow/workflow';
 import { Contact } from './pages/contact/contact';
@@ -25,6 +26,8 @@ import { WhatWeBuild } from './pages/home/what-we-build/what-we-build';
 import { Why } from './pages/home/why/why';
 import { Partnerships } from './pages/partnerships/partnerships';
 import { PrivacyPolicy } from './pages/privacy-policy/privacy-policy';
+import { CategoryNav } from './pages/services/category-nav/category-nav';
+import { FilterBar } from './pages/services/filter-bar/filter-bar';
 import { Services } from './pages/services/services';
 import { Solutions } from './pages/solutions/solutions';
 import { TermsOfUse } from './pages/terms-of-use/terms-of-use';
@@ -32,6 +35,7 @@ import { FieldLabel } from './shared/ui/field-label/field-label';
 import { IconTile } from './shared/ui/icon-tile/icon-tile';
 import { Logo } from './shared/ui/logo/logo';
 import { PageIntro } from './shared/ui/page-intro/page-intro';
+import { ServiceCard } from './shared/ui/service-card/service-card';
 import { SnackBar } from './shared/ui/snack-bar/snack-bar';
 import { StartConversation } from './shared/ui/start-conversation/start-conversation';
 
@@ -67,6 +71,8 @@ const COMPONENTS: readonly [string, Type<unknown>][] = [
   ['EngagementModels', EngagementModels],
   ['StartConversation', StartConversation],
   ['Services', Services],
+  ['CategoryNav', CategoryNav],
+  ['FilterBar', FilterBar],
   ['About', About],
   ['AiAgent', AiAgent],
   ['Audiences', Audiences],
@@ -74,6 +80,7 @@ const COMPONENTS: readonly [string, Type<unknown>][] = [
   ['Capabilities', Capabilities],
   ['Overview', Overview],
   ['Problems', Problems],
+  ['EngagementPanel', EngagementPanel],
   ['RelatedServices', RelatedServices],
   ['Workflow', Workflow],
   ['Solutions', Solutions],
@@ -85,6 +92,7 @@ const COMPONENTS: readonly [string, Type<unknown>][] = [
   ['IconTile', IconTile],
   ['PageIntro', PageIntro],
   ['FieldLabel', FieldLabel],
+  ['ServiceCard', ServiceCard],
   ['SnackBar', SnackBar],
 ];
 
@@ -100,7 +108,7 @@ describe('change detection', () => {
   });
 
   it('every component in the application resolves to OnPush', () => {
-    expect(COMPONENTS).toHaveLength(35);
+    expect(COMPONENTS).toHaveLength(39);
     const eager = COMPONENTS.filter(([, component]) => !isOnPush(component)).map(([name]) => name);
     expect(eager, 'these components are checked eagerly').toEqual([]);
   });

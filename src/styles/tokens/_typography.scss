@@ -61,6 +61,17 @@ $title-step: (
   line-height: 1.625rem,
 );
 
+$display-band: (
+  size: 1.625rem,
+  line-height: 2.125rem,
+);
+$display-band-tracking: -0.5px;
+$display-feature: (
+  size: 2rem,
+  line-height: 2.5rem,
+);
+$display-feature-tracking: -1px;
+
 $display-hero: (
   compact: $display-section,
   large: (
@@ -96,8 +107,12 @@ $body-lead: (
 
 @mixin extended-tokens() {
   --nx-sys-display-tracking: #{$display-tracking};
+  --nx-sys-display-band-tracking: #{$display-band-tracking};
+  --nx-sys-display-feature-tracking: #{$display-feature-tracking};
 
   @include _role(display-section, $weight-semibold, $display-section);
+  @include _role(display-band, $weight-semibold, $display-band);
+  @include _role(display-feature, $weight-semibold, $display-feature);
   @include _role(body-copy, $weight-regular, $body-copy);
   @include _role(title-card, $weight-semibold, $title-card);
   @include _role(title-step, $weight-semibold, $title-step);

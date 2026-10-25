@@ -4,8 +4,6 @@ import type { DeepTransformContent } from 'angular-intlayer';
 import { appIcon } from '../../../core/icons/icons';
 import type aiAgentContent from '../ai-agent.content';
 
-export type CapabilitiesTone = 'neutral' | 'accent';
-
 export type CapabilitiesContent = DeepTransformContent<
   (typeof aiAgentContent)['content']
 >['capabilities'];

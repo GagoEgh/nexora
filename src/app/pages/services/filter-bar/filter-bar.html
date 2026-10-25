@@ -1,0 +1,37 @@
+<div class="filter-bar__inner">
+  <div class="filter-bar__chips-wrap">
+    <mat-chip-listbox
+      class="filter-bar__chips"
+      [value]="value()"
+      [attr.aria-label]="label()"
+      (change)="onChipChange($event)"
+    >
+      <mat-chip-option [value]="all">
+        {{ allLabel() }}
+        <span class="filter-bar__count">{{ total() }}</span>
+      </mat-chip-option>
+      @for (category of categories(); track category.id) {
+        <mat-chip-option [value]="category.id">
+          {{ category.label }}
+          <span class="filter-bar__count">{{ category.count }}</span>
+        </mat-chip-option>
+      }
+    </mat-chip-listbox>
+  </div>
+
+  <div class="filter-bar__select-wrap">
+    <select
+      class="filter-bar__select"
+      [attr.aria-label]="label()"
+      (change)="onSelectChange($event)"
+    >
+      <option [value]="all" [selected]="value() === all">{{ allLabel() }} ({{ total() }})</option>
+      @for (category of categories(); track category.id) {
+        <option [value]="category.id" [selected]="value() === category.id">
+          {{ category.label }} ({{ category.count }})
+        </option>
+      }
+    </select>
+    <mat-icon class="filter-bar__select-icon" [svgIcon]="chevronIcon" />
+  </div>
+</div>

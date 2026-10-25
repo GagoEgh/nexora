@@ -141,7 +141,7 @@ test.describe('ai agents overview band', () => {
     await page.goto('/services/ai_agent');
   });
 
-  test('closes the page with an eyebrow, an h2 and two paragraphs', async ({ page }) => {
+  test('renders an eyebrow, an h2 and two paragraphs', async ({ page }) => {
     const overview = page.locator('app-overview');
     await expect(overview).toHaveCount(1);
     await expect(overview.locator('.overview__eyebrow')).toHaveText('Overview');
@@ -186,7 +186,7 @@ test.describe('ai agents problems band', () => {
     await page.goto('/services/ai_agent');
   });
 
-  test('ends the page with a header and four cards', async ({ page }) => {
+  test('renders a header and four problem cards', async ({ page }) => {
     const problems = page.locator('app-problems');
     await expect(problems).toHaveCount(1);
     await expect(problems.locator('.problems__eyebrow')).toHaveText('Problems we solve');
@@ -233,7 +233,7 @@ test.describe('ai agents capabilities band', () => {
     await page.goto('/services/ai_agent');
   });
 
-  test('closes the page with two checklist panels', async ({ page }) => {
+  test('renders two checklist panels', async ({ page }) => {
     const capabilities = page.locator('app-capabilities');
     await expect(capabilities).toHaveCount(1);
     await expect(capabilities.locator('.capabilities__eyebrow')).toHaveText(
@@ -295,9 +295,7 @@ test.describe('ai agents audiences band', () => {
     await page.goto('/services/ai_agent');
   });
 
-  test('closes the page with a numbered project list and an audience chip set', async ({
-    page,
-  }) => {
+  test('renders a numbered project list and an audience chip set', async ({ page }) => {
     const audiences = page.locator('app-audiences');
     await expect(audiences).toHaveCount(1);
     await expect(audiences.locator('.audiences__eyebrow')).toHaveText([
@@ -381,7 +379,7 @@ test.describe('ai agents business value band', () => {
     await page.goto('/services/ai_agent');
   });
 
-  test('closes the page with four outcome cards', async ({ page }) => {
+  test('renders four outcome cards', async ({ page }) => {
     const business = page.locator('app-business-value');
     await expect(business).toHaveCount(1);
     await expect(business.locator('.business-value__eyebrow')).toHaveText('Business value');
@@ -442,10 +440,10 @@ test.describe('ai agents related services band', () => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/services/ai_agent');
     // The page is lazy, so wait for the band before measuring anything.
-    await expect(page.locator('.related__card')).toHaveCount(3);
+    await expect(page.locator('app-service-card')).toHaveCount(3);
   });
 
-  test('closes the page with three service cards and the engagement panel', async ({ page }) => {
+  test('renders three service cards and the engagement panel', async ({ page }) => {
     const related = page.locator('app-related-services');
     await expect(related).toHaveCount(1);
     await expect(related.locator('.related__eyebrow')).toHaveText('Related services');
@@ -454,22 +452,22 @@ test.describe('ai agents related services band', () => {
     );
     await expect(page.locator('app-ai-agent h1')).toHaveCount(1);
 
-    await expect(related.locator('.related__card')).toHaveCount(3);
-    await expect(related.locator('.related__number')).toHaveText(['08', '06', '10']);
-    await expect(related.locator('.related__card-title')).toHaveText([
+    await expect(related.locator('app-service-card')).toHaveCount(3);
+    await expect(related.locator('.service-card__number')).toHaveText(['08', '06', '10']);
+    await expect(related.locator('.service-card__title')).toHaveText([
       'AI Development & Integration',
       'Backend Development & API Integration',
       'Claude & AI Workflow Engineering',
     ]);
-    await expect(related.locator('.related__tag')).toHaveCount(9);
+    await expect(related.locator('.service-card__tag')).toHaveCount(9);
 
     // Arrows are decoration: nothing in this band navigates.
-    await expect(related.locator('.related__card-arrow')).toHaveCount(3);
+    await expect(related.locator('.service-card__arrow')).toHaveCount(3);
     await expect(related.locator('a, button')).toHaveCount(0);
 
-    await expect(related.locator('.related__engage-eyebrow')).toHaveText('How to engage');
-    await expect(related.locator('h3.related__engage-title')).toHaveText('Usually delivered as');
-    await expect(related.locator('.related__model-title')).toHaveText([
+    await expect(related.locator('.engagement__eyebrow')).toHaveText('How to engage');
+    await expect(related.locator('h3.engagement__title')).toHaveText('Usually delivered as');
+    await expect(related.locator('.engagement__model-title')).toHaveText([
       'Project-Based',
       'Long-Term Partnership',
       'Maintenance & Support',
@@ -478,7 +476,7 @@ test.describe('ai agents related services band', () => {
   });
 
   test('matches the card and panel geometry from the design', async ({ page }) => {
-    const cards = await boxes(page, '.related__card');
+    const cards = await boxes(page, 'app-service-card');
     expect(cards).toHaveLength(3);
     expect(cards.map((c) => c.x)).toEqual([80, 512, 944]);
     for (const card of cards) expect(card.w).toBe(416);
@@ -491,19 +489,19 @@ test.describe('ai agents related services band', () => {
       expect(card.h).toBe(cards[0].h);
     }
 
-    const panel = await box(page, '.related__engage');
+    const panel = await box(page, 'app-engagement-panel');
     expect(panel.x).toBe(80);
     expect(panel.w).toBe(1280);
 
-    const models = await boxes(page, '.related__model');
+    const models = await boxes(page, '.engagement__model');
     expect(models).toHaveLength(3);
     for (const model of models) expect(model.w).toBe(290);
     expect(models[1].x - (models[0].x + models[0].w)).toBe(12);
     expect(models[2].x + models[2].w).toBeLessThanOrEqual(panel.x + panel.w - 32);
 
     // The arrow sits opposite the ordinal and never collides with it.
-    const numbers = await boxes(page, '.related__number');
-    const arrows = await boxes(page, '.related__card-arrow');
+    const numbers = await boxes(page, '.service-card__number');
+    const arrows = await boxes(page, '.service-card__arrow');
     for (let i = 0; i < 3; i += 1) {
       expect(arrows[i].w).toBe(32);
       expect(arrows[i].h).toBe(32);
@@ -513,12 +511,12 @@ test.describe('ai agents related services band', () => {
 
   test('uses one corner radius, one tag height and the design typography', async ({ page }) => {
     const radii = await page
-      .locator('.related__card, .related__engage, .related__model')
+      .locator('app-service-card, app-engagement-panel, .engagement__model')
       .evaluateAll((els) => [...new Set(els.map((e) => getComputedStyle(e).borderTopLeftRadius))]);
     expect(radii).toEqual(['16px']);
 
     const tagHeights = await page
-      .locator('.related__tag')
+      .locator('.service-card__tag')
       .evaluateAll((els) => [
         ...new Set(els.map((e) => Math.round(e.getBoundingClientRect().height))),
       ]);
@@ -529,20 +527,22 @@ test.describe('ai agents related services band', () => {
     expect(await style(page, '.related__title', 'font-weight')).toBe('600');
     expect(await style(page, '.related__title', 'letter-spacing')).toBe('-1px');
 
-    expect(await style(page, '.related__engage-title', 'font-size')).toBe('22px');
-    expect(await style(page, '.related__engage-title', 'line-height')).toBe('28px');
-    expect(await style(page, '.related__engage-title', 'font-weight')).toBe('600');
+    expect(await style(page, '.engagement__title', 'font-size')).toBe('22px');
+    expect(await style(page, '.engagement__title', 'line-height')).toBe('28px');
+    expect(await style(page, '.engagement__title', 'font-weight')).toBe('600');
 
-    expect(await style(page, '.related__card-title', 'font-size')).toBe('18px');
-    expect(await style(page, '.related__model-title', 'font-size')).toBe('16px');
-    expect(await style(page, '.related__model-text', 'font-size')).toBe('14px');
+    expect(await style(page, '.service-card__title', 'font-size')).toBe('18px');
+    expect(await style(page, '.engagement__model-title', 'font-size')).toBe('16px');
+    expect(await style(page, '.engagement__model-text', 'font-size')).toBe('14px');
 
-    expect(await style(page, '.related__card', 'background-color')).toBe('rgb(255, 255, 255)');
-    expect(await style(page, '.related__engage', 'background-color')).toBe('rgb(246, 248, 251)');
-    expect(await style(page, '.related__card-arrow', 'background-color')).toBe(
+    expect(await style(page, 'app-service-card', 'background-color')).toBe('rgb(255, 255, 255)');
+    expect(await style(page, 'app-engagement-panel', 'background-color')).toBe(
+      'rgb(246, 248, 251)',
+    );
+    expect(await style(page, '.service-card__arrow', 'background-color')).toBe(
       'rgb(238, 242, 247)',
     );
-    expect(await style(page, '.related__number', 'color')).toBe('rgb(15, 85, 232)');
+    expect(await style(page, '.service-card__number', 'color')).toBe('rgb(15, 85, 232)');
   });
 
   test('adapts its columns and never spills out of the viewport', async ({ page }) => {
@@ -556,12 +556,12 @@ test.describe('ai agents related services band', () => {
     ] as const) {
       await page.setViewportSize({ width, height: 900 });
       await page.goto('/services/ai_agent');
-      await expect(page.locator('.related__card')).toHaveCount(3);
+      await expect(page.locator('app-service-card')).toHaveCount(3);
 
       const state = await page.evaluate((vw) => {
         const q = (sel: string) => Array.from(document.querySelectorAll(sel));
-        const cards = q('.related__card');
-        const models = q('.related__model');
+        const cards = q('app-service-card');
+        const models = q('.engagement__model');
         const cols = (els: Element[]) => {
           const top = Math.round(els[0].getBoundingClientRect().y);
           return els.filter((e) => Math.round(e.getBoundingClientRect().y) === top).length;
@@ -573,10 +573,10 @@ test.describe('ai agents related services band', () => {
         const clipped = [
           ...cards,
           ...models,
-          ...q('.related__card-title'),
-          ...q('.related__card-summary'),
-          ...q('.related__tag'),
-          ...q('.related__model-copy'),
+          ...q('.service-card__title'),
+          ...q('.service-card__summary'),
+          ...q('.service-card__tag'),
+          ...q('.engagement__model-copy'),
         ].some((e) => e.scrollWidth > e.clientWidth + 1 || e.scrollHeight > e.clientHeight + 1);
         // rows equalise within themselves
         const rows = [...new Set(cards.map((c) => Math.round(c.getBoundingClientRect().y)))];
@@ -593,7 +593,7 @@ test.describe('ai agents related services band', () => {
         // the tile must never sit on top of the copy
         const overlap = models.some((m) => {
           const t = m.querySelector('app-icon-tile')!.getBoundingClientRect();
-          const c = m.querySelector('.related__model-copy')!.getBoundingClientRect();
+          const c = m.querySelector('.engagement__model-copy')!.getBoundingClientRect();
           return (
             t.right > c.left + 0.5 &&
             c.right > t.left + 0.5 &&
@@ -626,8 +626,8 @@ test.describe('ai agents related services band', () => {
     for (const width of [600, 768, 1024, 1199, 1440, 1920]) {
       await page.setViewportSize({ width, height: 900 });
       await page.goto('/services/ai_agent');
-      await expect(page.locator('.related__card-title')).toHaveCount(3);
-      const lines = await page.locator('.related__card-title').evaluateAll((els) =>
+      await expect(page.locator('.service-card__title')).toHaveCount(3);
+      const lines = await page.locator('.service-card__title').evaluateAll((els) =>
         els.map((e) => {
           const lh = parseFloat(getComputedStyle(e).lineHeight);
           return Math.round(e.getBoundingClientRect().height / lh);
@@ -765,7 +765,7 @@ test.describe('ai agents page in other locales', () => {
       'Меньше ручной работы',
     );
     await expect(page.locator('.related__eyebrow')).toHaveText('Смежные услуги');
-    await expect(page.locator('.related__number')).toHaveText(['08', '06', '10']);
+    await expect(page.locator('.service-card__number')).toHaveText(['08', '06', '10']);
     await expect(page.locator('.start-conversation__eyebrow')).toHaveText('Обсудим эту услугу');
     await expect(page.locator('app-start-conversation a').nth(1)).toHaveAttribute(
       'href',

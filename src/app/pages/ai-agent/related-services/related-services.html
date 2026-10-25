@@ -5,41 +5,10 @@
   </div>
 
   <ul class="related__grid">
-    @for (item of content().items; track $index) {
-      <li class="related__card">
-        <div class="related__card-head">
-          <p class="related__number">{{ item.number }}</p>
-          <span class="related__card-arrow" aria-hidden="true">
-            <mat-icon [svgIcon]="arrowIcon" />
-          </span>
-        </div>
-        <h3 class="related__card-title">{{ item.title }}</h3>
-        <p class="related__card-summary">{{ item.summary }}</p>
-        <ul class="related__tags">
-          @for (tag of item.tags; track $index) {
-            <li class="related__tag">{{ tag }}</li>
-          }
-        </ul>
-      </li>
+    @for (card of cards(); track card.number) {
+      <li><app-service-card [copy]="card" /></li>
     }
   </ul>
 
-  <div class="related__engage">
-    <div class="related__engage-copy">
-      <p class="related__engage-eyebrow">{{ content().engage.eyebrow }}</p>
-      <h3 class="related__engage-title">{{ content().engage.title }}</h3>
-    </div>
-
-    <ul class="related__models">
-      @for (model of content().engage.models; track $index) {
-        <li class="related__model">
-          <app-icon-tile [icon]="model.icon.value" tone="primary" size="compact" />
-          <div class="related__model-copy">
-            <p class="related__model-title">{{ model.title }}</p>
-            <p class="related__model-text">{{ model.text }}</p>
-          </div>
-        </li>
-      }
-    </ul>
-  </div>
+  <app-engagement-panel [content]="content().engage" />
 </section>

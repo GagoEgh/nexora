@@ -1,0 +1,15 @@
+<div class="service-card__head">
+  <p class="service-card__number">{{ copy().number }}</p>
+  <span class="service-card__arrow" aria-hidden="true">
+    <mat-icon [svgIcon]="arrowIcon" />
+  </span>
+</div>
+
+<h3 class="service-card__title">{{ copy().title }}</h3>
+<p class="service-card__summary">{{ copy().summary }}</p>
+
+<ul class="service-card__tags">
+  @for (tag of copy().tags; track $index) {
+    <li class="service-card__tag">{{ tag }}</li>
+  }
+</ul>
