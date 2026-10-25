@@ -1,9 +1,7 @@
-import { Component, input } from '@angular/core';
-import type { DeepTransformContent } from 'angular-intlayer';
+import { Component } from '@angular/core';
+import { useDictionary } from 'angular-intlayer';
 import { IconTile, type IconTileTone } from '../../../shared/ui/icon-tile/icon-tile';
-import type aiAgentContent from '../ai-agent.content';
-import type { WorkflowTone } from '../ai-agent.content';
-export type WorkflowContent = DeepTransformContent<(typeof aiAgentContent)['content']>['workflow'];
+import workflowContent, { type WorkflowTone } from './workflow.content';
 
 const TILE_TONES: Readonly<Record<WorkflowTone, IconTileTone>> = {
   plain: 'primary',
@@ -18,6 +16,6 @@ const TILE_TONES: Readonly<Record<WorkflowTone, IconTileTone>> = {
   styleUrl: './workflow.scss',
 })
 export class Workflow {
-  readonly content = input.required<WorkflowContent>();
+  protected readonly content = useDictionary(workflowContent);
   protected readonly tileTone = (tone: WorkflowTone): IconTileTone => TILE_TONES[tone];
 }

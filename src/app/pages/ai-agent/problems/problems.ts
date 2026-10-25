@@ -1,9 +1,7 @@
-import { Component, input } from '@angular/core';
-import type { DeepTransformContent } from 'angular-intlayer';
+import { Component } from '@angular/core';
+import { useDictionary } from 'angular-intlayer';
 import { IconTile } from '../../../shared/ui/icon-tile/icon-tile';
-import type aiAgentContent from '../ai-agent.content';
-
-export type ProblemsContent = DeepTransformContent<(typeof aiAgentContent)['content']>['problems'];
+import problemsContent from './problems.content';
 
 @Component({
   selector: 'app-problems',
@@ -12,5 +10,5 @@ export type ProblemsContent = DeepTransformContent<(typeof aiAgentContent)['cont
   styleUrl: './problems.scss',
 })
 export class Problems {
-  readonly content = input.required<ProblemsContent>();
+  protected readonly content = useDictionary(problemsContent);
 }

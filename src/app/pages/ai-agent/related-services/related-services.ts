@@ -1,12 +1,8 @@
-import { Component, computed, input } from '@angular/core';
-import type { DeepTransformContent } from 'angular-intlayer';
+import { Component, computed } from '@angular/core';
+import { useDictionary } from 'angular-intlayer';
 import { ServiceCard, type ServiceCardCopy } from '../../../shared/ui/service-card/service-card';
-import type aiAgentContent from '../ai-agent.content';
 import { EngagementPanel } from './engagement-panel/engagement-panel';
-
-export type RelatedServicesContent = DeepTransformContent<
-  (typeof aiAgentContent)['content']
->['relatedServices'];
+import relatedServicesContent from './related-services.content';
 
 @Component({
   selector: 'app-related-services',
@@ -15,7 +11,7 @@ export type RelatedServicesContent = DeepTransformContent<
   styleUrl: './related-services.scss',
 })
 export class RelatedServices {
-  readonly content = input.required<RelatedServicesContent>();
+  protected readonly content = useDictionary(relatedServicesContent);
 
   protected readonly cards = computed<readonly ServiceCardCopy[]>(() =>
     this.content().items.map((item) => ({

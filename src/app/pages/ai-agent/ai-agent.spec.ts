@@ -7,9 +7,9 @@ import { provideIntlayer, useLocale } from 'angular-intlayer';
 import { routes } from '../../app.routes';
 import { provideAppIcons } from '../../core/icons/provide-app-icons';
 import { ordinal } from '../../shared/ordinal';
-import servicesContent from '../services/services.content';
+import servicesCatalogueContent from '../services/services-catalogue.content';
 import { AiAgent } from './ai-agent';
-import aiAgentContent from './ai-agent.content';
+import relatedServicesContent from './related-services/related-services.content';
 
 const ICON_SVG =
   '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"></svg>';
@@ -358,8 +358,8 @@ describe('AiAgent', () => {
 
   it('keeps the three cards identical to the services dictionary in every locale', () => {
     // 08, 06 and 10 are services items 7, 5 and 9 - this page must not drift from that list.
-    const cards = aiAgentContent.content.relatedServices.items;
-    const source = servicesContent.content.items;
+    const cards = relatedServicesContent.content.items;
+    const source = servicesCatalogueContent.content.items;
 
     expect(cards.map((card) => card.number)).toEqual([ordinal(7), ordinal(5), ordinal(9)]);
 

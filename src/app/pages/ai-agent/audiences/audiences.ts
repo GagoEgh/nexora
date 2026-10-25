@@ -1,13 +1,9 @@
-import { Component, input } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import type { DeepTransformContent } from 'angular-intlayer';
+import { useDictionary } from 'angular-intlayer';
 import { appIcon, type AppIconName } from '../../../core/icons/icons';
 import { ordinal } from '../../../shared/ordinal';
-import type aiAgentContent from '../ai-agent.content';
-
-export type AudiencesContent = DeepTransformContent<
-  (typeof aiAgentContent)['content']
->['audiences'];
+import audiencesContent from './audiences.content';
 
 @Component({
   selector: 'app-audiences',
@@ -16,7 +12,7 @@ export type AudiencesContent = DeepTransformContent<
   styleUrl: './audiences.scss',
 })
 export class Audiences {
-  readonly content = input.required<AudiencesContent>();
+  protected readonly content = useDictionary(audiencesContent);
   protected readonly arrowIcon = appIcon('arrow-right');
   protected readonly ordinal = ordinal;
   protected readonly chipIcon = (icon: AppIconName) => appIcon(icon);

@@ -3,6 +3,7 @@ import { MatChipListbox, type MatChipListboxChange, MatChipOption } from '@angul
 import { useDictionary } from 'angular-intlayer';
 import { ordinal } from '../../../shared/ordinal';
 import { Logo } from '../../../shared/ui/logo/logo';
+import whyDisciplinesContent from './why-disciplines.content';
 import whyContent from './why.content';
 
 @Component({
@@ -13,10 +14,11 @@ import whyContent from './why.content';
 })
 export class Why {
   protected readonly content = useDictionary(whyContent);
+  protected readonly disciplines = useDictionary(whyDisciplinesContent);
   private readonly listbox = viewChild.required(MatChipListbox);
   protected readonly selected = signal(0);
 
-  protected readonly reasons = computed(() => this.content().disciplines[this.selected()].reasons);
+  protected readonly reasons = computed(() => this.disciplines().items[this.selected()].reasons);
 
   protected onSelection(change: MatChipListboxChange): void {
     if (typeof change.value === 'number') {

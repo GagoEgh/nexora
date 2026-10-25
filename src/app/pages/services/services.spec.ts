@@ -8,7 +8,7 @@ import { routes } from '../../app.routes';
 import { provideAppIcons } from '../../core/icons/provide-app-icons';
 import { SERVICE_CATEGORY_IDS, isServiceCategoryId, serviceSectionId } from './service-category';
 import { Services } from './services';
-import servicesContent from './services.content';
+import servicesCatalogueContent from './services-catalogue.content';
 
 const ICON_SVG =
   '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"></svg>';
@@ -90,7 +90,7 @@ describe('Services', () => {
   });
 
   it('declares every service against a category the page actually groups by', () => {
-    const items = servicesContent.content.items;
+    const items = servicesCatalogueContent.content.items;
     expect(items).toHaveLength(TOTAL);
 
     // `satisfies ServiceCategoryId` guards this at compile time; assert it at runtime too,

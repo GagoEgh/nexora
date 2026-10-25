@@ -37,6 +37,7 @@ import {
 } from './service-category';
 import { CategoryNav } from './category-nav/category-nav';
 import { FilterBar } from './filter-bar/filter-bar';
+import servicesCatalogueContent from './services-catalogue.content';
 import servicesContent from './services.content';
 
 const CATEGORY_PARAM = 'category';
@@ -83,6 +84,7 @@ export class Services {
   private readonly document = inject(DOCUMENT);
 
   protected readonly content = useDictionary(servicesContent);
+  protected readonly catalogue = useDictionary(servicesCatalogueContent);
   protected readonly sectionId = serviceSectionId;
 
   private readonly sections = viewChildren<ElementRef<HTMLElement>>('sectionRef');
@@ -95,7 +97,8 @@ export class Services {
   });
 
   private readonly groups = computed(() => {
-    const { categories, items } = this.content();
+    const { categories } = this.content();
+    const { items } = this.catalogue();
     return SERVICE_CATEGORY_IDS.map((id, index) => ({
       id,
       icon: categories[id].icon.value,
@@ -136,7 +139,7 @@ export class Services {
 
   protected readonly ctaArrowIcon = appIcon('arrow-right');
 
-  protected readonly total = computed(() => this.content().items.length);
+  protected readonly total = computed(() => this.catalogue().items.length);
 
   protected readonly conversationCopy = computed<ConversationCopy>(() => {
     const copy = this.content().conversation;

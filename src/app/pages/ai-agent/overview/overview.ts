@@ -1,8 +1,6 @@
-import { Component, input } from '@angular/core';
-import type { DeepTransformContent } from 'angular-intlayer';
-import type aiAgentContent from '../ai-agent.content';
-
-export type OverviewContent = DeepTransformContent<(typeof aiAgentContent)['content']>['overview'];
+import { Component } from '@angular/core';
+import { useDictionary } from 'angular-intlayer';
+import overviewContent from './overview.content';
 
 @Component({
   selector: 'app-overview',
@@ -10,5 +8,5 @@ export type OverviewContent = DeepTransformContent<(typeof aiAgentContent)['cont
   styleUrl: './overview.scss',
 })
 export class Overview {
-  readonly content = input.required<OverviewContent>();
+  protected readonly content = useDictionary(overviewContent);
 }

@@ -16,7 +16,7 @@
         [attr.aria-label]="content().team.disciplinesLabel.value"
         (change)="onSelection($event)"
       >
-        @for (discipline of content().disciplines; track $index) {
+        @for (discipline of disciplines().items; track $index) {
           <mat-chip-option [value]="$index">
             <span class="why__dot" aria-hidden="true"></span>
             {{ discipline.label }}

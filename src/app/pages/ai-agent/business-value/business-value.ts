@@ -1,12 +1,8 @@
-import { Component, input } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import type { DeepTransformContent } from 'angular-intlayer';
+import { useDictionary } from 'angular-intlayer';
 import { appIcon, type AppIconName } from '../../../core/icons/icons';
-import type aiAgentContent from '../ai-agent.content';
-
-export type BusinessValueContent = DeepTransformContent<
-  (typeof aiAgentContent)['content']
->['businessValue'];
+import businessValueContent from './business-value.content';
 
 @Component({
   selector: 'app-business-value',
@@ -15,6 +11,6 @@ export type BusinessValueContent = DeepTransformContent<
   styleUrl: './business-value.scss',
 })
 export class BusinessValue {
-  readonly content = input.required<BusinessValueContent>();
+  protected readonly content = useDictionary(businessValueContent);
   protected readonly cardIcon = (icon: AppIconName) => appIcon(icon);
 }

@@ -1,12 +1,8 @@
-import { Component, input } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import type { DeepTransformContent } from 'angular-intlayer';
+import { useDictionary } from 'angular-intlayer';
 import { appIcon } from '../../../core/icons/icons';
-import type aiAgentContent from '../ai-agent.content';
-
-export type CapabilitiesContent = DeepTransformContent<
-  (typeof aiAgentContent)['content']
->['capabilities'];
+import capabilitiesContent from './capabilities.content';
 
 @Component({
   selector: 'app-capabilities',
@@ -15,6 +11,6 @@ export type CapabilitiesContent = DeepTransformContent<
   styleUrl: './capabilities.scss',
 })
 export class Capabilities {
-  readonly content = input.required<CapabilitiesContent>();
+  protected readonly content = useDictionary(capabilitiesContent);
   protected readonly checkIcon = appIcon('check');
 }
