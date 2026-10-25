@@ -1,0 +1,215 @@
+@use 'tokens/spacing';
+@use 'tokens/layout';
+@use 'tokens/typography';
+@use 'mixins/eyebrow';
+
+:host {
+  display: block;
+  padding-block: spacing.space(96);
+  padding-inline: var(--nx-layout-margin);
+  background-color: var(--mat-sys-surface);
+}
+
+.related {
+  max-width: var(--nx-layout-container-max);
+  margin-inline: auto;
+}
+
+.related__heading {
+  display: grid;
+  gap: spacing.space(20);
+  margin-block-end: spacing.space(48);
+}
+
+.related__eyebrow {
+  @include eyebrow.eyebrow();
+}
+
+.related__title {
+  margin: 0;
+  font-size: 32px;
+  font-weight: typography.$weight-semibold;
+  line-height: 40px;
+  letter-spacing: -1px;
+  color: var(--mat-sys-on-surface);
+}
+
+.related__grid,
+.related__tags,
+.related__models {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.related__grid {
+  display: grid;
+  gap: spacing.space(16);
+
+  @include layout.up(expanded) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include layout.up(large) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+// One corner and surface token for every boxed element in the section.
+.related__card,
+.related__engage,
+.related__model {
+  box-sizing: border-box;
+  min-width: 0;
+  border-radius: var(--mat-sys-corner-large);
+}
+
+.related__card,
+.related__model {
+  background-color: var(--mat-sys-surface);
+}
+
+// Same recipe as the service cards on /services, so the two stay visually identical.
+.related__card {
+  display: flex;
+  flex-direction: column;
+  padding: spacing.space(24);
+  border: 1px solid var(--mat-sys-outline-variant);
+}
+
+.related__card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: spacing.space(12);
+}
+
+.related__number {
+  margin: 0;
+  font: typography.$code-font;
+  color: var(--mat-sys-primary);
+}
+
+.related__card-arrow {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--mat-sys-corner-full);
+  background-color: var(--mat-sys-surface-container);
+  color: var(--mat-sys-on-surface);
+}
+
+.related__card-title {
+  margin: spacing.space(12) 0 0;
+  font: var(--nx-sys-title-step);
+  letter-spacing: var(--nx-sys-display-tracking);
+  color: var(--mat-sys-on-surface);
+}
+
+.related__card-summary,
+.related__model-text {
+  margin: 0;
+  font: var(--mat-sys-body-small);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.related__card-summary {
+  margin-block-start: spacing.space(12);
+}
+
+.related__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: spacing.space(8);
+  margin-block-start: spacing.space(16);
+}
+
+.related__tag {
+  padding: spacing.space(4) spacing.space(8);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--mat-sys-corner-small);
+  background-color: var(--mat-sys-surface-container-low);
+  font: var(--mat-sys-label-medium);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.related__engage {
+  display: grid;
+  gap: spacing.space(24);
+  margin-block-start: spacing.space(48);
+  padding: calc(#{spacing.space(24)} + #{spacing.space(4)}) spacing.space(20);
+  background-color: var(--mat-sys-surface-container-low);
+
+  @include layout.up(medium) {
+    padding-inline: spacing.space(32);
+  }
+
+  // 312 + 12 + (3 x 290 + 2 x 12) = 1216, the container minus the panel padding.
+  @include layout.up(large) {
+    grid-template-columns: minmax(0, 312fr) minmax(0, 894fr);
+    gap: spacing.space(12);
+    align-items: center;
+  }
+}
+
+.related__engage-copy {
+  display: grid;
+  gap: spacing.space(4);
+  min-width: 0;
+}
+
+.related__engage-eyebrow {
+  margin: 0;
+  font: var(--mat-sys-label-medium);
+  letter-spacing: var(--mat-sys-label-medium-tracking);
+  text-transform: uppercase;
+  color: var(--mat-sys-primary);
+}
+
+.related__engage-title {
+  margin: 0;
+  font: var(--mat-sys-title-large);
+  font-weight: typography.$weight-semibold;
+  letter-spacing: var(--nx-sys-display-tracking);
+  color: var(--mat-sys-on-surface);
+}
+
+.related__models {
+  display: grid;
+  gap: spacing.space(12);
+  align-items: start;
+
+  @include layout.up(medium) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include layout.up(large) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.related__model {
+  display: flex;
+  gap: spacing.space(12);
+  align-items: center;
+  padding: spacing.space(16);
+
+  app-icon-tile {
+    flex-shrink: 0;
+  }
+}
+
+.related__model-copy {
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+.related__model-title {
+  margin: 0;
+  font: var(--mat-sys-title-medium);
+  font-weight: typography.$weight-semibold;
+  color: var(--mat-sys-on-surface);
+}

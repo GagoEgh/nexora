@@ -9,6 +9,7 @@ import { BusinessValue } from './pages/ai-agent/business-value/business-value';
 import { Capabilities } from './pages/ai-agent/capabilities/capabilities';
 import { Overview } from './pages/ai-agent/overview/overview';
 import { Problems } from './pages/ai-agent/problems/problems';
+import { RelatedServices } from './pages/ai-agent/related-services/related-services';
 import { Workflow } from './pages/ai-agent/workflow/workflow';
 import { Contact } from './pages/contact/contact';
 import { AiAutomation } from './pages/home/ai-automation/ai-automation';
@@ -73,6 +74,7 @@ const COMPONENTS: readonly [string, Type<unknown>][] = [
   ['Capabilities', Capabilities],
   ['Overview', Overview],
   ['Problems', Problems],
+  ['RelatedServices', RelatedServices],
   ['Workflow', Workflow],
   ['Solutions', Solutions],
   ['Partnerships', Partnerships],
@@ -98,7 +100,7 @@ describe('change detection', () => {
   });
 
   it('every component in the application resolves to OnPush', () => {
-    expect(COMPONENTS).toHaveLength(34);
+    expect(COMPONENTS).toHaveLength(35);
     const eager = COMPONENTS.filter(([, component]) => !isOnPush(component)).map(([name]) => name);
     expect(eager, 'these components are checked eagerly').toEqual([]);
   });

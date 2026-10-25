@@ -6,7 +6,10 @@ import { RouterTestingHarness } from '@angular/router/testing';
 import { provideIntlayer, useLocale } from 'angular-intlayer';
 import { routes } from '../../app.routes';
 import { provideAppIcons } from '../../core/icons/provide-app-icons';
+import { ordinal } from '../../shared/ordinal';
+import servicesContent from '../services/services.content';
 import { AiAgent } from './ai-agent';
+import aiAgentContent from './ai-agent.content';
 
 const ICON_SVG =
   '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"></svg>';
@@ -262,7 +265,8 @@ describe('AiAgent', () => {
 
     const business = root.querySelector('app-business-value');
     expect(business).not.toBeNull();
-    expect(root.lastElementChild?.tagName).toBe('APP-BUSINESS-VALUE');
+    expect(business?.previousElementSibling?.tagName).toBe('APP-AUDIENCES');
+    expect(business?.nextElementSibling?.tagName).toBe('APP-RELATED-SERVICES');
 
     expect(business?.querySelector('.business-value__eyebrow')?.textContent?.trim()).toBe(
       'Business value',
@@ -297,6 +301,115 @@ describe('AiAgent', () => {
     expect(cards[0].querySelector('.business-value__card-title')?.tagName).toBe('H3');
   });
 
+  it('closes the page with the related services band', async () => {
+    await go('/services/ai_agent');
+
+    const related = root.querySelector('app-related-services');
+    expect(related).not.toBeNull();
+    expect(related?.previousElementSibling?.tagName).toBe('APP-BUSINESS-VALUE');
+    expect(related?.nextElementSibling?.tagName).toBe('APP-START-CONVERSATION');
+
+    expect(related?.querySelector('.related__eyebrow')?.textContent?.trim()).toBe(
+      'Related services',
+    );
+    expect(related?.querySelector('h2.related__title')?.textContent?.trim()).toBe(
+      'Often combined with this service.',
+    );
+
+    expect(related?.querySelectorAll('.related__card')).toHaveLength(3);
+    expect(text('.related__number')).toEqual(['08', '06', '10']);
+    expect(text('.related__card-title')).toEqual([
+      'AI Development & Integration',
+      'Backend Development & API Integration',
+      'Claude & AI Workflow Engineering',
+    ]);
+    expect(related?.querySelectorAll('.related__tag')).toHaveLength(9);
+    expect(text('.related__tag').slice(0, 3)).toEqual(['RAG', 'Assistants', 'Document AI']);
+
+    // The arrows are decoration: nothing in this band navigates.
+    const arrows = Array.from(related?.querySelectorAll('.related__card-arrow') ?? []);
+    expect(arrows).toHaveLength(3);
+    expect(arrows.every((a) => a.getAttribute('aria-hidden') === 'true')).toBe(true);
+    expect(related?.querySelectorAll('a, button')).toHaveLength(0);
+
+    // Engagement panel.
+    expect(related?.querySelector('.related__engage-eyebrow')?.textContent?.trim()).toBe(
+      'How to engage',
+    );
+    expect(related?.querySelector('h3.related__engage-title')?.textContent?.trim()).toBe(
+      'Usually delivered as',
+    );
+    expect(text('.related__model-title')).toEqual([
+      'Project-Based',
+      'Long-Term Partnership',
+      'Maintenance & Support',
+    ]);
+    expect(text('.related__model-text')).toEqual([
+      'Scoped first automation',
+      'Expanding automation over time',
+      'Monitoring and improvements',
+    ]);
+    expect(related?.querySelectorAll('app-icon-tile')).toHaveLength(3);
+
+    // The section must not disturb the page outline.
+    expect(root.querySelectorAll('h1')).toHaveLength(1);
+    expect(related?.querySelector('.related__card-title')?.tagName).toBe('H3');
+  });
+
+  it('keeps the three cards identical to the services dictionary in every locale', () => {
+    // 08, 06 and 10 are services items 7, 5 and 9 - this page must not drift from that list.
+    const cards = aiAgentContent.content.relatedServices.items;
+    const source = servicesContent.content.items;
+
+    expect(cards.map((card) => card.number)).toEqual([ordinal(7), ordinal(5), ordinal(9)]);
+
+    for (const [card, index] of [
+      [cards[0], 7],
+      [cards[1], 5],
+      [cards[2], 9],
+    ] as const) {
+      expect(card.title).toEqual(source[index].title);
+      expect(card.summary).toEqual(source[index].summary);
+      expect(card.tags).toEqual(source[index].tags);
+    }
+  });
+
+  it('closes the page with the shared conversation band and no step list', async () => {
+    await go('/services/ai_agent');
+
+    const band = root.querySelector('app-start-conversation');
+    expect(band).not.toBeNull();
+    expect(root.lastElementChild?.tagName).toBe('APP-START-CONVERSATION');
+
+    expect(band?.querySelector('.start-conversation__eyebrow')?.textContent?.trim()).toBe(
+      'Discuss this service',
+    );
+    expect(band?.querySelector('h2.start-conversation__title')?.textContent?.trim()).toBe(
+      'Have a process you\u2019d like to automate?',
+    );
+    expect(band?.querySelector('.start-conversation__lead')?.textContent?.trim()).toBe(
+      'Describe the workflow, the tools involved and where it slows you down. We\u2019ll come back with a practical first step.',
+    );
+
+    // The design has no numbered list, which the shared component renders only when asked.
+    expect(band?.querySelectorAll('.start-conversation__step')).toHaveLength(0);
+
+    const links = Array.from(band?.querySelectorAll<HTMLAnchorElement>('a') ?? []);
+    expect(links).toHaveLength(2);
+    expect(links.map((a) => a.textContent?.trim())).toEqual([
+      'Discuss this service',
+      'All services',
+    ]);
+    expect(links.map((a) => a.getAttribute('href'))).toEqual(['/contact', '/services']);
+
+    // The artwork stays out of the accessibility tree and the outline is undisturbed.
+    expect(band?.querySelector('.start-conversation__art')?.getAttribute('aria-hidden')).toBe(
+      'true',
+    );
+    expect(band?.querySelectorAll('h2')).toHaveLength(1);
+    expect(root.querySelectorAll('h1')).toHaveLength(1);
+  });
+
   it('renders every string and both links under a locale prefix', async () => {
     await go('/ru/services/ai_agent');
 
@@ -310,6 +423,16 @@ describe('AiAgent', () => {
     expect(root.querySelector('.business-value__title')?.textContent?.trim()).toBe(
       'Что меняется, когда рутина выполняется сама.',
     );
+    expect(root.querySelector('.related__eyebrow')?.textContent?.trim()).toBe('Смежные услуги');
+    expect(text('.related__card-title')[1]).toBe('Backend-разработка и интеграция API');
+    expect(root.querySelector('.start-conversation__eyebrow')?.textContent?.trim()).toBe(
+      'Обсудим эту услугу',
+    );
+    expect(
+      Array.from(root.querySelectorAll('app-start-conversation a')).map((a) =>
+        a.getAttribute('href'),
+      ),
+    ).toEqual(['/ru/contact', '/ru/services']);
     expect(root.querySelector('.problems__card-title')?.textContent?.trim()).toBe(
       'Данные копируются вручную',
     );
@@ -335,6 +458,12 @@ describe('AiAgent', () => {
     expect(text('.audiences__eyebrow')).toEqual(['Բնորոշ նախագծեր', 'Ում համար է']);
     expect(root.querySelector('.business-value__title')?.textContent?.trim()).toBe(
       'Ինչ է փոխվում, երբ առօրյա գործընթացներն ինքնաշխատ են դառնում։',
+    );
+    expect(root.querySelector('.related__eyebrow')?.textContent?.trim()).toBe(
+      'Առնչվող ծառայություններ',
+    );
+    expect(root.querySelector('.start-conversation__eyebrow')?.textContent?.trim()).toBe(
+      'Քննարկենք այս ծառայությունը',
     );
     expect(
       Array.from(root.querySelectorAll('.page-intro__crumb-link')).map((a) =>

@@ -437,6 +437,312 @@ test.describe('ai agents business value band', () => {
   });
 });
 
+test.describe('ai agents related services band', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/services/ai_agent');
+    // The page is lazy, so wait for the band before measuring anything.
+    await expect(page.locator('.related__card')).toHaveCount(3);
+  });
+
+  test('closes the page with three service cards and the engagement panel', async ({ page }) => {
+    const related = page.locator('app-related-services');
+    await expect(related).toHaveCount(1);
+    await expect(related.locator('.related__eyebrow')).toHaveText('Related services');
+    await expect(related.locator('h2.related__title')).toHaveText(
+      'Often combined with this service.',
+    );
+    await expect(page.locator('app-ai-agent h1')).toHaveCount(1);
+
+    await expect(related.locator('.related__card')).toHaveCount(3);
+    await expect(related.locator('.related__number')).toHaveText(['08', '06', '10']);
+    await expect(related.locator('.related__card-title')).toHaveText([
+      'AI Development & Integration',
+      'Backend Development & API Integration',
+      'Claude & AI Workflow Engineering',
+    ]);
+    await expect(related.locator('.related__tag')).toHaveCount(9);
+
+    // Arrows are decoration: nothing in this band navigates.
+    await expect(related.locator('.related__card-arrow')).toHaveCount(3);
+    await expect(related.locator('a, button')).toHaveCount(0);
+
+    await expect(related.locator('.related__engage-eyebrow')).toHaveText('How to engage');
+    await expect(related.locator('h3.related__engage-title')).toHaveText('Usually delivered as');
+    await expect(related.locator('.related__model-title')).toHaveText([
+      'Project-Based',
+      'Long-Term Partnership',
+      'Maintenance & Support',
+    ]);
+    await expect(related.locator('app-icon-tile')).toHaveCount(3);
+  });
+
+  test('matches the card and panel geometry from the design', async ({ page }) => {
+    const cards = await boxes(page, '.related__card');
+    expect(cards).toHaveLength(3);
+    expect(cards.map((c) => c.x)).toEqual([80, 512, 944]);
+    for (const card of cards) expect(card.w).toBe(416);
+    expect(cards[1].x - (cards[0].x + cards[0].w)).toBe(16);
+    expect(cards[2].x - (cards[1].x + cards[1].w)).toBe(16);
+    expect(cards[2].x + cards[2].w).toBe(1360);
+    // single row, equal heights
+    for (const card of cards) {
+      expect(card.y).toBe(cards[0].y);
+      expect(card.h).toBe(cards[0].h);
+    }
+
+    const panel = await box(page, '.related__engage');
+    expect(panel.x).toBe(80);
+    expect(panel.w).toBe(1280);
+
+    const models = await boxes(page, '.related__model');
+    expect(models).toHaveLength(3);
+    for (const model of models) expect(model.w).toBe(290);
+    expect(models[1].x - (models[0].x + models[0].w)).toBe(12);
+    expect(models[2].x + models[2].w).toBeLessThanOrEqual(panel.x + panel.w - 32);
+
+    // The arrow sits opposite the ordinal and never collides with it.
+    const numbers = await boxes(page, '.related__number');
+    const arrows = await boxes(page, '.related__card-arrow');
+    for (let i = 0; i < 3; i += 1) {
+      expect(arrows[i].w).toBe(32);
+      expect(arrows[i].h).toBe(32);
+      expect(arrows[i].x).toBeGreaterThan(numbers[i].x + numbers[i].w);
+    }
+  });
+
+  test('uses one corner radius, one tag height and the design typography', async ({ page }) => {
+    const radii = await page
+      .locator('.related__card, .related__engage, .related__model')
+      .evaluateAll((els) => [...new Set(els.map((e) => getComputedStyle(e).borderTopLeftRadius))]);
+    expect(radii).toEqual(['16px']);
+
+    const tagHeights = await page
+      .locator('.related__tag')
+      .evaluateAll((els) => [
+        ...new Set(els.map((e) => Math.round(e.getBoundingClientRect().height))),
+      ]);
+    expect(tagHeights).toEqual([28]);
+
+    expect(await style(page, '.related__title', 'font-size')).toBe('32px');
+    expect(await style(page, '.related__title', 'line-height')).toBe('40px');
+    expect(await style(page, '.related__title', 'font-weight')).toBe('600');
+    expect(await style(page, '.related__title', 'letter-spacing')).toBe('-1px');
+
+    expect(await style(page, '.related__engage-title', 'font-size')).toBe('22px');
+    expect(await style(page, '.related__engage-title', 'line-height')).toBe('28px');
+    expect(await style(page, '.related__engage-title', 'font-weight')).toBe('600');
+
+    expect(await style(page, '.related__card-title', 'font-size')).toBe('18px');
+    expect(await style(page, '.related__model-title', 'font-size')).toBe('16px');
+    expect(await style(page, '.related__model-text', 'font-size')).toBe('14px');
+
+    expect(await style(page, '.related__card', 'background-color')).toBe('rgb(255, 255, 255)');
+    expect(await style(page, '.related__engage', 'background-color')).toBe('rgb(246, 248, 251)');
+    expect(await style(page, '.related__card-arrow', 'background-color')).toBe(
+      'rgb(238, 242, 247)',
+    );
+    expect(await style(page, '.related__number', 'color')).toBe('rgb(15, 85, 232)');
+  });
+
+  test('adapts its columns and never spills out of the viewport', async ({ page }) => {
+    for (const [width, cardCols, modelCols] of [
+      [390, 1, 1],
+      [768, 1, 2],
+      [1024, 2, 2],
+      [1280, 3, 3],
+      [1440, 3, 3],
+      [1920, 3, 3],
+    ] as const) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/services/ai_agent');
+      await expect(page.locator('.related__card')).toHaveCount(3);
+
+      const state = await page.evaluate((vw) => {
+        const q = (sel: string) => Array.from(document.querySelectorAll(sel));
+        const cards = q('.related__card');
+        const models = q('.related__model');
+        const cols = (els: Element[]) => {
+          const top = Math.round(els[0].getBoundingClientRect().y);
+          return els.filter((e) => Math.round(e.getBoundingClientRect().y) === top).length;
+        };
+        const spills = q('app-related-services *').some((e) => {
+          const b = e.getBoundingClientRect();
+          return b.right > vw + 0.5 || b.left < -0.5;
+        });
+        const clipped = [
+          ...cards,
+          ...models,
+          ...q('.related__card-title'),
+          ...q('.related__card-summary'),
+          ...q('.related__tag'),
+          ...q('.related__model-copy'),
+        ].some((e) => e.scrollWidth > e.clientWidth + 1 || e.scrollHeight > e.clientHeight + 1);
+        // rows equalise within themselves
+        const rows = [...new Set(cards.map((c) => Math.round(c.getBoundingClientRect().y)))];
+        const evenRows = rows.every((y) => {
+          const g = cards.filter((c) => Math.round(c.getBoundingClientRect().y) === y);
+          return g.every(
+            (c) =>
+              Math.round(c.getBoundingClientRect().height) ===
+                Math.round(g[0].getBoundingClientRect().height) &&
+              Math.round(c.getBoundingClientRect().width) ===
+                Math.round(g[0].getBoundingClientRect().width),
+          );
+        });
+        // the tile must never sit on top of the copy
+        const overlap = models.some((m) => {
+          const t = m.querySelector('app-icon-tile')!.getBoundingClientRect();
+          const c = m.querySelector('.related__model-copy')!.getBoundingClientRect();
+          return (
+            t.right > c.left + 0.5 &&
+            c.right > t.left + 0.5 &&
+            t.bottom > c.top + 0.5 &&
+            c.bottom > t.top + 0.5
+          );
+        });
+        return {
+          cardCols: cols(cards),
+          modelCols: cols(models),
+          spills,
+          clipped,
+          evenRows,
+          overlap,
+        };
+      }, width);
+
+      expect(state.cardCols, `card columns at ${width}`).toBe(cardCols);
+      expect(state.modelCols, `model columns at ${width}`).toBe(modelCols);
+      expect(state.spills, `band inside viewport at ${width}`).toBe(false);
+      expect(state.clipped, `no clipped text at ${width}`).toBe(false);
+      expect(state.evenRows, `equal cards per row at ${width}`).toBe(true);
+      expect(state.overlap, `tile clear of copy at ${width}`).toBe(false);
+    }
+  });
+
+  test('keeps the English card headings on a single line from 600px upward', async ({ page }) => {
+    // 1200-1439 is excluded: three columns of a sub-1280 container are too narrow for the
+    // longest English title, which is documented rather than papered over.
+    for (const width of [600, 768, 1024, 1199, 1440, 1920]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/services/ai_agent');
+      await expect(page.locator('.related__card-title')).toHaveCount(3);
+      const lines = await page.locator('.related__card-title').evaluateAll((els) =>
+        els.map((e) => {
+          const lh = parseFloat(getComputedStyle(e).lineHeight);
+          return Math.round(e.getBoundingClientRect().height / lh);
+        }),
+      );
+      expect(lines, `card heading lines at ${width}`).toEqual([1, 1, 1]);
+    }
+  });
+});
+
+test.describe('ai agents conversation band', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/services/ai_agent');
+    await expect(page.locator('app-start-conversation')).toHaveCount(1);
+  });
+
+  test('closes the page with the shared band, no steps and two working links', async ({ page }) => {
+    const band = page.locator('app-start-conversation');
+    await expect(band.locator('.start-conversation__eyebrow')).toHaveText('Discuss this service');
+    await expect(band.locator('h2.start-conversation__title')).toHaveText(
+      'Have a process you\u2019d like to automate?',
+    );
+    await expect(page.locator('app-ai-agent h1')).toHaveCount(1);
+
+    // The design shows no numbered list.
+    await expect(band.locator('.start-conversation__step')).toHaveCount(0);
+
+    const links = band.locator('a');
+    await expect(links).toHaveCount(2);
+    await expect(links).toHaveText(['Discuss this service', 'All services']);
+    await expect(links.nth(0)).toHaveAttribute('href', '/contact');
+    await expect(links.nth(1)).toHaveAttribute('href', '/services');
+    await expect(band.locator('.start-conversation__art')).toHaveAttribute('aria-hidden', 'true');
+
+    // Both links actually resolve.
+    await links.nth(1).click();
+    await expect(page).toHaveURL(/\/services$/);
+  });
+
+  test('matches the panel geometry and palette from the design', async ({ page }) => {
+    const panel = await box(page, '.start-conversation');
+    expect(panel.x).toBe(80);
+    expect(panel.w).toBe(1280);
+
+    expect(await style(page, '.start-conversation', 'border-radius')).toBe('28px');
+    expect(await style(page, '.start-conversation', 'background-color')).toBe('rgb(238, 244, 255)');
+    expect(await style(page, '.start-conversation__title', 'font-size')).toBe('40px');
+    expect(await style(page, '.start-conversation__title', 'line-height')).toBe('48px');
+    expect(await style(page, '.start-conversation__lead', 'font-size')).toBe('18px');
+    expect(await style(page, '.start-conversation__lead', 'line-height')).toBe('30px');
+
+    const buttons = await boxes(page, '.start-conversation__actions a');
+    expect(buttons).toHaveLength(2);
+    for (const button of buttons) expect(button.h).toBe(48);
+    expect(buttons[1].x - (buttons[0].x + buttons[0].w)).toBe(12);
+
+    // Artwork proportions: the disc is a fixed fraction of the ring.
+    const ring = await box(page, '.start-conversation__ring');
+    const disc = await box(page, '.start-conversation__disc');
+    expect(ring.w).toBe(ring.h);
+    // The stylesheet fixes the disc at 69.87% of the ring; pixel rounding lands on 69 or 70.
+    const discRatio = (100 * disc.w) / ring.w;
+    expect(discRatio).toBeGreaterThan(69);
+    expect(discRatio).toBeLessThan(70.5);
+
+    // This page narrows the shared artwork column and lets the ring bleed past the
+    // grid row, which is what reproduces the design's 380px ring in a 388px panel
+    // with the title on one line.
+    expect(ring.w).toBe(380);
+    expect(panel.h).toBe(388);
+    expect(ring.y - panel.y).toBe(4);
+    expect(panel.y + panel.h - (ring.y + ring.h)).toBe(4);
+    const titleLines = await page
+      .locator('.start-conversation__title')
+      .evaluate((el) =>
+        Math.round(el.getBoundingClientRect().height / parseFloat(getComputedStyle(el).lineHeight)),
+      );
+    expect(titleLines).toBe(1);
+  });
+
+  test('stays inside the viewport in every locale down to 320px', async ({ page }) => {
+    // Long Russian and Armenian words in the title used to widen the copy column
+    // past the panel; min-content has to be allowed to shrink.
+    for (const route of ['/services/ai_agent', '/ru/services/ai_agent', '/hy/services/ai_agent']) {
+      for (const width of [320, 375, 430, 768, 1024, 1440]) {
+        await page.setViewportSize({ width, height: 900 });
+        await page.goto(route);
+        await expect(page.locator('app-start-conversation')).toHaveCount(1);
+
+        const state = await page.evaluate((vw) => {
+          const band = document.querySelector('app-start-conversation')!;
+          const spills = Array.from(band.querySelectorAll('*')).some((el) => {
+            const b = el.getBoundingClientRect();
+            return b.right > vw + 0.5 || b.left < -0.5;
+          });
+          const clipped = Array.from(
+            band.querySelectorAll(
+              '.start-conversation__copy, .start-conversation__title, .start-conversation__lead',
+            ),
+          ).some((el) => el.scrollWidth > el.clientWidth + 1);
+          const links = Array.from(band.querySelectorAll('a')).map((a) =>
+            Math.round(a.getBoundingClientRect().height),
+          );
+          return { spills, clipped, minTouch: Math.min(...links) };
+        }, width);
+
+        expect(state.spills, `band inside viewport ${route} @${width}`).toBe(false);
+        expect(state.clipped, `no clipped copy ${route} @${width}`).toBe(false);
+        expect(state.minTouch, `touch target ${route} @${width}`).toBeGreaterThanOrEqual(44);
+      }
+    }
+  });
+});
+
 test.describe('ai agents page in other locales', () => {
   test('renders the whole band in Russian and Armenian', async ({ page }) => {
     await page.goto('/ru/services/ai_agent');
@@ -458,6 +764,13 @@ test.describe('ai agents page in other locales', () => {
     await expect(page.locator('.business-value__card-title').first()).toHaveText(
       'Меньше ручной работы',
     );
+    await expect(page.locator('.related__eyebrow')).toHaveText('Смежные услуги');
+    await expect(page.locator('.related__number')).toHaveText(['08', '06', '10']);
+    await expect(page.locator('.start-conversation__eyebrow')).toHaveText('Обсудим эту услугу');
+    await expect(page.locator('app-start-conversation a').nth(1)).toHaveAttribute(
+      'href',
+      '/ru/services',
+    );
     await expect(page.locator('.ai-agent__actions a').nth(1)).toHaveAttribute(
       'href',
       '/ru/solutions',
@@ -477,6 +790,11 @@ test.describe('ai agents page in other locales', () => {
     );
     await expect(page.locator('.audiences__eyebrow').first()).toHaveText('Բնորոշ նախագծեր');
     await expect(page.locator('.business-value__eyebrow')).toHaveText('Բիզնես արժեք');
+    await expect(page.locator('.related__eyebrow')).toHaveText('Առնչվող ծառայություններ');
+    await expect(page.locator('app-start-conversation a').nth(0)).toHaveAttribute(
+      'href',
+      '/hy/contact',
+    );
     await expect(page.locator('.ai-agent__actions a').nth(0)).toHaveAttribute(
       'href',
       '/hy/contact',

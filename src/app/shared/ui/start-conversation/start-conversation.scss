@@ -22,7 +22,7 @@
   }
 
   @include layout.up(large) {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 448px);
+    grid-template-columns: minmax(0, 1fr) minmax(0, var(--nx-conversation-aside, 448px));
     align-items: center;
     padding: spacing.space(64);
   }
@@ -32,6 +32,8 @@
   display: grid;
   gap: spacing.space(24);
   justify-items: start;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .start-conversation__eyebrow {
@@ -101,7 +103,7 @@
   justify-content: center;
 
   @include layout.up(large) {
-    margin-block: calc(#{spacing.space(32)} * -1);
+    margin-block: calc(var(--nx-conversation-art-bleed, #{spacing.space(32)}) * -1);
     margin-inline-end: calc(#{spacing.space(64)} * -1);
   }
 }
