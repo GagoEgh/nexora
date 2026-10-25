@@ -8,12 +8,14 @@ import { expect, test, type Page } from '@playwright/test';
 const HOME_HEADING = 'Engineering Digital Solutions That Move Business Forward.';
 const SERVICES_HEADING = 'Fifteen services across the full software lifecycle.';
 const SOLUTIONS_HEADING = 'Start from the problem, not the technology.';
+const ABOUT_HEADING = 'A senior engineering partner for businesses that build with technology.';
 
 /** Pages whose h1 is not simply their nav label. */
 const PAGE_HEADING: Record<string, string> = {
   '/': HOME_HEADING,
   '/services': SERVICES_HEADING,
   '/solutions': SOLUTIONS_HEADING,
+  '/about': ABOUT_HEADING,
 };
 
 const NAV = [
