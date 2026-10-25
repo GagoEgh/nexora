@@ -8,6 +8,7 @@ import { Philosophy } from './pages/about/philosophy/philosophy';
 import { BusinessFlow } from './pages/about/business-flow/business-flow';
 import { SeniorModel } from './pages/about/senior-model/senior-model';
 import { LongTerm } from './pages/about/long-term/long-term';
+import { Markets } from './pages/about/markets/markets';
 import { QualityCapability } from './pages/about/quality-capability/quality-capability';
 import { AiAgent } from './pages/ai-agent/ai-agent';
 import { Audiences } from './pages/ai-agent/audiences/audiences';
@@ -88,6 +89,7 @@ const COMPONENTS: readonly [string, Type<unknown>][] = [
   ['BusinessFlow', BusinessFlow],
   ['QualityCapability', QualityCapability],
   ['LongTerm', LongTerm],
+  ['Markets', Markets],
   ['AiAgent', AiAgent],
   ['Audiences', Audiences],
   ['BusinessValue', BusinessValue],
@@ -124,7 +126,7 @@ describe('change detection', () => {
   });
 
   it('every component in the application resolves to OnPush', () => {
-    expect(COMPONENTS).toHaveLength(47);
+    expect(COMPONENTS).toHaveLength(48);
     const eager = COMPONENTS.filter(([, component]) => !isOnPush(component)).map(([name]) => name);
     expect(eager, 'these components are checked eagerly').toEqual([]);
   });

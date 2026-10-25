@@ -833,3 +833,106 @@ test.describe('about long-term responsiveness', () => {
     });
   }
 });
+
+test.describe('about markets at the desktop design width', () => {
+  test.use({ viewport: { width: 1440, height: 3600 } });
+
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/about');
+    await expect(page.locator('.markets__panel')).toHaveCount(2);
+  });
+
+  test('closes the page as two 628px panels 24px apart', async ({ page }) => {
+    const longTerm = await box(page, '.long-term');
+    const list = await box(page, '.markets');
+    expect(list.y).toBeGreaterThan(longTerm.y + longTerm.h - 1);
+    expect(list.x).toBe(80);
+    expect(list.w).toBe(1280);
+
+    const panels = await boxes(page, '.markets__panel');
+    for (const panel of panels) expect(panel.w).toBe(628);
+    expect(panels[1].x - (panels[0].x + panels[0].w)).toBe(24);
+    expect(panels[0].x).toBe(80);
+    expect(panels[1].x + panels[1].w).toBe(1360);
+    expect(panels[0].h).toBe(panels[1].h);
+  });
+
+  test('matches the panel chrome from the design', async ({ page }) => {
+    expect(await style(page, '.markets__panel', 'background-color')).toBe('rgb(255, 255, 255)');
+    expect(await style(page, '.markets__panel', 'border-top-color')).toBe('rgb(226, 232, 240)');
+    expect(await style(page, '.markets__panel', 'border-top-left-radius')).toBe('24px');
+    expect(await style(page, '.markets__panel', 'padding-top')).toBe('36px');
+  });
+
+  test('uses a primary tile and a secondary tile, both 48px', async ({ page }) => {
+    const tiles = await boxes(page, '.markets__panel app-icon-tile');
+    expect(tiles).toHaveLength(2);
+    for (const tile of tiles) {
+      expect(tile.w).toBe(48);
+      expect(tile.h).toBe(48);
+    }
+
+    const panels = await boxes(page, '.markets__panel');
+    tiles.forEach((tile, i) => {
+      expect(tile.x - panels[i].x).toBe(37);
+      expect(tile.y - panels[i].y).toBe(37);
+    });
+
+    // blue-50 / cyan-50 containers from the project palette.
+    expect(
+      await style(page, '.markets__panel app-icon-tile[data-tone="primary"]', 'background-color'),
+    ).toBe('rgb(238, 244, 255)');
+    expect(
+      await style(page, '.markets__panel app-icon-tile[data-tone="secondary"]', 'background-color'),
+    ).toBe('rgb(232, 248, 254)');
+  });
+
+  test('sets the market titles and body copy from the design', async ({ page }) => {
+    await expect(page.locator('.markets__title')).toHaveText(['Armenia', 'International markets']);
+    expect(await style(page, '.markets__title', 'font-size')).toBe('22px');
+    expect(await style(page, '.markets__title', 'font-weight')).toBe('600');
+    expect(await style(page, '.markets__title', 'color')).toBe('rgb(11, 19, 36)');
+    expect(await style(page, '.markets__text', 'font-size')).toBe('16px');
+    expect(await style(page, '.markets__text', 'line-height')).toBe('26px');
+    expect(await style(page, '.markets__text', 'color')).toBe('rgb(71, 85, 105)');
+  });
+});
+
+test.describe('about markets responsiveness', () => {
+  for (const width of [320, 375, 768, 1024, 1199, 1200, 1920]) {
+    test(`fits ${width}px without horizontal scroll`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 3600 });
+      await page.goto('/about');
+      await expect(page.locator('.markets__panel')).toHaveCount(2);
+
+      expect(await noOverflow(page)).toBeLessThanOrEqual(0);
+
+      const panels = await boxes(page, '.markets__panel');
+      if (width >= 1200) {
+        expect(panels[0].y).toBe(panels[1].y);
+      } else {
+        expect(panels[1].y).toBeGreaterThan(panels[0].y);
+      }
+    });
+  }
+
+  for (const locale of ['hy', 'ru']) {
+    test(`does not clip ${locale} market copy at 320px or 1440px`, async ({ page }) => {
+      for (const width of [320, 1440]) {
+        await page.setViewportSize({ width, height: 3600 });
+        await page.goto(`/${locale}/about`);
+        await expect(page.locator('.markets__panel')).toHaveCount(2);
+
+        expect(await noOverflow(page)).toBeLessThanOrEqual(0);
+
+        const clipped = await page.evaluate(
+          () =>
+            [...document.querySelectorAll('.markets__title,.markets__text')].filter(
+              (el) => el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1,
+            ).length,
+        );
+        expect(clipped, `${locale} at ${width}`).toBe(0);
+      }
+    });
+  }
+});

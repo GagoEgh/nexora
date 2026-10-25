@@ -1,0 +1,58 @@
+@use 'mixins/container';
+@use 'tokens/layout';
+@use 'tokens/spacing';
+@use 'tokens/typography';
+
+:host {
+  @include container.section();
+}
+
+.markets {
+  @include container.container();
+
+  display: grid;
+  gap: spacing.space(24);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @include layout.up(large) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.markets__panel {
+  display: flex;
+  gap: spacing.space(20);
+  align-items: start;
+  box-sizing: border-box;
+  padding: 36px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--nx-sys-corner-panel);
+  background-color: var(--mat-sys-surface);
+}
+
+.markets__copy {
+  display: grid;
+  gap: spacing.space(12);
+  align-content: start;
+  min-width: 0;
+}
+
+.markets__title,
+.markets__text {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.markets__title {
+  font: var(--mat-sys-title-large);
+  font-weight: typography.$weight-semibold;
+  color: var(--mat-sys-on-surface);
+}
+
+.markets__text {
+  font: var(--nx-sys-body-copy);
+  color: var(--mat-sys-on-surface-variant);
+}

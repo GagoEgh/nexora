@@ -539,6 +539,51 @@ describe('About', () => {
     expect(aboutContent.content.longTerm.body).toHaveLength(2);
   });
 
+  it('closes the page with two market panels', async () => {
+    await go('/about');
+
+    const list = root.querySelector('.markets');
+    expect(list?.tagName).toBe('UL');
+
+    const panels = Array.from(root.querySelectorAll('.markets__panel'));
+    expect(panels).toHaveLength(2);
+    panels.forEach((panel) => expect(panel.tagName).toBe('LI'));
+
+    expect(text('.markets__title')).toEqual(['Armenia', 'International markets']);
+    root.querySelectorAll('.markets__title').forEach((el) => expect(el.tagName).toBe('H2'));
+    expect(text('.markets__text')[0]).toBe(
+      'We work with startups, growing businesses and established companies in Armenia’s technology and business community.',
+    );
+    expect(text('.markets__text')[1]).toContain('We partner with clients and agencies abroad');
+  });
+
+  it('tints the two market tiles with the primary and secondary tones', async () => {
+    await go('/about');
+
+    const tiles = Array.from(root.querySelectorAll('.markets__panel app-icon-tile'));
+    expect(tiles).toHaveLength(2);
+    expect(tiles.map((tile) => tile.getAttribute('data-tone'))).toEqual(['primary', 'secondary']);
+    // IconTile hides itself from assistive technology.
+    tiles.forEach((tile) => expect(tile.getAttribute('aria-hidden')).toBe('true'));
+  });
+
+  it('translates both market panels into Armenian and Russian', async () => {
+    setLocale('hy');
+    await go('/hy/about');
+    expect(text('.markets__title')).toEqual(['Հայաստան', 'Միջազգային շուկաներ']);
+
+    setLocale('ru');
+    await go('/ru/about');
+    expect(text('.markets__title')).toEqual(['Армения', 'Международные рынки']);
+    expect(text('.markets__text')[0]).toContain('Мы работаем со стартапами');
+  });
+
+  it('keeps the markets dictionary complete: two entries, both on the globe icon', () => {
+    const { markets } = aboutContent.content;
+    expect(markets).toHaveLength(2);
+    expect(markets.map((market) => market.icon)).toEqual(['globe', 'globe']);
+  });
+
   it('keeps the philosophy dictionary complete: four cards, two paragraphs', () => {
     const { cards, intro } = aboutContent.content.philosophy;
     expect(cards).toHaveLength(4);

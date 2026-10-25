@@ -7,6 +7,7 @@ import { Philosophy } from './philosophy/philosophy';
 import { BusinessFlow } from './business-flow/business-flow';
 import { SeniorModel } from './senior-model/senior-model';
 import { LongTerm } from './long-term/long-term';
+import { Markets } from './markets/markets';
 import { QualityCapability } from './quality-capability/quality-capability';
 
 @Component({
@@ -19,6 +20,7 @@ import { QualityCapability } from './quality-capability/quality-capability';
     BusinessFlow,
     QualityCapability,
     LongTerm,
+    Markets,
   ],
   templateUrl: './about.html',
   styleUrl: './about.scss',

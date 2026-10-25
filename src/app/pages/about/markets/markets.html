@@ -1,0 +1,12 @@
+<ul class="markets">
+  @for (market of content().markets; track $index; let index = $index) {
+    <li class="markets__panel">
+      <app-icon-tile [icon]="market.icon.value" [tone]="tones[index]" />
+
+      <div class="markets__copy">
+        <h2 class="markets__title">{{ market.title }}</h2>
+        <p class="markets__text">{{ market.text }}</p>
+      </div>
+    </li>
+  }
+</ul>
