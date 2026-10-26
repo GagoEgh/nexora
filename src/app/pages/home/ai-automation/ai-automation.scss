@@ -13,6 +13,10 @@
 .ai {
   display: grid;
   gap: spacing.space(48);
+
+  /* Without this the 64px padding is added outside max-width, so the panel renders 128px wider
+   * than every other container on the site once the viewport passes 1440px. */
+  box-sizing: border-box;
   max-width: var(--nx-layout-container-max);
   margin-inline: auto;
   padding: spacing.space(24);

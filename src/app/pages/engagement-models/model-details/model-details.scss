@@ -11,6 +11,22 @@
   @include container.container();
 }
 
+/*
+ * The design has no visible section heading, but the five cards are headings, so without one
+ * they sit at the same outline level as the other sections on the page. This names the section
+ * for assistive technology without changing what is drawn.
+ */
+.models__title {
+  position: absolute;
+  overflow: hidden;
+  clip-path: inset(50%);
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  white-space: nowrap;
+}
+
 .models__list {
   display: grid;
   gap: spacing.space(48);

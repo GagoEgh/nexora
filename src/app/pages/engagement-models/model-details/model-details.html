@@ -1,4 +1,6 @@
-<section class="models" [attr.aria-label]="content().title">
+<section class="models" aria-labelledby="models-title">
+  <h2 class="models__title" id="models-title">{{ content().title }}</h2>
+
   <ol class="models__list">
     @for (model of content().models; track $index; let index = $index) {
       <li class="models__item">
@@ -9,7 +11,7 @@
               <span class="model__ordinal" aria-hidden="true">{{ ordinal(index) }}</span>
             </div>
 
-            <h2 class="model__title">{{ model.title }}</h2>
+            <h3 class="model__title">{{ model.title }}</h3>
             <p class="model__description">{{ model.description }}</p>
           </div>
 

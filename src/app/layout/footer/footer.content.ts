@@ -112,7 +112,7 @@ const footerContent = {
             label: t({ en: 'About Nexora', hy: 'Nexora-ի մասին', ru: 'О Nexora' }),
           },
           {
-            path: '/about',
+            path: '/engagement-models',
             label: t({
               en: 'Engagement Models',
               hy: 'Համագործակցության մոդելներ',
