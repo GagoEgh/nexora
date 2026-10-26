@@ -21,6 +21,8 @@ import { EngagementPanel } from './pages/ai-agent/related-services/engagement-pa
 import { RelatedServices } from './pages/ai-agent/related-services/related-services';
 import { Workflow } from './pages/ai-agent/workflow/workflow';
 import { Contact } from './pages/contact/contact';
+import { EngagementModelsPage } from './pages/engagement-models/engagement-models';
+import { ModelFinder } from './pages/engagement-models/model-finder/model-finder';
 import { AiAutomation } from './pages/home/ai-automation/ai-automation';
 import { EngagementModels } from './pages/home/engagement-models/engagement-models';
 import { Expertise } from './pages/home/expertise/expertise';
@@ -104,6 +106,8 @@ const COMPONENTS: readonly [string, Type<unknown>][] = [
   ['Solutions', Solutions],
   ['ChallengeIndex', ChallengeIndex],
   ['ChallengeDetails', ChallengeDetails],
+  ['EngagementModelsPage', EngagementModelsPage],
+  ['ModelFinder', ModelFinder],
   ['Partnerships', Partnerships],
   ['Contact', Contact],
   ['PrivacyPolicy', PrivacyPolicy],

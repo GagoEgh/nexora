@@ -20,8 +20,8 @@
 
   @include layout.up(large) {
     grid-template-columns: minmax(0, 1fr) var(--nx-page-intro-aside, 420px);
-    gap: spacing.space(32);
-    align-items: end;
+    gap: var(--nx-page-intro-gap, #{spacing.space(32)});
+    align-items: var(--nx-page-intro-align, end);
     padding-block: calc(var(--nx-layout-header-height) + #{spacing.space(48)}) spacing.space(80);
   }
 }

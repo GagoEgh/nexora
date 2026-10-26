@@ -56,6 +56,18 @@ const documentMetaContent = {
           ru: 'Nexora держит команды небольшими и senior-уровня, чтобы архитектура, компромиссы и поставка с первого разговора оставались в опытных руках.',
         }),
       },
+      'engagement-models': {
+        title: t({
+          en: 'Engagement Models | Nexora',
+          hy: 'Համագործակցության մոդելներ | Nexora',
+          ru: 'Модели сотрудничества | Nexora',
+        }),
+        description: t({
+          en: 'Five ways to collaborate with Nexora: project-based development, dedicated teams, long-term technical partnership, maintenance and support, and white-label execution.',
+          hy: 'Nexora-ի հետ համագործակցության հինգ եղանակ՝ նախագծային մշակում, նվիրված թիմեր, երկարաժամկետ տեխնիկական գործընկերություն, սպասարկում և աջակցություն, ինչպես նաև white-label կատարում։',
+          ru: 'Пять способов сотрудничества с Nexora: проектная разработка, выделенные команды, долгосрочное техническое партнёрство, сопровождение и поддержка, а также white-label исполнение.',
+        }),
+      },
       partnerships: {
         title: t({
           en: 'Partnerships | Nexora',

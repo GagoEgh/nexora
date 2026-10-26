@@ -1,0 +1,8 @@
+@use 'tokens/spacing';
+
+:host {
+  display: block;
+  --nx-page-intro-aside: 500px;
+  --nx-page-intro-align: center;
+  --nx-page-intro-gap: #{spacing.space(80)};
+}

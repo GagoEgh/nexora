@@ -16,6 +16,7 @@ export const DOCUMENT_META_PAGES = [
   'services/ai_agent',
   'solutions',
   'about',
+  'engagement-models',
   'partnerships',
   'contact',
   'privacy-policy',

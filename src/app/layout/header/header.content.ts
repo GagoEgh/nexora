@@ -19,6 +19,15 @@ const headerContent = {
       },
       { path: '/about', label: t({ en: 'About', hy: 'Մեր մասին', ru: 'О нас' }), chevron: false },
       {
+        path: '/engagement-models',
+        label: t({
+          en: 'Engagement',
+          hy: 'Մոդելներ',
+          ru: 'Модели',
+        }),
+        chevron: false,
+      },
+      {
         path: '/partnerships',
         label: t({ en: 'Partnerships', hy: 'Գործընկերություն', ru: 'Партнёрство' }),
         chevron: false,

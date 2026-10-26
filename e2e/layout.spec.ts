@@ -9,6 +9,7 @@ const HOME_HEADING = 'Engineering Digital Solutions That Move Business Forward.'
 const SERVICES_HEADING = 'Fifteen services across the full software lifecycle.';
 const SOLUTIONS_HEADING = 'Start from the problem, not the technology.';
 const ABOUT_HEADING = 'A senior engineering partner for businesses that build with technology.';
+const ENGAGEMENT_HEADING = 'Choose how we work together.';
 
 /** Pages whose h1 is not simply their nav label. */
 const PAGE_HEADING: Record<string, string> = {
@@ -16,6 +17,7 @@ const PAGE_HEADING: Record<string, string> = {
   '/services': SERVICES_HEADING,
   '/solutions': SOLUTIONS_HEADING,
   '/about': ABOUT_HEADING,
+  '/engagement-models': ENGAGEMENT_HEADING,
 };
 
 const NAV = [
@@ -23,6 +25,7 @@ const NAV = [
   ['/services', 'Services'],
   ['/solutions', 'Solutions'],
   ['/about', 'About'],
+  ['/engagement-models', 'Engagement'],
   ['/partnerships', 'Partnerships'],
   ['/contact', 'Contact'],
 ] as const;
@@ -76,7 +79,7 @@ test.describe('header at the desktop design width', () => {
     page,
   }) => {
     const links = page.locator('app-header nav a.header__link');
-    await expect(links).toHaveCount(5);
+    await expect(links).toHaveCount(6);
     for (const [index, [href, label]] of NAV_ANCHORS.entries()) {
       await expect(links.nth(index)).toHaveAttribute('href', href);
       await expect(links.nth(index)).toHaveText(label);

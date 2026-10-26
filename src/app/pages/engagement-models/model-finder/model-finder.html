@@ -1,0 +1,19 @@
+<section class="finder" aria-labelledby="finder-title">
+  <h2 class="finder__title" id="finder-title">{{ content().title }}</h2>
+
+  <dl class="finder__rows">
+    @for (row of content().rows; track $index) {
+      <div class="finder__row">
+        <dt class="finder__need">
+          <span class="finder__label">{{ content().need }}</span>
+          <span class="finder__statement">{{ row.statement }}</span>
+        </dt>
+
+        <dd class="finder__model">
+          <mat-icon class="finder__arrow" aria-hidden="true" [svgIcon]="arrowIcon" />
+          <span class="finder__chip">{{ row.model }}</span>
+        </dd>
+      </div>
+    }
+  </dl>
+</section>

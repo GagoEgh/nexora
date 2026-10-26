@@ -57,6 +57,7 @@ describe('Header', () => {
       '/',
       '/solutions',
       '/about',
+      '/engagement-models',
       '/partnerships',
       '/contact',
     ]);
@@ -64,6 +65,7 @@ describe('Header', () => {
       'Home',
       'Solutions',
       'About',
+      'Engagement',
       'Partnerships',
       'Contact',
     ]);

@@ -35,6 +35,12 @@ const pages: Routes = [
     data: { meta: 'about' } satisfies DocumentMetaRouteData,
   },
   {
+    path: 'engagement-models',
+    loadComponent: () =>
+      import('./pages/engagement-models/engagement-models').then((m) => m.EngagementModelsPage),
+    data: { meta: 'engagement-models' } satisfies DocumentMetaRouteData,
+  },
+  {
     path: 'partnerships',
     loadComponent: () => import('./pages/partnerships/partnerships').then((m) => m.Partnerships),
     data: { meta: 'partnerships' } satisfies DocumentMetaRouteData,
