@@ -1,0 +1,13 @@
+@use '../tokens/layout';
+@use '../tokens/spacing';
+
+@mixin split($aside: 703px, $row-gap: 32, $align: start) {
+  display: grid;
+  gap: spacing.space($row-gap);
+
+  @include layout.up(large) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, $aside);
+    column-gap: spacing.space(64);
+    align-items: $align;
+  }
+}

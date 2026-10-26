@@ -1,9 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, computed } from '@angular/core';
 import { useDictionary } from 'angular-intlayer';
 import { IconTile, type IconTileTone } from '../../../shared/ui/icon-tile/icon-tile';
-import aboutContent from '../about.content';
-
-const TONES: readonly IconTileTone[] = ['primary', 'secondary'];
+import marketsContent from './markets.content';
 
 @Component({
   selector: 'app-markets',
@@ -12,6 +10,10 @@ const TONES: readonly IconTileTone[] = ['primary', 'secondary'];
   styleUrl: './markets.scss',
 })
 export class Markets {
-  protected readonly content = useDictionary(aboutContent);
-  protected readonly tones = TONES;
+  private readonly tones: readonly IconTileTone[] = ['primary', 'secondary'];
+  protected readonly content = useDictionary(marketsContent);
+
+  protected readonly markets = computed(() =>
+    this.content().map((market, index) => ({ market, tone: this.tones[index] ?? 'primary' })),
+  );
 }

@@ -1,0 +1,22 @@
+<figure class="senior__panel">
+  <figcaption class="senior__panel-label">{{ label() }}</figcaption>
+
+  <div class="senior__diagram" aria-hidden="true">
+    @for (row of rows(); track $index; let first = $first) {
+      <div class="senior__row">
+        @for (block of row; track $index) {
+          <span class="senior__block" [class.senior__block--apex]="first && highlightApex()"></span>
+        }
+      </div>
+    }
+  </div>
+
+  <p class="senior__legend">
+    @for (key of keys(); track $index) {
+      <span class="senior__key">
+        <span class="senior__dot" aria-hidden="true" [class.senior__dot--apex]="key.apex"></span>
+        {{ key.label }}
+      </span>
+    }
+  </p>
+</figure>

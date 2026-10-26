@@ -1,6 +1,6 @@
 @use 'mixins/container';
 @use 'mixins/eyebrow';
-@use 'tokens/layout';
+@use 'mixins/section';
 @use 'tokens/spacing';
 
 :host {
@@ -12,14 +12,7 @@
 .long-term {
   @include container.container();
 
-  display: grid;
-  gap: spacing.space(40);
-
-  @include layout.up(large) {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 440px);
-    column-gap: spacing.space(64);
-    align-items: start;
-  }
+  @include section.split(440px, 40);
 }
 
 .long-term__heading {

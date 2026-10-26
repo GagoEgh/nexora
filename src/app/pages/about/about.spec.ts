@@ -7,7 +7,12 @@ import { provideIntlayer, useLocale } from 'angular-intlayer';
 import { routes } from '../../app.routes';
 import { provideAppIcons } from '../../core/icons/provide-app-icons';
 import { About } from './about';
-import aboutContent from './about.content';
+import businessFlowContent from './business-flow/business-flow.content';
+import aboutGlanceContent from './glance/about-glance.content';
+import longTermContent from './long-term/long-term.content';
+import marketsContent from './markets/markets.content';
+import philosophyContent from './philosophy/philosophy.content';
+import qualityCapabilityContent from './quality-capability/quality-capability.content';
 
 const ICON_SVG =
   '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"></svg>';
@@ -398,7 +403,7 @@ describe('About', () => {
   });
 
   it('keeps the business flow dictionary complete: five steps with known icons', () => {
-    const { steps } = aboutContent.content.businessFlow;
+    const { steps } = businessFlowContent.content;
     expect(steps).toHaveLength(5);
     expect(steps.map((step) => step.icon)).toEqual([
       'target',
@@ -479,7 +484,7 @@ describe('About', () => {
   });
 
   it('keeps the capability dictionary complete: six practices, ten disciplines', () => {
-    const { practices, disciplines } = aboutContent.content.qualityCapability;
+    const { practices, disciplines } = qualityCapabilityContent.content;
     expect(practices.items).toHaveLength(6);
     expect(disciplines.items).toHaveLength(10);
     expect(practices.items.map((item) => item.icon)).toEqual([
@@ -536,7 +541,7 @@ describe('About', () => {
   });
 
   it('keeps the long-term dictionary complete: two body paragraphs', () => {
-    expect(aboutContent.content.longTerm.body).toHaveLength(2);
+    expect(longTermContent.content.body).toHaveLength(2);
   });
 
   it('closes the page with two market panels', async () => {
@@ -579,7 +584,7 @@ describe('About', () => {
   });
 
   it('keeps the markets dictionary complete: two entries, both on the globe icon', () => {
-    const { markets } = aboutContent.content;
+    const markets = marketsContent.content;
     expect(markets).toHaveLength(2);
     expect(markets.map((market) => market.icon)).toEqual(['globe', 'globe']);
   });
@@ -641,7 +646,7 @@ describe('About', () => {
   });
 
   it('keeps the philosophy dictionary complete: four cards, two paragraphs', () => {
-    const { cards, intro } = aboutContent.content.philosophy;
+    const { cards, intro } = philosophyContent.content;
     expect(cards).toHaveLength(4);
     expect(intro).toHaveLength(2);
     expect(cards.map((card) => card.icon)).toEqual([
@@ -653,7 +658,7 @@ describe('About', () => {
   });
 
   it('keeps the dictionary complete: five rows, every field populated', () => {
-    const { rows } = aboutContent.content.glance;
+    const { rows } = aboutGlanceContent.content;
     expect(rows).toHaveLength(5);
     rows.forEach((row) => {
       expect(row.label).toBeDefined();

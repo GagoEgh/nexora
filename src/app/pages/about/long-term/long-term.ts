@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { useDictionary } from 'angular-intlayer';
-import aboutContent from '../about.content';
+import longTermContent from './long-term.content';
 
 @Component({
   selector: 'app-long-term',
@@ -8,5 +8,5 @@ import aboutContent from '../about.content';
   styleUrl: './long-term.scss',
 })
 export class LongTerm {
-  protected readonly content = useDictionary(aboutContent);
+  protected readonly content = useDictionary(longTermContent);
 }

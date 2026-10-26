@@ -1,14 +1,14 @@
 <section class="senior" aria-labelledby="senior-title">
   <div class="senior__copy">
     <div class="senior__heading">
-      <p class="senior__eyebrow">{{ content().seniorModel.eyebrow }}</p>
-      <h2 class="senior__title" id="senior-title">{{ content().seniorModel.title }}</h2>
+      <p class="senior__eyebrow">{{ content().eyebrow }}</p>
+      <h2 class="senior__title" id="senior-title">{{ content().title }}</h2>
     </div>
 
-    <p class="senior__lead">{{ content().seniorModel.lead }}</p>
+    <p class="senior__lead">{{ content().lead }}</p>
 
     <ul class="senior__points">
-      @for (point of content().seniorModel.points; track $index) {
+      @for (point of content().points; track $index) {
         <li class="senior__point">
           <span class="senior__badge" aria-hidden="true">
             <mat-icon [svgIcon]="arrowIcon" />
@@ -20,50 +20,19 @@
   </div>
 
   <div class="senior__models">
-    <figure class="senior__panel" data-tone="plain">
-      <figcaption class="senior__panel-label">{{ content().seniorModel.pyramid.label }}</figcaption>
+    <app-model-panel
+      tone="plain"
+      [label]="content().pyramid.label.value"
+      [rows]="pyramidRows"
+      [keys]="pyramidKeys()"
+      [highlightApex]="true"
+    />
 
-      <div class="senior__diagram" aria-hidden="true">
-        @for (row of pyramidRows; track $index; let rowIndex = $index) {
-          <div class="senior__row">
-            @for (block of row; track $index) {
-              <span class="senior__block" [class.senior__block--apex]="rowIndex === 0"></span>
-            }
-          </div>
-        }
-      </div>
-
-      <p class="senior__legend">
-        <span class="senior__key">
-          <span class="senior__dot senior__dot--apex" aria-hidden="true"></span>
-          {{ content().seniorModel.pyramid.senior }}
-        </span>
-        <span class="senior__key">
-          <span class="senior__dot" aria-hidden="true"></span>
-          {{ content().seniorModel.pyramid.junior }}
-        </span>
-      </p>
-    </figure>
-
-    <figure class="senior__panel" data-tone="inverse">
-      <figcaption class="senior__panel-label">{{ content().seniorModel.nexora.label }}</figcaption>
-
-      <div class="senior__diagram" aria-hidden="true">
-        @for (row of nexoraRows; track $index) {
-          <div class="senior__row">
-            @for (block of row; track $index) {
-              <span class="senior__block"></span>
-            }
-          </div>
-        }
-      </div>
-
-      <p class="senior__legend">
-        <span class="senior__key">
-          <span class="senior__dot" aria-hidden="true"></span>
-          {{ content().seniorModel.nexora.legend }}
-        </span>
-      </p>
-    </figure>
+    <app-model-panel
+      tone="inverse"
+      [label]="content().nexora.label.value"
+      [rows]="nexoraRows"
+      [keys]="nexoraKeys()"
+    />
   </div>
 </section>

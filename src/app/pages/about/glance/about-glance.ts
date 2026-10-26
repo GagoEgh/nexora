@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { useDictionary } from 'angular-intlayer';
-import aboutContent from '../about.content';
+import aboutGlanceContent from './about-glance.content';
 
 @Component({
   selector: 'app-about-glance',
@@ -8,5 +8,5 @@ import aboutContent from '../about.content';
   styleUrl: './about-glance.scss',
 })
 export class AboutGlance {
-  protected readonly content = useDictionary(aboutContent);
+  protected readonly content = useDictionary(aboutGlanceContent);
 }

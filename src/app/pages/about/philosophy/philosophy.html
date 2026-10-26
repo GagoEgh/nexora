@@ -1,19 +1,19 @@
 <section class="philosophy" aria-labelledby="philosophy-title">
   <div class="philosophy__header">
     <div class="philosophy__heading">
-      <p class="philosophy__eyebrow">{{ content().philosophy.eyebrow }}</p>
-      <h2 class="philosophy__title" id="philosophy-title">{{ content().philosophy.title }}</h2>
+      <p class="philosophy__eyebrow">{{ content().eyebrow }}</p>
+      <h2 class="philosophy__title" id="philosophy-title">{{ content().title }}</h2>
     </div>
 
     <div class="philosophy__intro">
-      @for (paragraph of content().philosophy.intro; track $index) {
+      @for (paragraph of content().intro; track $index) {
         <p class="philosophy__text">{{ paragraph }}</p>
       }
     </div>
   </div>
 
   <ul class="philosophy__grid">
-    @for (card of content().philosophy.cards; track $index) {
+    @for (card of content().cards; track $index) {
       <li class="philosophy__card">
         <div class="philosophy__card-head">
           <app-icon-tile [icon]="card.icon.value" tone="primary" />

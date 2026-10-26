@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { useDictionary } from 'angular-intlayer';
 import { appIcon } from '../../../core/icons/icons';
-import aboutContent from '../about.content';
+import qualityCapabilityContent from './quality-capability.content';
 
 @Component({
   selector: 'app-quality-capability',
@@ -11,6 +11,6 @@ import aboutContent from '../about.content';
   styleUrl: './quality-capability.scss',
 })
 export class QualityCapability {
-  protected readonly content = useDictionary(aboutContent);
+  protected readonly content = useDictionary(qualityCapabilityContent);
   protected readonly icon = appIcon;
 }

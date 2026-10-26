@@ -1,15 +1,15 @@
 <section class="flow" aria-labelledby="flow-title">
   <div class="flow__header">
     <div class="flow__heading">
-      <p class="flow__eyebrow">{{ content().businessFlow.eyebrow }}</p>
-      <h2 class="flow__title" id="flow-title">{{ content().businessFlow.title }}</h2>
+      <p class="flow__eyebrow">{{ content().eyebrow }}</p>
+      <h2 class="flow__title" id="flow-title">{{ content().title }}</h2>
     </div>
 
-    <p class="flow__intro">{{ content().businessFlow.intro }}</p>
+    <p class="flow__intro">{{ content().intro }}</p>
   </div>
 
   <ol class="flow__steps">
-    @for (step of content().businessFlow.steps; track $index; let first = $first) {
+    @for (step of content().steps; track $index; let first = $first) {
       <li class="flow__step" [attr.data-tone]="first ? 'accent' : 'plain'">
         @if (!first) {
           <mat-icon class="flow__arrow" aria-hidden="true" [svgIcon]="arrowIcon" />

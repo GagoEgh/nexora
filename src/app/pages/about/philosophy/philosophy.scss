@@ -1,5 +1,6 @@
 @use 'mixins/container';
 @use 'mixins/eyebrow';
+@use 'mixins/section';
 @use 'tokens/layout';
 @use 'tokens/spacing';
 @use 'tokens/typography';
@@ -13,15 +14,9 @@
 }
 
 .philosophy__header {
-  display: grid;
-  gap: spacing.space(32);
-  margin-block-end: spacing.space(48);
+  @include section.split();
 
-  @include layout.up(large) {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 703px);
-    column-gap: spacing.space(64);
-    align-items: start;
-  }
+  margin-block-end: spacing.space(48);
 }
 
 .philosophy__heading {

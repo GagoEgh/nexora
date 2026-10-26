@@ -4,7 +4,7 @@ import { MatIcon } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { useDictionary } from 'angular-intlayer';
 import { LocalizedPathPipe } from '../../../core/i18n/localized-path.pipe';
-import { CONTACT_PATH } from '../../../core/routing/paths';
+import { CONTACT_PATH, PARTNERSHIPS_PATH } from '../../../core/routing/paths';
 import { appIcon } from '../../../core/icons/icons';
 import startConversationContent from './start-conversation.content';
 
@@ -54,7 +54,7 @@ export class StartConversation {
       lead: content.lead.value,
       steps: content.steps.map((step) => step.value),
       primary: { label: content.primaryCta.value, path: CONTACT_PATH },
-      secondary: { label: content.secondaryCta.value, path: '/partnerships' },
+      secondary: { label: content.secondaryCta.value, path: PARTNERSHIPS_PATH },
     };
   });
 }

@@ -1,6 +1,6 @@
 import { Component, computed } from '@angular/core';
 import { useDictionary } from 'angular-intlayer';
-import { CONTACT_PATH } from '../../core/routing/paths';
+import { CONTACT_PATH, PARTNERSHIPS_PATH } from '../../core/routing/paths';
 import { PageIntro, type PageIntroCrumb } from '../../shared/ui/page-intro/page-intro';
 import {
   type ConversationCopy,
@@ -9,11 +9,11 @@ import {
 import aboutContent from './about.content';
 import { AboutGlance } from './glance/about-glance';
 import { Philosophy } from './philosophy/philosophy';
-import { BusinessFlow } from './business-flow/business-flow';
 import { SeniorModel } from './senior-model/senior-model';
+import { BusinessFlow } from './business-flow/business-flow';
+import { QualityCapability } from './quality-capability/quality-capability';
 import { LongTerm } from './long-term/long-term';
 import { Markets } from './markets/markets';
-import { QualityCapability } from './quality-capability/quality-capability';
 
 @Component({
   selector: 'app-about',
@@ -47,7 +47,7 @@ export class About {
       title: copy.title.value,
       lead: copy.lead.value,
       primary: { label: copy.primaryCta.value, path: CONTACT_PATH },
-      secondary: { label: copy.secondaryCta.value, path: '/partnerships' },
+      secondary: { label: copy.secondaryCta.value, path: PARTNERSHIPS_PATH },
     };
   });
 }

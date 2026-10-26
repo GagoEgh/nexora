@@ -1,11 +1,11 @@
 <section class="glance" aria-labelledby="glance-title">
   <div class="glance__head">
     <img class="glance__mark" src="brand/mark.svg" alt="" />
-    <h2 class="glance__title" id="glance-title">{{ content().glance.title }}</h2>
+    <h2 class="glance__title" id="glance-title">{{ content().title }}</h2>
   </div>
 
   <dl class="glance__rows">
-    @for (row of content().glance.rows; track $index) {
+    @for (row of content().rows; track $index) {
       <div class="glance__row">
         <dt class="glance__label">{{ row.label }}</dt>
         <dd class="glance__value">{{ row.value }}</dd>
