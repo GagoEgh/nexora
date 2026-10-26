@@ -21,6 +21,10 @@ import { EngagementPanel } from './pages/ai-agent/related-services/engagement-pa
 import { RelatedServices } from './pages/ai-agent/related-services/related-services';
 import { Workflow } from './pages/ai-agent/workflow/workflow';
 import { Contact } from './pages/contact/contact';
+import { ContactChannels } from './pages/contact/contact-channels/contact-channels';
+import { ContactForm } from './pages/contact/contact-form/contact-form';
+import { ChipSelect } from './pages/contact/contact-form/chip-select/chip-select';
+import { ContactNext } from './pages/contact/contact-next/contact-next';
 import { EngagementModelsPage } from './pages/engagement-models/engagement-models';
 import { ModelComparison } from './pages/engagement-models/model-comparison/model-comparison';
 import { ModelDetails } from './pages/engagement-models/model-details/model-details';
@@ -126,6 +130,10 @@ const COMPONENTS: readonly [string, Type<unknown>][] = [
   ['PartnerProcess', PartnerProcess],
   ['PartnerTerms', PartnerTerms],
   ['Contact', Contact],
+  ['ContactNext', ContactNext],
+  ['ContactChannels', ContactChannels],
+  ['ContactForm', ContactForm],
+  ['ChipSelect', ChipSelect],
   ['PrivacyPolicy', PrivacyPolicy],
   ['TermsOfUse', TermsOfUse],
   ['Logo', Logo],
@@ -148,7 +156,7 @@ describe('change detection', () => {
   });
 
   it('every component in the application resolves to OnPush', () => {
-    expect(COMPONENTS).toHaveLength(59);
+    expect(COMPONENTS).toHaveLength(63);
     const eager = COMPONENTS.filter(([, component]) => !isOnPush(component)).map(([name]) => name);
     expect(eager, 'these components are checked eagerly').toEqual([]);
   });

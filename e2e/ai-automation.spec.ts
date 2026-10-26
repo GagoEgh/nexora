@@ -162,7 +162,7 @@ test.describe('ai-automation at the desktop design width', () => {
   test('the calls to action navigate', async ({ page }) => {
     await page.locator('app-ai-automation .ai__actions a').nth(1).click();
     await expect(page).toHaveURL(/\/contact$/);
-    await expect(page.locator('main h1')).toHaveText('Contact');
+    await expect(page.locator('main h1')).toHaveText('Let’s Build Something Meaningful.');
   });
 });
 

@@ -1,0 +1,198 @@
+<form #card class="form" novalidate (submit)="submit($event)" aria-labelledby="contact-form-title">
+  <div class="form__head">
+    <h2 class="form__title" id="contact-form-title">{{ content().title }}</h2>
+    <p class="form__note">{{ content().requiredNote }}</p>
+  </div>
+
+  <div class="form__block">
+    <app-field-label for="contact-interest">{{ content().interestLabel }}</app-field-label>
+    <app-chip-select
+      id="contact-interest"
+      [field]="form.interest"
+      [options]="interestOptions()"
+      [label]="content().interestLabel.value"
+    />
+  </div>
+
+  <div class="form__row">
+    <div class="form__field">
+      <app-field-label for="contact-name">
+        {{ content().nameLabel }} {{ content().requiredMark }}
+      </app-field-label>
+      <mat-form-field>
+        <input
+          matInput
+          id="contact-name"
+          type="text"
+          autocomplete="name"
+          [formField]="form.name"
+          [placeholder]="content().namePlaceholder.value"
+        />
+        @if (form.name().touched() && form.name().invalid()) {
+          <mat-error>{{ content().errorRequired }}</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <div class="form__field">
+      <app-field-label for="contact-email">
+        {{ content().emailLabel }} {{ content().requiredMark }}
+      </app-field-label>
+      <mat-form-field>
+        <input
+          matInput
+          id="contact-email"
+          type="email"
+          autocomplete="email"
+          [formField]="form.email"
+          [placeholder]="content().emailPlaceholder.value"
+        />
+        @if (form.email().touched() && form.email().invalid()) {
+          <mat-error>
+            @if (form.email().getError('required')) {
+              {{ content().errorRequired }}
+            } @else {
+              {{ content().errorEmail }}
+            }
+          </mat-error>
+        }
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="form__row">
+    <div class="form__field">
+      <app-field-label for="contact-company">
+        {{ content().companyLabel }} {{ content().requiredMark }}
+      </app-field-label>
+      <mat-form-field>
+        <input
+          matInput
+          id="contact-company"
+          type="text"
+          autocomplete="organization"
+          [formField]="form.company"
+          [placeholder]="content().companyPlaceholder.value"
+        />
+        @if (form.company().touched() && form.company().invalid()) {
+          <mat-error>{{ content().errorRequired }}</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <div class="form__field">
+      <app-field-label for="contact-service">
+        {{ content().serviceLabel }} {{ content().requiredMark }}
+      </app-field-label>
+      <mat-form-field>
+        <mat-select
+          id="contact-service"
+          [formField]="form.service"
+          [attr.aria-label]="content().serviceLabel.value"
+          [placeholder]="content().servicePlaceholder.value"
+        >
+          @for (option of content().serviceOptions; track option.value.value) {
+            <mat-option [value]="option.value.value">{{ option.label }}</mat-option>
+          }
+        </mat-select>
+        @if (form.service().touched() && form.service().invalid()) {
+          <mat-error>{{ content().errorRequired }}</mat-error>
+        }
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="form__field">
+    <app-field-label for="contact-description">
+      {{ content().descriptionLabel }} {{ content().requiredMark }}
+    </app-field-label>
+    <mat-form-field>
+      <textarea
+        matInput
+        id="contact-description"
+        rows="4"
+        [formField]="form.description"
+        [placeholder]="content().descriptionPlaceholder.value"
+      ></textarea>
+
+      @if (form.description().touched() && form.description().invalid()) {
+        <mat-error>{{ content().errorRequired }}</mat-error>
+      } @else {
+        <mat-hint>{{ content().descriptionHint }}</mat-hint>
+      }
+      <mat-hint align="end">{{ descriptionLength() }} / {{ descriptionMax }}</mat-hint>
+    </mat-form-field>
+  </div>
+
+  <div class="form__row">
+    <div class="form__field">
+      <app-field-label for="contact-timeline">{{ content().timelineLabel }}</app-field-label>
+      <mat-form-field>
+        <mat-select
+          id="contact-timeline"
+          [formField]="form.timeline"
+          [attr.aria-label]="content().timelineLabel.value"
+          [placeholder]="content().timelinePlaceholder.value"
+        >
+          @for (option of content().timelineOptions; track option.value.value) {
+            <mat-option [value]="option.value.value">{{ option.label }}</mat-option>
+          }
+        </mat-select>
+        <mat-hint>{{ content().optionalHint }}</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <div class="form__field">
+      <app-field-label for="contact-budget">{{ content().budgetLabel }}</app-field-label>
+      <mat-form-field>
+        <mat-select
+          id="contact-budget"
+          [formField]="form.budget"
+          [attr.aria-label]="content().budgetLabel.value"
+          [placeholder]="content().budgetPlaceholder.value"
+        >
+          @for (option of content().budgetOptions; track option.value.value) {
+            <mat-option [value]="option.value.value">{{ option.label }}</mat-option>
+          }
+        </mat-select>
+        <mat-hint>{{ content().optionalHint }}</mat-hint>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="form__block">
+    <app-field-label for="contact-method">{{ content().methodLabel }}</app-field-label>
+    <app-chip-select
+      id="contact-method"
+      [field]="form.method"
+      [options]="methodOptions()"
+      [label]="content().methodLabel.value"
+    />
+  </div>
+
+  <hr class="form__divider" />
+
+  <div class="form__consent">
+    <mat-checkbox [formField]="form.consent">
+      {{ content().consentBefore }}
+      <a [routerLink]="privacyPath | localizedPath">{{ content().privacyLabel }}</a
+      >{{ content().sentenceEnd }}
+    </mat-checkbox>
+    @if (form.consent().touched() && form.consent().invalid()) {
+      <p class="form__error">{{ content().errorConsent }}</p>
+    }
+  </div>
+
+  <div class="form__actions">
+    <button matButton="filled" type="submit" [disabled]="submitting()">
+      {{ content().submitLabel }}
+      <mat-icon iconPositionEnd [svgIcon]="arrowIcon" />
+    </button>
+
+    <p class="form__disclaimer">
+      {{ content().noteBefore }}
+      <a [routerLink]="privacyPath | localizedPath">{{ content().privacyLabel }}</a
+      >{{ content().sentenceEnd }}
+    </p>
+  </div>
+</form>

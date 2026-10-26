@@ -1,0 +1,14 @@
+<section class="next" aria-labelledby="contact-next-title">
+  <h2 class="next__title" id="contact-next-title">{{ content().title }}</h2>
+  <p class="next__eyebrow">{{ content().eyebrow }}</p>
+
+  <ol class="next__list">
+    @for (step of content().steps; track $index) {
+      <li class="next__step">
+        <span class="next__badge" aria-hidden="true">{{ $index + 1 }}</span>
+        <h3 class="next__step-title">{{ step.title }}</h3>
+        <p class="next__step-text">{{ step.text }}</p>
+      </li>
+    }
+  </ol>
+</section>

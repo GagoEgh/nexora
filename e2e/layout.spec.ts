@@ -11,6 +11,7 @@ const SOLUTIONS_HEADING = 'Start from the problem, not the technology.';
 const ABOUT_HEADING = 'A senior engineering partner for businesses that build with technology.';
 const ENGAGEMENT_HEADING = 'Choose how we work together.';
 const PARTNERSHIPS_HEADING = 'Senior engineering behind your client relationships.';
+const CONTACT_HEADING = 'Let’s Build Something Meaningful.';
 
 /** Pages whose h1 is not simply their nav label. */
 const PAGE_HEADING: Record<string, string> = {
@@ -20,6 +21,7 @@ const PAGE_HEADING: Record<string, string> = {
   '/about': ABOUT_HEADING,
   '/engagement-models': ENGAGEMENT_HEADING,
   '/partnerships': PARTNERSHIPS_HEADING,
+  '/contact': CONTACT_HEADING,
 };
 
 const NAV = [
@@ -173,7 +175,7 @@ test.describe('header at the mobile design width', () => {
     // Pages with an immersive intro run it behind the bar, so the hairline is dropped there
     // and kept on the ordinary pages.
     expect(await style(page, 'app-header', 'border-bottom-width')).toBe('0px');
-    await page.goto('/contact');
+    await page.goto('/privacy-policy');
     expect(await style(page, 'app-header', 'border-bottom-width')).toBe('1px');
     expect(await style(page, 'app-header', 'border-bottom-color')).toBe('rgb(226, 232, 240)');
   });

@@ -1,0 +1,56 @@
+@use 'tokens/spacing';
+@use 'tokens/typography';
+
+.channels {
+  box-sizing: border-box;
+  padding: spacing.space(16) spacing.space(20) spacing.space(8);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--mat-sys-corner-large);
+  background-color: var(--mat-sys-surface);
+  min-width: 0;
+}
+
+.channels__title {
+  margin: 0;
+  font: var(--nx-sys-title-step);
+  color: var(--mat-sys-on-surface);
+  overflow-wrap: anywhere;
+}
+
+.channels__list {
+  margin: 0;
+}
+
+.channels__row {
+  --nx-channel-icon: 20px;
+
+  display: grid;
+  grid-template-columns: var(--nx-channel-icon) minmax(0, 1fr);
+  column-gap: spacing.space(12);
+  align-items: center;
+  padding-block: spacing.space(12);
+  border-block-start: 1px solid var(--mat-sys-outline-variant);
+  min-width: 0;
+}
+
+.channels__icon {
+  grid-row: 1 / span 2;
+  width: var(--nx-channel-icon);
+  height: var(--nx-channel-icon);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.channels__label {
+  min-width: 0;
+  font: var(--mat-sys-body-small);
+  color: var(--mat-sys-on-surface);
+  overflow-wrap: anywhere;
+}
+
+.channels__value {
+  min-width: 0;
+  margin: 0;
+  font: typography.$code-font;
+  color: var(--nx-sys-on-surface-muted);
+  overflow-wrap: anywhere;
+}

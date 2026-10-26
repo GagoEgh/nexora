@@ -1,0 +1,87 @@
+@use 'mixins/eyebrow';
+@use 'tokens/spacing';
+
+.next {
+  display: grid;
+  gap: spacing.space(12);
+  min-width: 0;
+}
+
+.next__title {
+  position: absolute;
+  overflow: hidden;
+  clip-path: inset(50%);
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.next__eyebrow {
+  @include eyebrow.eyebrow();
+}
+
+.next__list {
+  display: grid;
+  gap: spacing.space(16);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.next__step {
+  --nx-next-badge: 28px;
+  --nx-next-line: 2px;
+
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--nx-next-badge) minmax(0, 1fr);
+  gap: spacing.space(4) spacing.space(16);
+  min-width: 0;
+}
+
+.next__step:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  top: var(--nx-next-badge);
+  bottom: calc(-1 * #{spacing.space(16)});
+  left: calc((var(--nx-next-badge) - var(--nx-next-line)) / 2);
+  width: var(--nx-next-line);
+  background-color: var(--mat-sys-outline-variant);
+}
+
+.next__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: var(--nx-next-badge);
+  height: var(--nx-next-badge);
+  border-radius: var(--mat-sys-corner-full);
+  background-color: var(--mat-sys-primary-container);
+  font: var(--mat-sys-label-medium);
+  color: var(--mat-sys-primary);
+}
+
+.next__step:first-child .next__badge {
+  background-color: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+}
+
+.next__step-title {
+  align-self: center;
+  min-width: 0;
+  margin: 0;
+  font: var(--nx-sys-title-step);
+  color: var(--mat-sys-on-surface);
+  overflow-wrap: anywhere;
+}
+
+.next__step-text {
+  grid-column: 2;
+  min-width: 0;
+  margin: 0;
+  font: var(--mat-sys-body-small);
+  color: var(--mat-sys-on-surface-variant);
+  overflow-wrap: anywhere;
+}

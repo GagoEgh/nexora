@@ -1,0 +1,15 @@
+@use 'tokens/spacing';
+
+:host {
+  display: block;
+  --nx-page-intro-aside: 756px;
+  --nx-page-intro-align: start;
+  --nx-page-intro-gap: #{spacing.space(64)};
+}
+
+.contact__aside {
+  display: grid;
+  gap: spacing.space(40);
+  width: 100%;
+  min-width: 0;
+}
