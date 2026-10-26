@@ -1,0 +1,23 @@
+<section class="faq" aria-labelledby="faq-title">
+  <div class="faq__heading">
+    <p class="faq__eyebrow">{{ content().eyebrow }}</p>
+    <h2 class="faq__title" id="faq-title">{{ content().title }}</h2>
+  </div>
+
+  <ul class="faq__list">
+    @for (item of content().items; track $index; let first = $first) {
+      <li class="faq__item">
+        <details class="faq__disclosure" [attr.open]="first ? '' : null">
+          <summary class="faq__summary">
+            <span class="faq__question">{{ item.question }}</span>
+
+            <mat-icon class="faq__icon faq__icon--more" aria-hidden="true" [svgIcon]="plusIcon" />
+            <mat-icon class="faq__icon faq__icon--less" aria-hidden="true" [svgIcon]="minusIcon" />
+          </summary>
+
+          <p class="faq__answer">{{ item.answer }}</p>
+        </details>
+      </li>
+    }
+  </ul>
+</section>

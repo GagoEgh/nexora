@@ -24,6 +24,7 @@ import { Contact } from './pages/contact/contact';
 import { EngagementModelsPage } from './pages/engagement-models/engagement-models';
 import { ModelComparison } from './pages/engagement-models/model-comparison/model-comparison';
 import { ModelDetails } from './pages/engagement-models/model-details/model-details';
+import { ModelFaq } from './pages/engagement-models/model-faq/model-faq';
 import { ModelFinder } from './pages/engagement-models/model-finder/model-finder';
 import { AiAutomation } from './pages/home/ai-automation/ai-automation';
 import { EngagementModels } from './pages/home/engagement-models/engagement-models';
@@ -112,6 +113,7 @@ const COMPONENTS: readonly [string, Type<unknown>][] = [
   ['ModelFinder', ModelFinder],
   ['ModelDetails', ModelDetails],
   ['ModelComparison', ModelComparison],
+  ['ModelFaq', ModelFaq],
   ['Partnerships', Partnerships],
   ['Contact', Contact],
   ['PrivacyPolicy', PrivacyPolicy],

@@ -3,12 +3,13 @@ import { useDictionary } from 'angular-intlayer';
 import { PageIntro, type PageIntroCrumb } from '../../shared/ui/page-intro/page-intro';
 import { ModelComparison } from './model-comparison/model-comparison';
 import { ModelDetails } from './model-details/model-details';
+import { ModelFaq } from './model-faq/model-faq';
 import { ModelFinder } from './model-finder/model-finder';
 import engagementModelsPageContent from './engagement-models.content';
 
 @Component({
   selector: 'app-engagement-models-page',
-  imports: [PageIntro, ModelFinder, ModelDetails, ModelComparison],
+  imports: [PageIntro, ModelFinder, ModelDetails, ModelComparison, ModelFaq],
   templateUrl: './engagement-models.html',
   styleUrl: './engagement-models.scss',
   host: { 'data-layout': 'immersive' },
