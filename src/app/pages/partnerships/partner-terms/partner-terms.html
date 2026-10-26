@@ -1,0 +1,23 @@
+<section class="terms" aria-labelledby="terms-title">
+  <div class="terms__panel">
+    <div class="terms__intro">
+      <app-icon-tile icon="shield-check" tone="secondary" />
+
+      <h2 class="terms__title" id="terms-title">{{ content().title }}</h2>
+      <p class="terms__lead">{{ content().lead }}</p>
+    </div>
+
+    <ul class="terms__list">
+      @for (item of content().items; track $index) {
+        <li class="terms__row">
+          <mat-icon class="terms__icon" aria-hidden="true" [svgIcon]="itemIcon" />
+
+          <div class="terms__copy">
+            <h3 class="terms__row-title">{{ item.title }}</h3>
+            <p class="terms__row-text">{{ item.text }}</p>
+          </div>
+        </li>
+      }
+    </ul>
+  </div>
+</section>

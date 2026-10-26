@@ -23,6 +23,29 @@ const partnershipsContent = {
       hy: 'Ինչպես է աշխատում գործընկերությունը',
       ru: 'Как работает партнёрство',
     }),
+    conversation: {
+      eyebrow: t({
+        en: 'Partnership inquiry',
+        hy: 'Գործընկերության հարցում',
+        ru: 'Запрос о партнёрстве',
+      }),
+      title: t({
+        en: 'Interested in partnering with Nexora?',
+        hy: 'Հետաքրքրվա՞ծ եք Nexora-ի հետ գործընկերությամբ։',
+        ru: 'Хотите стать партнёром Nexora?',
+      }),
+      lead: t({
+        en: 'Tell us about your business, your clients and the kind of partnership you have in mind. We’ll follow up to explore the fit.',
+        hy: 'Պատմեք ձեր բիզնեսի, հաճախորդների և այն գործընկերության մասին, որը պատկերացնում եք։ Մենք կկապվենք՝ քննարկելու համապատասխանությունը։',
+        ru: 'Расскажите о своём бизнесе, клиентах и о том, какое партнёрство вы имеете в виду. Мы свяжемся, чтобы обсудить, насколько это подходит.',
+      }),
+      primaryCta: t({ en: 'Become a Partner', hy: 'Դառնալ գործընկեր', ru: 'Стать партнёром' }),
+      secondaryCta: t({
+        en: 'White-label services',
+        hy: 'White-label ծառայություններ',
+        ru: 'White-label услуги',
+      }),
+    },
   },
 } as const satisfies Dictionary;
 

@@ -7,10 +7,15 @@ import { LocalizedPathPipe } from '../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../core/icons/icons';
 import { CONTACT_PATH, ENGAGEMENT_MODELS_PATH } from '../../core/routing/paths';
 import { PageIntro, type PageIntroCrumb } from '../../shared/ui/page-intro/page-intro';
+import {
+  type ConversationCopy,
+  StartConversation,
+} from '../../shared/ui/start-conversation/start-conversation';
 import { PartnerAudience } from './partner-audience/partner-audience';
 import { PartnerFlow } from './partner-flow/partner-flow';
 import { PartnerModel } from './partner-model/partner-model';
 import { PartnerProcess } from './partner-process/partner-process';
+import { PartnerTerms } from './partner-terms/partner-terms';
 import partnershipsContent from './partnerships.content';
 
 @Component({
@@ -21,6 +26,8 @@ import partnershipsContent from './partnerships.content';
     PartnerAudience,
     PartnerModel,
     PartnerProcess,
+    PartnerTerms,
+    StartConversation,
     RouterLink,
     LocalizedPathPipe,
     MatButton,
@@ -39,5 +46,16 @@ export class Partnerships {
   protected readonly crumbs = computed<readonly PageIntroCrumb[]>(() => {
     const copy = this.content();
     return [{ label: copy.breadcrumbHome.value, path: '/' }, { label: copy.title.value }];
+  });
+
+  protected readonly conversationCopy = computed<ConversationCopy>(() => {
+    const copy = this.content().conversation;
+    return {
+      eyebrow: copy.eyebrow.value,
+      title: copy.title.value,
+      lead: copy.lead.value,
+      primary: { label: copy.primaryCta.value, path: CONTACT_PATH },
+      secondary: { label: copy.secondaryCta.value, path: ENGAGEMENT_MODELS_PATH },
+    };
   });
 }
