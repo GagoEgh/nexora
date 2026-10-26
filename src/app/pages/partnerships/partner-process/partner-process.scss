@@ -1,0 +1,94 @@
+@use 'mixins/container';
+@use 'mixins/eyebrow';
+@use 'tokens/layout';
+@use 'tokens/spacing';
+@use 'tokens/typography';
+
+:host {
+  @include container.section();
+
+  background-color: var(--mat-sys-inverse-surface);
+}
+
+.process {
+  @include container.container();
+}
+
+.process__heading {
+  @include container.heading(20);
+
+  margin-block-end: spacing.space(40);
+}
+
+.process__eyebrow {
+  @include eyebrow.eyebrow();
+
+  color: var(--mat-sys-inverse-primary);
+}
+
+.process__title {
+  min-width: 0;
+  margin: 0;
+  font: var(--nx-sys-display-feature);
+  letter-spacing: var(--nx-sys-display-feature-tracking);
+  color: var(--mat-sys-inverse-on-surface);
+  overflow-wrap: anywhere;
+}
+
+.process__steps {
+  display: grid;
+  gap: spacing.space(16);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @include layout.up(medium) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include layout.up(large) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.process__step {
+  display: grid;
+  align-content: start;
+  box-sizing: border-box;
+  border-radius: var(--nx-sys-corner-panel);
+  background-color: var(--nx-sys-inverse-surface-container);
+  padding: 28px;
+}
+
+.process__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 40px;
+  height: 40px;
+  margin-block-end: spacing.space(16);
+  border-radius: var(--mat-sys-corner-full);
+  background-color: var(--mat-sys-inverse-surface);
+  font: typography.$code-font;
+  color: var(--mat-sys-inverse-primary);
+}
+
+.process__badge--lead {
+  background-color: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+}
+
+.process__step-title {
+  margin: 0 0 spacing.space(12);
+  font: var(--nx-sys-title-step);
+  color: var(--mat-sys-inverse-on-surface);
+  overflow-wrap: anywhere;
+}
+
+.process__step-text {
+  margin: 0;
+  font: var(--mat-sys-body-small);
+  color: var(--nx-sys-inverse-on-surface-variant);
+  overflow-wrap: anywhere;
+}

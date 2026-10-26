@@ -10,6 +10,7 @@ import { PageIntro, type PageIntroCrumb } from '../../shared/ui/page-intro/page-
 import { PartnerAudience } from './partner-audience/partner-audience';
 import { PartnerFlow } from './partner-flow/partner-flow';
 import { PartnerModel } from './partner-model/partner-model';
+import { PartnerProcess } from './partner-process/partner-process';
 import partnershipsContent from './partnerships.content';
 
 @Component({
@@ -19,6 +20,7 @@ import partnershipsContent from './partnerships.content';
     PartnerFlow,
     PartnerAudience,
     PartnerModel,
+    PartnerProcess,
     RouterLink,
     LocalizedPathPipe,
     MatButton,

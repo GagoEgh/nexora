@@ -1,0 +1,19 @@
+<section class="process" aria-labelledby="process-title">
+  <div class="process__heading">
+    <p class="process__eyebrow">{{ content().eyebrow }}</p>
+    <h2 class="process__title" id="process-title">{{ content().title }}</h2>
+  </div>
+
+  <ol class="process__steps">
+    @for (step of content().steps; track $index; let index = $index, first = $first) {
+      <li class="process__step">
+        <span class="process__badge" [class.process__badge--lead]="first" aria-hidden="true">
+          {{ ordinal(index) }}
+        </span>
+
+        <h3 class="process__step-title">{{ step.title }}</h3>
+        <p class="process__step-text">{{ step.text }}</p>
+      </li>
+    }
+  </ol>
+</section>
