@@ -1,8 +1,9 @@
 import { DOCUMENT } from '@angular/common';
-import { ApplicationRef, Component, computed, effect, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute } from '@angular/router';
+import { ApplicationRef, Component, computed, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router, Scroll } from '@angular/router';
 import { useDictionary } from 'angular-intlayer';
+import { filter } from 'rxjs';
 import { CONTACT_PATH, SERVICES_PATH } from '../../core/routing/paths';
 import { PageIntro, type PageIntroCrumb } from '../../shared/ui/page-intro/page-intro';
 import {
@@ -25,12 +26,11 @@ const CHALLENGE_PARAM = 'challenge';
 })
 export class Solutions {
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly app = inject(ApplicationRef);
   private readonly document = inject(DOCUMENT);
 
   protected readonly content = useDictionary(solutionsContent);
-
-  private readonly params = toSignal(this.route.queryParamMap, { requireSync: true });
 
   protected readonly crumbs = computed<readonly PageIntroCrumb[]>(() => {
     const copy = this.content();
@@ -49,17 +49,17 @@ export class Solutions {
   });
 
   constructor() {
-    /*
-     * `?challenge=` is how the footer deep-links a single challenge. The panels only exist once
-     * the page has rendered, so the scroll waits for the application to settle.
-     */
-    effect(() => {
-      const requested = this.params().get(CHALLENGE_PARAM);
-      if (!isChallengeId(requested)) {
-        return;
-      }
-      void this.app.whenStable().then(() => this.scrollTo(requested));
-    });
+    this.router.events
+      .pipe(
+        filter((event) => event instanceof Scroll),
+        takeUntilDestroyed(),
+      )
+      .subscribe(() => {
+        const requested = this.route.snapshot.queryParamMap.get(CHALLENGE_PARAM);
+        if (isChallengeId(requested)) {
+          void this.app.whenStable().then(() => this.scrollTo(requested));
+        }
+      });
   }
 
   protected onChallengeSelect(challenge: ChallengeId): void {
