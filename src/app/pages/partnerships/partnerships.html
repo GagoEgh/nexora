@@ -1,0 +1,22 @@
+<app-page-intro
+  [crumbs]="crumbs()"
+  [breadcrumbLabel]="content().breadcrumbLabel.value"
+  [eyebrow]="content().eyebrow.value"
+  [heading]="content().heading.value"
+  [lead]="content().lead.value"
+>
+  <div class="partnerships__actions" intro-actions>
+    <a matButton="filled" [routerLink]="contactPath | localizedPath">
+      {{ content().primaryCta }}
+      <mat-icon iconPositionEnd [svgIcon]="arrowIcon" />
+    </a>
+
+    <a matButton="outlined" [routerLink]="engagementPath | localizedPath">
+      {{ content().secondaryCta }}
+    </a>
+  </div>
+
+  <app-partner-flow />
+</app-page-intro>
+
+<app-partner-audience />

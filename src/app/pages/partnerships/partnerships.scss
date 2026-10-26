@@ -1,0 +1,20 @@
+@use 'tokens/layout';
+@use 'tokens/spacing';
+
+:host {
+  display: block;
+  --nx-page-intro-aside: 520px;
+  --nx-page-intro-align: start;
+  --nx-page-intro-gap: #{spacing.space(80)};
+}
+
+.partnerships__actions {
+  display: grid;
+  gap: spacing.space(12);
+  width: 100%;
+
+  @include layout.up(medium) {
+    display: flex;
+    width: auto;
+  }
+}

@@ -1,0 +1,32 @@
+<div class="flow">
+  <article class="flow__card flow__card--partner">
+    <p class="flow__head">
+      <mat-icon class="flow__icon" aria-hidden="true" [svgIcon]="partnerIcon" />
+      <span class="flow__title">{{ content().partnerTitle }}</span>
+    </p>
+
+    <ul class="flow__chips">
+      @for (chip of content().partnerChips; track $index) {
+        <li class="flow__chip">{{ chip }}</li>
+      }
+    </ul>
+  </article>
+
+  <p class="flow__badge">
+    <mat-icon class="flow__badge-icon" aria-hidden="true" [svgIcon]="badgeIcon" />
+    <span>{{ content().badge }}</span>
+  </p>
+
+  <article class="flow__card flow__card--nexora">
+    <p class="flow__head">
+      <img class="flow__mark" src="brand/mark.svg" alt="" />
+      <span class="flow__title">{{ content().nexoraTitle }}</span>
+    </p>
+
+    <ul class="flow__chips">
+      @for (chip of content().nexoraChips; track $index) {
+        <li class="flow__chip">{{ chip }}</li>
+      }
+    </ul>
+  </article>
+</div>

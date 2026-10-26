@@ -1,0 +1,123 @@
+@use 'tokens/spacing';
+@use 'tokens/typography';
+
+:host {
+  display: block;
+}
+
+.flow {
+  display: grid;
+  justify-items: stretch;
+}
+
+.flow__card {
+  display: grid;
+  gap: spacing.space(16);
+  box-sizing: border-box;
+  padding: spacing.space(24);
+  border-radius: var(--nx-sys-corner-panel);
+}
+
+.flow__card--partner {
+  background-color: var(--mat-sys-surface);
+  box-shadow: var(--mat-sys-level2);
+}
+
+.flow__card--nexora {
+  background-color: var(--mat-sys-inverse-surface);
+}
+
+.flow__head {
+  display: flex;
+  gap: spacing.space(16);
+  align-items: center;
+  margin: 0;
+}
+
+.flow__icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  color: var(--mat-sys-primary);
+}
+
+.flow__mark {
+  flex-shrink: 0;
+  width: 20px;
+}
+
+.flow__title {
+  min-width: 0;
+  font: var(--mat-sys-body-large);
+  line-height: 20px;
+  font-weight: typography.$weight-semibold;
+  color: var(--mat-sys-on-surface);
+  overflow-wrap: anywhere;
+}
+
+.flow__card--nexora .flow__title {
+  color: var(--mat-sys-inverse-on-surface);
+}
+
+.flow__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: spacing.space(8);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.flow__chip {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  min-height: 30px;
+  padding-inline: spacing.space(12);
+  border-radius: var(--mat-sys-corner-medium);
+  background-color: var(--mat-sys-surface-container-low);
+  font: var(--mat-sys-body-small);
+  color: var(--mat-sys-on-surface);
+}
+
+.flow__card--nexora .flow__chip {
+  background-color: var(--nx-sys-inverse-surface-container);
+  color: var(--mat-sys-inverse-on-surface);
+}
+
+/*
+ * The badge sits on a 2px rule that runs the full gap between the cards. The rule reads as the
+ * primary blue lightened against the page gradient, which `color-mix` reproduces directly.
+ */
+.flow__badge {
+  position: relative;
+  display: inline-flex;
+  gap: spacing.space(8);
+  align-items: center;
+  justify-self: center;
+  box-sizing: border-box;
+  min-height: 34px;
+  margin-block: spacing.space(24);
+  padding-inline: spacing.space(16);
+  border-radius: var(--mat-sys-corner-full);
+  background-color: var(--mat-sys-primary);
+  font: var(--mat-sys-body-small);
+  color: var(--mat-sys-on-primary);
+
+  &::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset-block: calc(#{spacing.space(24)} * -1);
+    inset-inline-start: 50%;
+    width: 2px;
+    background-color: color-mix(in srgb, var(--mat-sys-primary) 75%, transparent);
+    translate: -50%;
+  }
+}
+
+.flow__badge-icon {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+}

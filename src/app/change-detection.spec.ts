@@ -37,6 +37,8 @@ import { HowWeWork } from './pages/home/how-we-work/how-we-work';
 import { WhatWeBuildIllustration } from './pages/home/what-we-build/illustration/what-we-build-illustration';
 import { WhatWeBuild } from './pages/home/what-we-build/what-we-build';
 import { Why } from './pages/home/why/why';
+import { PartnerAudience } from './pages/partnerships/partner-audience/partner-audience';
+import { PartnerFlow } from './pages/partnerships/partner-flow/partner-flow';
 import { Partnerships } from './pages/partnerships/partnerships';
 import { PrivacyPolicy } from './pages/privacy-policy/privacy-policy';
 import { CategoryNav } from './pages/services/category-nav/category-nav';
@@ -115,6 +117,8 @@ const COMPONENTS: readonly [string, Type<unknown>][] = [
   ['ModelComparison', ModelComparison],
   ['ModelFaq', ModelFaq],
   ['Partnerships', Partnerships],
+  ['PartnerFlow', PartnerFlow],
+  ['PartnerAudience', PartnerAudience],
   ['Contact', Contact],
   ['PrivacyPolicy', PrivacyPolicy],
   ['TermsOfUse', TermsOfUse],
@@ -138,7 +142,7 @@ describe('change detection', () => {
   });
 
   it('every component in the application resolves to OnPush', () => {
-    expect(COMPONENTS).toHaveLength(54);
+    expect(COMPONENTS).toHaveLength(56);
     const eager = COMPONENTS.filter(([, component]) => !isOnPush(component)).map(([name]) => name);
     expect(eager, 'these components are checked eagerly').toEqual([]);
   });
