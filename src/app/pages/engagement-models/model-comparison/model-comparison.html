@@ -1,0 +1,38 @@
+<section class="comparison" aria-labelledby="comparison-title">
+  <div class="comparison__header">
+    <div class="comparison__heading">
+      <p class="comparison__eyebrow">{{ content().eyebrow }}</p>
+      <h2 class="comparison__title" id="comparison-title">{{ content().title }}</h2>
+    </div>
+
+    <p class="comparison__lead">{{ content().lead }}</p>
+  </div>
+
+  <div class="comparison__scroller" role="region" tabindex="0" aria-labelledby="comparison-title">
+    <table class="comparison__table">
+      <thead>
+        <tr>
+          <th class="comparison__corner" scope="col"></th>
+
+          @for (column of content().columns; track $index) {
+            <th class="comparison__column" scope="col">{{ column }}</th>
+          }
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (row of content().rows; track $index) {
+          <tr>
+            <th class="comparison__label" scope="row">{{ row.label }}</th>
+
+            @for (value of row.values; track $index) {
+              <td class="comparison__cell">{{ value }}</td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <p class="comparison__note">{{ content().note }}</p>
+</section>

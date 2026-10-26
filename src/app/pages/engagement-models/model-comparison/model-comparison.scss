@@ -1,0 +1,104 @@
+@use 'mixins/container';
+@use 'mixins/eyebrow';
+@use 'mixins/section';
+@use 'tokens/spacing';
+@use 'tokens/typography';
+
+:host {
+  @include container.section();
+}
+
+.comparison {
+  @include container.container();
+}
+
+.comparison__header {
+  @include section.split(440px);
+
+  margin-block-end: spacing.space(48);
+}
+
+.comparison__heading {
+  @include container.heading(20);
+}
+
+.comparison__eyebrow {
+  @include eyebrow.eyebrow();
+}
+
+.comparison__title {
+  min-width: 0;
+  margin: 0;
+  font: var(--nx-sys-display-feature);
+  letter-spacing: var(--nx-sys-display-feature-tracking);
+  color: var(--mat-sys-on-surface);
+  overflow-wrap: anywhere;
+}
+
+.comparison__lead {
+  min-width: 0;
+  margin: 0;
+  font: var(--nx-sys-body-copy);
+  color: var(--mat-sys-on-surface-variant);
+  overflow-wrap: anywhere;
+}
+
+.comparison__scroller {
+  overflow-x: auto;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--nx-sys-corner-panel);
+  background-color: var(--mat-sys-surface);
+}
+
+.comparison__table {
+  width: 100%;
+  min-width: 960px;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.comparison__corner,
+.comparison__column,
+.comparison__label,
+.comparison__cell {
+  box-sizing: border-box;
+  padding: 18px spacing.space(20);
+  text-align: start;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+.comparison__corner {
+  width: 170px;
+}
+
+.comparison__corner,
+.comparison__column {
+  height: 84px;
+  background-color: var(--mat-sys-surface-container-low);
+  font: var(--mat-sys-body-large);
+  font-weight: typography.$weight-semibold;
+  color: var(--mat-sys-on-surface);
+}
+
+.comparison__label,
+.comparison__cell {
+  border-block-start: 1px solid var(--mat-sys-outline-variant);
+}
+
+.comparison__label {
+  font: var(--mat-sys-label-large);
+  color: var(--mat-sys-on-surface);
+}
+
+.comparison__cell {
+  font: var(--mat-sys-body-small);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.comparison__note {
+  margin: spacing.space(48) 0 0;
+  font: var(--mat-sys-body-small);
+  color: var(--nx-sys-on-surface-muted);
+  overflow-wrap: anywhere;
+}

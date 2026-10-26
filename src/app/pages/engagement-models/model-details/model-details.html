@@ -1,0 +1,45 @@
+<section class="models" [attr.aria-label]="content().title">
+  <ol class="models__list">
+    @for (model of content().models; track $index; let index = $index) {
+      <li class="models__item">
+        <article class="model">
+          <div class="model__identity">
+            <div class="model__head">
+              <app-icon-tile [icon]="model.icon.value" tone="primary" />
+              <span class="model__ordinal" aria-hidden="true">{{ ordinal(index) }}</span>
+            </div>
+
+            <h2 class="model__title">{{ model.title }}</h2>
+            <p class="model__description">{{ model.description }}</p>
+          </div>
+
+          <div class="model__flow">
+            <p class="model__eyebrow">{{ content().howItWorks }}</p>
+
+            <ol class="model__steps">
+              @for (step of model.steps; track $index; let stepIndex = $index) {
+                <li class="model__step">
+                  <span class="model__step-number" aria-hidden="true">{{ stepIndex + 1 }}</span>
+                  <span class="model__step-text">{{ step }}</span>
+                </li>
+              }
+            </ol>
+          </div>
+
+          <div class="model__fit">
+            <p class="model__eyebrow model__eyebrow--muted">{{ content().goodFitWhen }}</p>
+
+            <ul class="model__fit-list">
+              @for (fit of model.fits; track $index) {
+                <li class="model__fit-item">
+                  <mat-icon class="model__check" aria-hidden="true" [svgIcon]="checkIcon" />
+                  <span class="model__fit-text">{{ fit }}</span>
+                </li>
+              }
+            </ul>
+          </div>
+        </article>
+      </li>
+    }
+  </ol>
+</section>
