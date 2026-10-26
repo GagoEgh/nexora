@@ -26,7 +26,7 @@
   gap: spacing.space(20);
   align-items: start;
   box-sizing: border-box;
-  padding: 36px;
+  padding: spacing.space(32);
   border: 1px solid var(--mat-sys-outline-variant);
   border-radius: var(--nx-sys-corner-panel);
   background-color: var(--mat-sys-surface);

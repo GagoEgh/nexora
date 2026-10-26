@@ -60,7 +60,7 @@
 }
 
 .quality__panel[data-tone='plain'] .quality__chips {
-  gap: 10px;
+  gap: spacing.space(8);
 }
 
 .quality__panel[data-tone='accent'] .quality__chips {
@@ -75,15 +75,14 @@
   box-sizing: border-box;
 }
 
-/* 14px inline and the 40/36 heights are measured from Quality.png; neither sits on the scale. */
 .quality__panel[data-tone='plain'] .quality__chip {
-  padding: 10px 14px;
+  padding: spacing.space(8) spacing.space(12);
   border-radius: var(--mat-sys-corner-medium);
   background-color: var(--mat-sys-surface-container-low);
 }
 
 .quality__panel[data-tone='accent'] .quality__chip {
-  padding: spacing.space(8) 14px;
+  padding: spacing.space(8) spacing.space(12);
   border-radius: var(--mat-sys-corner-full);
   background-color: var(--mat-sys-surface);
 }

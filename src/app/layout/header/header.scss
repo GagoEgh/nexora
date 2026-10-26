@@ -4,9 +4,9 @@
 @use 'tokens/typography';
 
 $nav-min: (
-  en: 1270px,
-  ru: 1328px,
-  hy: 1448px,
+  en: 1242px,
+  ru: 1300px,
+  hy: 1420px,
 );
 
 @mixin nav-up() {
@@ -118,9 +118,8 @@ $nav-min: (
   text-decoration: none;
   cursor: pointer;
 
-  /* The row of seven has to fit the 1280px container, which the stacked drawer does not. */
   @include nav-up() {
-    padding-inline: 10px;
+    padding-inline: spacing.space(8);
   }
 }
 

@@ -644,7 +644,7 @@ test.describe('about quality and capability panels at the desktop design width',
 
     const practice = await box(page, `${plain} .quality__chip`);
     const discipline = await box(page, `${accent} .quality__chip`);
-    expect(practice.h).toBe(40);
+    expect(practice.h).toBe(36);
     expect(discipline.h).toBe(36);
 
     expect(await style(page, `${plain} .quality__chip`, 'border-top-left-radius')).toBe('12px');
@@ -861,7 +861,7 @@ test.describe('about markets at the desktop design width', () => {
     expect(await style(page, '.markets__panel', 'background-color')).toBe('rgb(255, 255, 255)');
     expect(await style(page, '.markets__panel', 'border-top-color')).toBe('rgb(226, 232, 240)');
     expect(await style(page, '.markets__panel', 'border-top-left-radius')).toBe('24px');
-    expect(await style(page, '.markets__panel', 'padding-top')).toBe('36px');
+    expect(await style(page, '.markets__panel', 'padding-top')).toBe('32px');
   });
 
   test('uses a primary tile and a secondary tile, both 48px', async ({ page }) => {
@@ -874,8 +874,8 @@ test.describe('about markets at the desktop design width', () => {
 
     const panels = await boxes(page, '.markets__panel');
     tiles.forEach((tile, i) => {
-      expect(tile.x - panels[i].x).toBe(37);
-      expect(tile.y - panels[i].y).toBe(37);
+      expect(tile.x - panels[i].x).toBe(33);
+      expect(tile.y - panels[i].y).toBe(33);
     });
 
     // blue-50 / cyan-50 containers from the project palette.

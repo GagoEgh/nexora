@@ -56,7 +56,7 @@
   display: grid;
   gap: spacing.space(16) spacing.space(32);
   align-items: center;
-  padding: 28px spacing.space(32);
+  padding: spacing.space(24) spacing.space(32);
 
   @include layout.up(expanded) {
     grid-template-columns: auto minmax(0, 1fr);

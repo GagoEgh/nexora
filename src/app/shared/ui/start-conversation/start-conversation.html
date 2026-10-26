@@ -1,7 +1,7 @@
-<section class="start-conversation">
+<section class="start-conversation" aria-labelledby="start-conversation-title">
   <div class="start-conversation__copy">
     <p class="start-conversation__eyebrow">{{ band().eyebrow }}</p>
-    <h2 class="start-conversation__title">{{ band().title }}</h2>
+    <h2 class="start-conversation__title" id="start-conversation-title">{{ band().title }}</h2>
     <p class="start-conversation__lead">{{ band().lead }}</p>
 
     @if (band().steps.length) {

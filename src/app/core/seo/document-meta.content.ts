@@ -75,9 +75,9 @@ const documentMetaContent = {
           ru: 'Партнёрство | Nexora',
         }),
         description: t({
-          en: 'Scoped projects, dedicated specialists, white-label execution or ongoing support: engagement models that follow your situation. Become a Nexora partner.',
-          hy: 'Սահմանված նախագծեր, նվիրված մասնագետներ, white-label կատարում կամ շարունակական աջակցություն՝ համագործակցության մոդելներ, որոնք հետևում են ձեր իրավիճակին։ Դարձեք Nexora-ի գործընկեր։',
-          ru: 'Проекты с фиксированным объёмом, выделенные специалисты, white-label исполнение или постоянная поддержка: модели сотрудничества, которые подстраиваются под вашу ситуацию. Станьте партнёром Nexora.',
+          en: 'For agencies, consultants, software companies and sales partners: white-label delivery, referrals and commission-based collaboration. Terms are agreed individually.',
+          hy: 'Գործակալությունների, խորհրդատուների, ծրագրային ընկերությունների և վաճառքի գործընկերների համար՝ white-label մատակարարում, ուղղորդումներ և միջնորդավճարով համագործակցություն։ Պայմանները համաձայնեցվում են անհատապես։',
+          ru: 'Для агентств, консультантов, софтверных компаний и партнёров по продажам: white-label разработка, рекомендации и сотрудничество за комиссию. Условия согласуются индивидуально.',
         }),
       },
       contact: {

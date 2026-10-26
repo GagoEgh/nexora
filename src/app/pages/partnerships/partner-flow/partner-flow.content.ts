@@ -3,6 +3,11 @@ import { t, type Dictionary } from 'intlayer';
 const partnerFlowContent = {
   key: 'partnerships-flow',
   content: {
+    label: t({
+      en: 'What each side brings',
+      hy: 'Ինչ է բերում յուրաքանչյուր կողմը',
+      ru: 'Что вносит каждая сторона',
+    }),
     partnerTitle: t({ en: 'Your side', hy: 'Ձեր կողմը', ru: 'Ваша сторона' }),
     nexoraTitle: 'Nexora',
     badge: t({

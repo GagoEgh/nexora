@@ -5,7 +5,7 @@ import { RouterLink } from '@angular/router';
 import { useDictionary } from 'angular-intlayer';
 import { LocalizedPathPipe } from '../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../core/icons/icons';
-import { CONTACT_PATH, ENGAGEMENT_MODELS_PATH } from '../../core/routing/paths';
+import { CONTACT_PATH, ENGAGEMENT_MODELS_PATH, SERVICES_PATH } from '../../core/routing/paths';
 import { PageIntro, type PageIntroCrumb } from '../../shared/ui/page-intro/page-intro';
 import {
   type ConversationCopy,
@@ -42,6 +42,7 @@ export class Partnerships {
   protected readonly arrowIcon = appIcon('arrow-right');
   protected readonly contactPath = CONTACT_PATH;
   protected readonly engagementPath = ENGAGEMENT_MODELS_PATH;
+  protected readonly servicesPath = SERVICES_PATH;
 
   protected readonly crumbs = computed<readonly PageIntroCrumb[]>(() => {
     const copy = this.content();
@@ -54,8 +55,8 @@ export class Partnerships {
       eyebrow: copy.eyebrow.value,
       title: copy.title.value,
       lead: copy.lead.value,
-      primary: { label: copy.primaryCta.value, path: CONTACT_PATH },
-      secondary: { label: copy.secondaryCta.value, path: ENGAGEMENT_MODELS_PATH },
+      primary: { label: copy.primaryCta.value, path: this.contactPath },
+      secondary: { label: copy.secondaryCta.value, path: this.servicesPath },
     };
   });
 }

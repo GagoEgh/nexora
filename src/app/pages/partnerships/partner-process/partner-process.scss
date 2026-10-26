@@ -57,7 +57,7 @@
   box-sizing: border-box;
   border-radius: var(--nx-sys-corner-panel);
   background-color: var(--nx-sys-inverse-surface-container);
-  padding: 28px;
+  padding: spacing.space(24);
 }
 
 .process__badge {

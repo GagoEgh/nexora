@@ -265,6 +265,12 @@ test.describe('footer at the desktop design width', () => {
 });
 
 test.describe('routing', () => {
+  /*
+   * The desktop nav appears per locale (header.scss $nav-min: en 1270, ru 1328, hy 1448),
+   * so these locale-prefixed tests need a width that clears the widest of the three.
+   */
+  test.use({ viewport: { width: 1448, height: 900 } });
+
   test('pages are lazy: the chunk is requested on navigation and the active state follows', async ({
     page,
   }) => {
