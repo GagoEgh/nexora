@@ -1,0 +1,30 @@
+<section class="models" aria-labelledby="models-title">
+  <div class="models__header">
+    <div class="models__heading">
+      <p class="models__eyebrow">{{ content().eyebrow }}</p>
+      <h2 class="models__title" id="models-title">{{ content().title }}</h2>
+    </div>
+
+    <p class="models__lead">{{ content().lead }}</p>
+  </div>
+
+  <ul class="models__list">
+    @for (item of content().items; track $index; let first = $first) {
+      <li class="models__row">
+        <app-icon-tile [icon]="item.icon.value" [tone]="tileTone(first)" />
+
+        <div class="models__copy">
+          <h3 class="models__row-title">{{ item.title }}</h3>
+          <p class="models__row-text">{{ item.text }}</p>
+        </div>
+
+        <div class="models__fit">
+          <p class="models__label">{{ content().typicallyFor }}</p>
+          <p class="models__fit-value">{{ item.audience }}</p>
+        </div>
+
+        <p class="models__chip">{{ content().terms }}</p>
+      </li>
+    }
+  </ul>
+</section>

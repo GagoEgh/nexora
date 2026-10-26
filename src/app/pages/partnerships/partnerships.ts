@@ -9,6 +9,7 @@ import { CONTACT_PATH, ENGAGEMENT_MODELS_PATH } from '../../core/routing/paths';
 import { PageIntro, type PageIntroCrumb } from '../../shared/ui/page-intro/page-intro';
 import { PartnerAudience } from './partner-audience/partner-audience';
 import { PartnerFlow } from './partner-flow/partner-flow';
+import { PartnerModel } from './partner-model/partner-model';
 import partnershipsContent from './partnerships.content';
 
 @Component({
@@ -17,6 +18,7 @@ import partnershipsContent from './partnerships.content';
     PageIntro,
     PartnerFlow,
     PartnerAudience,
+    PartnerModel,
     RouterLink,
     LocalizedPathPipe,
     MatButton,
