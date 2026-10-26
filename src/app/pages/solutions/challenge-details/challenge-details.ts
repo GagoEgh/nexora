@@ -6,7 +6,7 @@ import { LocalizedPathPipe } from '../../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../../core/icons/icons';
 import { IconTile, type IconTileTone } from '../../../shared/ui/icon-tile/icon-tile';
 import { ordinal } from '../../../shared/ordinal';
-import type { ChallengeTone } from '../challenge';
+import { challengeSectionId, type ChallengeTone } from '../challenge';
 import challengesContent from '../challenges.content';
 
 const TILE_TONES: Readonly<Record<ChallengeTone, IconTileTone>> = {
@@ -23,6 +23,7 @@ const TILE_TONES: Readonly<Record<ChallengeTone, IconTileTone>> = {
 export class ChallengeDetails {
   protected readonly content = useDictionary(challengesContent);
   protected readonly ordinal = ordinal;
+  protected readonly sectionId = challengeSectionId;
   protected readonly total = computed(() => ordinal(this.content().items.length - 1));
 
   protected readonly checkIcon = appIcon('check');

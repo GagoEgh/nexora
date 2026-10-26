@@ -1,8 +1,14 @@
 <ul class="challenge-index">
   @for (item of content().items; track $index) {
-    <li class="challenge-index__card">
-      <span class="challenge-index__number">{{ ordinal($index) }}</span>
-      <span class="challenge-index__title">{{ item.title }}</span>
+    <li class="challenge-index__item">
+      <a
+        class="challenge-index__card"
+        [href]="'#' + sectionId(item.id.value)"
+        (click)="onSelect($event, item.id.value)"
+      >
+        <span class="challenge-index__number">{{ ordinal($index) }}</span>
+        <span class="challenge-index__title">{{ item.title }}</span>
+      </a>
     </li>
   }
 </ul>

@@ -1,6 +1,6 @@
 <ul class="challenge-details">
   @for (item of content().items; track $index) {
-    <li class="challenge-details__panel">
+    <li class="challenge-details__panel" [id]="sectionId(item.id.value)">
       <div class="challenge-details__summary">
         <div class="challenge-details__head">
           <app-icon-tile [icon]="item.icon.value" [tone]="tileTone(item.tone.value)" />

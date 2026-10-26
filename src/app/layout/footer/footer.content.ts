@@ -63,7 +63,7 @@ const footerContent = {
         heading: t({ en: 'Solutions', hy: 'Լուծումներ', ru: 'Решения' }),
         links: [
           {
-            path: '/solutions',
+            path: '/solutions?challenge=launch-digital-product',
             label: t({
               en: 'Launch a digital product',
               hy: 'Թողարկել թվային պրոդուկտ',
@@ -71,7 +71,7 @@ const footerContent = {
             }),
           },
           {
-            path: '/solutions',
+            path: '/solutions?challenge=modernize-platform',
             label: t({
               en: 'Modernize a platform',
               hy: 'Արդիականացնել հարթակը',
@@ -79,7 +79,7 @@ const footerContent = {
             }),
           },
           {
-            path: '/solutions',
+            path: '/solutions?challenge=automate-operations',
             label: t({
               en: 'Automate operations',
               hy: 'Ավտոմատացնել գործընթացները',
@@ -87,7 +87,7 @@ const footerContent = {
             }),
           },
           {
-            path: '/solutions',
+            path: '/solutions?challenge=introduce-ai',
             label: t({
               en: 'Introduce AI into workflows',
               hy: 'Ներդնել AI աշխատանքային հոսքերում',
@@ -95,7 +95,7 @@ const footerContent = {
             }),
           },
           {
-            path: '/solutions',
+            path: '/solutions?challenge=scale-engineering',
             label: t({
               en: 'Scale engineering capacity',
               hy: 'Ընդլայնել ինժեներական հզորությունը',

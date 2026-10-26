@@ -1,6 +1,6 @@
 import { t, type Dictionary } from 'intlayer';
 import type { AppIconName } from '../../core/icons/icons';
-import type { ChallengeTone } from './challenge';
+import type { ChallengeId, ChallengeTone } from './challenge';
 
 const challengesContent = {
   key: 'solutions-challenges',
@@ -19,6 +19,7 @@ const challengesContent = {
     }),
     items: [
       {
+        id: 'launch-digital-product' satisfies ChallengeId,
         icon: 'rocket' satisfies AppIconName,
         tone: 'plain' satisfies ChallengeTone,
         title: t({
@@ -56,6 +57,7 @@ const challengesContent = {
         ],
       },
       {
+        id: 'modernize-platform' satisfies ChallengeId,
         icon: 'refresh-cw' satisfies AppIconName,
         tone: 'plain' satisfies ChallengeTone,
         title: t({
@@ -96,6 +98,7 @@ const challengesContent = {
         ],
       },
       {
+        id: 'automate-operations' satisfies ChallengeId,
         icon: 'workflow' satisfies AppIconName,
         tone: 'plain' satisfies ChallengeTone,
         title: t({
@@ -136,6 +139,7 @@ const challengesContent = {
         ],
       },
       {
+        id: 'introduce-ai' satisfies ChallengeId,
         icon: 'sparkle' satisfies AppIconName,
         tone: 'accent' satisfies ChallengeTone,
         title: t({
@@ -180,6 +184,7 @@ const challengesContent = {
         ],
       },
       {
+        id: 'connect-systems' satisfies ChallengeId,
         icon: 'plug' satisfies AppIconName,
         tone: 'plain' satisfies ChallengeTone,
         title: t({
@@ -220,6 +225,7 @@ const challengesContent = {
         ],
       },
       {
+        id: 'scale-engineering' satisfies ChallengeId,
         icon: 'users' satisfies AppIconName,
         tone: 'plain' satisfies ChallengeTone,
         title: t({
@@ -259,6 +265,7 @@ const challengesContent = {
         ],
       },
       {
+        id: 'build-saas' satisfies ChallengeId,
         icon: 'layers' satisfies AppIconName,
         tone: 'plain' satisfies ChallengeTone,
         title: t({
@@ -300,6 +307,7 @@ const challengesContent = {
         ],
       },
       {
+        id: 'improve-reliability' satisfies ChallengeId,
         icon: 'shield-check' satisfies AppIconName,
         tone: 'plain' satisfies ChallengeTone,
         title: t({

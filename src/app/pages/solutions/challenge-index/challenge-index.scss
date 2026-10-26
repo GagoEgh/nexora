@@ -28,6 +28,10 @@
   }
 }
 
+.challenge-index__item {
+  display: grid;
+}
+
 .challenge-index__card {
   display: flex;
   gap: spacing.space(16);
@@ -38,6 +42,11 @@
   border: 1px solid var(--mat-sys-outline-variant);
   border-radius: var(--mat-sys-corner-medium);
   background-color: var(--mat-sys-surface);
+  text-decoration: none;
+
+  &:hover {
+    background-color: var(--mat-sys-surface-container-low);
+  }
 }
 
 .challenge-index__number {

@@ -7,7 +7,7 @@
   <p class="solutions__lead">{{ content().lead }}</p>
 </app-page-intro>
 
-<app-challenge-index />
+<app-challenge-index (challengeSelect)="onChallengeSelect($event)" />
 
 <app-challenge-details />
 
