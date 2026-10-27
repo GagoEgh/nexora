@@ -1,6 +1,7 @@
 @use 'tokens/spacing';
 @use 'tokens/layout';
 @use 'mixins/eyebrow';
+@use 'mixins/text';
 
 :host {
   display: block;
@@ -24,6 +25,7 @@
 }
 
 .hero__copy {
+  @include text.contained();
   display: grid;
   gap: spacing.space(24);
   justify-items: start;
@@ -52,6 +54,7 @@
 }
 
 .hero__title {
+  @include text.contained();
   margin: 0;
   font: var(--nx-sys-display-hero);
   letter-spacing: var(--nx-sys-display-tracking);
@@ -59,6 +62,7 @@
 }
 
 .hero__lead {
+  @include text.contained();
   margin: 0;
   max-width: 34rem;
   font: var(--nx-sys-body-lead);
@@ -93,6 +97,7 @@
 }
 
 .hero__trust-item {
+  @include text.contained();
   display: flex;
   align-items: center;
   gap: spacing.space(8);

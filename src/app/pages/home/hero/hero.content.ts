@@ -6,45 +6,49 @@ const heroContent = {
   content: {
     eyebrow: t({
       en: 'Technology development & AI solutions partner',
-      hy: 'Տեխնոլոգիական մշակման և AI լուծումների գործընկեր',
-      ru: 'Партнёр по разработке технологий и AI-решений',
+      hy: 'Տեխնոլոգիաների մշակման և AI լուծումների գործընկեր',
+      ru: 'Партнёр по разработке технологий и внедрению AI-решений',
     }),
     eyebrowShort: t({
       en: 'Technology & AI solutions partner',
-      hy: 'Տեխնոլոգիական և AI լուծումների գործընկեր',
-      ru: 'Партнёр по технологиям и AI-решениям',
+      hy: 'Տեխնոլոգիաների և AI լուծումների գործընկեր',
+      ru: 'Партнёр в области технологий и AI-решений',
     }),
     title: t({
       en: 'Engineering Digital Solutions That Move Business Forward.',
-      hy: 'Թվային լուծումներ, որոնք առաջ են տանում բիզնեսը։',
-      ru: 'Создаём цифровые решения, которые двигают бизнес вперёд.',
+      hy: 'Ստեղծում ենք թվային լուծումներ, որոնք զարգացնում են բիզնեսը։',
+      ru: 'Создаём цифровые решения, которые помогают бизнесу развиваться.',
     }),
     lead: t({
       en: 'Nexora brings together Senior and Senior+ engineering expertise to build custom software, AI-powered solutions, web and mobile applications, and reliable technology infrastructure.',
-      hy: 'Nexora-ն միավորում է Senior և Senior+ ինժեներական փորձը՝ ստեղծելու անհատական ծրագրային ապահովում, AI լուծումներ, վեբ և մոբայլ հավելվածներ և հուսալի տեխնոլոգիական ենթակառուցվածք։',
-      ru: 'Nexora объединяет инженерную экспертизу уровня Senior и Senior+, чтобы создавать заказное ПО, решения на основе AI, веб- и мобильные приложения и надёжную технологическую инфраструктуру.',
+      hy: 'Nexora-ն միավորում է Senior և Senior+ մակարդակի ինժեներական փորձառությունը՝ անհատական ծրագրային լուծումներ, AI-ով աշխատող համակարգեր, վեբ և բջջային հավելվածներ ու հուսալի տեխնոլոգիական ենթակառուցվածքներ ստեղծելու համար։',
+      ru: 'Nexora объединяет инженерную экспертизу специалистов уровня Senior и Senior+, создавая заказное программное обеспечение, решения на базе AI, веб- и мобильные приложения, а также надёжную технологическую инфраструктуру.',
     }),
     primaryCta: t({
       en: 'Discuss Your Project',
-      hy: 'Քննարկել ձեր նախագիծը',
+      hy: 'Քննարկենք ձեր նախագիծը',
       ru: 'Обсудить ваш проект',
     }),
     secondaryCta: t({
       en: 'Explore Our Services',
-      hy: 'Ծանոթանալ ծառայություններին',
+      hy: 'Ծանոթացեք մեր ծառայություններին',
       ru: 'Наши услуги',
     }),
     trust: [
       t({
         en: 'Senior & Senior+ engineers only',
-        hy: 'Միայն Senior և Senior+ ինժեներներ',
-        ru: 'Только Senior и Senior+ инженеры',
+        hy: 'Միայն Senior և Senior+ մակարդակի ինժեներներ',
+        ru: 'Только инженеры уровня Senior и Senior+',
       }),
-      t({ en: 'End-to-end delivery', hy: 'Ամբողջական մատակարարում', ru: 'Полный цикл разработки' }),
+      t({
+        en: 'End-to-end delivery',
+        hy: 'Ամբողջական իրականացում՝ սկզբից մինչև վերջ',
+        ru: 'Полный цикл реализации проекта',
+      }),
       t({
         en: 'Armenia & international',
-        hy: 'Հայաստան և միջազգային',
-        ru: 'Армения и международные проекты',
+        hy: 'Հայաստան և միջազգային շուկաներ',
+        ru: 'Армения и международные рынки',
       }),
     ],
     illustration: {
@@ -53,8 +57,16 @@ const heroContent = {
         [
           {
             icon: 'code' satisfies AppIconName,
-            label: t({ en: 'Web App', hy: 'Վեբ հավելված', ru: 'Веб-приложение' }),
-            shortLabel: t({ en: 'Web App', hy: 'Վեբ', ru: 'Веб' }),
+            label: t({
+              en: 'Web App',
+              hy: 'Վեբ հավելված',
+              ru: 'Веб-приложение',
+            }),
+            shortLabel: t({
+              en: 'Web App',
+              hy: 'Վեբ',
+              ru: 'Веб',
+            }),
             meta: 'next.js',
             dark: false,
           },
@@ -69,8 +81,16 @@ const heroContent = {
         [
           {
             icon: 'sparkle' satisfies AppIconName,
-            label: t({ en: 'AI Orchestrator', hy: 'AI նվագախումբ', ru: 'AI-оркестратор' }),
-            shortLabel: t({ en: 'AI Orchestrator', hy: 'AI նվագախումբ', ru: 'AI-оркестратор' }),
+            label: t({
+              en: 'AI Orchestrator',
+              hy: 'AI համակարգերի համակարգող',
+              ru: 'Оркестратор AI-систем',
+            }),
+            shortLabel: t({
+              en: 'AI Orchestrator',
+              hy: 'AI համակարգող',
+              ru: 'AI-оркестратор',
+            }),
             meta: 'agents · rag',
             dark: true,
           },
@@ -78,15 +98,31 @@ const heroContent = {
         [
           {
             icon: 'smartphone' satisfies AppIconName,
-            label: t({ en: 'Mobile App', hy: 'Մոբայլ հավելված', ru: 'Мобильное приложение' }),
-            shortLabel: t({ en: 'Mobile', hy: 'Մոբայլ', ru: 'Мобильное' }),
+            label: t({
+              en: 'Mobile App',
+              hy: 'Բջջային հավելված',
+              ru: 'Мобильное приложение',
+            }),
+            shortLabel: t({
+              en: 'Mobile',
+              hy: 'Բջջային',
+              ru: 'Мобильное',
+            }),
             meta: 'ios · android',
             dark: false,
           },
           {
             icon: 'database' satisfies AppIconName,
-            label: t({ en: 'Knowledge Base', hy: 'Գիտելիքների բազա', ru: 'База знаний' }),
-            shortLabel: t({ en: 'Knowledge', hy: 'Գիտելիք', ru: 'Знания' }),
+            label: t({
+              en: 'Knowledge Base',
+              hy: 'Գիտելիքների բազա',
+              ru: 'База знаний',
+            }),
+            shortLabel: t({
+              en: 'Knowledge',
+              hy: 'Գիտելիք',
+              ru: 'Знания',
+            }),
             meta: 'vector search',
             dark: false,
           },
@@ -96,8 +132,8 @@ const heroContent = {
       workflow: {
         title: t({
           en: 'Agent workflow',
-          hy: 'Գործակալի աշխատահոսք',
-          ru: 'Рабочий процесс агента',
+          hy: 'AI գործակալի աշխատանքային գործընթաց',
+          ru: 'Рабочий процесс AI-агента',
         }),
         steps: [
           {
@@ -111,16 +147,16 @@ const heroContent = {
           {
             label: t({
               en: 'Retrieve context from CRM',
-              hy: 'Ստանալ համատեքստը CRM-ից',
-              ru: 'Получить контекст из CRM',
+              hy: 'Ստանալ անհրաժեշտ համատեքստը CRM-ից',
+              ru: 'Получить необходимые данные из CRM',
             }),
             done: true,
           },
           {
             label: t({
               en: 'Draft reply for review',
-              hy: 'Պատրաստել պատասխանի նախագիծը',
-              ru: 'Подготовить черновик ответа',
+              hy: 'Պատրաստել պատասխանի նախագիծը՝ ստուգման համար',
+              ru: 'Подготовить черновик ответа для проверки',
             }),
             done: false,
           },

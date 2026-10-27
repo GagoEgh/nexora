@@ -1,0 +1,4 @@
+@mixin contained() {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}

@@ -15,7 +15,7 @@
   </div>
 
   <ul class="engagement-models__list">
-    @for (model of content().models; track model.icon.value) {
+    @for (model of content().models; track $index) {
       <li class="engagement-models__card">
         <app-icon-tile [icon]="model.icon.value" tone="primary" />
         <h3 class="engagement-models__card-title">{{ model.title }}</h3>

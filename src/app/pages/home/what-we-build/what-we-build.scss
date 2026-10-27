@@ -1,6 +1,7 @@
 @use 'tokens/spacing';
 @use 'tokens/layout';
 @use 'mixins/eyebrow';
+@use 'mixins/text';
 
 :host {
   display: block;
@@ -27,6 +28,7 @@
 }
 
 .what-we-build__heading {
+  @include text.contained();
   display: grid;
   gap: spacing.space(24);
   justify-items: start;
@@ -37,6 +39,7 @@
 }
 
 .what-we-build__title {
+  @include text.contained();
   margin: 0;
   max-width: 640px;
   font: var(--nx-sys-display-section);
@@ -45,6 +48,7 @@
 }
 
 .what-we-build__intro {
+  @include text.contained();
   margin: 0;
   font: var(--nx-sys-body-copy);
   color: var(--mat-sys-on-surface-variant);
@@ -77,12 +81,14 @@
 }
 
 .what-we-build__card-copy {
+  @include text.contained();
   display: grid;
   gap: spacing.space(4);
   padding: spacing.space(8);
 }
 
 .what-we-build__card-title {
+  @include text.contained();
   margin: 0;
   font: var(--nx-sys-title-card);
   letter-spacing: var(--nx-sys-display-tracking);
@@ -90,12 +96,14 @@
 }
 
 .what-we-build__card-desc {
+  @include text.contained();
   margin: 0;
   font: var(--mat-sys-body-small);
   color: var(--mat-sys-on-surface-variant);
 }
 
 .what-we-build__note {
+  @include text.contained();
   margin: spacing.space(48) 0 0;
   font: var(--mat-sys-body-small);
   color: var(--nx-sys-on-surface-muted);

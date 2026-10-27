@@ -18,8 +18,20 @@ export class Why {
   private readonly listbox = viewChild.required(MatChipListbox);
   protected readonly selected = signal(0);
 
-  protected readonly reasons = computed(() => this.disciplines().items[this.selected()].reasons);
+  protected readonly ordinal = ordinal;
 
+  protected readonly reasons = computed(() => {
+    const items = this.disciplines().items;
+    // Clamped: a content edit that shortens the list must not throw on a stale selection.
+    return items[Math.min(this.selected(), items.length - 1)]?.reasons ?? [];
+  });
+
+  /**
+   * Chips here are a filter, so there is always exactly one selection. Clicking the selected
+   * chip makes MatChipListbox emit `undefined`, and because the signal has not changed Angular
+   * will not re-run `[value]`, leaving the listbox visually blank. Writing the value back is
+   * what resyncs it - it looks redundant but removing it reintroduces the deselection bug.
+   */
   protected onSelection(change: MatChipListboxChange): void {
     if (typeof change.value === 'number') {
       this.selected.set(change.value);
@@ -28,6 +40,4 @@ export class Why {
 
     this.listbox().value = this.selected();
   }
-
-  protected readonly ordinal = ordinal;
 }

@@ -3,6 +3,7 @@
 @use 'tokens/layout';
 @use 'tokens/typography';
 @use 'mixins/eyebrow';
+@use 'mixins/text';
 
 :host {
   display: block;
@@ -13,9 +14,6 @@
 .ai {
   display: grid;
   gap: spacing.space(48);
-
-  /* Without this the 64px padding is added outside max-width, so the panel renders 128px wider
-   * than every other container on the site once the viewport passes 1440px. */
   box-sizing: border-box;
   max-width: var(--nx-layout-container-max);
   margin-inline: auto;
@@ -50,6 +48,7 @@
 }
 
 .ai__copy {
+  @include text.contained();
   display: grid;
   gap: spacing.space(24);
   justify-items: start;
@@ -62,12 +61,14 @@
 }
 
 .ai__title {
+  @include text.contained();
   margin: 0;
   font: var(--nx-sys-display-section);
   letter-spacing: var(--nx-sys-display-tracking);
 }
 
 .ai__lead {
+  @include text.contained();
   margin: 0;
   max-width: 440px;
   font: var(--nx-sys-body-lead);
@@ -108,17 +109,20 @@
 }
 
 .ai__card-copy {
+  @include text.contained();
   display: grid;
   gap: spacing.space(4);
   min-width: 0;
 }
 
 .ai__card-title {
+  @include text.contained();
   margin: 0;
   font: var(--mat-sys-label-large);
 }
 
 .ai__card-text {
+  @include text.contained();
   margin: 0;
   font: var(--mat-sys-body-small);
   color: var(--nx-sys-inverse-on-surface-variant);
@@ -155,6 +159,7 @@
 }
 
 .ai__step-label {
+  @include text.contained();
   display: inline-flex;
   align-items: center;
   box-sizing: border-box;
@@ -176,6 +181,7 @@
 }
 
 .ai__note {
+  @include text.contained();
   margin: 0;
   font: var(--mat-sys-body-small);
   color: var(--nx-sys-inverse-on-surface-variant);

@@ -1,6 +1,7 @@
 @use 'tokens/spacing';
 @use 'tokens/layout';
 @use 'mixins/eyebrow';
+@use 'mixins/text';
 
 :host {
   display: block;
@@ -26,6 +27,7 @@
 }
 
 .engagement-models__heading {
+  @include text.contained();
   display: grid;
   gap: spacing.space(24);
   justify-items: start;
@@ -36,6 +38,7 @@
 }
 
 .engagement-models__title {
+  @include text.contained();
   margin: 0;
   max-width: 640px;
   font: var(--nx-sys-display-section);
@@ -44,12 +47,14 @@
 }
 
 .engagement-models__intro {
+  @include text.contained();
   display: grid;
   gap: spacing.space(12);
   justify-items: start;
 }
 
 .engagement-models__text {
+  @include text.contained();
   margin: 0;
   font: var(--nx-sys-body-copy);
   color: var(--mat-sys-on-surface-variant);
@@ -82,6 +87,7 @@
 }
 
 .engagement-models__card-title {
+  @include text.contained();
   margin: spacing.space(16) 0 0;
   font: var(--nx-sys-title-step);
   letter-spacing: var(--nx-sys-display-tracking);
@@ -89,6 +95,7 @@
 }
 
 .engagement-models__description {
+  @include text.contained();
   margin: spacing.space(16) 0 spacing.space(32);
   font: var(--mat-sys-body-small);
   color: var(--mat-sys-on-surface-variant);
@@ -109,6 +116,7 @@
 }
 
 .engagement-models__value {
+  @include text.contained();
   margin: spacing.space(4) 0 0;
   font: var(--mat-sys-body-small);
   color: var(--mat-sys-on-surface);
