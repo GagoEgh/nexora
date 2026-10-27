@@ -1,0 +1,37 @@
+<section class="notfound">
+  <p class="notfound__diagram" role="img" [attr.aria-label]="content().diagramLabel.value">
+    <span class="notfound__node">
+      <app-icon-tile icon="globe" tone="primary" size="small" />
+      <span class="notfound__node-text">{{ content().requestedLink }}</span>
+    </span>
+
+    <span class="notfound__wire" aria-hidden="true"></span>
+    <mat-icon class="notfound__cross" aria-hidden="true" [svgIcon]="crossIcon" />
+    <span class="notfound__wire" aria-hidden="true"></span>
+
+    <span class="notfound__node notfound__node--missing">
+      <app-icon-tile icon="x" tone="error" size="small" />
+      <span class="notfound__node-text">{{ content().missingLabel }}</span>
+    </span>
+  </p>
+
+  <p class="notfound__eyebrow">{{ content().eyebrow }}</p>
+  <h1 class="notfound__title">{{ content().heading }}</h1>
+  <p class="notfound__lead">{{ content().lead }}</p>
+
+  <div class="notfound__actions">
+    <a matButton="filled" [routerLink]="homePath | localizedPath">
+      {{ content().primaryCta }}
+    </a>
+
+    <a matButton="outlined" [routerLink]="servicesPath | localizedPath">
+      {{ content().secondaryCta }}
+    </a>
+  </div>
+
+  <nav class="notfound__links" [attr.aria-label]="content().linksLabel.value">
+    @for (link of content().links; track link.path.value) {
+      <a class="notfound__chip" [routerLink]="link.path.value | localizedPath">{{ link.label }}</a>
+    }
+  </nav>
+</section>

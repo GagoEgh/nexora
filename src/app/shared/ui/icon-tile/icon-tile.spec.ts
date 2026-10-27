@@ -56,6 +56,7 @@ describe('IconTile', () => {
     for (const tone of [
       'primary',
       'secondary',
+      'error',
       'neutral',
       'inverse',
       'inverse-accent',

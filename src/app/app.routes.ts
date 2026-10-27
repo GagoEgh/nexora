@@ -61,7 +61,11 @@ const pages: Routes = [
     loadComponent: () => import('./pages/terms-of-use/terms-of-use').then((m) => m.TermsOfUse),
     data: { meta: 'terms-of-use' } satisfies DocumentMetaRouteData,
   },
-  { path: '**', redirectTo: '' },
+  {
+    path: '**',
+    loadComponent: () => import('./pages/not-found/not-found').then((m) => m.NotFound),
+    data: { meta: 'not-found' } satisfies DocumentMetaRouteData,
+  },
 ];
 
 export const routes: Routes = [

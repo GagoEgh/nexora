@@ -21,6 +21,11 @@
   color: var(--mat-sys-on-secondary-container);
 }
 
+:host([data-tone='error']) {
+  background-color: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+}
+
 :host([data-tone='neutral']) {
   background-color: var(--mat-sys-surface-container);
   color: var(--mat-sys-on-surface);

@@ -5,6 +5,7 @@ import { appIcon, type AppIconName } from '../../../core/icons/icons';
 export type IconTileTone =
   | 'primary'
   | 'secondary'
+  | 'error'
   | 'neutral'
   | 'inverse'
   | 'inverse-accent'

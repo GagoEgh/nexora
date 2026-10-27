@@ -21,6 +21,7 @@ export const DOCUMENT_META_PAGES = [
   'contact',
   'privacy-policy',
   'terms-of-use',
+  'not-found',
 ] as const;
 
 export type DocumentMetaPage = (typeof DOCUMENT_META_PAGES)[number];

@@ -36,14 +36,14 @@ describe('locale routing', () => {
     expect(i18n().locale()).toBe('en');
   });
 
-  it('redirects unknown paths to the root of their locale', async () => {
+  it('keeps unknown paths on their own URL, under the locale they were opened in', async () => {
     const router = TestBed.inject(Router);
     await router.navigateByUrl('/hy/does-not-exist');
-    expect(router.url).toBe('/hy');
+    expect(router.url).toBe('/hy/does-not-exist');
     expect(i18n().locale()).toBe('hy');
 
     await router.navigateByUrl('/does-not-exist');
-    expect(router.url).toBe('/');
+    expect(router.url).toBe('/does-not-exist');
     expect(i18n().locale()).toBe('en');
   });
 

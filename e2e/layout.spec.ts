@@ -333,10 +333,11 @@ test.describe('routing', () => {
     await expect(page.locator('main h1')).toHaveText('Terms of Use');
   });
 
-  test('unknown URLs redirect to Home', async ({ page }) => {
+  test('unknown URLs render the 404 page at the attempted address', async ({ page }) => {
     await page.goto('/does-not-exist');
-    await expect(page).toHaveURL(/\/$/);
-    await expect(page.locator('main h1')).toHaveText(HOME_HEADING);
+    await expect(page).toHaveURL(/\/does-not-exist$/);
+    await expect(page.locator('main h1')).toHaveText('This page doesn’t exist — or it has moved.');
+    await expect(page.locator('app-not-found .notfound__eyebrow')).toHaveText(/error 404/i);
   });
 
   test('localized pages have their own URLs with localized links and alternates', async ({
@@ -371,9 +372,10 @@ test.describe('routing', () => {
       'Տասնհինգ ծառայություն՝ ծրագրային ապահովման ողջ կենսափուլի ընթացքում։',
     );
 
-    // Unknown paths fall back to the root of their locale; a bare entry honours the last choice.
+    // Unknown paths keep their own address and locale; a bare entry honours the last choice.
     await page.goto('/hy/does-not-exist');
-    await expect(page).toHaveURL(/\/hy$/);
+    await expect(page).toHaveURL(/\/hy\/does-not-exist$/);
+    await expect(page.locator('html')).toHaveAttribute('lang', 'hy');
     await page.goto('/');
     await expect(page).toHaveURL(/\/hy$/);
     await expect(page.locator('html')).toHaveAttribute('lang', 'hy');

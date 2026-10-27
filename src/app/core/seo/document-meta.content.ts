@@ -100,6 +100,18 @@ const documentMetaContent = {
           ru: 'Как Nexora собирает, использует и защищает персональные данные, когда вы пользуетесь сайтом и связываетесь с нами.',
         }),
       },
+      'not-found': {
+        title: t({
+          en: 'Page not found | Nexora',
+          hy: 'Էջը չի գտնվել | Nexora',
+          ru: 'Страница не найдена | Nexora',
+        }),
+        description: t({
+          en: 'The page you are looking for does not exist or has moved. Continue from the Nexora homepage, services or contact page.',
+          hy: 'Ձեր փնտրած էջը գոյություն չունի կամ տեղափոխվել է։ Շարունակեք Nexora-ի գլխավոր էջից, ծառայություններից կամ կապի էջից։',
+          ru: 'Страница, которую вы ищете, не существует или была перемещена. Продолжите с главной страницы Nexora, раздела услуг или страницы контактов.',
+        }),
+      },
       'terms-of-use': {
         title: t({
           en: 'Terms of Use | Nexora',
