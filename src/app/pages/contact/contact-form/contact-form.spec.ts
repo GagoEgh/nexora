@@ -21,7 +21,6 @@ const VALID = {
   company: 'Nexora',
   service: 'software-engineering',
   description: 'We need to modernize a legacy ordering platform.',
-  consent: true,
 } as const;
 
 class FakeSubmitter extends ContactSubmitter {
@@ -61,7 +60,6 @@ interface FormInternals {
     timeline: FieldAccessor<string>;
     budget: FieldAccessor<string>;
     method: FieldAccessor<string>;
-    consent: FieldAccessor<boolean>;
   };
   submit(): Promise<void>;
   descriptionLength(): number;
@@ -103,7 +101,6 @@ describe('ContactForm', () => {
     inner.form.company().value.set(VALID.company);
     inner.form.service().value.set(VALID.service);
     inner.form.description().value.set(VALID.description);
-    inner.form.consent().value.set(VALID.consent);
     await fixture.whenStable();
   };
 
@@ -111,11 +108,10 @@ describe('ContactForm', () => {
     expect(inner.form().invalid()).toBe(true);
     expect(inner.form.interest().value()).toBe('new-project');
     expect(inner.form.method().value()).toBe('email');
-    expect(inner.form.consent().value()).toBe(false);
   });
 
-  it('requires name, email, company, service, description and consent', () => {
-    for (const key of ['name', 'email', 'company', 'service', 'description', 'consent']) {
+  it('requires name, email, company, service and description', () => {
+    for (const key of ['name', 'email', 'company', 'service', 'description']) {
       expect(field(key).invalid(), key).toBe(true);
     }
     for (const key of ['timeline', 'budget']) {
@@ -131,16 +127,6 @@ describe('ContactForm', () => {
     inner.form.email().value.set('ada@example.com');
     await fixture.whenStable();
     expect(inner.form.email().valid()).toBe(true);
-  });
-
-  it('treats consent as required, so an unchecked box fails', async () => {
-    inner.form.consent().value.set(false);
-    await fixture.whenStable();
-    expect(inner.form.consent().getError('required')).toBeTruthy();
-
-    inner.form.consent().value.set(true);
-    await fixture.whenStable();
-    expect(inner.form.consent().valid()).toBe(true);
   });
 
   it('caps name, company and description at the advertised maximums', async () => {
@@ -169,7 +155,7 @@ describe('ContactForm', () => {
 
     expect(submitter.calls).toHaveLength(0);
     expect(inner.form.name().touched()).toBe(true);
-    expect(inner.form.consent().touched()).toBe(true);
+    expect(inner.form.description().touched()).toBe(true);
   });
 
   it('submits a valid form once with the entered values and resets on success', async () => {
@@ -185,13 +171,12 @@ describe('ContactForm', () => {
       company: VALID.company,
       service: VALID.service,
       description: VALID.description,
-      consent: true,
       interest: 'new-project',
       method: 'email',
     });
 
     expect(inner.form.name().value()).toBe('');
-    expect(inner.form.consent().value()).toBe(false);
+    expect(inner.form.email().value()).toBe('');
     expect(inner.form.interest().value()).toBe('new-project');
   });
 

@@ -10,7 +10,6 @@ import {
   submit as submitForm,
 } from '@angular/forms/signals';
 import { MatButton } from '@angular/material/button';
-import { MatCheckbox } from '@angular/material/checkbox';
 import {
   MAT_FORM_FIELD_DEFAULT_OPTIONS,
   MatError,
@@ -54,13 +53,9 @@ const DEFAULTS: ContactInquiry = {
   timeline: '',
   budget: '',
   method: 'email',
-  consent: false,
+  website: '',
 };
 
-/**
- * The project's SCSS relies on the reactive-forms status classes (see theme/_checkbox.scss),
- * which signal forms only emit when they are configured.
- */
 const STATUS_CLASSES = {
   'ng-invalid': (binding: FormFieldBinding) => binding.state().invalid(),
   'ng-valid': (binding: FormFieldBinding) => !binding.state().invalid(),
@@ -79,7 +74,6 @@ const STATUS_CLASSES = {
     MatOption,
     MatHint,
     MatError,
-    MatCheckbox,
     MatButton,
     MatIcon,
     RouterLink,
@@ -123,9 +117,6 @@ export class ContactForm {
 
     required(inquiry.description);
     maxLength(inquiry.description, DESCRIPTION_MAX);
-
-    // `required` treats `false` as empty, matching Validators.requiredTrue.
-    required(inquiry.consent);
   });
 
   protected readonly submitting = computed(() => this.form().submitting());
@@ -147,7 +138,6 @@ export class ContactForm {
   );
 
   protected async submit(event?: Event): Promise<void> {
-    // Signal forms has no form-level directive, so the native submit event is handled here.
     event?.preventDefault();
 
     await submitForm(this.form, {
@@ -172,7 +162,7 @@ export class ContactForm {
 
   private focusFirstInvalid(): void {
     const invalid = this.card().nativeElement.querySelector<HTMLElement>(
-      'input.ng-invalid, textarea.ng-invalid, .mat-mdc-select.ng-invalid, .mat-mdc-checkbox.ng-invalid input',
+      'input.ng-invalid, textarea.ng-invalid, .mat-mdc-select.ng-invalid',
     );
     invalid?.focus();
   }

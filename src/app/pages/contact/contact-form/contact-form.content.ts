@@ -175,11 +175,6 @@ const contactFormContent = {
       { value: 'video', label: t({ en: 'Video call', hy: 'Տեսազանգ', ru: 'Видеозвонок' }) },
     ],
 
-    consentBefore: t({
-      en: 'I agree to the processing of my data as described in the',
-      hy: 'Համաձայն եմ իմ տվյալների մշակմանը, ինչպես նկարագրված է',
-      ru: 'Я согласен на обработку моих данных, как описано в',
-    }),
     privacyLabel: t({
       en: 'Privacy Policy',
       hy: 'Գաղտնիության քաղաքականությունում',
@@ -203,11 +198,6 @@ const contactFormContent = {
       en: 'Enter a valid email address.',
       hy: 'Մուտքագրեք վավեր էլ. փոստի հասցե։',
       ru: 'Введите корректный адрес эл. почты.',
-    }),
-    errorConsent: t({
-      en: 'Please accept the Privacy Policy to continue.',
-      hy: 'Շարունակելու համար ընդունեք գաղտնիության քաղաքականությունը։',
-      ru: 'Чтобы продолжить, примите политику конфиденциальности.',
     }),
 
     sentMessage: t({

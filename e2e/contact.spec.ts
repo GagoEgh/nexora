@@ -35,6 +35,15 @@ const style = (page: Page, selector: string, prop: string) =>
     .first()
     .evaluate((el, p) => getComputedStyle(el).getPropertyValue(p), prop);
 
+const fillValidForm = async (page: Page) => {
+  await page.locator('#contact-name').fill('Ada Lovelace');
+  await page.locator('#contact-email').fill('ada@example.com');
+  await page.locator('#contact-company').fill('Nexora');
+  await page.locator('#contact-service').click();
+  await page.locator('mat-option').first().click();
+  await page.locator('#contact-description').fill('Modernizing a legacy ordering platform.');
+};
+
 const noOverflow = (page: Page) =>
   page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
 
@@ -149,27 +158,99 @@ test.describe('contact at the desktop design width', () => {
     await page.locator('app-contact-form button[type="submit"]').click();
 
     await expect(page.locator('app-contact-form mat-error').first()).toBeVisible();
-    await expect(page.locator('.form__error')).toBeVisible();
   });
 
-  test('reports that sending is not configured once the form is valid', async ({ page }) => {
-    await page.locator('#contact-name').fill('Ada Lovelace');
-    await page.locator('#contact-email').fill('ada@example.com');
-    await page.locator('#contact-company').fill('Nexora');
-    await page.locator('#contact-service').click();
-    await page.locator('mat-option').first().click();
-    await page.locator('#contact-description').fill('Modernizing a legacy ordering platform.');
-    await page.locator('app-contact-form mat-checkbox input').check();
+  test('posts the inquiry to /api/contact and confirms a successful send', async ({ page }) => {
+    const posted: Record<string, unknown>[] = [];
 
+    await page.route('**/api/contact', async (route) => {
+      posted.push(route.request().postDataJSON() as Record<string, unknown>);
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ success: true, message: 'Your message has been submitted.' }),
+      });
+    });
+
+    await fillValidForm(page);
     await page.locator('app-contact-form button[type="submit"]').click();
 
-    // No endpoint ships with the static build, so the form says so instead of faking a send.
-    await expect(page.locator('app-snack-bar')).toContainText('Sending isn’t available yet');
+    await expect(page.locator('app-snack-bar')).toContainText('on its way');
+
+    expect(posted).toHaveLength(1);
+    expect(posted[0]).toMatchObject({
+      interest: 'new-project',
+      name: 'Ada Lovelace',
+      email: 'ada@example.com',
+      company: 'Nexora',
+      description: 'Modernizing a legacy ordering platform.',
+      method: 'email',
+      website: '',
+    });
   });
 
-  test('points both privacy links at the policy route', async ({ page }) => {
+  test('never claims success when the API cannot deliver', async ({ page }) => {
+    await page.route('**/api/contact', (route) =>
+      route.fulfill({
+        status: 503,
+        contentType: 'application/json',
+        body: JSON.stringify({ success: false, message: 'unavailable' }),
+      }),
+    );
+
+    await fillValidForm(page);
+    await page.locator('app-contact-form button[type="submit"]').click();
+
+    await expect(page.locator('app-snack-bar')).toContainText('Something went wrong');
+  });
+
+  test('keeps the honeypot out of sight and out of the tab order', async ({ page }) => {
+    const honeypot = page.locator('#contact-website');
+    await expect(honeypot).toHaveAttribute('tabindex', '-1');
+    await expect(honeypot).toHaveValue('');
+    await expect(page.locator('.form__honeypot')).toHaveAttribute('aria-hidden', 'true');
+
+    const box = await page.locator('.form__honeypot').boundingBox();
+    expect(box?.width ?? 0).toBeLessThanOrEqual(1);
+  });
+
+  test('every caption focuses its control when clicked', async ({ page }) => {
+    // The pointer is honest: all nine captions act on click.
+    const cursors = await page
+      .locator('app-contact-form app-field-label label')
+      .evaluateAll((els) => els.map((el) => getComputedStyle(el).cursor));
+    expect(cursors).toHaveLength(9);
+    expect(new Set(cursors)).toEqual(new Set(['pointer']));
+
+    // The four labelable controls are associated natively through `for`...
+    for (const id of ['contact-name', 'contact-email', 'contact-company', 'contact-description']) {
+      await page.locator(`label[for="${id}"]`).click();
+      await expect(page.locator(`#${id}`)).toBeFocused();
+    }
+
+    // ...and the five custom controls, which `for` cannot reach, focus by reference instead.
+    for (const id of ['contact-service', 'contact-timeline', 'contact-budget']) {
+      await page.locator('body').click({ position: { x: 5, y: 5 } });
+      await page.locator(`#${id}-label`).click();
+      await expect(page.locator(`#${id}`)).toBeFocused();
+      await page.keyboard.press('Escape');
+    }
+
+    for (const id of ['contact-interest', 'contact-method']) {
+      await page.locator('body').click({ position: { x: 5, y: 5 } });
+      await page.locator(`#${id}-label`).click();
+      // A chip listbox delegates focus to its selected chip.
+      await expect(
+        page.locator(`#${id} mat-chip-option button[aria-selected="true"]`),
+      ).toBeFocused();
+    }
+  });
+
+  test('points every privacy link in the form at the policy route', async ({ page }) => {
+    // There were two: one in the consent block, now removed, and one in the disclaimer block,
+    // which is currently commented out in the template. So this can legitimately find none -
+    // the count is deliberately not asserted. It regains teeth when the disclaimer returns.
     const links = page.locator('app-contact-form a');
-    await expect(links).toHaveCount(2);
     for (const href of await links.evaluateAll((els) => els.map((el) => el.getAttribute('href')))) {
       expect(href).toBe('/privacy-policy');
     }

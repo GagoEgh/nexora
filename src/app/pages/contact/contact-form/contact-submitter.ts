@@ -10,7 +10,8 @@ export interface ContactInquiry {
   readonly timeline: string;
   readonly budget: string;
   readonly method: string;
-  readonly consent: boolean;
+  /** Honeypot: rendered hidden, so a real visitor always leaves it empty. */
+  readonly website: string;
 }
 
 export type ContactSubmitStatus = 'sent' | 'not-configured' | 'failed';

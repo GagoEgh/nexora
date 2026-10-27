@@ -69,20 +69,13 @@
   border-block-start: 1px solid var(--mat-sys-outline-variant);
 }
 
-.form__consent {
-  display: grid;
-  gap: spacing.space(8);
-  min-width: 0;
-
-  a {
-    color: var(--mat-sys-primary);
-  }
-}
-
-.form__error {
-  margin: 0;
-  font: var(--mat-sys-body-small);
-  color: var(--mat-sys-error);
+.form__honeypot {
+  position: absolute;
+  overflow: hidden;
+  clip-path: inset(50%);
+  width: 1px;
+  height: 1px;
+  white-space: nowrap;
 }
 
 .form__actions {
@@ -95,7 +88,6 @@
     grid-template-columns: auto minmax(0, 1fr);
   }
 
-  /* Contact.png draws the submit control 220 wide; the label alone is narrower. */
   button[type='submit'] {
     min-width: 220px;
   }

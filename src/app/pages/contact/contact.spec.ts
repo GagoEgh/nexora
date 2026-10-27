@@ -126,20 +126,31 @@ describe('Contact', () => {
       'Tell us about your project',
     );
 
-    const ids = [
+    // `for` may only name a labelable element, so the inputs and the textarea use it...
+    const labelable = ['contact-name', 'contact-email', 'contact-company', 'contact-description'];
+    for (const id of labelable) {
+      const control = root.querySelector(`#${id}`);
+      expect(control, id).not.toBeNull();
+      expect(['INPUT', 'TEXTAREA'], id).toContain(control!.tagName);
+      expect(root.querySelector(`label[for="${id}"]`), id).not.toBeNull();
+    }
+
+    // ...while the custom controls are named by reference instead.
+    const referenced = [
       'contact-interest',
-      'contact-name',
-      'contact-email',
-      'contact-company',
       'contact-service',
-      'contact-description',
       'contact-timeline',
       'contact-budget',
       'contact-method',
     ];
-    for (const id of ids) {
-      expect(root.querySelector(`[for="${id}"]`), id).not.toBeNull();
+    for (const id of referenced) {
       expect(root.querySelector(`#${id}`), id).not.toBeNull();
+      expect(root.querySelector(`label[for="${id}"]`), id).toBeNull();
+
+      // Material joins its own ids onto the list, so match a token, not the whole value.
+      const named = root.querySelector(`[aria-labelledby~="${id}-label"]`);
+      expect(named, id).not.toBeNull();
+      expect(root.querySelector(`#${id}-label`)?.textContent?.trim(), id).toBeTruthy();
     }
 
     expect(text('app-chip-select mat-chip-option')).toEqual([...INTERESTS, ...METHODS]);
@@ -147,15 +158,16 @@ describe('Contact', () => {
     expect(root.querySelector('app-contact-form textarea')?.getAttribute('maxlength')).toBe('2000');
   });
 
-  it('points both privacy links at the policy route', async () => {
+  it('points every privacy link in the form at the policy route', async () => {
     await go('/contact');
 
+    // There were two: one in the consent block, now removed, and one in the disclaimer block,
+    // which is currently commented out in the template. So this can legitimately find none -
+    // the count is deliberately not asserted. It regains teeth when the disclaimer returns.
     const links = Array.from(root.querySelectorAll('app-contact-form a'));
-    expect(links).toHaveLength(2);
-    expect(links.map((el) => el.getAttribute('href'))).toEqual([
-      '/privacy-policy',
-      '/privacy-policy',
-    ]);
+    for (const link of links) {
+      expect(link.getAttribute('href')).toBe('/privacy-policy');
+    }
   });
 
   it('keeps one h1 and never skips a heading level', async () => {
