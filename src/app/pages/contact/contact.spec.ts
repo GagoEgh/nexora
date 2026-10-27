@@ -7,7 +7,7 @@ import { provideIntlayer, useLocale } from 'angular-intlayer';
 import { routes } from '../../app.routes';
 import { provideAppIcons } from '../../core/icons/provide-app-icons';
 import { Contact } from './contact';
-import contactChannelsContent from './contact-channels/contact-channels.content';
+import contactChannelsContent, { CONTACT_EMAIL } from './contact-channels/contact-channels.content';
 import contactFormContent from './contact-form/contact-form.content';
 import contactNextContent from './contact-next/contact-next.content';
 
@@ -22,7 +22,7 @@ const STEPS = [
   'We suggest next steps',
 ];
 
-const CHANNELS = ['Email', 'Phone', 'Office address'];
+const CHANNELS = ['Email', 'Phone'];
 
 const INTERESTS = ['A new project', 'A dedicated team', 'A partnership', 'Something else'];
 
@@ -97,7 +97,7 @@ describe('Contact', () => {
     expect(badges.every((badge) => badge.getAttribute('aria-hidden') === 'true')).toBe(true);
   });
 
-  it('lists the three contact channels as a description list of unresolved placeholders', async () => {
+  it('lists the contact channels, linking the approved email', async () => {
     await go('/contact');
 
     const section = root.querySelector('app-contact-channels .channels');
@@ -108,12 +108,15 @@ describe('Contact', () => {
 
     expect(text('.channels__label')).toEqual(CHANNELS);
 
-    // The design ships unapproved placeholders; no real contact detail may be invented.
+    // Email is approved and linked; the phone number is still an unapproved placeholder.
     expect(text('.channels__value')).toEqual([
-      '{CONTACT_EMAIL} — add when approved',
+      CONTACT_EMAIL,
       '{CONTACT_PHONE} — add when approved',
-      '{CONTACT_ADDRESS} — add when approved',
     ]);
+
+    const mail = root.querySelector('.channels__link');
+    expect(mail?.getAttribute('href')).toBe(`mailto:${CONTACT_EMAIL}`);
+    expect(mail?.textContent?.trim()).toBe(CONTACT_EMAIL);
   });
 
   it('renders the form card with every labelled control', async () => {
@@ -183,12 +186,17 @@ describe('Contact', () => {
     );
 
     const hrefs = Array.from(root.querySelectorAll('a')).map((el) => el.getAttribute('href'));
-    expect(hrefs.every((href) => href === '/ru' || href?.startsWith('/ru/'))).toBe(true);
+
+    // The mailto channel is not a router link, so it must stay unprefixed.
+    expect(hrefs).toContain(`mailto:${CONTACT_EMAIL}`);
+    const routed = hrefs.filter((href) => !href?.startsWith('mailto:'));
+    expect(routed.length).toBeGreaterThan(0);
+    expect(routed.every((href) => href === '/ru' || href?.startsWith('/ru/'))).toBe(true);
   });
 
   it('keeps the dictionaries complete: three steps, three channels, four interests', () => {
     expect(contactNextContent.content.steps).toHaveLength(3);
-    expect(contactChannelsContent.content.items).toHaveLength(3);
+    expect(contactChannelsContent.content.items).toHaveLength(2);
     expect(contactFormContent.content.interestOptions).toHaveLength(4);
     expect(contactFormContent.content.methodOptions).toHaveLength(3);
     expect(contactFormContent.content.serviceOptions).toHaveLength(5);

@@ -76,25 +76,27 @@ test.describe('contact at the desktop design width', () => {
     );
   });
 
-  test('renders the channels card with three hairline rows of unresolved placeholders', async ({
-    page,
-  }) => {
+  test('renders the channels card with a hairline row per channel', async ({ page }) => {
     const card = await box(page, '.channels');
     expect(card.w).toBe(460);
     expect(await style(page, '.channels', 'border-top-left-radius')).toBe('16px');
 
     const rows = await boxes(page, '.channels__row');
-    expect(rows).toHaveLength(3);
+    expect(rows).toHaveLength(2);
 
     const dividers = await page
       .locator('.channels__row')
       .evaluateAll(
         (els) => els.filter((el) => getComputedStyle(el).borderTopWidth === '1px').length,
       );
-    expect(dividers).toBe(3);
+    expect(dividers).toBe(2);
 
-    await expect(page.locator('.channels__value').first()).toHaveText(
-      '{CONTACT_EMAIL} — add when approved',
+    // The approved email is a mailto link; the phone number is still a placeholder.
+    const mail = page.locator('.channels__link');
+    await expect(mail).toHaveAttribute('href', 'mailto:info@nexoratechnology.org');
+    await expect(mail).toHaveText('info@nexoratechnology.org');
+    await expect(page.locator('.channels__value').last()).toContainText(
+      '{CONTACT_PHONE} — add when approved',
     );
   });
 
@@ -195,7 +197,7 @@ test.describe('contact at narrower widths', () => {
 
       expect(await noOverflow(page)).toBeLessThanOrEqual(0);
       await expect(page.locator('.next__step')).toHaveCount(3);
-      await expect(page.locator('.channels__row')).toHaveCount(3);
+      await expect(page.locator('.channels__row')).toHaveCount(2);
       await expect(page.locator('mat-chip-option')).toHaveCount(7);
     });
   }
@@ -214,6 +216,11 @@ test.describe('contact under a locale prefix', () => {
     const hrefs = await page
       .locator('app-contact a')
       .evaluateAll((els) => els.map((el) => el.getAttribute('href')));
-    expect(hrefs.every((href) => href === '/ru' || href?.startsWith('/ru/'))).toBe(true);
+
+    // The mailto channel is not a router link, so it must stay unprefixed.
+    expect(hrefs).toContain('mailto:info@nexoratechnology.org');
+    const routed = hrefs.filter((href) => !href?.startsWith('mailto:'));
+    expect(routed.length).toBeGreaterThan(0);
+    expect(routed.every((href) => href === '/ru' || href?.startsWith('/ru/'))).toBe(true);
   });
 });

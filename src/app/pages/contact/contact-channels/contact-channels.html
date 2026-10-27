@@ -2,12 +2,18 @@
   <h2 class="channels__title" id="contact-channels-title">{{ content().title }}</h2>
 
   <dl class="channels__list">
-    @for (item of content().items; track item.token.value) {
+    @for (item of content().items; track $index) {
       <div class="channels__row">
         <mat-icon class="channels__icon" aria-hidden="true" [svgIcon]="icon(item.icon.value)" />
 
         <dt class="channels__label">{{ item.label }}</dt>
-        <dd class="channels__value">{{ item.token }} — {{ content().pendingNote }}</dd>
+        <dd class="channels__value">
+          @if (item.href.value) {
+            <a class="channels__link" [href]="item.href.value">{{ item.detail }}</a>
+          } @else {
+            {{ item.detail }} — {{ content().pendingNote }}
+          }
+        </dd>
       </div>
     }
   </dl>

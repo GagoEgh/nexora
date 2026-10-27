@@ -54,3 +54,12 @@
   color: var(--nx-sys-on-surface-muted);
   overflow-wrap: anywhere;
 }
+
+.channels__link {
+  color: var(--mat-sys-primary);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

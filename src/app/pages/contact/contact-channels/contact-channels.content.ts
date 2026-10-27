@@ -7,6 +7,8 @@ const PENDING_NOTE = t({
   ru: 'добавить после согласования',
 });
 
+export const CONTACT_EMAIL = 'info@nexoratechnology.org';
+
 const contactChannelsContent = {
   key: 'contact-channels',
   content: {
@@ -20,18 +22,21 @@ const contactChannelsContent = {
       {
         icon: 'mail' satisfies AppIconName,
         label: t({ en: 'Email', hy: 'Էլ. փոստ', ru: 'Эл. почта' }),
-        token: '{CONTACT_EMAIL}',
+        detail: CONTACT_EMAIL,
+        href: `mailto:${CONTACT_EMAIL}`,
       },
       {
-        icon: 'message-square' satisfies AppIconName,
+        icon: 'smartphone' satisfies AppIconName,
         label: t({ en: 'Phone', hy: 'Հեռախոս', ru: 'Телефон' }),
-        token: '{CONTACT_PHONE}',
+        detail: '{CONTACT_PHONE}',
+        href: '',
       },
-      {
-        icon: 'globe' satisfies AppIconName,
-        label: t({ en: 'Office address', hy: 'Գրասենյակի հասցե', ru: 'Адрес офиса' }),
-        token: '{CONTACT_ADDRESS}',
-      },
+      // {
+      //   icon: 'globe' satisfies AppIconName,
+      //   label: t({ en: 'Office address', hy: 'Գրասենյակի հասցե', ru: 'Адрес офиса' }),
+      //   detail: '{CONTACT_ADDRESS}',
+      //   href: '',
+      // },
     ],
   },
 } as const satisfies Dictionary;
