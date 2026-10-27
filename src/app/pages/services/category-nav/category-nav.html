@@ -5,7 +5,7 @@
         <a
           class="category-nav__item"
           [class.category-nav__item--active]="category.id === active()"
-          [attr.aria-current]="category.id === active() ? 'true' : null"
+          [attr.aria-current]="category.id === active() ? 'location' : null"
           [href]="'#' + sectionId(category.id)"
           (click)="onSelect($event, category.id)"
         >

@@ -192,7 +192,10 @@ describe('Services', () => {
     expect(root.querySelector('.category-nav')?.getAttribute('aria-label')).toBe(
       'Service categories',
     );
-    expect(root.querySelector('.services__results')?.getAttribute('aria-live')).toBe('polite');
+    // The region is labelled but not live; a filter change announces a count instead, so a
+    // screen reader is not read all fifteen cards again.
+    expect(root.querySelector('.services__results')?.hasAttribute('aria-live')).toBe(false);
+    expect(root.querySelector('.services__status')?.getAttribute('role')).toBe('status');
   });
 
   it('hides the decorative category icons from assistive technology', async () => {

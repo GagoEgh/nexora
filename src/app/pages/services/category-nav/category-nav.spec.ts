@@ -111,7 +111,7 @@ describe('CategoryNav', () => {
 
   it('marks exactly one category as current, and omits the attribute elsewhere', () => {
     expect(links().map((link) => link.getAttribute('aria-current'))).toEqual([
-      'true',
+      'location',
       null,
       null,
       null,
@@ -127,7 +127,7 @@ describe('CategoryNav', () => {
     expect(links().map((link) => link.getAttribute('aria-current'))).toEqual([
       null,
       null,
-      'true',
+      'location',
       null,
       null,
     ]);

@@ -14,7 +14,7 @@ import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { useDictionary } from 'angular-intlayer';
-import { AI_AGENT_PATH, CONTACT_PATH } from '../../core/routing/paths';
+import { AI_AGENT_PATH, CONTACT_PATH, SOLUTIONS_PATH } from '../../core/routing/paths';
 import { LocalizedPathPipe } from '../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../core/icons/icons';
 import { ordinal } from '../../shared/ordinal';
@@ -42,21 +42,11 @@ import servicesContent from './services.content';
 
 const CATEGORY_PARAM = 'category';
 const ALL = ALL_SERVICES;
-const ACTIVE_LINE = 0.3;
 const ACCENT_CATEGORY: ServiceCategoryId = 'artificial-intelligence';
+const READING_BAND = '-30% 0px -69% 0px';
 
 function categoryTone(category: ServiceCategoryId): IconTileTone {
   return category === ACCENT_CATEGORY ? 'inverse-accent' : 'primary';
-}
-
-function sectionInView(elements: readonly HTMLElement[], line: number): string | undefined {
-  let current = elements[0];
-  for (const element of elements) {
-    if (element.getBoundingClientRect().top <= line) {
-      current = element;
-    }
-  }
-  return current?.dataset['category'];
 }
 
 @Component({
@@ -138,6 +128,7 @@ export class Services {
   );
 
   protected readonly ctaArrowIcon = appIcon('arrow-right');
+  protected readonly solutionsPath = SOLUTIONS_PATH;
 
   protected readonly total = computed(() => this.catalogue().items.length);
 
@@ -157,6 +148,10 @@ export class Services {
     return filter === ALL ? this.groups() : this.groups().filter((group) => group.id === filter);
   });
 
+  protected readonly visibleCount = computed(() =>
+    this.visibleGroups().reduce((count, group) => count + group.services.length, 0),
+  );
+
   protected readonly active = computed<ServiceCategoryId>(() => {
     const filter = this.filter();
     return filter === ALL ? this.scrolled() : filter;
@@ -174,24 +169,23 @@ export class Services {
         return;
       }
 
-      const sync = (): void => {
-        const id = sectionInView(elements, view.innerHeight * ACTIVE_LINE);
-        if (isServiceCategoryId(id)) {
-          this.scrolled.set(id);
-        }
-      };
+      const observer = new view.IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            const id = (entry.target as HTMLElement).dataset['category'];
+            if (entry.isIntersecting && isServiceCategoryId(id)) {
+              this.scrolled.set(id);
+            }
+          }
+        },
+        { rootMargin: READING_BAND, threshold: 0 },
+      );
 
-      const observer = new view.IntersectionObserver(sync, { threshold: [0, 0.5, 1] });
       for (const element of elements) {
         observer.observe(element);
       }
-      view.addEventListener('resize', sync, { passive: true });
-      sync();
 
-      onCleanup(() => {
-        observer.disconnect();
-        view.removeEventListener('resize', sync);
-      });
+      onCleanup(() => observer.disconnect());
     });
   }
 

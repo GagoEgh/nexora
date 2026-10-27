@@ -285,12 +285,12 @@ test.describe('services page at the desktop design width', () => {
 
   test('highlights the category of the section being read', async ({ page }) => {
     const row = (index: number) => page.locator('.category-nav__item').nth(index);
-    await expect(row(0)).toHaveAttribute('aria-current', 'true');
+    await expect(row(0)).toHaveAttribute('aria-current', 'location');
 
     for (const [index, id] of IDS.entries()) {
       await page.locator(`#${id}`).evaluate((el) => el.scrollIntoView());
-      await expect(row(index)).toHaveAttribute('aria-current', 'true');
-      await expect(page.locator('.category-nav__item[aria-current="true"]')).toHaveCount(1);
+      await expect(row(index)).toHaveAttribute('aria-current', 'location');
+      await expect(page.locator('.category-nav__item[aria-current="location"]')).toHaveCount(1);
     }
     // Scroll position alone never touches the filter or the URL.
     await expect(page).toHaveURL(/\/services$/);
@@ -309,7 +309,7 @@ test.describe('services page at the desktop design width', () => {
     await expect(page).toHaveURL(/\/services$/);
     await expect(page.locator('.category-nav__item').nth(3)).toHaveAttribute(
       'aria-current',
-      'true',
+      'location',
     );
   });
 
@@ -320,7 +320,7 @@ test.describe('services page at the desktop design width', () => {
     await expect(page.locator('app-service-card')).toHaveCount(3);
     await expect(page.locator('.category-nav__item').nth(2)).toHaveAttribute(
       'aria-current',
-      'true',
+      'location',
     );
 
     await page.locator('mat-chip-option').first().click();
