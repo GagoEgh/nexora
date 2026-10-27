@@ -1,3 +1,4 @@
+@use 'tokens/motion';
 @use 'tokens/spacing';
 @use 'tokens/layout';
 @use 'tokens/typography';
@@ -19,12 +20,16 @@
 }
 
 .notes__workflow {
-  top: calc(-1 * #{spacing.space(80)});
+  top: spacing.space(96);
+  transform: translateY(-115%);
   right: calc(-1 * #{spacing.space(40)});
   width: 240px;
   border: 1px solid var(--mat-sys-outline-variant);
   border-radius: var(--mat-sys-corner-large);
   background-color: var(--mat-sys-surface);
+  transition:
+    opacity motion.duration(base) motion.easing(out) 560ms,
+    transform motion.duration(base) motion.easing(out) 560ms;
 }
 
 .notes__title {
@@ -57,6 +62,17 @@
   gap: spacing.space(8);
   font: var(--mat-sys-body-medium);
   color: var(--mat-sys-on-surface-variant);
+  transition: opacity motion.duration(base) motion.easing(out);
+
+  @for $i from 1 through 3 {
+    &:nth-child(#{$i}) {
+      transition-delay: 600ms + ($i - 1) * 40ms;
+    }
+  }
+
+  &:nth-child(n + 4) {
+    transition-delay: 680ms;
+  }
 }
 
 .notes__mark {
@@ -93,6 +109,10 @@
   background-color: var(--mat-sys-inverse-surface);
   font: typography.$code-font;
   color: var(--mat-sys-inverse-on-surface);
+
+  transition:
+    opacity motion.duration(base) motion.easing(out) 620ms,
+    transform motion.duration(base) motion.easing(out) 620ms;
 }
 
 .notes__method {
@@ -101,4 +121,22 @@
 
 .notes__status {
   color: var(--nx-sys-inverse-success);
+}
+
+:host-context(.art[data-reveal='out']) {
+  @media (prefers-reduced-motion: no-preference) {
+    .notes__workflow {
+      opacity: 0;
+      transform: translateY(-115%) translate3d(0, 8px, 0);
+    }
+
+    .notes__request {
+      opacity: 0;
+      transform: translate3d(0, 8px, 0);
+    }
+
+    .notes__step {
+      opacity: 0;
+    }
+  }
 }

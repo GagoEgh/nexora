@@ -1,0 +1,54 @@
+@use 'sass:list';
+@use '../tokens/motion';
+
+@mixin item($delay: 0ms, $hover: false) {
+  $parts: (
+    opacity motion.duration(base) motion.easing(out) $delay,
+    transform motion.duration(base) motion.easing(out) $delay
+  );
+
+  @if $hover {
+    $parts: list.append(
+      $parts,
+      translate motion.duration(fast) motion.easing(out),
+      $separator: comma
+    );
+    $parts: list.append(
+      $parts,
+      box-shadow motion.duration(fast) motion.easing(out),
+      $separator: comma
+    );
+  }
+
+  transition: $parts;
+}
+
+@mixin hidden($distance: null, $scale: null) {
+  @media (prefers-reduced-motion: no-preference) {
+    $rise: if($distance, $distance, motion.distance(rise));
+
+    opacity: 0;
+    transform: translate3d(0, $rise, 0) if($scale, scale($scale), null);
+  }
+}
+
+@mixin stagger($count, $step: 60ms, $from: 0ms) {
+  @for $i from 1 through $count {
+    &:nth-child(#{$i}) {
+      transition-delay: $from + ($i - 1) * $step;
+    }
+  }
+
+  &:nth-child(n + #{$count + 1}) {
+    transition-delay: $from + ($count - 1) * $step;
+  }
+}
+
+@mixin lift() {
+  &:hover,
+  &:focus-visible,
+  &:focus-within {
+    translate: 0 calc(-1 * #{motion.distance(lift)});
+    box-shadow: var(--mat-sys-level2);
+  }
+}

@@ -5,12 +5,13 @@ import { RouterLink } from '@angular/router';
 import { useDictionary } from 'angular-intlayer';
 import { LocalizedPathPipe } from '../../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../../core/icons/icons';
+import { Reveal } from '../../../shared/motion/reveal';
 import heroContent from './hero.content';
 import { HeroIllustration } from './illustration/hero-illustration';
 
 @Component({
   selector: 'app-hero',
-  imports: [RouterLink, LocalizedPathPipe, MatButton, MatIcon, HeroIllustration],
+  imports: [RouterLink, LocalizedPathPipe, MatButton, MatIcon, HeroIllustration, Reveal],
   templateUrl: './hero.html',
   styleUrl: './hero.scss',
 })

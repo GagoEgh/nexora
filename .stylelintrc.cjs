@@ -63,8 +63,15 @@ module.exports = {
     'scss/dollar-variable-empty-line-before': null,
     'scss/double-slash-comment-empty-line-before': null,
 
-    // Added, not inherited: both held at zero across src/ when audited by hand. These turn
-    // that one-off check into a standing one.
+    // Added, not inherited: held at zero across src/ when audited by hand. These turn that
+    // one-off check into a standing one.
+    //
+    // stylelint-config-standard-scss switches `no-duplicate-selectors` off, because `&`
+    // nesting makes it awkward in Sass. It is back on here because its absence let nine
+    // duplicated selectors through review in the hero and home styles: animation blocks were
+    // appended to files instead of extending the rules already there, which made source order
+    // load-bearing for no reason.
+    'no-duplicate-selectors': true,
     'declaration-no-important': true,
     'selector-disallowed-list': [
       ['/::ng-deep/', '//deep//', '/>>>/'],

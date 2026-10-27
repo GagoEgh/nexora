@@ -1,7 +1,9 @@
 @use 'tokens/spacing';
 @use 'tokens/layout';
 @use 'tokens/typography';
+@use 'tokens/motion';
 @use 'mixins/eyebrow';
+@use 'mixins/reveal';
 @use 'mixins/text';
 
 :host {
@@ -32,6 +34,8 @@
   display: grid;
   gap: spacing.space(24);
   justify-items: start;
+
+  @include reveal.item(0ms);
 }
 
 .how-we-work__eyebrow {
@@ -51,6 +55,8 @@
   margin: 0;
   font: var(--nx-sys-body-copy);
   color: var(--mat-sys-on-surface-variant);
+
+  @include reveal.item(60ms);
 }
 
 .how-we-work__steps {
@@ -73,6 +79,9 @@
 .how-we-work__step {
   display: grid;
   align-content: start;
+
+  @include reveal.item(120ms);
+  @include reveal.stagger(6, 60ms, 120ms);
 }
 
 .how-we-work__track {
@@ -84,6 +93,8 @@
     flex: 1;
     height: 2px;
     background-color: var(--mat-sys-outline-variant);
+    transform-origin: left center;
+    transition: transform motion.duration(base) motion.easing(out) 180ms;
   }
 }
 
@@ -141,4 +152,18 @@
 .how-we-work__arrow {
   width: 12px;
   height: 12px;
+}
+
+.how-we-work[data-reveal='out'] {
+  .how-we-work__heading,
+  .how-we-work__intro,
+  .how-we-work__step {
+    @include reveal.hidden();
+  }
+}
+
+.how-we-work[data-reveal='out'] .how-we-work__track::after {
+  @media (prefers-reduced-motion: no-preference) {
+    transform: scaleX(0);
+  }
 }

@@ -1,6 +1,8 @@
+@use 'tokens/motion';
 @use 'tokens/spacing';
 @use 'tokens/layout';
 @use 'tokens/typography';
+@use 'mixins/reveal';
 
 :host {
   display: block;
@@ -20,6 +22,8 @@
   border-radius: var(--mat-sys-corner-large);
   background-color: var(--mat-sys-surface);
   box-shadow: var(--mat-sys-level2);
+
+  transition: transform motion.duration(base) motion.easing(out);
 }
 
 .art__bar {
@@ -44,11 +48,27 @@
 }
 
 .art__canvas {
+  position: relative;
   padding: spacing.space(24);
-  background-image:
-    linear-gradient(var(--mat-sys-outline-variant) 1px, transparent 1px),
-    linear-gradient(90deg, var(--mat-sys-outline-variant) 1px, transparent 1px);
-  background-size: 40px 40px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-image:
+      linear-gradient(var(--mat-sys-outline-variant) 1px, transparent 1px),
+      linear-gradient(90deg, var(--mat-sys-outline-variant) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: radial-gradient(ellipse 75% 70% at 50% 45%, #000000 35%, transparent 100%);
+  }
+}
+
+.art__tier,
+.art__link,
+.art__pipeline {
+  position: relative;
+  z-index: 1;
 }
 
 .art__tier {
@@ -77,6 +97,7 @@
   border-color: transparent;
   background-color: var(--mat-sys-inverse-surface);
   color: var(--mat-sys-inverse-on-surface);
+  box-shadow: var(--mat-sys-level2);
 }
 
 .art__node-text {
@@ -135,6 +156,17 @@
 .art__chip--idle {
   background-color: var(--mat-sys-surface-container);
   color: var(--mat-sys-on-surface-variant);
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: art-chip-ready motion.duration(base) motion.easing(out) 900ms 1 both;
+  }
+}
+
+@keyframes art-chip-ready {
+  50% {
+    background-color: var(--nx-sys-success-container);
+    color: var(--nx-sys-success);
+  }
 }
 
 .art__arrow {
@@ -165,5 +197,150 @@
 
   .art__pipeline {
     display: flex;
+  }
+}
+
+.art__dots,
+.art__path {
+  @include reveal.item(80ms);
+}
+
+.art__tier:nth-child(1) .art__node {
+  @include reveal.item(140ms);
+  @include reveal.stagger(2, 40ms, 140ms);
+}
+
+.art__tier:nth-child(3) .art__node {
+  @include reveal.item(280ms);
+}
+
+.art__tier:nth-child(5) .art__node {
+  @include reveal.item(400ms);
+  @include reveal.stagger(2, 40ms, 400ms);
+}
+
+/* The diagram is dictionary-driven: `hero.content.ts` could gain a fourth tier, which would
+ * sit at :nth-child(7) and otherwise reveal with no delay, ahead of the tier above it. */
+.art__tier:nth-child(n + 7) .art__node {
+  @include reveal.item(520ms);
+}
+
+.art__link:nth-child(n + 6) .art__link-line {
+  transition-delay: 460ms;
+}
+
+/* The pipeline fills left to right. Chips and arrows alternate as `li` siblings, so one rule
+ * over every child staggers them in document order without having to tell them apart. */
+.art__pipeline > * {
+  transition:
+    opacity motion.duration(base) motion.easing(out),
+    transform motion.duration(base) motion.easing(out);
+
+  /* Four steps today means seven children, counting the arrows between them. A fifth step
+   * would add two more, which the catch-all keeps at the end of the sequence. */
+  @for $i from 1 through 7 {
+    &:nth-child(#{$i}) {
+      transition-delay: 460ms + ($i - 1) * 20ms;
+    }
+  }
+
+  &:nth-child(n + 8) {
+    transition-delay: 580ms;
+  }
+}
+
+/*
+ * The connectors draw themselves in. `pathLength="1"` in the template makes the whole path one
+ * dash unit long, so the offset runs 1 -> 0 regardless of the path's real geometry. Each `d`
+ * holds two subpaths - the bus between the tier's nodes, then the stem down to the next tier -
+ * and a single offset traverses them in that order, which is the order the eye wants.
+ *
+ * This is a paint-level property rather than a composited one, unlike everything else here.
+ * Two short paths animating once is a negligible cost, and no cheaper property draws a line.
+ */
+.art__link-line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset motion.duration(base) motion.easing(out);
+}
+
+.art__link:nth-child(2) .art__link-line {
+  transition-delay: 220ms;
+}
+
+.art__link:nth-child(4) .art__link-line {
+  transition-delay: 340ms;
+}
+
+.art[data-reveal='out'] {
+  .art__dots,
+  .art__path,
+  .art__node,
+  .art__pipeline > * {
+    @include reveal.hidden($distance: 8px);
+  }
+
+  /* The orchestrator is the only inverse-surface node and the point the whole diagram leads to,
+   * so it arrives with a little more presence than the nodes either side of it. */
+  .art__node--dark {
+    @include reveal.hidden($distance: 8px, $scale: 0.96);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .art__window {
+      transform: translate3d(0, #{motion.distance(rise)}, 0) scale(0.99);
+    }
+
+    .art__link-line {
+      stroke-dashoffset: 1;
+    }
+  }
+}
+
+/*
+ * A single packet travelling each connector, once the line it follows exists.
+ *
+ * A 12% dash with the rest of the unit empty, moved from one end to the other. It runs once per
+ * connector, staggered to follow that line's draw-in, and is hidden outright under reduced
+ * motion - a travelling highlight is exactly the kind of movement someone disables motion to
+ * avoid. Slightly thicker than the line so the packet reads against it.
+ */
+.art__link-pulse {
+  stroke: var(--mat-sys-primary);
+  stroke-width: 3;
+  stroke-dasharray: 0.12 0.88;
+  stroke-dashoffset: 0.12;
+  opacity: 0;
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: art-link-pulse 900ms motion.easing(out) 1 both;
+  }
+}
+
+.art__link:nth-child(2) .art__link-pulse {
+  animation-delay: 520ms;
+}
+
+.art__link:nth-child(4) .art__link-pulse {
+  animation-delay: 640ms;
+}
+
+@keyframes art-link-pulse {
+  0% {
+    stroke-dashoffset: 0.12;
+    opacity: 0;
+  }
+
+  15% {
+    opacity: 0.9;
+  }
+
+  85% {
+    opacity: 0.9;
+  }
+
+  100% {
+    stroke-dashoffset: -1;
+    opacity: 0;
   }
 }

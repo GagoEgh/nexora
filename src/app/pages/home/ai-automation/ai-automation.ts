@@ -7,10 +7,11 @@ import { LocalizedPathPipe } from '../../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../../core/icons/icons';
 import { IconTile } from '../../../shared/ui/icon-tile/icon-tile';
 import aiAutomationContent from './ai-automation.content';
+import { Reveal } from '../../../shared/motion/reveal';
 
 @Component({
   selector: 'app-ai-automation',
-  imports: [RouterLink, LocalizedPathPipe, MatButton, MatIcon, IconTile],
+  imports: [RouterLink, LocalizedPathPipe, MatButton, MatIcon, IconTile, Reveal],
   templateUrl: './ai-automation.html',
   styleUrl: './ai-automation.scss',
 })

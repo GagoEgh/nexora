@@ -2,6 +2,7 @@
 @use 'tokens/layout';
 @use 'tokens/typography';
 @use 'mixins/eyebrow';
+@use 'mixins/reveal';
 @use 'mixins/text';
 
 :host {
@@ -31,6 +32,8 @@
   display: grid;
   gap: spacing.space(24);
   justify-items: start;
+
+  @include reveal.item(0ms);
 }
 
 .expertise__eyebrow {
@@ -51,6 +54,8 @@
   display: grid;
   gap: spacing.space(12);
   justify-items: start;
+
+  @include reveal.item(60ms);
 }
 
 .expertise__text {
@@ -85,6 +90,10 @@
   border: 1px solid var(--mat-sys-outline-variant);
   border-radius: var(--mat-sys-corner-large);
   background-color: var(--mat-sys-surface);
+
+  @include reveal.item(120ms, $hover: true);
+  @include reveal.stagger(6, 60ms, 120ms);
+  @include reveal.lift();
 }
 
 .expertise__card-title {
@@ -116,4 +125,12 @@
 .expertise__link-icon {
   width: 16px;
   height: 16px;
+}
+
+.expertise[data-reveal='out'] {
+  .expertise__heading,
+  .expertise__intro,
+  .expertise__card {
+    @include reveal.hidden();
+  }
 }

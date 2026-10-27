@@ -1,0 +1,55 @@
+@use 'sass:map';
+
+$durations: (
+  fast: 160ms,
+  base: 220ms,
+);
+
+$easings: (
+  out: cubic-bezier(0.22, 0.61, 0.36, 1),
+);
+
+$distances: (
+  rise: 16px,
+  lift: 2px,
+);
+
+@function duration($name) {
+  @if not map.has-key($durations, $name) {
+    @error 'Motion duration #{$name} is not defined (#{map.keys($durations)}).';
+  }
+  @return var(--nx-motion-duration-#{$name});
+}
+
+@function easing($name) {
+  @if not map.has-key($easings, $name) {
+    @error 'Motion easing #{$name} is not defined (#{map.keys($easings)}).';
+  }
+  @return var(--nx-motion-ease-#{$name});
+}
+
+@function distance($name) {
+  @if not map.has-key($distances, $name) {
+    @error 'Motion distance #{$name} is not defined (#{map.keys($distances)}).';
+  }
+  @return var(--nx-motion-#{$name});
+}
+
+@mixin tokens() {
+  @each $name, $value in $durations {
+    --nx-motion-duration-#{$name}: #{$value};
+  }
+  @each $name, $value in $easings {
+    --nx-motion-ease-#{$name}: #{$value};
+  }
+  @each $name, $value in $distances {
+    --nx-motion-#{$name}: #{$value};
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    --nx-motion-duration-fast: 0ms;
+    --nx-motion-duration-base: 0ms;
+    --nx-motion-rise: 0px;
+    --nx-motion-lift: 0px;
+  }
+}

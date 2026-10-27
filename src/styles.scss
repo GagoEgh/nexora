@@ -4,6 +4,7 @@
 @use './styles/tokens/color';
 @use './styles/tokens/spacing';
 @use './styles/tokens/layout';
+@use './styles/tokens/motion';
 @use './styles/tokens/typography';
 
 html {
@@ -12,6 +13,7 @@ html {
   @include color.extended-tokens();
   @include spacing.tokens();
   @include layout.tokens();
+  @include motion.tokens();
   @include typography.extended-tokens();
 }
 

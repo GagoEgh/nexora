@@ -4,10 +4,11 @@ import { useDictionary } from 'angular-intlayer';
 import { appIcon } from '../../../core/icons/icons';
 import { ordinal } from '../../../shared/ordinal';
 import howWeWorkContent from './how-we-work.content';
+import { Reveal } from '../../../shared/motion/reveal';
 
 @Component({
   selector: 'app-how-we-work',
-  imports: [MatIcon],
+  imports: [MatIcon, Reveal],
   templateUrl: './how-we-work.html',
   styleUrl: './how-we-work.scss',
 })

@@ -2,6 +2,7 @@
 @use 'tokens/layout';
 @use 'tokens/typography';
 @use 'mixins/eyebrow';
+@use 'mixins/reveal';
 @use 'mixins/text';
 
 :host {
@@ -28,6 +29,8 @@
   display: grid;
   gap: spacing.space(24);
   justify-items: start;
+
+  @include reveal.item(0ms);
 }
 
 .why__eyebrow {
@@ -104,6 +107,8 @@
   margin: 0;
   padding: 0;
   list-style: none;
+
+  @include reveal.item(120ms);
 }
 
 .why__item {
@@ -140,4 +145,11 @@
   margin: spacing.space(8) 0 0;
   font: var(--nx-sys-body-copy);
   color: var(--mat-sys-on-surface-variant);
+}
+
+.why[data-reveal='out'] {
+  .why__copy,
+  .why__list {
+    @include reveal.hidden();
+  }
 }

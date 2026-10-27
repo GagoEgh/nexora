@@ -1,6 +1,7 @@
 @use 'tokens/spacing';
 @use 'tokens/layout';
 @use 'mixins/eyebrow';
+@use 'mixins/reveal';
 @use 'mixins/text';
 
 :host {
@@ -37,6 +38,8 @@
 
 .hero__eyebrow {
   @include eyebrow.eyebrow();
+
+  @include reveal.item();
 }
 
 .hero__eyebrow-text--full {
@@ -59,6 +62,8 @@
   font: var(--nx-sys-display-hero);
   letter-spacing: var(--nx-sys-display-tracking);
   color: var(--mat-sys-on-surface);
+
+  @include reveal.item(60ms);
 }
 
 .hero__lead {
@@ -67,6 +72,8 @@
   max-width: 34rem;
   font: var(--nx-sys-body-lead);
   color: var(--mat-sys-on-surface-variant);
+
+  @include reveal.item(120ms);
 }
 
 .hero__actions {
@@ -79,6 +86,8 @@
     width: auto;
     margin-block-start: spacing.space(8);
   }
+
+  @include reveal.item(180ms);
 }
 
 .hero__trust {
@@ -103,6 +112,9 @@
   gap: spacing.space(8);
   font: var(--mat-sys-body-medium);
   color: var(--mat-sys-on-surface-variant);
+
+  @include reveal.item(240ms);
+  @include reveal.stagger(4, 40ms, 240ms);
 }
 
 .hero__trust-icon {
@@ -111,6 +123,23 @@
   color: var(--mat-sys-primary);
 }
 
+/* The illustration runs its own entrance sequence; see hero-illustration.scss. */
 .hero__art {
   min-width: 0;
+}
+
+/*
+ * Load reveal. The hero is above the fold, so it arrives with the page rather than on scroll:
+ * the eyebrow leads, the heading and lead follow, the actions and trust row close, and the
+ * illustration settles alongside them. Delays are declared here rather than bound in the
+ * template, so the stagger costs no change detection.
+ */
+.hero[data-reveal='out'] {
+  .hero__eyebrow,
+  .hero__title,
+  .hero__lead,
+  .hero__actions,
+  .hero__trust-item {
+    @include reveal.hidden();
+  }
 }

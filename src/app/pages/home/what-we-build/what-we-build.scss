@@ -1,6 +1,7 @@
 @use 'tokens/spacing';
 @use 'tokens/layout';
 @use 'mixins/eyebrow';
+@use 'mixins/reveal';
 @use 'mixins/text';
 
 :host {
@@ -32,6 +33,8 @@
   display: grid;
   gap: spacing.space(24);
   justify-items: start;
+
+  @include reveal.item(0ms);
 }
 
 .what-we-build__eyebrow {
@@ -52,6 +55,8 @@
   margin: 0;
   font: var(--nx-sys-body-copy);
   color: var(--mat-sys-on-surface-variant);
+
+  @include reveal.item(60ms);
 }
 
 .what-we-build__grid {
@@ -78,6 +83,10 @@
   border: 1px solid var(--mat-sys-outline-variant);
   border-radius: var(--mat-sys-corner-large);
   background-color: var(--mat-sys-surface);
+
+  @include reveal.item(120ms, $hover: true);
+  @include reveal.stagger(6, 60ms, 120ms);
+  @include reveal.lift();
 }
 
 .what-we-build__card-copy {
@@ -107,4 +116,12 @@
   margin: spacing.space(48) 0 0;
   font: var(--mat-sys-body-small);
   color: var(--nx-sys-on-surface-muted);
+}
+
+.what-we-build[data-reveal='out'] {
+  .what-we-build__heading,
+  .what-we-build__intro,
+  .what-we-build__card {
+    @include reveal.hidden();
+  }
 }

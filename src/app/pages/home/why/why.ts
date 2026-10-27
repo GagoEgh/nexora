@@ -5,10 +5,11 @@ import { ordinal } from '../../../shared/ordinal';
 import { Logo } from '../../../shared/ui/logo/logo';
 import whyDisciplinesContent from './why-disciplines.content';
 import whyContent from './why.content';
+import { Reveal } from '../../../shared/motion/reveal';
 
 @Component({
   selector: 'app-why',
-  imports: [Logo, MatChipListbox, MatChipOption],
+  imports: [Logo, MatChipListbox, MatChipOption, Reveal],
   templateUrl: './why.html',
   styleUrl: './why.scss',
 })
@@ -26,12 +27,6 @@ export class Why {
     return items[Math.min(this.selected(), items.length - 1)]?.reasons ?? [];
   });
 
-  /**
-   * Chips here are a filter, so there is always exactly one selection. Clicking the selected
-   * chip makes MatChipListbox emit `undefined`, and because the signal has not changed Angular
-   * will not re-run `[value]`, leaving the listbox visually blank. Writing the value back is
-   * what resyncs it - it looks redundant but removing it reintroduces the deselection bug.
-   */
   protected onSelection(change: MatChipListboxChange): void {
     if (typeof change.value === 'number') {
       this.selected.set(change.value);

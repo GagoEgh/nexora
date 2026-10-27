@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { useDictionary } from 'angular-intlayer';
 import { WhatWeBuildIllustration } from './illustration/what-we-build-illustration';
 import whatWeBuildContent from './what-we-build.content';
+import { Reveal } from '../../../shared/motion/reveal';
 
 @Component({
   selector: 'app-what-we-build',
-  imports: [WhatWeBuildIllustration],
+  imports: [WhatWeBuildIllustration, Reveal],
   templateUrl: './what-we-build.html',
   styleUrl: './what-we-build.scss',
 })

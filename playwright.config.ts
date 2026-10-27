@@ -13,11 +13,11 @@ export default defineConfig({
   forbidOnly: !!process.env['CI'],
   retries: process.env['CI'] ? 2 : 0,
   workers: process.env['CI'] ? 1 : undefined,
-  /* `list` keeps terminal runs non-interactive; the HTML report is still written but never auto-opened. */
   reporter: [['list'], ['html', { open: 'never' }]],
   use: {
     baseURL: process.env['PLAYWRIGHT_TEST_BASE_URL'] ?? 'http://localhost:4200',
     trace: 'on-first-retry',
+    reducedMotion: 'reduce',
   },
   /*
    * Only Chromium binaries are installed in this workspace (`npx playwright install chromium`).

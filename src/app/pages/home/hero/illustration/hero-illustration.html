@@ -1,4 +1,4 @@
-<div class="art">
+<div class="art" appReveal="load">
   <div class="art__window">
     <div class="art__bar">
       <span class="art__dots"></span>
@@ -9,7 +9,18 @@
       @for (tier of content().tiers; track $index; let i = $index) {
         @if (i > 0) {
           <svg class="art__link" viewBox="0 0 100 56" preserveAspectRatio="none">
-            <path [attr.d]="links[i - 1]" vector-effect="non-scaling-stroke" />
+            <path
+              class="art__link-line"
+              [attr.d]="links[i - 1]"
+              pathLength="1"
+              vector-effect="non-scaling-stroke"
+            />
+            <path
+              class="art__link-pulse"
+              [attr.d]="links[i - 1]"
+              pathLength="1"
+              vector-effect="non-scaling-stroke"
+            />
           </svg>
         }
         <div class="art__tier">
