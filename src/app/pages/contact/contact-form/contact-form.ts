@@ -20,9 +20,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { RouterLink } from '@angular/router';
 import { useDictionary } from 'angular-intlayer';
-import { LocalizedPathPipe } from '../../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../../core/icons/icons';
 import { PRIVACY_POLICY_PATH } from '../../../core/routing/paths';
 import {
@@ -76,8 +74,6 @@ const STATUS_CLASSES = {
     MatError,
     MatButton,
     MatIcon,
-    RouterLink,
-    LocalizedPathPipe,
     FieldLabel,
     ChipSelect,
   ],

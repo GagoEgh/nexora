@@ -1,3 +1,4 @@
+@use 'tokens/motion';
 @use 'tokens/spacing';
 @use 'tokens/typography';
 
@@ -11,6 +12,19 @@
   border: 1px solid var(--mat-sys-outline-variant);
   border-radius: var(--mat-sys-corner-large);
   background-color: var(--mat-sys-surface);
+
+  transition:
+    border-color motion.duration(fast) motion.easing(out),
+    box-shadow motion.duration(fast) motion.easing(out);
+}
+
+:host(:hover) {
+  border-color: var(--mat-sys-outline);
+  box-shadow: var(--mat-sys-level1);
+
+  .service-card__arrow {
+    background-color: var(--mat-sys-surface-container-high);
+  }
 }
 
 .service-card__head {
@@ -27,6 +41,7 @@
 }
 
 .service-card__arrow {
+  transition: background-color motion.duration(fast) motion.easing(out);
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;

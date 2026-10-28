@@ -30,6 +30,7 @@
   @for (group of visibleGroups(); track group.id) {
     <section
       #sectionRef
+      appReveal
       class="services__group"
       [id]="sectionId(group.id)"
       [attr.data-category]="group.id"

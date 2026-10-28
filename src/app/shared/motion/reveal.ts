@@ -23,18 +23,21 @@ export class Reveal {
       }
 
       element.setAttribute('data-reveal', 'out');
-
-      if (this.appReveal() === 'load') {
+      const revealNextFrame = (): void => {
         view.requestAnimationFrame(() => {
           view.requestAnimationFrame(() => this.reveal());
         });
+      };
+
+      if (this.appReveal() === 'load') {
+        revealNextFrame();
         return;
       }
 
       const observer = new view.IntersectionObserver(
         (entries) => {
           if (entries.some((entry) => entry.isIntersecting)) {
-            this.reveal();
+            revealNextFrame();
             observer.disconnect();
           }
         },

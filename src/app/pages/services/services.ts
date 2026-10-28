@@ -17,6 +17,7 @@ import { useDictionary } from 'angular-intlayer';
 import { AI_AGENT_PATH, CONTACT_PATH, SOLUTIONS_PATH } from '../../core/routing/paths';
 import { LocalizedPathPipe } from '../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../core/icons/icons';
+import { Reveal } from '../../shared/motion/reveal';
 import { ordinal } from '../../shared/ordinal';
 import { IconTile, type IconTileTone } from '../../shared/ui/icon-tile/icon-tile';
 import { PageIntro, type PageIntroCrumb } from '../../shared/ui/page-intro/page-intro';
@@ -62,6 +63,7 @@ function categoryTone(category: ServiceCategoryId): IconTileTone {
     FilterBar,
     MatButton,
     MatIcon,
+    Reveal,
   ],
   templateUrl: './services.html',
   styleUrl: './services.scss',

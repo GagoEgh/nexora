@@ -1,6 +1,7 @@
 @use 'tokens/spacing';
 @use 'tokens/layout';
 @use 'tokens/typography';
+@use 'mixins/reveal';
 @use 'mixins/text';
 
 :host {
@@ -46,6 +47,8 @@
   gap: spacing.space(16);
   align-content: start;
   justify-items: start;
+
+  @include reveal.item();
 }
 
 .services__group-position {
@@ -146,4 +149,16 @@
   margin: 0;
   font: var(--mat-sys-body-small);
   color: var(--mat-sys-on-surface-variant);
+}
+
+.services__list > li {
+  @include reveal.item(80ms);
+  @include reveal.stagger(6, 60ms, 80ms);
+}
+
+.services__group[data-reveal='out'] {
+  .services__group-head,
+  .services__list > li {
+    @include reveal.hidden($distance: 8px);
+  }
 }
