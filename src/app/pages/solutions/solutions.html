@@ -8,8 +8,8 @@
 >
 </app-page-intro>
 
-<app-challenge-index />
+<app-challenge-index [current]="current()" />
 
-<app-challenge-details />
+<app-challenge-details [current]="current()" />
 
 <app-start-conversation variant="compact" [copy]="conversationCopy()" />

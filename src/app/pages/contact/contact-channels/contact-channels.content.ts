@@ -21,22 +21,14 @@ const contactChannelsContent = {
     items: [
       {
         icon: 'mail' satisfies AppIconName,
-        label: t({ en: 'Email', hy: 'Էլ. փոստ', ru: 'Эл. почта' }),
+        label: t({
+          en: 'Email',
+          hy: 'Էլեկտրոնային փոստ',
+          ru: 'Электронная почта',
+        }),
         detail: CONTACT_EMAIL,
         href: `mailto:${CONTACT_EMAIL}`,
       },
-      {
-        icon: 'smartphone' satisfies AppIconName,
-        label: t({ en: 'Phone', hy: 'Հեռախոս', ru: 'Телефон' }),
-        detail: '{CONTACT_PHONE}',
-        href: '',
-      },
-      // {
-      //   icon: 'globe' satisfies AppIconName,
-      //   label: t({ en: 'Office address', hy: 'Գրասենյակի հասցե', ru: 'Адрес офиса' }),
-      //   detail: '{CONTACT_ADDRESS}',
-      //   href: '',
-      // },
     ],
   },
 } as const satisfies Dictionary;

@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { ApplicationRef, Component, computed, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, Scroll } from '@angular/router';
 import { useDictionary } from 'angular-intlayer';
 import { filter } from 'rxjs';
@@ -32,6 +32,11 @@ export class Solutions {
   private readonly document = inject(DOCUMENT);
 
   protected readonly content = useDictionary(solutionsContent);
+  private readonly params = toSignal(this.route.queryParamMap, { requireSync: true });
+  protected readonly current = computed<ChallengeId | null>(() => {
+    const value = this.params().get(CHALLENGE_PARAM);
+    return isChallengeId(value) ? value : null;
+  });
 
   protected readonly crumbs = computed<readonly PageIntroCrumb[]>(() => {
     const copy = this.content();

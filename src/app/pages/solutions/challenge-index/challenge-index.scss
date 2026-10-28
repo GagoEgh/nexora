@@ -1,6 +1,7 @@
 @use 'mixins/container';
 @use 'mixins/reveal';
 @use 'tokens/layout';
+@use 'tokens/motion';
 @use 'tokens/spacing';
 @use 'tokens/typography';
 
@@ -47,10 +48,32 @@
   border-radius: var(--mat-sys-corner-medium);
   background-color: var(--mat-sys-surface);
   text-decoration: none;
+  transition:
+    background-color motion.duration(fast) motion.easing(out),
+    translate motion.duration(fast) motion.easing(out),
+    box-shadow motion.duration(fast) motion.easing(out);
 
   &:hover,
   &:focus-visible {
     background-color: var(--mat-sys-surface-container-low);
+    translate: 0 calc(-1 * #{motion.distance(lift)});
+    box-shadow: var(--mat-sys-level1);
+  }
+}
+
+.challenge-index__card--current {
+  position: relative;
+  border-color: var(--mat-sys-primary);
+  background-color: var(--mat-sys-primary-container);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset-block: spacing.space(12);
+    inset-inline-start: 0;
+    width: 2px;
+    border-radius: var(--mat-sys-corner-full);
+    background-color: var(--mat-sys-primary);
   }
 }
 

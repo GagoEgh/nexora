@@ -10,42 +10,74 @@ const contactFormContent = {
     }),
     requiredNote: t({
       en: 'Fields marked * are required.',
-      hy: '* նշված դաշտերը պարտադիր են։',
-      ru: 'Поля, отмеченные *, обязательны.',
+      hy: '* նշանով նշված դաշտերը պարտադիր են։',
+      ru: 'Поля, отмеченные знаком *, обязательны для заполнения.',
     }),
     requiredMark: '*',
 
-    interestLabel: t({ en: 'I’m interested in', hy: 'Ինձ հետաքրքրում է', ru: 'Меня интересует' }),
+    interestLabel: t({
+      en: 'I’m interested in',
+      hy: 'Ինձ հետաքրքրում է',
+      ru: 'Меня интересует',
+    }),
     interestOptions: [
       {
         value: 'new-project',
-        label: t({ en: 'A new project', hy: 'Նոր նախագիծ', ru: 'Новый проект' }),
+        label: t({
+          en: 'A new project',
+          hy: 'Նոր նախագիծ',
+          ru: 'Новый проект',
+        }),
       },
       {
         value: 'dedicated-team',
-        label: t({ en: 'A dedicated team', hy: 'Նվիրված թիմ', ru: 'Выделенная команда' }),
+        label: t({
+          en: 'A dedicated team',
+          hy: 'Առանձին՝ իմ նախագծին նվիրված թիմ',
+          ru: 'Выделенная команда',
+        }),
       },
       {
         value: 'partnership',
-        label: t({ en: 'A partnership', hy: 'Գործընկերություն', ru: 'Партнёрство' }),
+        label: t({
+          en: 'A partnership',
+          hy: 'Համագործակցություն',
+          ru: 'Партнёрство',
+        }),
       },
       {
         value: 'something-else',
-        label: t({ en: 'Something else', hy: 'Այլ բան', ru: 'Что-то другое' }),
+        label: t({
+          en: 'Something else',
+          hy: 'Այլ հարց կամ առաջարկ',
+          ru: 'Другой запрос или предложение',
+        }),
       },
     ],
 
-    nameLabel: t({ en: 'Full name', hy: 'Անուն ազգանուն', ru: 'Имя и фамилия' }),
+    nameLabel: t({
+      en: 'Full name',
+      hy: 'Անուն և ազգանուն',
+      ru: 'Имя и фамилия',
+    }),
     namePlaceholder: t({
       en: 'Your full name',
-      hy: 'Ձեր անուն ազգանունը',
-      ru: 'Ваше имя и фамилия',
+      hy: 'Մուտքագրեք ձեր անունն ու ազգանունը',
+      ru: 'Введите имя и фамилию',
     }),
 
-    emailLabel: t({ en: 'Work email', hy: 'Աշխատանքային էլ. փոստ', ru: 'Рабочая эл. почта' }),
+    emailLabel: t({
+      en: 'Work email',
+      hy: 'Աշխատանքային էլեկտրոնային փոստ',
+      ru: 'Рабочая электронная почта',
+    }),
     emailPlaceholder: 'name@company.com',
 
-    companyLabel: t({ en: 'Company name', hy: 'Ընկերության անվանում', ru: 'Название компании' }),
+    companyLabel: t({
+      en: 'Company name',
+      hy: 'Ընկերության անվանումը',
+      ru: 'Название компании',
+    }),
     companyPlaceholder: t({
       en: 'Company or organization',
       hy: 'Ընկերություն կամ կազմակերպություն',
@@ -54,7 +86,7 @@ const contactFormContent = {
 
     serviceLabel: t({
       en: 'Service of interest',
-      hy: 'Հետաքրքրող ծառայություն',
+      hy: 'Հետաքրքրող ծառայությունը',
       ru: 'Интересующая услуга',
     }),
     servicePlaceholder: t({
@@ -65,11 +97,19 @@ const contactFormContent = {
     serviceOptions: [
       {
         value: 'design-product',
-        label: t({ en: 'Design & Product', hy: 'Դիզայն և պրոդուկտ', ru: 'Дизайн и продукт' }),
+        label: t({
+          en: 'Design & Product',
+          hy: 'Դիզայն և թվային արտադրանք',
+          ru: 'Дизайн и цифровые продукты',
+        }),
       },
       {
         value: 'software-engineering',
-        label: t({ en: 'Software Engineering', hy: 'Ծրագրային ինժեներիա', ru: 'Разработка ПО' }),
+        label: t({
+          en: 'Software Engineering',
+          hy: 'Ծրագրային ապահովման մշակում',
+          ru: 'Разработка программного обеспечения',
+        }),
       },
       {
         value: 'artificial-intelligence',
@@ -83,7 +123,7 @@ const contactFormContent = {
         value: 'infrastructure-operations',
         label: t({
           en: 'Infrastructure & Operations',
-          hy: 'Ենթակառուցվածք և շահագործում',
+          hy: 'Ենթակառուցվածքներ և շահագործում',
           ru: 'Инфраструктура и эксплуатация',
         }),
       },
@@ -91,7 +131,7 @@ const contactFormContent = {
         value: 'engineering-partnerships',
         label: t({
           en: 'Engineering Partnerships',
-          hy: 'Ինժեներական գործընկերություն',
+          hy: 'Ինժեներական համագործակցություն',
           ru: 'Инженерное партнёрство',
         }),
       },
@@ -99,24 +139,28 @@ const contactFormContent = {
 
     descriptionLabel: t({
       en: 'Project description',
-      hy: 'Նախագծի նկարագրություն',
+      hy: 'Նախագծի նկարագրությունը',
       ru: 'Описание проекта',
     }),
     descriptionPlaceholder: t({
       en: 'What are you building, modernizing or automating? Share goals, current systems and any constraints.',
-      hy: 'Ի՞նչ եք կառուցում, արդիականացնում կամ ավտոմատացնում։ Կիսվեք նպատակներով, ներկայիս համակարգերով և սահմանափակումներով։',
-      ru: 'Что вы создаёте, модернизируете или автоматизируете? Поделитесь целями, текущими системами и ограничениями.',
+      hy: 'Ի՞նչ եք ցանկանում ստեղծել, արդիականացնել կամ ավտոմատացնել։ Ներկայացրեք ձեր նպատակները, ներկայումս օգտագործվող համակարգերը և առկա սահմանափակումները։',
+      ru: 'Что вы хотите создать, модернизировать или автоматизировать? Расскажите о целях, используемых системах и возможных ограничениях.',
     }),
     descriptionHint: t({
       en: 'A few sentences is enough to start.',
-      hy: 'Սկսելու համար մի քանի նախադասությունը բավական է։',
+      hy: 'Սկսելու համար բավական է մի քանի նախադասություն։',
       ru: 'Для начала достаточно нескольких предложений.',
     }),
 
-    timelineLabel: t({ en: 'Estimated timeline', hy: 'Մոտավոր ժամկետ', ru: 'Примерные сроки' }),
+    timelineLabel: t({
+      en: 'Estimated timeline',
+      hy: 'Նախագծի իրականացման մոտավոր ժամկետը',
+      ru: 'Предполагаемые сроки реализации',
+    }),
     timelinePlaceholder: t({
       en: 'Select timeline',
-      hy: 'Ընտրեք ժամկետ',
+      hy: 'Ընտրեք ժամկետը',
       ru: 'Выберите срок',
     }),
     timelineOptions: [
@@ -138,82 +182,142 @@ const contactFormContent = {
       },
       {
         value: '3-6-months',
-        label: t({ en: 'In 3–6 months', hy: '3–6 ամսից', ru: 'Через 3–6 месяцев' }),
+        label: t({
+          en: 'In 3–6 months',
+          hy: '3–6 ամսից',
+          ru: 'Через 3–6 месяцев',
+        }),
       },
       {
         value: 'planning',
-        label: t({ en: 'Still planning', hy: 'Դեռ պլանավորում ենք', ru: 'Пока планируем' }),
+        label: t({
+          en: 'Still planning',
+          hy: 'Դեռ պլանավորման փուլում է',
+          ru: 'Пока на этапе планирования',
+        }),
       },
     ],
 
-    budgetLabel: t({ en: 'Budget range', hy: 'Բյուջեի միջակայք', ru: 'Бюджетный диапазон' }),
-    budgetPlaceholder: t({ en: 'Select range', hy: 'Ընտրեք միջակայք', ru: 'Выберите диапазон' }),
+    budgetLabel: t({
+      en: 'Budget range',
+      hy: 'Նախատեսված բյուջեն',
+      ru: 'Предполагаемый бюджет',
+    }),
+    budgetPlaceholder: t({
+      en: 'Select range',
+      hy: 'Ընտրեք բյուջեի միջակայքը',
+      ru: 'Выберите диапазон',
+    }),
     budgetOptions: [
       {
         value: 'under-10k',
-        label: t({ en: 'Under $10,000', hy: 'Մինչև $10,000', ru: 'До $10 000' }),
+        label: t({
+          en: 'Under $10,000',
+          hy: 'Մինչև $10,000',
+          ru: 'До $10 000',
+        }),
       },
       { value: '10-25k', label: '$10,000–$25,000' },
       { value: '25-50k', label: '$25,000–$50,000' },
       { value: '50-100k', label: '$50,000–$100,000' },
       {
         value: 'over-100k',
-        label: t({ en: 'Over $100,000', hy: '$100,000-ից ավել', ru: 'Более $100 000' }),
+        label: t({
+          en: 'Over $100,000',
+          hy: '$100,000-ից ավելի',
+          ru: 'Более $100 000',
+        }),
       },
-      { value: 'unsure', label: t({ en: 'Not sure yet', hy: 'Դեռ հստակ չէ', ru: 'Пока не знаю' }) },
+      {
+        value: 'unsure',
+        label: t({
+          en: 'Not sure yet',
+          hy: 'Դեռ որոշված չէ',
+          ru: 'Пока не определён',
+        }),
+      },
     ],
-    optionalHint: t({ en: 'Optional', hy: 'Ըստ ցանկության', ru: 'Необязательно' }),
+    optionalHint: t({
+      en: 'Optional',
+      hy: 'Ոչ պարտադիր',
+      ru: 'Необязательно',
+    }),
 
     methodLabel: t({
       en: 'Preferred contact method · optional',
-      hy: 'Նախընտրելի կապի եղանակ · ըստ ցանկության',
+      hy: 'Կապի նախընտրելի եղանակը · ոչ պարտադիր',
       ru: 'Предпочтительный способ связи · необязательно',
     }),
     methodOptions: [
-      { value: 'email', label: t({ en: 'Email', hy: 'Էլ. փոստ', ru: 'Эл. почта' }) },
-      { value: 'phone', label: t({ en: 'Phone', hy: 'Հեռախոս', ru: 'Телефон' }) },
-      { value: 'video', label: t({ en: 'Video call', hy: 'Տեսազանգ', ru: 'Видеозвонок' }) },
+      {
+        value: 'email',
+        label: t({
+          en: 'Email',
+          hy: 'Էլեկտրոնային փոստ',
+          ru: 'Электронная почта',
+        }),
+      },
+      {
+        value: 'phone',
+        label: t({
+          en: 'Phone',
+          hy: 'Հեռախոս',
+          ru: 'Телефон',
+        }),
+      },
+      {
+        value: 'video',
+        label: t({
+          en: 'Video call',
+          hy: 'Տեսազանգ',
+          ru: 'Видеозвонок',
+        }),
+      },
     ],
 
     privacyLabel: t({
       en: 'Privacy Policy',
-      hy: 'Գաղտնիության քաղաքականությունում',
-      ru: 'Политике конфиденциальности',
+      hy: 'Գաղտնիության քաղաքականություն',
+      ru: 'Политика конфиденциальности',
     }),
     sentenceEnd: '.',
 
-    submitLabel: t({ en: 'Send inquiry', hy: 'Ուղարկել հարցումը', ru: 'Отправить запрос' }),
+    submitLabel: t({
+      en: 'Send inquiry',
+      hy: 'Ուղարկել հարցումը',
+      ru: 'Отправить запрос',
+    }),
     noteBefore: t({
       en: 'Your details are used only to respond to this inquiry. See our',
-      hy: 'Ձեր տվյալները օգտագործվում են միայն այս հարցմանը պատասխանելու համար։ Տեսեք մեր',
-      ru: 'Ваши данные используются только для ответа на этот запрос. Смотрите нашу',
+      hy: 'Ձեր տվյալներն օգտագործվում են բացառապես այս հարցմանը պատասխանելու համար։ Ծանոթացեք մեր',
+      ru: 'Ваши данные используются исключительно для ответа на ваш запрос. Ознакомьтесь с нашей',
     }),
 
     errorRequired: t({
       en: 'This field is required.',
       hy: 'Այս դաշտը պարտադիր է։',
-      ru: 'Это поле обязательно.',
+      ru: 'Это поле обязательно для заполнения.',
     }),
     errorEmail: t({
       en: 'Enter a valid email address.',
-      hy: 'Մուտքագրեք վավեր էլ. փոստի հասցե։',
-      ru: 'Введите корректный адрес эл. почты.',
+      hy: 'Մուտքագրեք էլեկտրոնային փոստի վավեր հասցե։',
+      ru: 'Введите корректный адрес электронной почты.',
     }),
 
     sentMessage: t({
       en: 'Thanks — your inquiry is on its way.',
-      hy: 'Շնորհակալություն՝ ձեր հարցումն ուղարկվել է։',
-      ru: 'Спасибо — ваш запрос отправлен.',
+      hy: 'Շնորհակալություն։ Ձեր հարցումն ուղարկվել է։',
+      ru: 'Спасибо! Ваш запрос отправлен.',
     }),
     notConfiguredMessage: t({
       en: 'Sending isn’t available yet. Please use the contact details listed beside this form.',
-      hy: 'Ուղարկումը դեռ հասանելի չէ։ Խնդրում ենք օգտվել այս ձևի կողքին նշված կոնտակտային տվյալներից։',
-      ru: 'Отправка пока недоступна. Воспользуйтесь контактными данными рядом с этой формой.',
+      hy: 'Հարցումների ուղարկման հնարավորությունը դեռ հասանելի չէ։ Խնդրում ենք օգտվել ձևի կողքին նշված կապի տվյալներից։',
+      ru: 'Отправка запросов пока недоступна. Пожалуйста, воспользуйтесь контактными данными, указанными рядом с формой.',
     }),
     failedMessage: t({
       en: 'Something went wrong. Please try again.',
-      hy: 'Ինչ-որ բան սխալ գնաց։ Խնդրում ենք փորձել կրկին։',
-      ru: 'Что-то пошло не так. Попробуйте снова.',
+      hy: 'Սխալ է տեղի ունեցել։ Խնդրում ենք կրկին փորձել։',
+      ru: 'Произошла ошибка. Пожалуйста, попробуйте ещё раз.',
     }),
   },
 } as const satisfies Dictionary;

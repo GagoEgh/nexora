@@ -341,6 +341,87 @@ test.describe('solutions entrance', () => {
   });
 });
 
+/**
+ * Arriving at a challenge.
+ *
+ * Eight panels look alike, so landing on one needs an acknowledgement. The index keeps a
+ * persistent mark of where the reader is; the panel gives a one-shot ring and then stops. The
+ * mark is state and applies whatever the motion setting is; the ring is motion and is gated.
+ */
+test.describe('arriving at a challenge', () => {
+  test.use({ reducedMotion: 'no-preference', viewport: { width: 1440, height: 900 } });
+
+  test('marks exactly the card that matches the url', async ({ page }) => {
+    await page.goto('/solutions?challenge=introduce-ai');
+
+    const current = page.locator('.challenge-index__card[aria-current="location"]');
+    await expect(current).toHaveCount(1);
+    await expect(current).toHaveCSS('background-color', 'rgb(238, 244, 255)');
+    await expect(page.locator('.challenge-index__card').nth(3)).toHaveAttribute(
+      'aria-current',
+      'location',
+    );
+  });
+
+  test('marks nothing when the url names no challenge', async ({ page }) => {
+    await page.goto('/solutions');
+
+    await expect(page.locator('.challenge-index__card[aria-current]')).toHaveCount(0);
+  });
+
+  test('rings the panel once and leaves it at its resting colour', async ({ page }) => {
+    await page.goto('/solutions?challenge=introduce-ai');
+    const panel = page.locator('#challenge-introduce-ai');
+
+    expect(await panel.evaluate((el) => getComputedStyle(el).animationName)).toContain('arrival');
+    expect(await panel.evaluate((el) => getComputedStyle(el).animationIterationCount)).toBe('1');
+
+    await page.waitForTimeout(1600);
+    await expect(panel).toHaveCSS('border-top-color', 'rgb(226, 232, 240)');
+  });
+
+  test('lifts an index card under the pointer', async ({ page }) => {
+    await page.goto('/solutions');
+    const card = page.locator('.challenge-index__card').first();
+    await expect(card).toHaveCSS('translate', 'none');
+
+    await card.hover();
+    await expect.poll(() => card.evaluate((el) => getComputedStyle(el).translate)).toBe('0px -2px');
+  });
+
+  test('nudges the panel cta arrow under the pointer', async ({ page }) => {
+    await page.goto('/solutions');
+    const cta = page.locator('.challenge-details__cta').first();
+    await cta.scrollIntoViewIfNeeded();
+    const arrow = cta.locator('.mat-icon');
+
+    await cta.hover();
+    await expect.poll(() => arrow.evaluate((el) => getComputedStyle(el).translate)).toBe('4px');
+  });
+});
+
+test.describe('arriving at a challenge with reduced motion', () => {
+  test.use({ reducedMotion: 'reduce', viewport: { width: 1440, height: 900 } });
+
+  test('keeps the mark and drops the ring and the nudge', async ({ page }) => {
+    await page.goto('/solutions?challenge=introduce-ai');
+
+    await expect(page.locator('.challenge-index__card[aria-current="location"]')).toHaveCount(1);
+    expect(
+      await page
+        .locator('#challenge-introduce-ai')
+        .evaluate((el) => getComputedStyle(el).animationName),
+    ).toBe('none');
+
+    const cta = page.locator('.challenge-details__cta').first();
+    await cta.scrollIntoViewIfNeeded();
+    await cta.hover();
+    expect(await cta.locator('.mat-icon').evaluate((el) => getComputedStyle(el).translate)).toBe(
+      'none',
+    );
+  });
+});
+
 test.describe('solutions entrance with reduced motion', () => {
   test.use({ reducedMotion: 'reduce', viewport: { width: 1440, height: 900 } });
 

@@ -1,4 +1,4 @@
-import { Component, computed } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { useDictionary } from 'angular-intlayer';
@@ -8,7 +8,7 @@ import { CONTACT_PATH } from '../../../core/routing/paths';
 import { Reveal } from '../../../shared/motion/reveal';
 import { IconTile, type IconTileTone } from '../../../shared/ui/icon-tile/icon-tile';
 import { ordinal } from '../../../shared/ordinal';
-import { challengeSectionId, type ChallengeTone } from '../challenge';
+import { challengeSectionId, type ChallengeId, type ChallengeTone } from '../challenge';
 import challengesContent from '../challenges.content';
 
 const TILE_TONES: Readonly<Record<ChallengeTone, IconTileTone>> = {
@@ -23,6 +23,8 @@ const TILE_TONES: Readonly<Record<ChallengeTone, IconTileTone>> = {
   styleUrl: './challenge-details.scss',
 })
 export class ChallengeDetails {
+  readonly current = input<ChallengeId | null>(null);
+
   protected readonly content = useDictionary(challengesContent);
   protected readonly ordinal = ordinal;
   protected readonly sectionId = challengeSectionId;

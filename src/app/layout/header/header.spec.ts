@@ -208,6 +208,29 @@ describe('Header', () => {
     expect(document.activeElement).toBe(button);
   });
 
+  /**
+   * Every route is lazy, so in the real app the router's first navigation lands well after the
+   * header is clickable - measured 62ms to 371ms later. A tap inside that window used to open
+   * the menu only for the arriving navigation to close it again. A navigation already in
+   * flight when the menu opens must leave it alone.
+   */
+  it('leaves the menu alone when a navigation that was already running completes', async () => {
+    const button = root.querySelector<HTMLButtonElement>(
+      'button.header__menu',
+    ) as HTMLButtonElement;
+
+    const inFlight = router.navigateByUrl('/about');
+    button.click();
+    await fixture.whenStable();
+    expect(root.hasAttribute('data-open')).toBe(true);
+
+    await inFlight;
+    await fixture.whenStable();
+
+    expect(root.hasAttribute('data-open')).toBe(true);
+    expect(button.getAttribute('aria-expanded')).toBe('true');
+  });
+
   it('closes the mobile menu after any completed navigation', async () => {
     const button = root.querySelector<HTMLButtonElement>(
       'button.header__menu',

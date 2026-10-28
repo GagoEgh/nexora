@@ -3,10 +3,17 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
-import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
+import {
+  NavigationEnd,
+  NavigationStart,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+} from '@angular/router';
 import { useDictionary } from 'angular-intlayer';
-import { getPathWithoutLocale } from 'intlayer';
 import { filter } from 'rxjs';
+import { getPathWithoutLocale } from 'intlayer';
+
 import { AI_AGENT_PATH, SERVICES_PATH } from '../../core/routing/paths';
 import { useLocaleSwitcher } from '../../core/i18n/locale-switcher';
 import { LocalizedPathPipe } from '../../core/i18n/localized-path.pipe';
@@ -43,6 +50,9 @@ export class Header {
   private readonly menuButton = viewChild.required('menuButton', { read: ElementRef });
 
   protected readonly menuOpen = signal(false);
+
+  private navigations = 0;
+  private openedAtNavigation = 0;
   protected readonly exact = { exact: true } as const;
   protected readonly chevronIcon = appIcon('chevron-down');
   protected readonly aiAgentPath = AI_AGENT_PATH;
@@ -61,16 +71,21 @@ export class Header {
   });
 
   constructor() {
-    this.router.events
-      .pipe(
-        filter((event) => event instanceof NavigationEnd),
-        takeUntilDestroyed(),
-      )
-      .subscribe(() => this.closeMenu());
+    this.router.events.pipe(takeUntilDestroyed()).subscribe((event) => {
+      if (event instanceof NavigationStart) {
+        this.navigations += 1;
+      } else if (event instanceof NavigationEnd && this.navigations > this.openedAtNavigation) {
+        this.closeMenu();
+      }
+    });
   }
 
   protected toggleMenu(): void {
     this.menuOpen.update((open) => !open);
+
+    if (this.menuOpen()) {
+      this.openedAtNavigation = this.navigations;
+    }
   }
 
   protected closeMenu(): void {

@@ -3,6 +3,8 @@
     <li class="challenge-index__item">
       <a
         class="challenge-index__card"
+        [class.challenge-index__card--current]="item.id.value === current()"
+        [attr.aria-current]="item.id.value === current() ? 'location' : null"
         [routerLink]="[]"
         [queryParams]="{ challenge: item.id.value }"
       >
