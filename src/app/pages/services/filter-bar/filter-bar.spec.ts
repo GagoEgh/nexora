@@ -2,7 +2,9 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { provideAppIcons } from '../../../core/icons/provide-app-icons';
+import { Reveal } from '../../../shared/motion/reveal';
 import type { ServiceCategorySummary, ServiceFilter } from '../service-category';
 import { FilterBar } from './filter-bar';
 
@@ -124,6 +126,16 @@ describe('FilterBar', () => {
       'all',
       ...CATEGORIES.map((category) => category.id),
     ]);
+  });
+
+  /**
+   * The bar animates itself in rather than leaving that to the page, so the hook lives on its
+   * own root element.
+   */
+  it('drives its own reveal', () => {
+    const revealed = fixture.debugElement.query(By.directive(Reveal));
+
+    expect(revealed?.nativeElement).toBe(root.querySelector('.filter-bar__inner'));
   });
 
   it('labels both controls for assistive technology', () => {

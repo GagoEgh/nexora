@@ -410,3 +410,104 @@ test.describe('services page below the chip breakpoint', () => {
     expect(await noOverflow(page)).toBe(true);
   });
 });
+
+/**
+ * The filter bar sits on the page margin like every other band.
+ *
+ * It used to be an inline host, which meant its `padding-inline` never reached the inner
+ * container: the bar centred itself on the viewport instead. That is invisible at 1440, where
+ * (1440 - 1280) / 2 happens to equal the 80px margin, so these widths are the ones that matter.
+ */
+test.describe('filter bar alignment', () => {
+  for (const [width, margin] of [
+    [1366, 80],
+    [1280, 80],
+    [1200, 80],
+    [840, 40],
+    [390, 20],
+  ] as const) {
+    test(`starts on the ${margin}px page margin at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/services');
+      await expect(page.locator('app-filter-bar')).toBeVisible();
+
+      const [inner] = await boxes(page, '.filter-bar__inner');
+      expect(inner.x).toBe(margin);
+      expect(inner.w).toBeLessThanOrEqual(width - margin * 2);
+
+      // And it agrees with the copy above it rather than floating on its own.
+      const [copy] = await boxes(page, '.page-intro__copy');
+      expect(inner.x).toBe(copy.x);
+      expect(await noOverflow(page)).toBe(true);
+    });
+  }
+
+  test('is a block box, so its rule and background span the bar', async ({ page }) => {
+    await page.goto('/services');
+    expect(await style(page, 'app-filter-bar', 'display')).toBe('block');
+
+    const [host] = await boxes(page, 'app-filter-bar');
+    const [inner] = await boxes(page, '.filter-bar__inner');
+    // 1px of border above and below the inner, and nothing else.
+    expect(host.h - inner.h).toBe(2);
+  });
+});
+
+/**
+ * The filter bar entrance. The rest of this file runs under the suite-wide
+ * `reducedMotion: 'reduce'` (playwright.config.ts), which is what keeps its chip geometry
+ * assertions stable: under `reduce` no hidden state applies, so nothing is displaced.
+ */
+test.describe('filter bar motion', () => {
+  test.use({ reducedMotion: 'no-preference', viewport: { width: 1440, height: 900 } });
+
+  test('staggers the chips in and settles with nothing displaced', async ({ page }) => {
+    await page.goto('/services');
+    await expect
+      .poll(() => page.locator('.filter-bar__inner').getAttribute('data-reveal'), { timeout: 5000 })
+      .toBe('in');
+
+    const delays = await page
+      .locator('mat-chip-option')
+      .evaluateAll((els) => els.map((el) => getComputedStyle(el).transitionDelay));
+    expect(delays).toEqual(['0s', '0.045s', '0.09s', '0.135s', '0.18s', '0.225s']);
+
+    await page.waitForTimeout(900);
+    for (const chip of await page.locator('mat-chip-option').all()) {
+      await expect(chip).toHaveCSS('opacity', '1');
+      await expect(chip).toHaveCSS('transform', 'none');
+    }
+  });
+
+  test('lifts a chip under the pointer and puts it back', async ({ page }) => {
+    await page.goto('/services');
+    await page.waitForTimeout(1200);
+
+    const chip = page.locator('mat-chip-option').nth(1);
+    await expect(chip).toHaveCSS('translate', 'none');
+
+    await chip.hover();
+    await expect.poll(() => chip.evaluate((el) => getComputedStyle(el).translate)).toBe('0px -2px');
+
+    await page.mouse.move(0, 0);
+    await expect.poll(() => chip.evaluate((el) => getComputedStyle(el).translate)).toBe('none');
+  });
+});
+
+test.describe('filter bar with reduced motion', () => {
+  test.use({ reducedMotion: 'reduce', viewport: { width: 1440, height: 900 } });
+
+  test('hides nothing and does not displace a hovered chip', async ({ page }) => {
+    await page.goto('/services');
+
+    for (const chip of await page.locator('mat-chip-option').all()) {
+      await expect(chip).toHaveCSS('opacity', '1');
+      await expect(chip).toHaveCSS('transform', 'none');
+    }
+
+    const chip = page.locator('mat-chip-option').nth(1);
+    await chip.hover();
+    // The lift distance is a token, and the token is zeroed under reduced motion.
+    await expect.poll(() => chip.evaluate((el) => getComputedStyle(el).translate)).toBe('0px');
+  });
+});

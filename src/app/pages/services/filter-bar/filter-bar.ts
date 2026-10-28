@@ -2,6 +2,7 @@ import { Component, input, output, viewChild } from '@angular/core';
 import { MatChipListbox, type MatChipListboxChange, MatChipOption } from '@angular/material/chips';
 import { MatIcon } from '@angular/material/icon';
 import { appIcon } from '../../../core/icons/icons';
+import { Reveal } from '../../../shared/motion/reveal';
 import {
   ALL_SERVICES,
   type ServiceCategorySummary,
@@ -11,7 +12,7 @@ import {
 
 @Component({
   selector: 'app-filter-bar',
-  imports: [MatChipListbox, MatChipOption, MatIcon],
+  imports: [MatChipListbox, MatChipOption, MatIcon, Reveal],
   templateUrl: './filter-bar.html',
   styleUrl: './filter-bar.scss',
 })

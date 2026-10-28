@@ -1,17 +1,20 @@
 @use '@angular/material' as mat;
 @use 'tokens/spacing';
 @use 'tokens/layout';
+@use 'tokens/motion';
+@use 'mixins/reveal';
+
+:host {
+  display: block;
+  padding-inline: var(--nx-layout-margin);
+  border-block: 1px solid var(--mat-sys-outline-variant);
+  background-color: var(--mat-sys-surface);
+}
 
 .filter-bar__inner {
   max-width: var(--nx-layout-container-max);
   margin-inline: auto;
   padding-block: spacing.space(16);
-}
-
-:host {
-  padding-inline: var(--nx-layout-margin);
-  border-block: 1px solid var(--mat-sys-outline-variant);
-  background-color: var(--mat-sys-surface);
 }
 
 .filter-bar__chips-wrap {
@@ -35,7 +38,15 @@
   );
 }
 
+.filter-bar__chips mat-chip-option {
+  @include reveal.item($hover: true);
+  @include reveal.stagger(6, 45ms);
+  @include reveal.lift();
+}
+
 .filter-bar__select-wrap {
+  @include reveal.item();
+
   position: relative;
   display: flex;
   align-items: center;
@@ -51,6 +62,7 @@
   inset-inline-end: spacing.space(16);
   color: var(--nx-sys-on-surface-muted);
   pointer-events: none;
+  transition: color motion.duration(fast) motion.easing(out);
 }
 
 .filter-bar__select {
@@ -64,4 +76,20 @@
   font: var(--nx-sys-body-copy);
   color: var(--mat-sys-on-surface);
   appearance: none;
+  transition: border-color motion.duration(fast) motion.easing(out);
+}
+
+.filter-bar__select:hover {
+  border-color: var(--mat-sys-on-surface-variant);
+}
+
+.filter-bar__select:hover + .filter-bar__select-icon {
+  color: var(--mat-sys-on-surface);
+}
+
+.filter-bar__inner[data-reveal='out'] {
+  mat-chip-option,
+  .filter-bar__select-wrap {
+    @include reveal.hidden($distance: 8px);
+  }
 }
