@@ -3,6 +3,7 @@ import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { useDictionary } from 'angular-intlayer';
+import { Reveal } from '../../motion/reveal';
 import { LocalizedPathPipe } from '../../../core/i18n/localized-path.pipe';
 import { CONTACT_PATH, PARTNERSHIPS_PATH } from '../../../core/routing/paths';
 import { appIcon } from '../../../core/icons/icons';
@@ -29,7 +30,7 @@ type ConversationBand = Omit<ConversationCopy, 'steps'> & { readonly steps: read
 
 @Component({
   selector: 'app-start-conversation',
-  imports: [RouterLink, LocalizedPathPipe, MatButton, MatIcon],
+  imports: [RouterLink, LocalizedPathPipe, MatButton, MatIcon, Reveal],
   templateUrl: './start-conversation.html',
   styleUrl: './start-conversation.scss',
   host: { '[attr.data-variant]': 'variant()' },

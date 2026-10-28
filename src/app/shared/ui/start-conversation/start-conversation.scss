@@ -1,6 +1,8 @@
 @use 'tokens/spacing';
 @use 'tokens/layout';
+@use 'tokens/motion';
 @use 'mixins/eyebrow';
+@use 'mixins/reveal';
 
 :host {
   display: block;
@@ -16,9 +18,6 @@
 .start-conversation {
   display: grid;
   gap: spacing.space(48);
-
-  /* Without this the 64px padding is added outside max-width, so the band renders 128px wider
-   * than every other container on the site once the viewport passes 1440px. */
   box-sizing: border-box;
   max-width: var(--nx-layout-container-max);
   margin-inline: auto;
@@ -117,7 +116,18 @@
   }
 }
 
+/*
+ * One transition shared by the three concentric pieces - only the delay differs, and that
+ * ordering is the whole idea: the mark arrives first and the ring opens out around it.
+ */
+.start-conversation__ring,
+.start-conversation__disc,
+.start-conversation__mark {
+  @include reveal.item();
+}
+
 .start-conversation__ring {
+  transition-delay: 140ms;
   position: relative;
   box-sizing: border-box;
   width: 100%;
@@ -127,6 +137,16 @@
   border-radius: var(--mat-sys-corner-full);
 }
 
+.start-conversation__ring::after {
+  content: '';
+  position: absolute;
+  box-sizing: border-box;
+  inset: -1px;
+  border: 1px solid var(--mat-sys-primary);
+  border-radius: var(--mat-sys-corner-full);
+  opacity: 0;
+}
+
 .start-conversation__disc {
   position: absolute;
   inset-block-start: 50%;
@@ -134,16 +154,49 @@
   box-sizing: border-box;
   width: 69.87%;
   aspect-ratio: 1;
-  border: 1px solid var(--mat-sys-primary);
   border-radius: var(--mat-sys-corner-full);
   background-color: var(--mat-sys-surface);
   translate: -50% -50%;
 }
 
 .start-conversation__mark {
+  transition-delay: 60ms;
   position: absolute;
   inset-block-start: 50%;
   inset-inline-start: 50%;
   width: 79.3%;
   translate: -50% -50%;
+}
+
+.start-conversation__art[data-reveal='out'] {
+  .start-conversation__ring {
+    @include reveal.hidden($distance: 0, $scale: 0.72);
+  }
+
+  .start-conversation__disc,
+  .start-conversation__mark {
+    @include reveal.hidden($distance: 0, $scale: 0.92);
+  }
+}
+
+.start-conversation__art[data-reveal='in'] .start-conversation__ring::after {
+  @media (prefers-reduced-motion: no-preference) {
+    animation: conversation-ping 1200ms motion.easing(out) 520ms 1 both;
+  }
+}
+
+@keyframes conversation-ping {
+  0% {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+
+  25% {
+    opacity: 0.55;
+  }
+
+  100% {
+    transform: scale(1.02);
+    opacity: 0;
+  }
 }

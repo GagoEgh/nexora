@@ -3,7 +3,7 @@ import { expect, test, type Page } from '@playwright/test';
 /**
  * Start-a-conversation contract (CTA.png at 1440): a primary-container panel holding the copy
  * column — eyebrow, h2, lead, three numbered steps and two CTA buttons — beside the brand mark
- * inside two concentric rings that reach the panel edge. One column below 1200.
+ * on a white disc inside a hairline ring that reaches the panel edge. One column below 1200.
  */
 const style = (page: Page, selector: string, prop: string) =>
   page
@@ -149,7 +149,7 @@ test.describe('start a conversation at the desktop design width', () => {
     ).toBe('rgb(203, 213, 225)');
   });
 
-  test('centres the brand mark in two rings that reach the panel edge', async ({ page }) => {
+  test('centres the brand mark in a ring that reaches the panel edge', async ({ page }) => {
     const [panel] = await boxes(page, 'app-start-conversation .start-conversation');
     const [ring] = await boxes(page, 'app-start-conversation .start-conversation__ring');
     expect(ring.w).toBe(460);
@@ -171,6 +171,11 @@ test.describe('start a conversation at the desktop design width', () => {
     expect(
       await style(page, 'app-start-conversation .start-conversation__disc', 'background-color'),
     ).toBe('rgb(255, 255, 255)');
+    // The disc is the mark's white backdrop only: the second blue hairline it used to carry
+    // was removed, leaving one ring. Its border-box width is unchanged by that.
+    expect(
+      await style(page, 'app-start-conversation .start-conversation__disc', 'border-top-width'),
+    ).toBe('0px');
 
     const [mark] = await boxes(page, 'app-start-conversation .start-conversation__mark');
     // Concentric: the mark, the disc and the ring share one centre.
@@ -249,5 +254,110 @@ test.describe('start a conversation at narrower widths', () => {
     expect(links[0].x).toBe(links[1].x);
     expect(links[0].w).toBe(links[1].w);
     expect(links[1].y - (links[0].y + links[0].h)).toBe(12);
+  });
+});
+
+/**
+ * The artwork entrance: the mark settles, the ring opens out around it, one ping follows.
+ *
+ * Everything above runs under the suite-wide `reducedMotion: 'reduce'` (playwright.config.ts),
+ * which is what keeps its pixel assertions stable: under `reduce` no hidden state applies at
+ * all, so no transform ever perturbs a measurement. These specs opt back in, so the animation
+ * is exercised somewhere, and then assert the reduced-motion path separately.
+ */
+const ART = 'app-start-conversation .start-conversation__art';
+const PARTS = ['__ring', '__disc', '__mark'] as const;
+
+const revealState = (page: Page) => page.locator(ART).getAttribute('data-reveal');
+
+const animationName = (page: Page) =>
+  page
+    .locator('app-start-conversation .start-conversation__ring')
+    .evaluate((el) => getComputedStyle(el, '::after').animationName);
+
+test.describe('the artwork assembles when it is scrolled into view', () => {
+  test.use({ reducedMotion: 'no-preference', viewport: { width: 1440, height: 900 } });
+
+  test('stays hidden until it is reached, then settles with nothing left behind', async ({
+    page,
+  }) => {
+    await page.goto('/');
+    // The band closes a long page, so it is still far below the fold here.
+    await expect.poll(revealState.bind(null, page), { timeout: 5000 }).toBe('out');
+    expect(await style(page, 'app-start-conversation .start-conversation__mark', 'opacity')).toBe(
+      '0',
+    );
+
+    await page.locator('app-start-conversation').scrollIntoViewIfNeeded();
+    await expect.poll(revealState.bind(null, page), { timeout: 5000 }).toBe('in');
+    await page.waitForTimeout(2200);
+
+    for (const part of PARTS) {
+      const selector = `app-start-conversation .start-conversation${part}`;
+      expect(await style(page, selector, 'opacity'), part).toBe('1');
+      // The disc and the mark are centred with `translate`, so a settled `transform` of `none`
+      // is also the proof that the entrance never touched their centring.
+      expect(await style(page, selector, 'transform'), part).toBe('none');
+    }
+  });
+
+  test('is still concentric and still fits the panel once settled', async ({ page }) => {
+    await page.goto('/');
+    await page.locator('app-start-conversation').scrollIntoViewIfNeeded();
+    await expect.poll(revealState.bind(null, page), { timeout: 5000 }).toBe('in');
+    await page.waitForTimeout(2200);
+
+    const [ring] = await boxes(page, 'app-start-conversation .start-conversation__ring');
+    const [disc] = await boxes(page, 'app-start-conversation .start-conversation__disc');
+    const [mark] = await boxes(page, 'app-start-conversation .start-conversation__mark');
+    for (const part of [disc, mark]) {
+      expect(Math.abs(part.x + part.w / 2 - (ring.x + ring.w / 2))).toBeLessThanOrEqual(1);
+      expect(Math.abs(part.y + part.h / 2 - (ring.y + ring.h / 2))).toBeLessThanOrEqual(1);
+    }
+    expect(ring.w).toBe(460);
+    expect(await noOverflow(page)).toBe(true);
+  });
+
+  test('pings outward once and does not repeat', async ({ page }) => {
+    await page.goto('/');
+    await page.locator('app-start-conversation').scrollIntoViewIfNeeded();
+    await expect.poll(revealState.bind(null, page), { timeout: 5000 }).toBe('in');
+
+    // Angular scopes the keyframes name to the component, so the computed value carries its
+    // `_ngcontent-*` prefix.
+    expect(await animationName(page)).toContain('conversation-ping');
+
+    const ping = page.locator('app-start-conversation .start-conversation__ring');
+    expect(await ping.evaluate((el) => getComputedStyle(el, '::after').animationIterationCount)) //
+      .toBe('1');
+
+    // Caught in flight: expanded past the ring it started inside, and visible.
+    await page.waitForTimeout(900);
+    const flight = await ping.evaluate((el) => {
+      const after = getComputedStyle(el, '::after');
+      return { scale: new DOMMatrixReadOnly(after.transform).a, opacity: Number(after.opacity) };
+    });
+    expect(flight.scale).toBeGreaterThan(0.7);
+    expect(flight.opacity).toBeGreaterThan(0);
+
+    // And gone afterwards, so it leaves no second ring behind.
+    await page.waitForTimeout(1400);
+    expect(await ping.evaluate((el) => getComputedStyle(el, '::after').opacity)).toBe('0');
+  });
+});
+
+test.describe('the artwork with reduced motion', () => {
+  test.use({ reducedMotion: 'reduce', viewport: { width: 1440, height: 900 } });
+
+  test('hides nothing and never pings', async ({ page }) => {
+    await page.goto('/');
+    await page.locator('app-start-conversation').scrollIntoViewIfNeeded();
+
+    for (const part of PARTS) {
+      const selector = `app-start-conversation .start-conversation${part}`;
+      expect(await style(page, selector, 'opacity'), part).toBe('1');
+      expect(await style(page, selector, 'transform'), part).toBe('none');
+    }
+    expect(await animationName(page)).toBe('none');
   });
 });

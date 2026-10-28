@@ -297,7 +297,7 @@ const challengesContent = {
         help: [
           t({
             en: 'Multi-tenant architecture',
-            hy: 'Բազմավարձակալ ճարտարապետություն',
+            hy: 'Մի քանի հաճախորդի սպասարկման ճարտարապետություն',
             ru: 'Мультитенантная архитектура',
           }),
           t({
@@ -343,7 +343,7 @@ const challengesContent = {
         help: [
           t({
             en: 'CI/CD pipelines',
-            hy: 'CI/CD գործընթացների ավտոմատացում',
+            hy: 'CI/CD խողովակաշարեր',
             ru: 'CI/CD-конвейеры',
           }),
           t({

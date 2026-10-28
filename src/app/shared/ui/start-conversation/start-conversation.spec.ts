@@ -1,10 +1,12 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { provideIntlayer, useLocale } from 'angular-intlayer';
 import { routes } from '../../../app.routes';
 import { provideAppIcons } from '../../../core/icons/provide-app-icons';
+import { Reveal } from '../../motion/reveal';
 import { StartConversation } from './start-conversation';
 
 const ICON_SVG =
@@ -150,6 +152,16 @@ describe('StartConversation', () => {
     expect(mark?.getAttribute('src')).toBe('brand/mark.svg');
     expect(mark?.getAttribute('alt')).toBe('');
     expect(art?.querySelectorAll('a, button')).toHaveLength(0);
+  });
+
+  /**
+   * The artwork animates itself on all six pages that embed this band, so the reveal hook
+   * belongs to the component rather than being repeated at every call site.
+   */
+  it('drives its own artwork reveal', () => {
+    const art = fixture.debugElement.query(By.directive(Reveal));
+
+    expect(art?.nativeElement).toBe(root.querySelector('.start-conversation__art'));
   });
 
   it('re-renders in another locale and keeps the locale prefix on both links', async () => {

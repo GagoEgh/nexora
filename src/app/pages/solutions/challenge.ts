@@ -1,6 +1,5 @@
 export type ChallengeTone = 'plain' | 'accent';
 
-/** Stable identifiers for the eight challenges, in the order they are authored. */
 export const CHALLENGE_IDS = [
   'launch-digital-product',
   'modernize-platform',
