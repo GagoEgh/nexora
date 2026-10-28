@@ -6,13 +6,9 @@
     </h2>
 
     <ul class="quality__chips">
-      @for (item of content().practices.items; track $index) {
+      @for (item of practices(); track $index) {
         <li class="quality__chip">
-          <mat-icon
-            class="quality__chip-icon"
-            aria-hidden="true"
-            [svgIcon]="icon(item.icon.value)"
-          />
+          <mat-icon class="quality__chip-icon" aria-hidden="true" [svgIcon]="item.svgIcon" />
           <span class="quality__chip-label">{{ item.label }}</span>
         </li>
       }

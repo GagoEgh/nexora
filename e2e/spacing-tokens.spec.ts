@@ -95,6 +95,25 @@ test.describe('spacing static guard', () => {
       return entry.endsWith('.scss') ? [path] : [];
     });
 
+  /*
+   * Scope of this guard, so the next reader does not over-trust it.
+   *
+   * `spacing.space()` @errors on any step outside $scale (styles/tokens/_spacing.scss:6-7), so
+   * an off-scale value cannot be written through the function at all. The one way to express one
+   * is to compose it: `calc(#{spacing.space(24)} + #{spacing.space(4)})` yields 28px, and that
+   * is deliberate - 28 sits in the 24-to-32 gap the scale leaves open. Five sites rely on it:
+   *
+   *   pages/about/glance/about-glance.scss:6
+   *   pages/about/philosophy/philosophy.scss:67
+   *   pages/ai-agent/business-value/business-value.scss:61
+   *   pages/ai-agent/capabilities/capabilities.scss:51
+   *   pages/ai-agent/related-services/engagement-panel/engagement-panel.scss:10
+   *
+   * The regex below matches px literals only, so those composed values pass it untouched. That
+   * is the intended reading: the guard enforces "no raw px", not "only scale steps". Tightening
+   * it to reject token-composed arithmetic would fail all five sites and is a design-system
+   * decision, not a lint fix - take it by adding a 28 step to $scale if the value is wanted.
+   */
   test('component and theme styles contain no px spacing literals', () => {
     const offenders: string[] = [];
     for (const file of scssFiles(SRC)) {

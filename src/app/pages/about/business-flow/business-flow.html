@@ -9,13 +9,13 @@
   </div>
 
   <ol class="flow__steps">
-    @for (step of content().steps; track $index; let first = $first) {
+    @for (step of steps(); track $index; let first = $first) {
       <li class="flow__step" [attr.data-tone]="first ? 'accent' : 'plain'">
         @if (!first) {
           <mat-icon class="flow__arrow" aria-hidden="true" [svgIcon]="arrowIcon" />
         }
 
-        <mat-icon class="flow__icon" aria-hidden="true" [svgIcon]="icon(step.icon.value)" />
+        <mat-icon class="flow__icon" aria-hidden="true" [svgIcon]="step.svgIcon" />
         <h3 class="flow__step-title">{{ step.title }}</h3>
         <p class="flow__step-text">{{ step.text }}</p>
       </li>

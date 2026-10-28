@@ -14,6 +14,7 @@ import {
   maxLength,
   type FormFieldBinding,
   provideSignalFormsConfig,
+  readonly,
   required,
   submit as submitForm,
 } from '@angular/forms/signals';
@@ -112,6 +113,13 @@ export class ContactForm {
 
   private readonly model = signal<ContactInquiry>({ ...DEFAULTS });
 
+  /*
+   * True for the duration of a send. Its own signal rather than `form().submitting()`, because
+   * the readonly rules below are declared inside the schema that builds the form and so cannot
+   * read the form back out while it is still being constructed.
+   */
+  private readonly sending = signal(false);
+
   protected readonly form = form(this.model, (inquiry) => {
     required(inquiry.interest);
 
@@ -128,6 +136,18 @@ export class ContactForm {
 
     required(inquiry.description);
     maxLength(inquiry.description, DESCRIPTION_MAX);
+
+    /*
+     * Refuse typing while a submission is in flight - otherwise input is accepted and then
+     * silently discarded by the reset on success. These are schema rules because Signal Forms
+     * owns the readonly state of a bound control: a `[readonly]` binding on a `[formField]`
+     * node is rejected by the template compiler as NG8022. Only the typed fields need it; the
+     * selects and chip groups hold single values the reset restores anyway.
+     */
+    readonly(inquiry.name, () => this.sending());
+    readonly(inquiry.email, () => this.sending());
+    readonly(inquiry.company, () => this.sending());
+    readonly(inquiry.description, () => this.sending());
   });
 
   protected readonly submitting = computed(() => this.form().submitting());
@@ -161,6 +181,7 @@ export class ContactForm {
 
     await submitForm(this.form, {
       action: async () => {
+        this.sending.set(true);
         try {
           const { status } = await this.submitter.submit(this.model());
           if (status === 'sent') {
@@ -171,6 +192,8 @@ export class ContactForm {
         } catch (error) {
           this.errorHandler.handleError(error);
           this.notify('failed');
+        } finally {
+          this.sending.set(false);
         }
         return undefined;
       },

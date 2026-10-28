@@ -608,3 +608,108 @@ test.describe('contact form states', () => {
     await expect(page.locator('.mat-mdc-snack-bar-container')).toBeVisible();
   });
 });
+
+/** Second-pass fixes: in-flight input, subscript reserve and option rhythm. */
+test.describe('contact form second-pass states', () => {
+  test.use({ reducedMotion: 'reduce', viewport: { width: 1440, height: 1500 } });
+
+  test('refuses input while a submission is in flight, then restores it', async ({ page }) => {
+    let release!: () => void;
+    const held = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    await page.route('**/api/contact', async (route) => {
+      await held;
+      await route.fulfill({
+        status: 201,
+        contentType: 'application/json',
+        body: JSON.stringify({ success: true }),
+      });
+    });
+
+    await page.goto('/contact');
+    await page.locator('app-contact-form form.form').waitFor();
+    await fillValidForm(page);
+    await page.locator('button[type="submit"]').click();
+
+    const typed = ['#contact-name', '#contact-email', '#contact-company', '#contact-description'];
+    // The DOM property, not the attribute: Angular's binding renders `readonly="true"`, and the
+    // property is what actually refuses the keystrokes.
+    const readOnlyFlags = () =>
+      page.evaluate(
+        (selectors) =>
+          selectors.map((s) => (document.querySelector(s) as HTMLInputElement).readOnly),
+        typed,
+      );
+    expect(await readOnlyFlags()).toEqual([true, true, true, true]);
+
+    // `readonly` rather than `disabled`: the control keeps its place in the tab order, so a
+    // visitor's focus is not moved mid-send.
+    expect(
+      await page.locator('#contact-name').evaluate((el) => (el as HTMLInputElement).tabIndex),
+    ).toBe(0);
+
+    // Keystrokes are refused rather than accepted and then thrown away by the reset.
+    await page.locator('#contact-name').click();
+    await page.keyboard.type('XXXX');
+    await expect(page.locator('#contact-name')).toHaveValue('Ada Lovelace');
+
+    release();
+    await expect(page.locator('app-contact-form form.form')).toHaveAttribute('aria-busy', 'false');
+    await expect.poll(readOnlyFlags, { timeout: 2000 }).toEqual([false, false, false, false]);
+    await expect(page.locator('#contact-name')).toHaveValue('');
+  });
+
+  test('select options follow the form’s 52px control rhythm', async ({ page }) => {
+    await page.goto('/contact');
+    await page.locator('app-contact-form form.form').waitFor();
+    await page.locator('#contact-service').click();
+    await expect(page.locator('mat-option').first()).toBeVisible();
+    const h = await page
+      .locator('mat-option')
+      .first()
+      .evaluate((el) => Math.round(el.getBoundingClientRect().height));
+    expect(h).toBe(52);
+  });
+
+  /**
+   * The description carries a hint and a counter at a 16px subscript, so on a narrow column they
+   * wrap to two lines. Material positions that wrapper absolutely inside a 24px subscript, so the
+   * overflow used to run into the gap below and leave the next field exactly 0px of clearance -
+   * in hy and ru as wide as 600px.
+   */
+  test.describe('the description hints never crowd the next field', () => {
+    for (const [locale, path] of [
+      ['en', '/contact'],
+      ['hy', '/hy/contact'],
+      ['ru', '/ru/contact'],
+    ] as const) {
+      for (const width of [390, 600]) {
+        test(`${locale} at ${width}px`, async ({ page }) => {
+          await page.setViewportSize({ width, height: 1500 });
+          await page.goto(path);
+          await page.locator('app-contact-form form.form').waitFor();
+          await page.evaluate(() => document.fonts.ready);
+
+          const clearance = await page.evaluate(() => {
+            const field = document
+              .querySelector('#contact-description')!
+              .closest('mat-form-field')!;
+            const start = field.querySelector(
+              '.mat-mdc-form-field-hint-start, .mat-mdc-form-field-hint',
+            )!;
+            const end = field.querySelector('.mat-mdc-form-field-hint-end')!;
+            const next = document.querySelectorAll('.form__group')[1].querySelector('.form__row')!;
+            const bottom = Math.max(
+              start.getBoundingClientRect().bottom,
+              end.getBoundingClientRect().bottom,
+            );
+            return Math.round(next.getBoundingClientRect().top - bottom);
+          });
+          expect(clearance, `clearance in ${locale} at ${width}px`).toBeGreaterThan(0);
+          expect(await noOverflow(page)).toBeLessThanOrEqual(0);
+        });
+      }
+    }
+  });
+});

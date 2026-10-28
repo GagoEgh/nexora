@@ -23,6 +23,10 @@
       color: var(--mat-sys-on-surface-variant);
     }
 
+    .mat-mdc-select-panel .mat-mdc-option {
+      min-height: 52px;
+    }
+
     .mat-mdc-select-panel.mdc-menu-surface {
       border-radius: var(--mat-sys-corner-medium);
     }
@@ -59,6 +63,11 @@
 
       .mat-mdc-form-field-hint-end {
         color: var(--nx-sys-on-surface-muted);
+      }
+
+      .mat-mdc-form-field-subscript-wrapper {
+        height: auto;
+        min-height: calc(2 * var(--mat-sys-body-large-line-height));
       }
     }
   }

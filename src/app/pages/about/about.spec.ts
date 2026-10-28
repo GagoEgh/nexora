@@ -552,7 +552,13 @@ describe('About', () => {
   it('closes the page with two market panels', async () => {
     await go('/about');
 
-    const list = root.querySelector('.markets');
+    // The section is the landmark; the list inside it carries the grid.
+    const region = root.querySelector('.markets');
+    expect(region?.tagName).toBe('SECTION');
+    expect(region?.getAttribute('aria-labelledby')).toBe('markets-title');
+    expect(root.querySelector('#markets-title')?.textContent?.trim()).toBe('Markets');
+
+    const list = root.querySelector('.markets__list');
     expect(list?.tagName).toBe('UL');
 
     const panels = Array.from(root.querySelectorAll('.markets__panel'));
@@ -560,7 +566,7 @@ describe('About', () => {
     panels.forEach((panel) => expect(panel.tagName).toBe('LI'));
 
     expect(text('.markets__title')).toEqual(['Armenia', 'International markets']);
-    root.querySelectorAll('.markets__title').forEach((el) => expect(el.tagName).toBe('H2'));
+    root.querySelectorAll('.markets__title').forEach((el) => expect(el.tagName).toBe('H3'));
     expect(text('.markets__text')[0]).toBe(
       'We work with startups, growing businesses and established companies in Armenia’s technology and business community.',
     );
@@ -589,7 +595,7 @@ describe('About', () => {
   });
 
   it('keeps the markets dictionary complete: two entries, both on the globe icon', () => {
-    const markets = marketsContent.content;
+    const markets = marketsContent.content.items;
     expect(markets).toHaveLength(2);
     expect(markets.map((market) => market.icon)).toEqual(['globe', 'globe']);
   });

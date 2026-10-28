@@ -1,12 +1,16 @@
-<ul class="markets">
-  @for (entry of markets(); track $index) {
-    <li class="markets__panel">
-      <app-icon-tile [icon]="entry.market.icon.value" [tone]="entry.tone" />
+<section class="markets" aria-labelledby="markets-title">
+  <h2 class="markets__heading" id="markets-title">{{ content().title }}</h2>
 
-      <div class="markets__copy">
-        <h2 class="markets__title">{{ entry.market.title }}</h2>
-        <p class="markets__text">{{ entry.market.text }}</p>
-      </div>
-    </li>
-  }
-</ul>
+  <ul class="markets__list">
+    @for (entry of markets(); track $index) {
+      <li class="markets__panel">
+        <app-icon-tile [icon]="entry.market.icon.value" [tone]="entry.tone" />
+
+        <div class="markets__copy">
+          <h3 class="markets__title">{{ entry.market.title }}</h3>
+          <p class="markets__text">{{ entry.market.text }}</p>
+        </div>
+      </li>
+    }
+  </ul>
+</section>

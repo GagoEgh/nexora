@@ -14,6 +14,6 @@ export class Markets {
   protected readonly content = useDictionary(marketsContent);
 
   protected readonly markets = computed(() =>
-    this.content().map((market, index) => ({ market, tone: this.tones[index] ?? 'primary' })),
+    this.content().items.map((market, index) => ({ market, tone: this.tones[index] ?? 'primary' })),
   );
 }

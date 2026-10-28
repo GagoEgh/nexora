@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, computed } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { useDictionary } from 'angular-intlayer';
 import { appIcon } from '../../../core/icons/icons';
@@ -12,5 +12,11 @@ import qualityCapabilityContent from './quality-capability.content';
 })
 export class QualityCapability {
   protected readonly content = useDictionary(qualityCapabilityContent);
-  protected readonly icon = appIcon;
+
+  protected readonly practices = computed(() =>
+    this.content().practices.items.map((item) => ({
+      label: item.label,
+      svgIcon: appIcon(item.icon.value),
+    })),
+  );
 }
