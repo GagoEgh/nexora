@@ -36,6 +36,10 @@ import { Expertise } from './pages/home/expertise/expertise';
 import { Hero } from './pages/home/hero/hero';
 import { HeroIllustration } from './pages/home/hero/illustration/hero-illustration';
 import { HeroNotes } from './pages/home/hero/illustration/notes/hero-notes';
+import { ArtNode } from './pages/home/hero/illustration/node/art-node';
+import { ArtPipeline } from './pages/home/hero/illustration/pipeline/art-pipeline';
+import { AiPipeline } from './pages/home/ai-automation/pipeline/ai-pipeline';
+import { ConversationArt } from './shared/ui/start-conversation/art/conversation-art';
 import { Home } from './pages/home/home';
 import { HowWeWork } from './pages/home/how-we-work/how-we-work';
 import { WhatWeBuildIllustration } from './pages/home/what-we-build/illustration/what-we-build-illustration';
@@ -87,6 +91,10 @@ const COMPONENTS: readonly [string, Type<unknown>][] = [
   ['Hero', Hero],
   ['HeroIllustration', HeroIllustration],
   ['HeroNotes', HeroNotes],
+  ['ArtNode', ArtNode],
+  ['ArtPipeline', ArtPipeline],
+  ['AiPipeline', AiPipeline],
+  ['ConversationArt', ConversationArt],
   ['Expertise', Expertise],
   ['Why', Why],
   ['WhatWeBuild', WhatWeBuild],
@@ -158,7 +166,7 @@ describe('change detection', () => {
   });
 
   it('every component in the application resolves to OnPush', () => {
-    expect(COMPONENTS).toHaveLength(64);
+    expect(COMPONENTS).toHaveLength(68);
     const eager = COMPONENTS.filter(([, component]) => !isOnPush(component)).map(([name]) => name);
     expect(eager, 'these components are checked eagerly').toEqual([]);
   });

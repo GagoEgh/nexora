@@ -65,8 +65,7 @@
 }
 
 .art__tier,
-.art__link,
-.art__pipeline {
+.art__link {
   position: relative;
   z-index: 1;
 }
@@ -80,41 +79,6 @@
   }
 }
 
-.art__node {
-  display: flex;
-  align-items: center;
-  gap: spacing.space(12);
-  padding: spacing.space(8) spacing.space(12);
-  border: 1px solid var(--mat-sys-outline-variant);
-  border-radius: var(--mat-sys-corner-medium);
-  background-color: var(--mat-sys-surface);
-  box-shadow: var(--mat-sys-level1);
-}
-
-.art__node--dark {
-  --nx-art-meta: var(--nx-sys-inverse-on-surface-variant);
-
-  border-color: transparent;
-  background-color: var(--mat-sys-inverse-surface);
-  color: var(--mat-sys-inverse-on-surface);
-  box-shadow: var(--mat-sys-level2);
-}
-
-.art__node-text {
-  display: grid;
-}
-
-.art__node-label {
-  font: var(--mat-sys-label-medium);
-  font-weight: typography.$weight-semibold;
-}
-
-.art__node-meta {
-  font: typography.$code-font;
-  line-height: 1rem;
-  color: var(--nx-art-meta, var(--nx-sys-on-surface-muted));
-}
-
 .art__link {
   display: block;
   width: 100%;
@@ -124,91 +88,9 @@
   stroke-width: 2;
 }
 
-.art__pipeline {
-  display: flex;
-  align-items: center;
-  gap: spacing.space(8);
-  margin: spacing.space(24) 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.art__chip {
-  display: inline-flex;
-  align-items: center;
-  gap: spacing.space(4);
-  height: 22px;
-  padding-inline: spacing.space(8);
-  border-radius: var(--mat-sys-corner-full);
-  background-color: var(--nx-sys-success-container);
-  font: typography.$code-font;
-  color: var(--nx-sys-success);
-
-  &::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    border-radius: var(--mat-sys-corner-full);
-    background-color: currentColor;
-  }
-}
-
-.art__chip--idle {
-  background-color: var(--mat-sys-surface-container);
-  color: var(--mat-sys-on-surface-variant);
-
-  @media (prefers-reduced-motion: no-preference) {
-    animation: art-chip-ready motion.duration(base) motion.easing(out) 900ms 1 both;
-  }
-}
-
-@keyframes art-chip-ready {
-  50% {
-    background-color: var(--nx-sys-success-container);
-    color: var(--nx-sys-success);
-  }
-}
-
-.art__arrow {
-  display: inline-flex;
-  color: var(--nx-sys-on-surface-muted);
-
-  .mat-icon {
-    width: 14px;
-    height: 14px;
-  }
-}
-
-.art__node-label--full,
-.art__node-meta,
-.art__pipeline {
-  display: none;
-}
-
-@include layout.up(large) {
-  .art__node-label--full,
-  .art__node-meta {
-    display: block;
-  }
-
-  .art__node-label--short {
-    display: none;
-  }
-
-  .art__pipeline {
-    display: flex;
-  }
-}
-
-/*
- * One transition for every part of the diagram that reveals. `item()` writes the whole
- * `transition`, so declaring it per tier repeated the duration and easing five times over;
- * only the delay differs, and that is one declaration each.
- */
 .art__dots,
 .art__path,
-.art__node,
-.art__pipeline > * {
+.art__node {
   @include reveal.item();
 }
 
@@ -217,7 +99,6 @@
   transition-delay: 80ms;
 }
 
-/* Two nodes a tier, 40ms apart, so a tier reads as a pair rather than a single block. */
 .art__tier:nth-child(1) .art__node {
   @include reveal.stagger(2, 40ms, 140ms);
 }
@@ -230,8 +111,6 @@
   @include reveal.stagger(2, 40ms, 400ms);
 }
 
-/* The diagram is dictionary-driven: `hero.content.ts` could gain a fourth tier, which would
- * sit at :nth-child(7) and otherwise reveal with no delay, ahead of the tier above it. */
 .art__tier:nth-child(n + 7) .art__node {
   transition-delay: 520ms;
 }
@@ -240,23 +119,6 @@
   transition-delay: 460ms;
 }
 
-/* The pipeline fills left to right. Chips and arrows alternate as `li` siblings, so one rule
- * over every child staggers them in document order without having to tell them apart. Four
- * steps today means seven children, counting the arrows; the catch-all keeps any further ones
- * at the end of the sequence. */
-.art__pipeline > * {
-  @include reveal.stagger(4, 40ms, 460ms);
-}
-
-/*
- * The connectors draw themselves in. `pathLength="1"` in the template makes the whole path one
- * dash unit long, so the offset runs 1 -> 0 regardless of the path's real geometry. Each `d`
- * holds two subpaths - the bus between the tier's nodes, then the stem down to the next tier -
- * and a single offset traverses them in that order, which is the order the eye wants.
- *
- * This is a paint-level property rather than a composited one, unlike everything else here.
- * Two short paths animating once is a negligible cost, and no cheaper property draws a line.
- */
 .art__link-line {
   stroke-dasharray: 1;
   stroke-dashoffset: 0;
@@ -274,13 +136,10 @@
 .art[data-reveal='out'] {
   .art__dots,
   .art__path,
-  .art__node,
-  .art__pipeline > * {
+  .art__node {
     @include reveal.hidden($distance: 8px);
   }
 
-  /* The orchestrator is the only inverse-surface node and the point the whole diagram leads to,
-   * so it arrives with a little more presence than the nodes either side of it. */
   .art__node--dark {
     @include reveal.hidden($distance: 8px, $scale: 0.96);
   }
@@ -296,14 +155,6 @@
   }
 }
 
-/*
- * A single packet travelling each connector, once the line it follows exists.
- *
- * A 12% dash with the rest of the unit empty, moved from one end to the other. It runs once per
- * connector, staggered to follow that line's draw-in, and is hidden outright under reduced
- * motion - a travelling highlight is exactly the kind of movement someone disables motion to
- * avoid. Slightly thicker than the line so the packet reads against it.
- */
 .art__link-pulse {
   stroke: var(--mat-sys-primary);
   stroke-width: 3;

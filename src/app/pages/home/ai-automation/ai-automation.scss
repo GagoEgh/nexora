@@ -149,14 +149,6 @@
 }
 
 .ai__footer {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: spacing.space(24);
-  padding-block-start: spacing.space(32);
-  border-block-start: 1px solid var(--mat-sys-inverse-on-surface);
-
   @include layout.up(large) {
     grid-column: 1 / -1;
   }
@@ -164,52 +156,6 @@
   transition-delay: 240ms;
 }
 
-.ai__pipeline {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: spacing.space(8);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.ai__step {
-  display: flex;
-  align-items: center;
-  gap: spacing.space(8);
-}
-
-.ai__step-label {
-  @include text.contained();
-  display: inline-flex;
-  align-items: center;
-  box-sizing: border-box;
-  height: 30px;
-  padding-inline: spacing.space(12);
-  border: 1px solid currentColor;
-  border-radius: var(--mat-sys-corner-full);
-  font: typography.$code-font;
-}
-
-.ai__step--review {
-  color: var(--mat-sys-inverse-primary);
-}
-
-.ai__arrow {
-  width: 14px;
-  height: 14px;
-  color: var(--nx-sys-inverse-on-surface-variant);
-}
-
-.ai__note {
-  @include text.contained();
-  margin: 0;
-  font: var(--mat-sys-body-small);
-  color: var(--nx-sys-inverse-on-surface-variant);
-}
-
-/* Scroll reveal: the header leads, then the content below it. */
 .ai[data-reveal='out'] {
   .ai__copy,
   .ai__footer,

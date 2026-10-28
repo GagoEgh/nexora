@@ -27,17 +27,10 @@
     }
   </ul>
 
-  <div class="ai__footer">
-    <ol class="ai__pipeline" [attr.aria-label]="content().pipelineLabel.value">
-      @for (step of content().pipeline; track $index; let last = $last) {
-        <li class="ai__step" [class.ai__step--review]="last">
-          <span class="ai__step-label">{{ step }}</span>
-          @if (!last) {
-            <mat-icon class="ai__arrow" [svgIcon]="arrowIcon" />
-          }
-        </li>
-      }
-    </ol>
-    <p class="ai__note">{{ content().note }}</p>
-  </div>
+  <app-ai-pipeline
+    class="ai__footer"
+    [steps]="content().pipeline"
+    [label]="content().pipelineLabel.value"
+    [note]="content().note"
+  />
 </section>

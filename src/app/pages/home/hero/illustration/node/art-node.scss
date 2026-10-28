@@ -1,0 +1,54 @@
+@use 'tokens/layout';
+@use 'tokens/spacing';
+@use 'tokens/typography';
+
+:host {
+  display: flex;
+  align-items: center;
+  gap: spacing.space(12);
+  padding: spacing.space(8) spacing.space(12);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--mat-sys-corner-medium);
+  background-color: var(--mat-sys-surface);
+  box-shadow: var(--mat-sys-level1);
+}
+
+:host(.art__node--dark) {
+  --nx-art-meta: var(--nx-sys-inverse-on-surface-variant);
+
+  border-color: transparent;
+  background-color: var(--mat-sys-inverse-surface);
+  color: var(--mat-sys-inverse-on-surface);
+  box-shadow: var(--mat-sys-level2);
+}
+
+.art__node-text {
+  display: grid;
+}
+
+.art__node-label {
+  font: var(--mat-sys-label-medium);
+  font-weight: typography.$weight-semibold;
+}
+
+.art__node-meta {
+  font: typography.$code-font;
+  line-height: 1rem;
+  color: var(--nx-art-meta, var(--nx-sys-on-surface-muted));
+}
+
+.art__node-label--full,
+.art__node-meta {
+  display: none;
+}
+
+@include layout.up(large) {
+  .art__node-label--full,
+  .art__node-meta {
+    display: block;
+  }
+
+  .art__node-label--short {
+    display: none;
+  }
+}

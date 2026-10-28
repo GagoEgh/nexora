@@ -8,10 +8,11 @@ import { appIcon } from '../../../core/icons/icons';
 import { IconTile } from '../../../shared/ui/icon-tile/icon-tile';
 import aiAutomationContent from './ai-automation.content';
 import { Reveal } from '../../../shared/motion/reveal';
+import { AiPipeline } from './pipeline/ai-pipeline';
 
 @Component({
   selector: 'app-ai-automation',
-  imports: [RouterLink, LocalizedPathPipe, MatButton, MatIcon, IconTile, Reveal],
+  imports: [RouterLink, LocalizedPathPipe, MatButton, MatIcon, IconTile, Reveal, AiPipeline],
   templateUrl: './ai-automation.html',
   styleUrl: './ai-automation.scss',
 })

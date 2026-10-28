@@ -422,6 +422,81 @@ test.describe('ai agents audiences band', () => {
  * is true of all six is starting a conversation, which is this page's own primary call to
  * action, so the whole row carries it.
  */
+/**
+ * Hover feedback across the bands. State (ground, depth) applies whatever the motion setting
+ * is; movement is gated, so someone who asked for less motion still gets the feedback without
+ * anything shifting.
+ */
+test.describe('ai agents hover feedback', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/services/ai_agent');
+  });
+
+  test('brightens the workflow step under the pointer without moving it', async ({ page }) => {
+    const step = page.locator('.workflow__step').first();
+    await expect(step).toBeVisible();
+    const before = await step.boundingBox();
+
+    await step.hover();
+    await expect(step).toHaveCSS('background-color', 'rgb(255, 255, 255)');
+    await expect.poll(() => step.evaluate((el) => getComputedStyle(el).boxShadow)).not.toBe('none');
+    // The card lives inside the intro column, so the step must not move.
+    expect(await step.boundingBox()).toEqual(before);
+  });
+
+  test('lifts the problem card under the pointer', async ({ page }) => {
+    const card = page.locator('.problems__card').first();
+    await card.scrollIntoViewIfNeeded();
+    await expect(card).toHaveCSS('box-shadow', 'none');
+
+    await card.hover();
+    await expect.poll(() => card.evaluate((el) => getComputedStyle(el).boxShadow)).not.toBe('none');
+  });
+
+  test('raises the accent capabilities panel above the neutral one', async ({ page }) => {
+    await page.locator('app-capabilities').scrollIntoViewIfNeeded();
+    const accent = ".capabilities__panel[data-tone='accent']";
+
+    // The flat colour is unchanged; the depth is a wash layered over it plus one elevation.
+    expect(await style(page, accent, 'background-color')).toBe('rgb(238, 244, 255)');
+    expect(await style(page, accent, 'background-image')).toContain('linear-gradient');
+    expect(await style(page, accent, 'box-shadow')).not.toBe('none');
+    expect(await style(page, ".capabilities__panel[data-tone='neutral']", 'box-shadow')).toBe(
+      'none',
+    );
+  });
+
+  test('builds the audience chips in sequence rather than as one block', async ({ page }) => {
+    await page.locator('app-audiences').scrollIntoViewIfNeeded();
+
+    const delays = await page
+      .locator('.audiences__chip')
+      .evaluateAll((els) => [...new Set(els.map((el) => getComputedStyle(el).transitionDelay))]);
+    expect(delays.length).toBeGreaterThan(1);
+
+    // The two column headings are not siblings, so the offset is placed on the column.
+    const headings = await page
+      .locator('.audiences__heading')
+      .evaluateAll((els) => els.map((el) => getComputedStyle(el).transitionDelay));
+    expect(headings[1]).toBe('0.12s');
+  });
+});
+
+test.describe('ai agents hover feedback under reduced motion', () => {
+  test.use({ reducedMotion: 'reduce', viewport: { width: 1440, height: 900 } });
+
+  test('keeps the feedback and drops the movement', async ({ page }) => {
+    await page.goto('/services/ai_agent');
+    const card = page.locator('.problems__card').first();
+    await card.scrollIntoViewIfNeeded();
+
+    await card.hover();
+    await expect.poll(() => card.evaluate((el) => getComputedStyle(el).boxShadow)).not.toBe('none');
+    expect(await card.evaluate((el) => getComputedStyle(el).translate)).toBe('0px');
+  });
+});
+
 test.describe('ai agents typical project rows', () => {
   test.beforeEach(async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
@@ -949,11 +1024,20 @@ test.describe('ai agents entrance', () => {
       .poll(() => page.locator('.workflow').getAttribute('data-reveal'), { timeout: 5000 })
       .toBe('in');
 
-    // Each step waits a little longer than the one above it.
+    // Each step waits a little longer than the one above it. The delay is a list across every
+    // transitioned property: the reveal pair is staggered, the hover pair pinned at zero so a
+    // step near the bottom does not take half a second to answer the pointer.
     const delays = await page
       .locator('.workflow__step')
       .evaluateAll((els) => els.map((el) => getComputedStyle(el).transitionDelay));
-    expect(delays).toEqual(['0.08s', '0.15s', '0.22s', '0.29s', '0.36s', '0.43s']);
+    expect(delays).toEqual([
+      '0.08s, 0.08s, 0s, 0s',
+      '0.15s, 0.15s, 0s, 0s',
+      '0.22s, 0.22s, 0s, 0s',
+      '0.29s, 0.29s, 0s, 0s',
+      '0.36s, 0.36s, 0s, 0s',
+      '0.43s, 0.43s, 0s, 0s',
+    ]);
 
     // And the rule above each step is drawn 40ms ahead of it, so it leads rather than follows.
     const connectors = await page

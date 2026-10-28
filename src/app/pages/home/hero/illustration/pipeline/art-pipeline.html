@@ -1,0 +1,8 @@
+<ul class="art__pipeline">
+  @for (step of steps(); track $index; let last = $last) {
+    <li class="art__chip" [class.art__chip--idle]="last">{{ step }}</li>
+    @if (!last) {
+      <li class="art__arrow"><mat-icon [svgIcon]="arrowIcon" /></li>
+    }
+  }
+</ul>

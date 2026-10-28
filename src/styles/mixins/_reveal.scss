@@ -1,7 +1,7 @@
 @use 'sass:list';
 @use '../tokens/motion';
 
-@mixin item($delay: 0ms, $hover: false) {
+@mixin item($delay: 0ms, $hover: false, $extra: ()) {
   $parts: if(
     $delay == 0ms,
     (
@@ -27,6 +27,14 @@
     );
   }
 
+  @each $property in $extra {
+    $parts: list.append(
+      $parts,
+      $property motion.duration(fast) motion.easing(out),
+      $separator: comma
+    );
+  }
+
   transition: $parts;
 }
 
@@ -44,13 +52,6 @@
   }
 }
 
-/*
- * `$hover` must match the `item()` call on the same element. `transition-delay` is one list
- * covering every transitioned property, so on an element that also transitions `translate` and
- * `box-shadow` for its hover state, a single delay postpones the hover too - measured at 280ms
- * on the third card of a staggered grid, and worse further down. Naming all four keeps the
- * reveal staggered and the hover immediate.
- */
 @mixin stagger($count, $step: 60ms, $from: 0ms, $hover: false) {
   @for $i from 1 through $count {
     &:nth-child(#{$i}) {

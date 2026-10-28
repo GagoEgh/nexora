@@ -29,11 +29,19 @@
   align-content: start;
 }
 
-.audiences__heading {
+.audiences__heading,
+.audiences__item,
+.audiences__chip,
+.audiences__note {
   @include reveal.item();
-  @include reveal.stagger(2, 120ms);
+}
 
+.audiences__heading {
   @include container.heading(20);
+}
+
+.audiences__column:nth-child(2) .audiences__heading {
+  transition-delay: 120ms;
 }
 
 .audiences__eyebrow {
@@ -54,7 +62,6 @@
 }
 
 .audiences__item {
-  @include reveal.item(140ms);
   @include reveal.stagger(6, 50ms, 140ms);
 }
 
@@ -108,8 +115,6 @@
 }
 
 .audiences__chips {
-  @include reveal.item(200ms);
-
   display: flex;
   flex-wrap: wrap;
   gap: spacing.space(12);
@@ -119,6 +124,8 @@
 }
 
 .audiences__chip {
+  @include reveal.stagger(2, 80ms, 200ms);
+
   display: inline-flex;
   gap: spacing.space(8);
   align-items: center;
@@ -137,21 +144,17 @@
 }
 
 .audiences__note {
-  @include reveal.item(260ms);
+  transition-delay: 260ms;
 
   margin: 0;
   font: var(--mat-sys-body-small);
   color: var(--mat-sys-on-surface-variant);
 }
 
-/*
- * The columns are not animated - their contents are. Moving a column and the rows inside it
- * would compound two transforms on the same pixels and read as a slide within a slide.
- */
 .audiences[data-reveal='out'] {
   .audiences__heading,
   .audiences__item,
-  .audiences__chips,
+  .audiences__chip,
   .audiences__note {
     @include reveal.hidden($distance: 8px);
   }

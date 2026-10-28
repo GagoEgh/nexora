@@ -1,0 +1,11 @@
+<ol class="ai__pipeline" [attr.aria-label]="label()">
+  @for (step of steps(); track $index; let last = $last) {
+    <li class="ai__step" [class.ai__step--review]="last">
+      <span class="ai__step-label">{{ step }}</span>
+      @if (!last) {
+        <mat-icon class="ai__arrow" [svgIcon]="arrowIcon" />
+      }
+    </li>
+  }
+</ol>
+<p class="ai__note">{{ note() }}</p>

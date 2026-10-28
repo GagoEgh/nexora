@@ -25,30 +25,12 @@
         }
         <div class="art__tier">
           @for (node of tier; track $index) {
-            <div class="art__node" [class.art__node--dark]="node.dark">
-              <app-icon-tile
-                size="small"
-                [icon]="node.icon.value"
-                [tone]="node.dark ? 'inverse-container' : 'primary'"
-              />
-              <div class="art__node-text">
-                <span class="art__node-label art__node-label--full">{{ node.label }}</span>
-                <span class="art__node-label art__node-label--short">{{ node.shortLabel }}</span>
-                <span class="art__node-meta">{{ node.meta }}</span>
-              </div>
-            </div>
+            <app-art-node class="art__node" [class.art__node--dark]="node.dark" [node]="node" />
           }
         </div>
       }
 
-      <ul class="art__pipeline">
-        @for (step of content().pipeline; track $index; let last = $last) {
-          <li class="art__chip" [class.art__chip--idle]="last">{{ step }}</li>
-          @if (!last) {
-            <li class="art__arrow"><mat-icon [svgIcon]="arrowIcon" /></li>
-          }
-        }
-      </ul>
+      <app-art-pipeline [steps]="content().pipeline" />
     </div>
   </div>
 

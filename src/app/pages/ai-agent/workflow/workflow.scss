@@ -62,9 +62,14 @@
 }
 
 .workflow__step {
-  @include reveal.item(80ms);
-  @include reveal.stagger(6, 70ms, 80ms);
+  @include reveal.item(
+    $extra: (
+      background-color,
+      box-shadow,
+    )
+  );
 
+  transition-delay: var(--nx-step-delay), var(--nx-step-delay), 0s, 0s;
   position: relative;
   display: flex;
   gap: spacing.space(12);
@@ -83,6 +88,7 @@
     background-color: var(--mat-sys-primary);
     transform-origin: top center;
     transition: transform motion.duration(base) motion.easing(out);
+    transition-delay: calc(var(--nx-step-delay) - 40ms);
   }
 }
 
@@ -120,20 +126,43 @@
   color: var(--mat-sys-inverse-on-surface);
 }
 
-.workflow__step + .workflow__step:nth-child(2)::before {
-  transition-delay: 110ms;
+.workflow__step:nth-child(1) {
+  --nx-step-delay: 80ms;
 }
-.workflow__step + .workflow__step:nth-child(3)::before {
-  transition-delay: 180ms;
+
+.workflow__step:nth-child(2) {
+  --nx-step-delay: 150ms;
 }
-.workflow__step + .workflow__step:nth-child(4)::before {
-  transition-delay: 250ms;
+
+.workflow__step:nth-child(3) {
+  --nx-step-delay: 220ms;
 }
-.workflow__step + .workflow__step:nth-child(5)::before {
-  transition-delay: 320ms;
+
+.workflow__step:nth-child(4) {
+  --nx-step-delay: 290ms;
 }
-.workflow__step + .workflow__step:nth-child(6)::before {
-  transition-delay: 390ms;
+
+.workflow__step:nth-child(5) {
+  --nx-step-delay: 360ms;
+}
+
+.workflow__step:nth-child(6) {
+  --nx-step-delay: 430ms;
+}
+
+.workflow__step:nth-child(n + 7) {
+  --nx-step-delay: 430ms;
+}
+
+.workflow__step:hover,
+.workflow__step:focus-within {
+  background-color: var(--mat-sys-surface);
+  box-shadow: var(--mat-sys-level1);
+}
+
+.workflow__step[data-tone='dark']:hover,
+.workflow__step[data-tone='dark']:focus-within {
+  background-color: var(--mat-sys-inverse-surface);
 }
 
 .workflow[data-reveal='out'] {

@@ -1,0 +1,10 @@
+<app-icon-tile
+  size="small"
+  [icon]="node().icon.value"
+  [tone]="node().dark ? 'inverse-container' : 'primary'"
+/>
+<div class="art__node-text">
+  <span class="art__node-label art__node-label--full">{{ node().label }}</span>
+  <span class="art__node-label art__node-label--short">{{ node().shortLabel }}</span>
+  <span class="art__node-meta">{{ node().meta }}</span>
+</div>

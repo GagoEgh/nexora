@@ -7,6 +7,7 @@ import { Reveal } from '../../motion/reveal';
 import { LocalizedPathPipe } from '../../../core/i18n/localized-path.pipe';
 import { CONTACT_PATH, PARTNERSHIPS_PATH } from '../../../core/routing/paths';
 import { appIcon } from '../../../core/icons/icons';
+import { ConversationArt } from './art/conversation-art';
 import startConversationContent from './start-conversation.content';
 
 export interface ConversationAction {
@@ -30,7 +31,7 @@ type ConversationBand = Omit<ConversationCopy, 'steps'> & { readonly steps: read
 
 @Component({
   selector: 'app-start-conversation',
-  imports: [RouterLink, LocalizedPathPipe, MatButton, MatIcon, Reveal],
+  imports: [RouterLink, LocalizedPathPipe, MatButton, MatIcon, Reveal, ConversationArt],
   templateUrl: './start-conversation.html',
   styleUrl: './start-conversation.scss',
   host: { '[attr.data-variant]': 'variant()' },

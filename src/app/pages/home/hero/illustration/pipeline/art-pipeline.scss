@@ -1,0 +1,79 @@
+@use 'tokens/layout';
+@use 'tokens/motion';
+@use 'tokens/spacing';
+@use 'tokens/typography';
+@use 'mixins/reveal';
+
+:host {
+  position: relative;
+  z-index: 1;
+  display: none;
+
+  @include layout.up(large) {
+    display: block;
+  }
+}
+
+.art__pipeline {
+  display: flex;
+  align-items: center;
+  gap: spacing.space(8);
+  margin: spacing.space(24) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.art__pipeline > * {
+  @include reveal.item();
+  @include reveal.stagger(4, 40ms, 460ms);
+}
+
+.art__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: spacing.space(4);
+  height: 22px;
+  padding-inline: spacing.space(8);
+  border-radius: var(--mat-sys-corner-full);
+  background-color: var(--nx-sys-success-container);
+  font: typography.$code-font;
+  color: var(--nx-sys-success);
+
+  &::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: var(--mat-sys-corner-full);
+    background-color: currentcolor;
+  }
+}
+
+.art__chip--idle {
+  background-color: var(--mat-sys-surface-container);
+  color: var(--mat-sys-on-surface-variant);
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: art-chip-ready motion.duration(base) motion.easing(out) 900ms 1 both;
+  }
+}
+
+@keyframes art-chip-ready {
+  50% {
+    background-color: var(--nx-sys-success-container);
+    color: var(--nx-sys-success);
+  }
+}
+
+.art__arrow {
+  display: inline-flex;
+  color: var(--nx-sys-on-surface-muted);
+
+  .mat-icon {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+:host-context(.art[data-reveal='out']) .art__pipeline > * {
+  @include reveal.hidden($distance: 8px);
+}

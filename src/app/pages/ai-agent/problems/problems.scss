@@ -2,6 +2,7 @@
 @use 'mixins/eyebrow';
 @use 'mixins/reveal';
 @use 'tokens/layout';
+@use 'tokens/motion';
 @use 'tokens/spacing';
 
 :host {
@@ -64,8 +65,8 @@
 }
 
 .problems__card {
-  @include reveal.item(100ms);
-  @include reveal.stagger(4, 60ms, 100ms);
+  @include reveal.item(100ms, $hover: true);
+  @include reveal.stagger(4, 60ms, 100ms, $hover: true);
 
   display: grid;
   align-content: start;
@@ -75,6 +76,12 @@
   border: 1px solid var(--mat-sys-outline-variant);
   border-radius: var(--mat-sys-corner-large);
   background-color: var(--mat-sys-surface);
+}
+
+.problems__card:hover,
+.problems__card:focus-within {
+  translate: 0 calc(-1 * #{motion.distance(lift)});
+  box-shadow: var(--mat-sys-level1);
 }
 
 .problems__card-title {
