@@ -1,3 +1,4 @@
+@use 'mixins/reveal';
 @use 'mixins/container';
 @use 'mixins/eyebrow';
 @use 'tokens/layout';
@@ -21,12 +22,16 @@
 }
 
 .process__eyebrow {
+  @include reveal.item();
+
   @include eyebrow.eyebrow();
 
   color: var(--mat-sys-inverse-primary);
 }
 
 .process__title {
+  @include reveal.item($delay: 60ms);
+
   min-width: 0;
   margin: 0;
   font: var(--nx-sys-display-feature);
@@ -52,6 +57,9 @@
 }
 
 .process__step {
+  @include reveal.item();
+  @include reveal.stagger(4, 60ms, 120ms);
+
   display: grid;
   align-content: start;
   box-sizing: border-box;
@@ -91,4 +99,12 @@
   font: var(--mat-sys-body-small);
   color: var(--nx-sys-inverse-on-surface-variant);
   overflow-wrap: anywhere;
+}
+
+.process[data-reveal='out'] {
+  .process__eyebrow,
+  .process__title,
+  .process__step {
+    @include reveal.hidden($distance: 8px);
+  }
 }

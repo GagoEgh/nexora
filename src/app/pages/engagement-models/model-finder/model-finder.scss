@@ -1,3 +1,4 @@
+@use 'mixins/reveal';
 @use 'tokens/layout';
 @use 'tokens/spacing';
 
@@ -11,6 +12,8 @@
 }
 
 .finder__title {
+  @include reveal.item();
+
   margin: 0;
   padding-block-end: spacing.space(12);
   font: var(--nx-sys-title-step);
@@ -24,6 +27,9 @@
 }
 
 .finder__row {
+  @include reveal.item();
+  @include reveal.stagger(5, 50ms, 120ms);
+
   display: grid;
   gap: spacing.space(12);
   padding-block: spacing.space(12);
@@ -81,4 +87,11 @@
   background-color: var(--mat-sys-primary-container);
   font: var(--mat-sys-label-medium);
   color: var(--mat-sys-on-primary-container);
+}
+
+.finder[data-reveal='out'] {
+  .finder__title,
+  .finder__row {
+    @include reveal.hidden($distance: 8px);
+  }
 }

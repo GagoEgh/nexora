@@ -5,10 +5,11 @@ import { appIcon } from '../../../core/icons/icons';
 import { ordinal } from '../../../shared/ordinal';
 import { IconTile } from '../../../shared/ui/icon-tile/icon-tile';
 import modelDetailsContent from './model-details.content';
+import { Reveal } from '../../../shared/motion/reveal';
 
 @Component({
   selector: 'app-model-details',
-  imports: [IconTile, MatIcon],
+  imports: [IconTile, MatIcon, Reveal],
   templateUrl: './model-details.html',
   styleUrl: './model-details.scss',
 })

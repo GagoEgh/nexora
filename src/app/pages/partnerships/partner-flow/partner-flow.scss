@@ -1,3 +1,4 @@
+@use 'mixins/reveal';
 @use 'tokens/spacing';
 @use 'tokens/typography';
 
@@ -11,6 +12,9 @@
 }
 
 .flow__card {
+  @include reveal.item();
+  @include reveal.stagger(2, 80ms, 240ms);
+
   display: grid;
   gap: spacing.space(16);
   box-sizing: border-box;
@@ -120,4 +124,10 @@
   flex-shrink: 0;
   width: 16px;
   height: 16px;
+}
+
+.flow[data-reveal='out'] {
+  .flow__card {
+    @include reveal.hidden($distance: 8px);
+  }
 }

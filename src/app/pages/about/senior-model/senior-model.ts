@@ -2,6 +2,7 @@ import { Component, computed } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { useDictionary } from 'angular-intlayer';
 import { appIcon } from '../../../core/icons/icons';
+import { Reveal } from '../../../shared/motion/reveal';
 import seniorModelContent from './senior-model.content';
 import { ModelPanel, type ModelPanelKey } from './model-panel/model-panel';
 
@@ -10,7 +11,7 @@ const toRows = (counts: readonly number[]): readonly (readonly number[])[] =>
 
 @Component({
   selector: 'app-senior-model',
-  imports: [MatIcon, ModelPanel],
+  imports: [MatIcon, ModelPanel, Reveal],
   templateUrl: './senior-model.html',
   styleUrl: './senior-model.scss',
 })

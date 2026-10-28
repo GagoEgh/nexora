@@ -3,10 +3,11 @@ import { MatIcon } from '@angular/material/icon';
 import { useDictionary } from 'angular-intlayer';
 import { appIcon } from '../../../core/icons/icons';
 import partnerFlowContent from './partner-flow.content';
+import { Reveal } from '../../../shared/motion/reveal';
 
 @Component({
   selector: 'app-partner-flow',
-  imports: [MatIcon],
+  imports: [MatIcon, Reveal],
   templateUrl: './partner-flow.html',
   styleUrl: './partner-flow.scss',
 })

@@ -2,11 +2,12 @@ import { Component, computed } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { useDictionary } from 'angular-intlayer';
 import { appIcon } from '../../../core/icons/icons';
+import { Reveal } from '../../../shared/motion/reveal';
 import businessFlowContent from './business-flow.content';
 
 @Component({
   selector: 'app-business-flow',
-  imports: [MatIcon],
+  imports: [MatIcon, Reveal],
   templateUrl: './business-flow.html',
   styleUrl: './business-flow.scss',
 })

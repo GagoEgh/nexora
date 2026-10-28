@@ -1040,3 +1040,285 @@ test.describe('about conversation band responsiveness', () => {
     });
   }
 });
+
+/**
+ * The entrance animations.
+ *
+ * The rest of this file runs under `reducedMotion: 'reduce'` (playwright.config.ts), which is
+ * what keeps its geometry assertions stable. These specs opt back in, so the motion is actually
+ * exercised somewhere, and then assert the reduced-motion path separately.
+ */
+const SECTIONS = [
+  ['app-about-glance', '.glance'],
+  ['app-philosophy', '.philosophy'],
+  ['app-senior-model', '.senior'],
+  ['app-business-flow', '.flow'],
+  ['app-quality-capability', '.quality'],
+  ['app-long-term', '.long-term'],
+  ['app-markets', '.markets'],
+] as const;
+
+const revealState = (page: Page, selector: string) =>
+  page.locator(selector).getAttribute('data-reveal');
+
+/** The first value of a (possibly multi-part) transition-delay list. */
+const firstDelay = (page: Page, selector: string) =>
+  page
+    .locator(selector)
+    .evaluateAll((els) =>
+      els.map((el) => getComputedStyle(el).transitionDelay.split(',')[0].trim()),
+    );
+
+test.describe('about entrance, with motion enabled', () => {
+  test.use({ reducedMotion: 'no-preference', viewport: { width: 1440, height: 900 } });
+
+  test('every section reveals when it is reached, and settles with nothing left behind', async ({
+    page,
+  }) => {
+    await page.goto('/about');
+    // The glance card sits in the intro band and reveals on load.
+    await expect.poll(() => revealState(page, '.glance'), { timeout: 5000 }).toBe('in');
+
+    for (const [host, root] of SECTIONS) {
+      await page.locator(host).scrollIntoViewIfNeeded();
+      await expect.poll(() => revealState(page, root), { timeout: 5000 }).toBe('in');
+    }
+
+    await page.waitForTimeout(1200);
+    for (const selector of [
+      '.glance__row',
+      '.philosophy__card',
+      '.senior__point',
+      '.senior__block',
+      '.flow__step',
+      '.quality__chip',
+      '.long-term__text',
+      '.markets__panel',
+    ]) {
+      await expect(page.locator(selector).first(), selector).toHaveCSS('opacity', '1');
+      await expect(page.locator(selector).first(), selector).toHaveCSS('transform', 'none');
+    }
+  });
+
+  test('the step connectors land between the steps they join', async ({ page }) => {
+    await page.goto('/about');
+    await page.locator('app-business-flow').scrollIntoViewIfNeeded();
+    await expect.poll(() => revealState(page, '.flow'), { timeout: 5000 }).toBe('in');
+
+    const steps = await firstDelay(page, '.flow__step');
+    const arrows = await firstDelay(page, '.flow__arrow');
+    expect(steps).toEqual(['0s', '0.06s', '0.12s', '0.18s', '0.24s']);
+    // Each arrow precedes its own step by 30ms, so it reads as leaving the previous one.
+    expect(arrows).toEqual(['0.03s', '0.09s', '0.15s', '0.21s']);
+
+    /*
+     * The arrow is centred with `transform: translateY(-50%)`. It animates on opacity and the
+     * independent `scale` property precisely so that anchor survives - a reveal that set
+     * `transform` would drop it to the top of the step.
+     */
+    await page.waitForTimeout(900);
+    expect(
+      await page
+        .locator('.flow__arrow')
+        .first()
+        .evaluate((el) => getComputedStyle(el).transform),
+    ).not.toBe('none');
+  });
+
+  test('the pyramid builds row by row, each row filling across', async ({ page }) => {
+    await page.goto('/about');
+    await page.locator('app-senior-model').scrollIntoViewIfNeeded();
+    await expect.poll(() => revealState(page, '.senior'), { timeout: 5000 }).toBe('in');
+
+    const blocks = await page
+      .locator('app-model-panel')
+      .first()
+      .locator('.senior__block')
+      .evaluateAll((els) =>
+        els.map((el) => getComputedStyle(el).transitionDelay.split(',')[0].trim()),
+      );
+
+    // Rows of 1 / 2 / 3 / 5 at 80ms apart, blocks within a row 30ms apart.
+    expect(blocks).toEqual([
+      '0.12s',
+      '0.2s',
+      '0.23s',
+      '0.28s',
+      '0.31s',
+      '0.34s',
+      '0.36s',
+      '0.39s',
+      '0.42s',
+      '0.45s',
+      '0.48s',
+    ]);
+  });
+});
+
+test.describe('about entrance with reduced motion', () => {
+  test.use({ reducedMotion: 'reduce', viewport: { width: 1440, height: 900 } });
+
+  test('hides nothing, displaces nothing and keeps the connector anchored', async ({ page }) => {
+    await page.goto('/about');
+
+    for (const [host] of SECTIONS) {
+      await page.locator(host).scrollIntoViewIfNeeded();
+    }
+    await page.waitForTimeout(600);
+
+    for (const selector of [
+      '.glance__row',
+      '.philosophy__card',
+      '.senior__point',
+      '.senior__block',
+      '.flow__step',
+      '.flow__arrow',
+      '.quality__chip',
+      '.long-term__text',
+      '.markets__panel',
+    ]) {
+      await expect(page.locator(selector).first(), selector).toHaveCSS('opacity', '1');
+    }
+
+    // The scale-based reveals must leave no residual scale.
+    const scales = await page
+      .locator('.senior__block')
+      .evaluateAll((els) => [...new Set(els.map((el) => getComputedStyle(el).scale))]);
+    expect(scales).toEqual(['none']);
+
+    // Still centred: translateY(-50%) of the 16px icon.
+    expect(
+      await page
+        .locator('.flow__arrow')
+        .first()
+        .evaluate((el) => getComputedStyle(el).transform),
+    ).toBe('matrix(1, 0, 0, 1, 0, -8)');
+  });
+});
+
+/**
+ * Hover emphasis.
+ *
+ * Nothing on this page is interactive - no links, buttons or focusable content - so these states
+ * are emphasis, not affordance. The assertions pin that distinction: colour responds, and the
+ * three things that would promise a click (pointer cursor, movement, elevation) must not appear.
+ */
+test.describe('about hover emphasis', () => {
+  test.use({ reducedMotion: 'no-preference', viewport: { width: 1440, height: 900 } });
+
+  const settled = async (page: Page, host: string) => {
+    await page.locator(host).scrollIntoViewIfNeeded();
+    await page.waitForTimeout(900);
+  };
+
+  const bg = (page: Page, selector: string) =>
+    page
+      .locator(selector)
+      .first()
+      .evaluate((el) => getComputedStyle(el).backgroundColor);
+
+  test('cards, rows and steps answer the pointer with colour alone', async ({ page }) => {
+    await page.goto('/about');
+
+    for (const [host, selector] of [
+      ['app-philosophy', '.philosophy__card'],
+      ['app-about-glance', '.glance__row'],
+      ['app-business-flow', '.flow__step[data-tone="plain"]'],
+      ['app-business-flow', '.flow__step[data-tone="accent"]'],
+    ] as const) {
+      await settled(page, host);
+      const idle = await bg(page, selector);
+      await page.locator(selector).first().hover();
+      await expect.poll(() => bg(page, selector), { timeout: 2000 }).not.toBe(idle);
+
+      const el = page.locator(selector).first();
+      // No affordance signals: the content is not clickable.
+      await expect(el).toHaveCSS('cursor', 'auto');
+      await expect(el).toHaveCSS('box-shadow', 'none');
+      await expect(el).toHaveCSS('translate', 'none');
+      await page.mouse.move(0, 0);
+      await page.waitForTimeout(200);
+    }
+  });
+
+  /*
+   * The hover must not inherit the entrance delay. reveal.item()'s `$extra` carries the hover
+   * property into the transition list and stagger()'s `$hover` ends the delay list in 0s, so the
+   * last delay - the hover one - is always zero.
+   */
+  test('the hover responds at once, while the entrance keeps its ladder', async ({ page }) => {
+    await page.goto('/about');
+    await settled(page, 'app-philosophy');
+
+    for (const selector of ['.philosophy__card', '.glance__row', '.flow__step']) {
+      const delays = await page
+        .locator(selector)
+        .first()
+        .evaluate((el) =>
+          getComputedStyle(el)
+            .transitionDelay.split(',')
+            .map((d) => d.trim()),
+        );
+      expect(delays.at(-1), `${selector} hover delay`).toBe('0s');
+    }
+  });
+
+  test('the pyramid reads row, then block, without flattening the apex', async ({ page }) => {
+    await page.goto('/about');
+    await settled(page, 'app-senior-model');
+
+    const row = page.locator('app-model-panel').first().locator('.senior__row').nth(1);
+    const colours = () =>
+      row.evaluate((el) =>
+        [...el.querySelectorAll('.senior__block')].map((b) => getComputedStyle(b).backgroundColor),
+      );
+    const apex = () =>
+      page
+        .locator('app-model-panel')
+        .first()
+        .locator('.senior__block--apex')
+        .evaluate((el) => getComputedStyle(el).backgroundColor);
+
+    const idle = await colours();
+    expect(new Set(idle).size).toBe(1);
+    const apexIdle = await apex();
+
+    // Hovering the tier tints the whole row...
+    await row.hover();
+    await expect.poll(colours, { timeout: 2000 }).not.toEqual(idle);
+    const tinted = await colours();
+    expect(new Set(tinted).size).toBe(1);
+    // ...and never repaints the apex, which carries the hierarchy.
+    expect(await apex()).toBe(apexIdle);
+
+    // Hovering one block takes it a step further than its own row.
+    await row.locator('.senior__block').first().hover();
+    await expect.poll(async () => new Set(await colours()).size, { timeout: 2000 }).toBe(2);
+  });
+});
+
+test.describe('about hover emphasis with reduced motion', () => {
+  test.use({ reducedMotion: 'reduce', viewport: { width: 1440, height: 900 } });
+
+  test('keeps the colour cue and drops the timing', async ({ page }) => {
+    await page.goto('/about');
+    await page.locator('app-philosophy').scrollIntoViewIfNeeded();
+    await page.waitForTimeout(500);
+
+    const card = page.locator('.philosophy__card').first();
+    const idle = await card.evaluate((el) => getComputedStyle(el).backgroundColor);
+    await card.hover();
+    // Colour is not motion, so the cue stays; only the transition time goes.
+    await expect
+      .poll(() => card.evaluate((el) => getComputedStyle(el).backgroundColor), { timeout: 2000 })
+      .not.toBe(idle);
+    const durations = await card.evaluate((el) => [
+      ...new Set(
+        getComputedStyle(el)
+          .transitionDuration.split(',')
+          .map((d) => d.trim()),
+      ),
+    ]);
+    expect(durations).toEqual(['0s']);
+  });
+});

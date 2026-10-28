@@ -1,3 +1,4 @@
+@use 'mixins/reveal';
 @use 'mixins/container';
 @use 'tokens/typography';
 @use 'tokens/layout';
@@ -8,6 +9,8 @@
 }
 
 .terms__panel {
+  @include reveal.item($delay: 80ms);
+
   @include container.container();
 
   display: grid;
@@ -26,6 +29,8 @@
 }
 
 .terms__intro {
+  @include reveal.item();
+
   display: grid;
   gap: spacing.space(16);
   justify-items: start;
@@ -57,6 +62,9 @@
 
 /* 16 padding + 26 title + 22 text + 16 padding + 1 divider is the 81px row pitch in Agreed.png. */
 .terms__row {
+  @include reveal.item();
+  @include reveal.stagger(5, 50ms, 160ms);
+
   display: flex;
   gap: spacing.space(16);
   align-items: center;
@@ -91,4 +99,12 @@
   font: var(--mat-sys-body-small);
   color: var(--mat-sys-on-surface-variant);
   overflow-wrap: anywhere;
+}
+
+.terms[data-reveal='out'] {
+  .terms__intro,
+  .terms__panel,
+  .terms__row {
+    @include reveal.hidden($distance: 8px);
+  }
 }

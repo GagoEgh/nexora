@@ -1,3 +1,5 @@
+@use 'mixins/reveal';
+@use 'tokens/motion';
 @use 'tokens/spacing';
 
 :host {
@@ -26,6 +28,8 @@
 }
 
 .senior__panel-label {
+  @include reveal.item();
+
   margin: 0;
   font: var(--mat-sys-label-medium);
   letter-spacing: var(--mat-sys-label-medium-tracking);
@@ -47,12 +51,29 @@
   justify-items: center;
 }
 
+@for $i from 1 through 4 {
+  .senior__row:nth-child(#{$i}) {
+    --nx-row-delay: #{120ms + ($i - 1) * 80ms};
+  }
+}
+
 .senior__row {
   display: flex;
   gap: spacing.space(8);
 }
+@for $j from 1 through 5 {
+  .senior__block:nth-child(#{$j}) {
+    --nx-block-delay: #{($j - 1) * 30ms};
+  }
+}
 
 .senior__block {
+  --nx-block-in: calc(var(--nx-row-delay, 120ms) + var(--nx-block-delay, 0ms));
+
+  transition:
+    opacity motion.duration(base) motion.easing(out) var(--nx-block-in),
+    scale motion.duration(base) motion.easing(out) var(--nx-block-in),
+    background-color motion.duration(fast) motion.easing(out);
   width: 30px;
   height: 30px;
   border-radius: var(--mat-sys-corner-small);
@@ -71,6 +92,8 @@
 }
 
 .senior__legend {
+  @include reveal.item($delay: 420ms);
+
   display: flex;
   flex-wrap: wrap;
   gap: spacing.space(16);
@@ -110,4 +133,38 @@
 
 :host([data-tone='inverse']) .senior__dot {
   background-color: var(--mat-sys-inverse-primary);
+}
+
+:host-context(.senior[data-reveal='out']) {
+  .senior__panel-label,
+  .senior__legend {
+    @include reveal.hidden($distance: 8px);
+  }
+
+  .senior__block {
+    @media (prefers-reduced-motion: no-preference) {
+      opacity: 0;
+      scale: 0.7;
+    }
+  }
+}
+
+:host([data-tone='plain']) .senior__row:hover .senior__block:not(.senior__block--apex) {
+  background-color: color-mix(in srgb, var(--mat-sys-outline-variant) 55%, var(--mat-sys-primary));
+}
+
+:host([data-tone='plain']) .senior__row:hover .senior__block:hover {
+  background-color: var(--mat-sys-primary);
+}
+
+:host([data-tone='inverse']) .senior__row:hover .senior__block {
+  background-color: color-mix(
+    in srgb,
+    var(--mat-sys-inverse-primary) 70%,
+    var(--mat-sys-inverse-on-surface)
+  );
+}
+
+:host([data-tone='inverse']) .senior__row:hover .senior__block:hover {
+  background-color: var(--mat-sys-inverse-on-surface);
 }

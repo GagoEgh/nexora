@@ -2,11 +2,12 @@ import { Component, computed } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { useDictionary } from 'angular-intlayer';
 import { appIcon } from '../../../core/icons/icons';
+import { Reveal } from '../../../shared/motion/reveal';
 import qualityCapabilityContent from './quality-capability.content';
 
 @Component({
   selector: 'app-quality-capability',
-  imports: [MatIcon],
+  imports: [MatIcon, Reveal],
   templateUrl: './quality-capability.html',
   styleUrl: './quality-capability.scss',
 })

@@ -3,10 +3,11 @@ import { MatIcon } from '@angular/material/icon';
 import { useDictionary } from 'angular-intlayer';
 import { appIcon } from '../../../core/icons/icons';
 import modelFinderContent from './model-finder.content';
+import { Reveal } from '../../../shared/motion/reveal';
 
 @Component({
   selector: 'app-model-finder',
-  imports: [MatIcon],
+  imports: [MatIcon, Reveal],
   templateUrl: './model-finder.html',
   styleUrl: './model-finder.scss',
 })

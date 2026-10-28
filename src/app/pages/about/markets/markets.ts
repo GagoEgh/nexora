@@ -1,11 +1,12 @@
 import { Component, computed } from '@angular/core';
 import { useDictionary } from 'angular-intlayer';
 import { IconTile, type IconTileTone } from '../../../shared/ui/icon-tile/icon-tile';
+import { Reveal } from '../../../shared/motion/reveal';
 import marketsContent from './markets.content';
 
 @Component({
   selector: 'app-markets',
-  imports: [IconTile],
+  imports: [IconTile, Reveal],
   templateUrl: './markets.html',
   styleUrl: './markets.scss',
 })

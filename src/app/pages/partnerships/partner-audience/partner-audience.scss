@@ -1,3 +1,4 @@
+@use 'mixins/reveal';
 @use 'mixins/container';
 @use 'mixins/eyebrow';
 @use 'mixins/section';
@@ -23,10 +24,14 @@
 }
 
 .audience__eyebrow {
+  @include reveal.item();
+
   @include eyebrow.eyebrow();
 }
 
 .audience__title {
+  @include reveal.item($delay: 60ms);
+
   min-width: 0;
   margin: 0;
   font: var(--nx-sys-display-feature);
@@ -36,6 +41,8 @@
 }
 
 .audience__lead {
+  @include reveal.item($delay: 120ms);
+
   min-width: 0;
   margin: 0;
   font: var(--nx-sys-body-copy);
@@ -60,6 +67,9 @@
 }
 
 .audience__card {
+  @include reveal.item();
+  @include reveal.stagger(6, 50ms, 180ms);
+
   display: flex;
   gap: spacing.space(16);
   align-items: start;
@@ -88,4 +98,13 @@
   font: var(--mat-sys-body-small);
   color: var(--mat-sys-on-surface-variant);
   overflow-wrap: anywhere;
+}
+
+.audience[data-reveal='out'] {
+  .audience__eyebrow,
+  .audience__title,
+  .audience__lead,
+  .audience__card {
+    @include reveal.hidden($distance: 8px);
+  }
 }

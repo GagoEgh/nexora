@@ -61,5 +61,4 @@ const partnerProcessContent = {
     ],
   },
 } as const satisfies Dictionary;
-
 export default partnerProcessContent;

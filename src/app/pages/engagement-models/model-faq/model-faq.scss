@@ -1,3 +1,4 @@
+@use 'mixins/reveal';
 @use 'mixins/container';
 @use 'mixins/eyebrow';
 @use 'tokens/layout';
@@ -25,10 +26,14 @@
 }
 
 .faq__eyebrow {
+  @include reveal.item();
+
   @include eyebrow.eyebrow();
 }
 
 .faq__title {
+  @include reveal.item($delay: 60ms);
+
   min-width: 0;
   margin: 0;
   font: var(--nx-sys-display-feature);
@@ -45,6 +50,9 @@
 }
 
 .faq__item {
+  @include reveal.item();
+  @include reveal.stagger(4, 60ms, 140ms);
+
   border-block-start: 1px solid var(--mat-sys-outline-variant);
 }
 
@@ -96,4 +104,12 @@
   font: var(--nx-sys-body-copy);
   color: var(--mat-sys-on-surface-variant);
   overflow-wrap: anywhere;
+}
+
+.faq[data-reveal='out'] {
+  .faq__eyebrow,
+  .faq__title,
+  .faq__item {
+    @include reveal.hidden($distance: 8px);
+  }
 }

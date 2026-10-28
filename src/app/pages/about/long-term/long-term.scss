@@ -1,4 +1,5 @@
 @use 'mixins/container';
+@use 'mixins/reveal';
 @use 'mixins/eyebrow';
 @use 'mixins/section';
 @use 'tokens/spacing';
@@ -21,11 +22,14 @@
 
 .long-term__eyebrow {
   @include eyebrow.eyebrow();
+  @include reveal.item();
 
   color: var(--mat-sys-inverse-primary);
 }
 
 .long-term__title {
+  @include reveal.item($delay: 60ms);
+
   min-width: 0;
   max-width: 720px;
   margin: 0;
@@ -42,9 +46,20 @@
 }
 
 .long-term__text {
+  @include reveal.item();
+  @include reveal.stagger(3, 60ms, 120ms);
+
   min-width: 0;
   margin: 0;
   font: var(--nx-sys-body-lead);
   color: var(--nx-sys-inverse-on-surface-variant);
   overflow-wrap: anywhere;
+}
+
+.long-term[data-reveal='out'] {
+  .long-term__eyebrow,
+  .long-term__title,
+  .long-term__text {
+    @include reveal.hidden($distance: 8px);
+  }
 }

@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { useDictionary } from 'angular-intlayer';
 import { IconTile, type IconTileTone } from '../../../shared/ui/icon-tile/icon-tile';
 import partnerModelContent from './partner-model.content';
+import { Reveal } from '../../../shared/motion/reveal';
 
 @Component({
   selector: 'app-partner-model',
-  imports: [IconTile],
+  imports: [IconTile, Reveal],
   templateUrl: './partner-model.html',
   styleUrl: './partner-model.scss',
 })

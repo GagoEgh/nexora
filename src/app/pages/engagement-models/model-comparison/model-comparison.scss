@@ -1,3 +1,4 @@
+@use 'mixins/reveal';
 @use 'mixins/container';
 @use 'mixins/eyebrow';
 @use 'mixins/section';
@@ -23,10 +24,14 @@
 }
 
 .comparison__eyebrow {
+  @include reveal.item();
+
   @include eyebrow.eyebrow();
 }
 
 .comparison__title {
+  @include reveal.item($delay: 60ms);
+
   min-width: 0;
   margin: 0;
   font: var(--nx-sys-display-feature);
@@ -36,6 +41,8 @@
 }
 
 .comparison__lead {
+  @include reveal.item($delay: 120ms);
+
   min-width: 0;
   margin: 0;
   font: var(--nx-sys-body-copy);
@@ -44,6 +51,8 @@
 }
 
 .comparison__scroller {
+  @include reveal.item($delay: 180ms);
+
   overflow-x: auto;
   border: 1px solid var(--mat-sys-outline-variant);
   border-radius: var(--nx-sys-corner-panel);
@@ -97,8 +106,20 @@
 }
 
 .comparison__note {
+  @include reveal.item($delay: 240ms);
+
   margin: spacing.space(48) 0 0;
   font: var(--mat-sys-body-small);
   color: var(--nx-sys-on-surface-muted);
   overflow-wrap: anywhere;
+}
+
+.comparison[data-reveal='out'] {
+  .comparison__eyebrow,
+  .comparison__title,
+  .comparison__lead,
+  .comparison__scroller,
+  .comparison__note {
+    @include reveal.hidden($distance: 8px);
+  }
 }

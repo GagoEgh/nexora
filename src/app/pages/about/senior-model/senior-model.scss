@@ -1,4 +1,5 @@
 @use 'mixins/container';
+@use 'mixins/reveal';
 @use 'mixins/eyebrow';
 @use 'mixins/section';
 @use 'tokens/layout';
@@ -26,6 +27,8 @@
 }
 
 .senior__eyebrow {
+  @include reveal.item();
+
   @include eyebrow.eyebrow();
 }
 
@@ -55,6 +58,9 @@
 }
 
 .senior__point {
+  @include reveal.item();
+  @include reveal.stagger(3, 60ms, 120ms);
+
   display: flex;
   gap: spacing.space(12);
   align-items: center;
@@ -91,5 +97,14 @@
 
   @include layout.up(medium) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.senior[data-reveal='out'] {
+  .senior__eyebrow,
+  .senior__title,
+  .senior__lead,
+  .senior__point {
+    @include reveal.hidden($distance: 8px);
   }
 }

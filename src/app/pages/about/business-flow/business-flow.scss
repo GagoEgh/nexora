@@ -1,4 +1,6 @@
 @use 'mixins/container';
+@use 'mixins/reveal';
+@use 'tokens/motion';
 @use 'mixins/eyebrow';
 @use 'mixins/section';
 @use 'tokens/layout';
@@ -62,6 +64,8 @@
 }
 
 .flow__step {
+  @include reveal.item($extra: (background-color));
+  transition-delay: var(--nx-step-delay), var(--nx-step-delay), 0s;
   position: relative;
   display: grid;
   gap: spacing.space(12);
@@ -78,8 +82,16 @@
 .flow__step[data-tone='plain'] {
   background-color: var(--mat-sys-surface-container-low);
 }
+@for $i from 1 through 5 {
+  .flow__step:nth-child(#{$i}) {
+    --nx-step-delay: #{($i - 1) * 60ms};
+  }
+}
 
-/* The arrows only read as connectors while the steps sit in one row. */
+.flow__step:nth-child(n + 6) {
+  --nx-step-delay: 240ms;
+}
+
 .flow__arrow {
   display: none;
 
@@ -91,6 +103,9 @@
     width: 16px;
     height: 16px;
     transform: translateY(-50%);
+    transition:
+      opacity motion.duration(base) motion.easing(out) calc(var(--nx-step-delay) - 30ms),
+      scale motion.duration(base) motion.easing(out) calc(var(--nx-step-delay) - 30ms);
     color: var(--nx-sys-on-surface-muted);
   }
 }
@@ -135,4 +150,25 @@
 .flow__step[data-tone='accent'] .flow__step-title,
 .flow__step[data-tone='accent'] .flow__step-text {
   color: var(--mat-sys-on-primary);
+}
+
+.flow[data-reveal='out'] {
+  .flow__step {
+    @include reveal.hidden($distance: 8px);
+  }
+
+  .flow__arrow {
+    @media (prefers-reduced-motion: no-preference) {
+      opacity: 0;
+      scale: 0.6;
+    }
+  }
+}
+
+.flow__step[data-tone='plain']:hover {
+  background-color: var(--mat-sys-surface-container);
+}
+
+.flow__step[data-tone='accent']:hover {
+  background-color: color-mix(in srgb, var(--mat-sys-primary) 88%, var(--mat-sys-inverse-surface));
 }

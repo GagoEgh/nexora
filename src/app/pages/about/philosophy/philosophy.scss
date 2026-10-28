@@ -1,4 +1,6 @@
 @use 'mixins/container';
+@use 'mixins/reveal';
+@use 'tokens/motion';
 @use 'mixins/eyebrow';
 @use 'mixins/section';
 @use 'tokens/layout';
@@ -25,9 +27,12 @@
 
 .philosophy__eyebrow {
   @include eyebrow.eyebrow();
+  @include reveal.item();
 }
 
 .philosophy__title {
+  @include reveal.item($delay: 60ms);
+
   min-width: 0;
   margin: 0;
   font: var(--nx-sys-display-feature);
@@ -37,6 +42,8 @@
 }
 
 .philosophy__intro {
+  @include reveal.item($delay: 120ms);
+
   display: grid;
   gap: spacing.space(16);
   align-content: start;
@@ -60,6 +67,9 @@
 }
 
 .philosophy__card {
+  @include reveal.item($extra: (background-color));
+  @include reveal.stagger(4, 60ms, 200ms, $hover: true);
+
   display: grid;
   gap: spacing.space(16);
   align-content: start;
@@ -77,6 +87,7 @@
 }
 
 .philosophy__number {
+  transition: color motion.duration(fast) motion.easing(out);
   flex-shrink: 0;
   font: typography.$code-font;
   color: var(--nx-sys-on-surface-muted);
@@ -103,4 +114,21 @@
 .philosophy__card-text {
   font: var(--mat-sys-body-small);
   color: var(--mat-sys-on-surface-variant);
+}
+
+.philosophy[data-reveal='out'] {
+  .philosophy__eyebrow,
+  .philosophy__title,
+  .philosophy__intro,
+  .philosophy__card {
+    @include reveal.hidden($distance: 8px);
+  }
+}
+
+.philosophy__card:hover {
+  background-color: var(--mat-sys-surface-container);
+
+  .philosophy__number {
+    color: var(--mat-sys-primary);
+  }
 }
