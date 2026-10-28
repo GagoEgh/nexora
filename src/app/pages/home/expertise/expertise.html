@@ -7,7 +7,7 @@
 
     <div class="expertise__intro">
       <p class="expertise__text">{{ content().intro }}</p>
-      <a class="expertise__all" matButton [routerLink]="'/services' | localizedPath">
+      <a class="expertise__all" matButton [routerLink]="servicesPath | localizedPath">
         {{ content().viewAll }}
         <mat-icon iconPositionEnd [svgIcon]="arrowIcon" />
       </a>
@@ -20,7 +20,7 @@
         <app-icon-tile [icon]="service.icon.value" tone="primary" />
         <h3 class="expertise__card-title">{{ service.title }}</h3>
         <p class="expertise__card-text">{{ service.description }}</p>
-        <a class="expertise__link" [routerLink]="'/services' | localizedPath">
+        <a class="expertise__link" [routerLink]="toUrl(service.path.value | localizedPath)">
           {{ content().explore }}
           <mat-icon class="expertise__link-icon" [svgIcon]="arrowIcon" />
         </a>

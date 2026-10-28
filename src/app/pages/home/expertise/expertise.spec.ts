@@ -5,11 +5,26 @@ import { provideRouter } from '@angular/router';
 import { provideIntlayer, useLocale } from 'angular-intlayer';
 import { routes } from '../../../app.routes';
 import { provideAppIcons } from '../../../core/icons/provide-app-icons';
+import { isServiceCategoryId } from '../../services/service-category';
 import { Expertise } from './expertise';
 
 const ICON_SVG =
   '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">' +
   '<path d="M5 12H19" stroke="#0B1324"/></svg>';
+
+/**
+ * Where each card sends the reader. Cards one and two share a destination because the
+ * catalogue files Mobile App Development under software-engineering; there is no mobile
+ * category to send it to.
+ */
+const CATEGORIES = [
+  'software-engineering',
+  'software-engineering',
+  'artificial-intelligence',
+  'design-product',
+  'infrastructure-operations',
+  'engineering-partnerships',
+];
 
 const TITLES = [
   'Software & Web Development',
@@ -82,9 +97,25 @@ describe('Expertise', () => {
         card.querySelector('.expertise__card-text')?.textContent?.trim().length,
       ).toBeGreaterThan(40);
       const link = card.querySelector<HTMLAnchorElement>('a.expertise__link');
-      expect(link?.getAttribute('href')).toBe('/services');
       expect(link?.textContent?.trim()).toBe('Explore service');
       expect(link?.querySelector('mat-icon')?.getAttribute('aria-hidden')).toBe('true');
+    }
+  });
+
+  /**
+   * Every card used to point at the bare `/services`, so six different subjects and the
+   * "view all" button all led to the same unfiltered page.
+   */
+  it('deep-links each card to the services filter that holds it', () => {
+    const hrefs = Array.from(root.querySelectorAll<HTMLAnchorElement>('a.expertise__link')).map(
+      (link) => link.getAttribute('href'),
+    );
+
+    expect(hrefs).toEqual(CATEGORIES.map((category) => `/services?category=${category}`));
+    // A category the services page does not recognise silently falls back to showing all of
+    // them, which looks like the bug this replaced.
+    for (const category of CATEGORIES) {
+      expect(isServiceCategoryId(category)).toBe(true);
     }
   });
 

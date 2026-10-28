@@ -29,9 +29,11 @@ const expertiseContent = {
       hy: 'Ծանոթանալ ծառայությանը',
       ru: 'Подробнее об услуге',
     }),
+
     services: [
       {
         icon: 'code' satisfies AppIconName,
+        path: '/services?category=software-engineering',
         title: t({
           en: 'Software & Web Development',
           hy: 'Ծրագրային ապահովման և վեբ մշակում',
@@ -45,6 +47,7 @@ const expertiseContent = {
       },
       {
         icon: 'smartphone' satisfies AppIconName,
+        path: '/services?category=software-engineering',
         title: t({
           en: 'Mobile Applications',
           hy: 'Բջջային հավելվածների մշակում',
@@ -58,6 +61,7 @@ const expertiseContent = {
       },
       {
         icon: 'sparkle' satisfies AppIconName,
+        path: '/services?category=artificial-intelligence',
         title: t({
           en: 'AI Engineering & Automation',
           hy: 'AI լուծումների մշակում և ավտոմատացում',
@@ -71,6 +75,7 @@ const expertiseContent = {
       },
       {
         icon: 'pen-tool' satisfies AppIconName,
+        path: '/services?category=design-product',
         title: t({
           en: 'UI/UX Design',
           hy: 'UI/UX դիզայն',
@@ -84,6 +89,7 @@ const expertiseContent = {
       },
       {
         icon: 'cloud' satisfies AppIconName,
+        path: '/services?category=infrastructure-operations',
         title: t({
           en: 'Cloud Infrastructure & DevOps',
           hy: 'Ամպային ենթակառուցվածք և DevOps',
@@ -97,6 +103,7 @@ const expertiseContent = {
       },
       {
         icon: 'users' satisfies AppIconName,
+        path: '/services?category=engineering-partnerships',
         title: t({
           en: 'Dedicated Engineering Teams',
           hy: 'Ձեր նախագծին նվիրված ինժեներական թիմեր',
