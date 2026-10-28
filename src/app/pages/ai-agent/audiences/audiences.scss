@@ -2,6 +2,7 @@
 @use 'mixins/eyebrow';
 @use 'mixins/reveal';
 @use 'tokens/layout';
+@use 'tokens/motion';
 @use 'tokens/spacing';
 @use 'tokens/typography';
 
@@ -52,19 +53,37 @@
   list-style: none;
 }
 
-.audiences__row {
+.audiences__item {
   @include reveal.item(140ms);
   @include reveal.stagger(6, 50ms, 140ms);
+}
 
+.audiences__row {
   display: grid;
+  color: inherit;
+  text-decoration: none;
+  transition: background-color motion.duration(fast) motion.easing(out);
   grid-template-columns: auto minmax(0, 1fr) auto;
   gap: spacing.space(16);
   align-items: center;
   padding-block: spacing.space(16);
   border-block-start: 1px solid var(--mat-sys-outline-variant);
+}
 
-  &:last-child {
-    border-block-end: 1px solid var(--mat-sys-outline-variant);
+.audiences__item:last-child .audiences__row {
+  border-block-end: 1px solid var(--mat-sys-outline-variant);
+}
+
+.audiences__row:hover,
+.audiences__row:focus-visible {
+  background-color: var(--mat-sys-surface-container-low);
+
+  .audiences__arrow {
+    color: var(--mat-sys-primary);
+
+    @media (prefers-reduced-motion: no-preference) {
+      translate: spacing.space(4) 0;
+    }
   }
 }
 
@@ -83,6 +102,9 @@
   width: 20px;
   height: 20px;
   color: var(--mat-sys-on-surface-variant);
+  transition:
+    color motion.duration(fast) motion.easing(out),
+    translate motion.duration(fast) motion.easing(out);
 }
 
 .audiences__chips {
@@ -128,7 +150,7 @@
  */
 .audiences[data-reveal='out'] {
   .audiences__heading,
-  .audiences__row,
+  .audiences__item,
   .audiences__chips,
   .audiences__note {
     @include reveal.hidden($distance: 8px);

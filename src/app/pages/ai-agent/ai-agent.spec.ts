@@ -230,12 +230,22 @@ describe('AiAgent', () => {
       'Built for teams that run on repeatable processes.',
     ]);
 
-    // Six numbered projects. The arrows are decoration, so nothing here navigates.
+    // Six numbered projects, each the whole row a link to contact. The arrow used to promise a
+    // destination the row did not have; now it has one.
     expect(audiences?.querySelectorAll('.audiences__row')).toHaveLength(6);
     expect(text('.audiences__number')).toEqual(['01', '02', '03', '04', '05', '06']);
     expect(text('.audiences__label')[0]).toBe('Inbound lead triage and enrichment');
     expect(text('.audiences__label').at(-1)).toBe('Internal approval workflows');
-    expect(audiences?.querySelectorAll('a, button')).toHaveLength(0);
+
+    const rows = Array.from(audiences?.querySelectorAll('a.audiences__row') ?? []);
+    expect(rows).toHaveLength(6);
+    expect(rows.every((row) => row.getAttribute('href') === '/contact')).toBe(true);
+    // The project name sits inside the link, so that is what names it for assistive technology.
+    expect(rows[0].querySelector('.audiences__label')?.textContent?.trim()).toBe(
+      'Inbound lead triage and enrichment',
+    );
+    expect(audiences?.querySelectorAll('button')).toHaveLength(0);
+
     const arrows = Array.from(audiences?.querySelectorAll('.audiences__arrow') ?? []);
     expect(arrows).toHaveLength(6);
     expect(arrows.every((arrow) => arrow.getAttribute('aria-hidden') === 'true')).toBe(true);

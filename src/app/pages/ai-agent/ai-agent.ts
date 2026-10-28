@@ -6,6 +6,7 @@ import { useDictionary } from 'angular-intlayer';
 import { CONTACT_PATH, SERVICES_PATH, SOLUTIONS_PATH } from '../../core/routing/paths';
 import { LocalizedPathPipe } from '../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../core/icons/icons';
+import { Reveal } from '../../shared/motion/reveal';
 import { PageIntro, type PageIntroCrumb } from '../../shared/ui/page-intro/page-intro';
 import {
   type ConversationCopy,
@@ -36,6 +37,7 @@ import { Workflow } from './workflow/workflow';
     Workflow,
     MatButton,
     MatIcon,
+    Reveal,
   ],
   templateUrl: './ai-agent.html',
   styleUrl: './ai-agent.scss',

@@ -270,7 +270,12 @@ describe('About', () => {
     const panels = Array.from(root.querySelectorAll('.senior__panel'));
     expect(panels).toHaveLength(2);
     panels.forEach((panel) => expect(panel.tagName).toBe('FIGURE'));
-    expect(panels.map((panel) => panel.getAttribute('data-tone'))).toEqual(['plain', 'inverse']);
+    // The tone is an input on `app-model-panel` and lands on its host, not on the figure.
+    expect(
+      Array.from(root.querySelectorAll('app-model-panel')).map((host) =>
+        host.getAttribute('data-tone'),
+      ),
+    ).toEqual(['plain', 'inverse']);
 
     expect(text('.senior__panel-label')).toEqual(['Common pyramid', 'Nexora model']);
     root

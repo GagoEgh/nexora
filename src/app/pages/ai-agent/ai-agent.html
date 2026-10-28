@@ -5,7 +5,7 @@
   [heading]="content().title.value"
   [lead]="content().lead.value"
 >
-  <div class="ai-agent__actions" intro-actions>
+  <div class="ai-agent__actions" appReveal="load" intro-actions>
     <a matButton="filled" [routerLink]="contactPath | localizedPath">
       {{ content().primaryCta }}
       <mat-icon iconPositionEnd [svgIcon]="arrowIcon" />

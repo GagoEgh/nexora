@@ -1,6 +1,7 @@
 import { Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { LocalizedPathPipe } from '../../../core/i18n/localized-path.pipe';
+import { Reveal } from '../../motion/reveal';
 
 export interface PageIntroCrumb {
   readonly label: string;
@@ -9,7 +10,7 @@ export interface PageIntroCrumb {
 
 @Component({
   selector: 'app-page-intro',
-  imports: [RouterLink, LocalizedPathPipe],
+  imports: [RouterLink, LocalizedPathPipe, Reveal],
   templateUrl: './page-intro.html',
   styleUrl: './page-intro.scss',
 })

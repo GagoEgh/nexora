@@ -362,7 +362,8 @@ test.describe('ai agents audiences band', () => {
 
     // The arrows are decoration: the rows must not be interactive.
     await expect(audiences.locator('.audiences__arrow')).toHaveCount(6);
-    await expect(audiences.locator('a, button')).toHaveCount(0);
+    await expect(audiences.locator('a.audiences__row')).toHaveCount(6);
+    await expect(audiences.locator('button')).toHaveCount(0);
 
     await expect(audiences.locator('.audiences__chip')).toHaveCount(6);
     await expect(audiences.locator('.audiences__chip').nth(3)).toHaveText(
@@ -410,6 +411,94 @@ test.describe('ai agents audiences band', () => {
         .last()
         .evaluate((el) => getComputedStyle(el).borderBottomWidth),
     ).toBe('1px');
+  });
+});
+
+/**
+ * The project rows are links.
+ *
+ * They used to carry an arrow and go nowhere. There is no per-example destination to send them
+ * to - the catalogue has no entry for "weekly reporting automation" - but the one action that
+ * is true of all six is starting a conversation, which is this page's own primary call to
+ * action, so the whole row carries it.
+ */
+test.describe('ai agents typical project rows', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/services/ai_agent');
+  });
+
+  test('offers the whole row as the target, not just the words', async ({ page }) => {
+    const row = page.locator('a.audiences__row').first();
+    await expect(row).toBeVisible();
+    const [box] = await boxes(page, 'a.audiences__row');
+    const [column] = await boxes(page, '.audiences__column');
+
+    expect(box.w).toBe(column.w);
+    await expect(row).toHaveAttribute('href', '/contact');
+    expect(await style(page, 'a.audiences__row', 'text-decoration-line')).toBe('none');
+  });
+
+  /**
+   * The tint is state and the nudge is motion, so they are gated differently: the row still
+   * answers the pointer when someone has asked for less motion, it just does not move.
+   */
+  test('tints under the pointer whether or not motion is allowed', async ({ page }) => {
+    const row = page.locator('a.audiences__row').nth(1);
+    const rest = await style(page, 'a.audiences__row', 'background-color');
+
+    await row.hover();
+    await expect
+      .poll(() => row.evaluate((el) => getComputedStyle(el).backgroundColor))
+      .not.toBe(rest);
+  });
+
+  test('holds the arrow still under reduced motion', async ({ page }) => {
+    await page.locator('a.audiences__row').nth(1).hover();
+    await page.waitForTimeout(300);
+
+    expect(
+      await page
+        .locator('a.audiences__row')
+        .nth(1)
+        .locator('.audiences__arrow')
+        .evaluate((el) => getComputedStyle(el).translate),
+    ).toBe('none');
+  });
+
+  test('is reachable and operable from the keyboard', async ({ page }) => {
+    const row = page.locator('a.audiences__row').first();
+    await row.focus();
+
+    await expect(row).toBeFocused();
+    // The same affordance the pointer gets, plus the global focus ring.
+    await expect
+      .poll(() => row.evaluate((el) => getComputedStyle(el).backgroundColor))
+      .not.toBe('rgba(0, 0, 0, 0)');
+
+    await page.keyboard.press('Enter');
+    await expect(page).toHaveURL(/\/contact$/);
+  });
+
+  test('keeps the locale prefix', async ({ page }) => {
+    await page.goto('/ru/services/ai_agent');
+    await expect(page.locator('a.audiences__row').first()).toHaveAttribute('href', '/ru/contact');
+  });
+});
+
+test.describe('ai agents typical project rows with motion', () => {
+  test.use({ reducedMotion: 'no-preference', viewport: { width: 1440, height: 900 } });
+
+  test('nudges the arrow under the pointer and puts it back', async ({ page }) => {
+    await page.goto('/services/ai_agent');
+    const row = page.locator('a.audiences__row').nth(1);
+    const arrow = row.locator('.audiences__arrow');
+
+    await row.hover();
+    await expect.poll(() => arrow.evaluate((el) => getComputedStyle(el).translate)).toBe('4px');
+
+    await page.mouse.move(0, 0);
+    await expect.poll(() => arrow.evaluate((el) => getComputedStyle(el).translate)).toBe('none');
   });
 });
 
@@ -798,6 +887,56 @@ const BANDS = [
   ['app-business-value', '.business-value'],
   ['app-related-services', '.related'],
 ] as const;
+
+/**
+ * The shared page intro.
+ *
+ * `app-page-intro` renders the `h1` on seven pages, so this covers the band itself rather than
+ * anything specific to this one. The cadence matches the home hero's - 60ms a line - so moving
+ * between the home page and any of the seven reads as one gesture.
+ */
+test.describe('page intro entrance', () => {
+  test.use({ reducedMotion: 'no-preference', viewport: { width: 1440, height: 900 } });
+
+  const COPY = [
+    '.page-intro__breadcrumb',
+    '.page-intro__eyebrow',
+    '.page-intro__title',
+    '.page-intro__lead',
+  ] as const;
+
+  test('introduces the page in reading order and settles flat', async ({ page }) => {
+    await page.goto('/services/ai_agent');
+    await expect
+      .poll(() => page.locator('.page-intro').getAttribute('data-reveal'), { timeout: 5000 })
+      .toBe('in');
+
+    const delays = await Promise.all(COPY.map((s) => style(page, s, 'transition-delay')));
+    // The breadcrumb leads with no delay; the shorthand gives it one value per property.
+    expect(delays[0].split(',').every((d) => d.trim() === '0s')).toBe(true);
+    expect(delays.slice(1)).toEqual(['0.06s', '0.12s', '0.18s']);
+
+    // The projected buttons are not reachable from the intro's own stylesheet, so they carry
+    // their own reveal one step further along the same cadence.
+    expect(await style(page, '.ai-agent__actions', 'transition-delay')).toBe('0.24s');
+
+    await page.waitForTimeout(1200);
+    for (const selector of [...COPY, '.ai-agent__actions']) {
+      await expect(page.locator(selector), selector).toHaveCSS('opacity', '1');
+      await expect(page.locator(selector), selector).toHaveCSS('transform', 'none');
+    }
+  });
+
+  test('leaves the heading visible and flat under reduced motion', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto('/services/ai_agent');
+
+    for (const selector of [...COPY, '.ai-agent__actions']) {
+      await expect(page.locator(selector), selector).toHaveCSS('opacity', '1');
+      await expect(page.locator(selector), selector).toHaveCSS('transform', 'none');
+    }
+  });
+});
 
 test.describe('ai agents entrance', () => {
   test.use({ reducedMotion: 'no-preference', viewport: { width: 1440, height: 900 } });

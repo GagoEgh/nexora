@@ -1,6 +1,7 @@
 @use 'tokens/spacing';
 @use 'tokens/layout';
 @use 'mixins/eyebrow';
+@use 'mixins/reveal';
 
 :host {
   display: block;
@@ -31,6 +32,13 @@
   gap: spacing.space(20);
   justify-items: start;
   min-width: 0;
+}
+
+.page-intro__breadcrumb,
+.page-intro__eyebrow,
+.page-intro__title,
+.page-intro__lead {
+  @include reveal.item();
 }
 
 .page-intro__breadcrumb {
@@ -65,10 +73,12 @@
 }
 
 .page-intro__eyebrow {
+  transition-delay: 60ms;
   @include eyebrow.eyebrow();
 }
 
 .page-intro__title {
+  transition-delay: 120ms;
   margin: 0;
   overflow-wrap: anywhere;
   font: var(--nx-sys-display-page);
@@ -77,7 +87,17 @@
 }
 
 .page-intro__lead {
+  transition-delay: 180ms;
   margin: 0;
   font: var(--nx-sys-body-lead);
   color: var(--mat-sys-on-surface-variant);
+}
+
+.page-intro[data-reveal='out'] {
+  .page-intro__breadcrumb,
+  .page-intro__eyebrow,
+  .page-intro__title,
+  .page-intro__lead {
+    @include reveal.hidden($distance: 8px);
+  }
 }

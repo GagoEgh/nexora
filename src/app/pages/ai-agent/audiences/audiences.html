@@ -7,10 +7,12 @@
 
     <ol class="audiences__list">
       @for (item of content().projects.items; track $index) {
-        <li class="audiences__row">
-          <span class="audiences__number">{{ ordinal($index) }}</span>
-          <span class="audiences__label">{{ item }}</span>
-          <mat-icon class="audiences__arrow" aria-hidden="true" [svgIcon]="arrowIcon" />
+        <li class="audiences__item">
+          <a class="audiences__row" [routerLink]="contactPath | localizedPath">
+            <span class="audiences__number">{{ ordinal($index) }}</span>
+            <span class="audiences__label">{{ item }}</span>
+            <mat-icon class="audiences__arrow" aria-hidden="true" [svgIcon]="arrowIcon" />
+          </a>
         </li>
       }
     </ol>

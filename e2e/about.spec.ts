@@ -15,6 +15,7 @@ const box = (page: Page, selector: string) =>
     .evaluate((el) => {
       const r = el.getBoundingClientRect();
       return {
+        right: Math.round(r.right),
         x: Math.round(r.left),
         y: Math.round(r.top),
         w: Math.round(r.width),
@@ -31,6 +32,7 @@ const boxes = (page: Page, selector: string) =>
         y: Math.round(r.top),
         w: Math.round(r.width),
         h: Math.round(r.height),
+        right: Math.round(r.right),
       };
     }),
   );
@@ -336,14 +338,18 @@ test.describe('about senior model section at the desktop design width', () => {
     expect(panels[0].w).toBe(panels[1].w);
     expect(panels[0].h).toBe(panels[1].h);
     expect(panels[0].x).toBe(657);
-    expect(panels[1].x + panels[1].w).toBe(1360);
+    // The 703px column splits into two 341.5px panels, so the right edge is read from the rect
+    // rather than added up from an independently rounded x and width.
+    expect(panels[1].right).toBe(1360);
   });
 
   test('uses the inverse palette for the Nexora panel and a bordered surface for the pyramid', async ({
     page,
   }) => {
-    const plain = '.senior__panel[data-tone="plain"]';
-    const inverse = '.senior__panel[data-tone="inverse"]';
+    // `data-tone` is on the `app-model-panel` host, which is what `model-panel.scss` keys its
+    // `:host([data-tone=...])` rules on; the figure inside carries only the class.
+    const plain = 'app-model-panel[data-tone="plain"] .senior__panel';
+    const inverse = 'app-model-panel[data-tone="inverse"] .senior__panel';
 
     expect(await style(page, plain, 'background-color')).toBe('rgb(255, 255, 255)');
     expect(await style(page, plain, 'border-top-color')).toBe('rgb(226, 232, 240)');
@@ -364,19 +370,25 @@ test.describe('about senior model section at the desktop design width', () => {
         .locator(selector)
         .evaluateAll((els) => els.map((el) => el.querySelectorAll('.senior__block').length));
 
-    expect(await rows('.senior__panel[data-tone="plain"] .senior__row')).toEqual([1, 2, 3, 5]);
-    expect(await rows('.senior__panel[data-tone="inverse"] .senior__row')).toEqual([3, 3]);
+    expect(await rows('app-model-panel[data-tone="plain"] .senior__row')).toEqual([1, 2, 3, 5]);
+    expect(await rows('app-model-panel[data-tone="inverse"] .senior__row')).toEqual([3, 3]);
 
     await expect(page.locator('.senior__block--apex')).toHaveCount(1);
     expect(await style(page, '.senior__block--apex', 'background-color')).toBe('rgb(15, 85, 232)');
+    // The apex is the first block in the pyramid, so the plain fill is read from a block that
+    // is not it.
     expect(
-      await style(page, '.senior__panel[data-tone="plain"] .senior__block', 'background-color'),
+      await style(
+        page,
+        'app-model-panel[data-tone="plain"] .senior__block:not(.senior__block--apex)',
+        'background-color',
+      ),
     ).toBe('rgb(226, 232, 240)');
 
     // Blocks measured 29-30px on a 38px pitch.
     const blocks = await boxes(
       page,
-      '.senior__panel[data-tone="inverse"] .senior__row:first-child .senior__block',
+      'app-model-panel[data-tone="inverse"] .senior__row:first-child .senior__block',
     );
     expect(blocks).toHaveLength(3);
     for (const block of blocks) expect(block.w).toBe(30);

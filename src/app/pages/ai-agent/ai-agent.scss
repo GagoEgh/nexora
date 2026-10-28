@@ -1,5 +1,6 @@
 @use 'tokens/spacing';
 @use 'tokens/layout';
+@use 'mixins/reveal';
 
 :host {
   display: block;
@@ -7,6 +8,9 @@
 }
 
 .ai-agent__actions {
+  @include reveal.item();
+
+  transition-delay: 240ms;
   display: grid;
   gap: spacing.space(12);
   width: 100%;
@@ -18,4 +22,8 @@
     gap: spacing.space(24);
     width: auto;
   }
+}
+
+.ai-agent__actions[data-reveal='out'] {
+  @include reveal.hidden($distance: 8px);
 }
