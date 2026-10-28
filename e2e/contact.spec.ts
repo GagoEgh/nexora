@@ -91,22 +91,19 @@ test.describe('contact at the desktop design width', () => {
     expect(await style(page, '.channels', 'border-top-left-radius')).toBe('16px');
 
     const rows = await boxes(page, '.channels__row');
-    expect(rows).toHaveLength(2);
+    expect(rows).toHaveLength(1);
 
     const dividers = await page
       .locator('.channels__row')
       .evaluateAll(
         (els) => els.filter((el) => getComputedStyle(el).borderTopWidth === '1px').length,
       );
-    expect(dividers).toBe(2);
+    expect(dividers).toBe(1);
 
-    // The approved email is a mailto link; the phone number is still a placeholder.
+    // The approved email is the one published channel, rendered as a mailto link.
     const mail = page.locator('.channels__link');
     await expect(mail).toHaveAttribute('href', 'mailto:info@nexoratechnology.org');
     await expect(mail).toHaveText('info@nexoratechnology.org');
-    await expect(page.locator('.channels__value').last()).toContainText(
-      '{CONTACT_PHONE} — add when approved',
-    );
   });
 
   test('lays the form card out on the themed field metrics', async ({ page }) => {
@@ -278,8 +275,38 @@ test.describe('contact at narrower widths', () => {
 
       expect(await noOverflow(page)).toBeLessThanOrEqual(0);
       await expect(page.locator('.next__step')).toHaveCount(3);
-      await expect(page.locator('.channels__row')).toHaveCount(2);
+      await expect(page.locator('.channels__row')).toHaveCount(1);
       await expect(page.locator('mat-chip-option')).toHaveCount(7);
+    });
+  }
+});
+
+/**
+ * The two-column band, which starts at the `large` breakpoint (1200px).
+ *
+ * `--nx-page-intro-aside` sizes the form column, and the narrative column takes whatever is
+ * left. Between 1200px and 1440px the container has not yet reached its own 1280 maximum, so a
+ * flat 756px aside used to eat the remainder: the narrative column measured 220px at 1200px and
+ * the heading stacked into a 360px-tall ribbon. These are the common laptop widths, and the
+ * band was previously untested - the matrix stopped at 1024 and resumed at 1440.
+ */
+test.describe('contact across the two-column band', () => {
+  for (const width of [1200, 1280, 1366, 1440, 1920]) {
+    test(`holds the narrative column at its design width at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 1200 });
+      await page.goto('/contact');
+      await page.locator('app-contact-form form.form').waitFor();
+
+      expect(await noOverflow(page)).toBeLessThanOrEqual(0);
+
+      // Contact.png fixes the narrative column at 460; it must not be the column that absorbs
+      // a container narrower than 1280.
+      const copy = await box(page, '.page-intro__copy');
+      expect(copy.w, `narrative column at ${width}px`).toBeGreaterThanOrEqual(440);
+
+      // The symptom the squeeze produced: a heading several times taller than designed.
+      const heading = await box(page, '.page-intro__title');
+      expect(heading.h, `heading height at ${width}px`).toBeLessThanOrEqual(200);
     });
   }
 });
@@ -291,7 +318,9 @@ test.describe('contact under a locale prefix', () => {
     await page.goto('/ru/contact');
     await page.locator('app-contact-form form.form').waitFor();
 
-    await expect(page.locator('main h1')).toHaveText('Давайте создадим что-то значимое.');
+    await expect(page.locator('main h1')).toHaveText(
+      'Давайте вместе создадим нечто действительно ценное.',
+    );
     await expect(page.locator('#contact-form-title')).toHaveText('Расскажите о своём проекте');
 
     const hrefs = await page

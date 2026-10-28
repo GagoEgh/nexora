@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { ErrorHandler, Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { API_ORIGIN } from '../../../core/routing/api-origin';
 import {
@@ -17,6 +17,7 @@ interface ContactApiResponse {
 export class HttpContactSubmitter extends ContactSubmitter {
   private readonly http = inject(HttpClient);
   private readonly origin = inject(API_ORIGIN);
+  private readonly errorHandler = inject(ErrorHandler);
 
   override async submit(inquiry: ContactInquiry): Promise<ContactSubmitResult> {
     if (!this.origin) {
@@ -28,7 +29,8 @@ export class HttpContactSubmitter extends ContactSubmitter {
         this.http.post<ContactApiResponse>(`${this.origin}/api/contact`, inquiry),
       );
       return { status: response?.success ? 'sent' : 'failed' };
-    } catch {
+    } catch (error) {
+      this.errorHandler.handleError(error);
       return { status: 'failed' };
     }
   }

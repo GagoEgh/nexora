@@ -2,9 +2,13 @@
 
 :host {
   display: block;
-  --nx-page-intro-aside: 756px;
-  --nx-page-intro-align: start;
+  --nx-contact-narrative: 460px;
   --nx-page-intro-gap: #{spacing.space(64)};
+  --nx-page-intro-aside: min(
+    756px,
+    calc(100% - var(--nx-contact-narrative) - var(--nx-page-intro-gap))
+  );
+  --nx-page-intro-align: start;
 }
 
 .contact__aside {

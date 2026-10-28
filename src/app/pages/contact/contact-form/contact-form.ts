@@ -1,4 +1,12 @@
-import { Component, computed, ElementRef, inject, signal, viewChild } from '@angular/core';
+import {
+  Component,
+  computed,
+  ElementRef,
+  ErrorHandler,
+  inject,
+  signal,
+  viewChild,
+} from '@angular/core';
 import {
   email,
   form,
@@ -23,6 +31,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { useDictionary } from 'angular-intlayer';
 import { appIcon } from '../../../core/icons/icons';
 import { PRIVACY_POLICY_PATH } from '../../../core/routing/paths';
+import { Reveal } from '../../../shared/motion/reveal';
 import {
   SNACK_BAR_CONFIG,
   SnackBar,
@@ -76,6 +85,7 @@ const STATUS_CLASSES = {
     MatIcon,
     FieldLabel,
     ChipSelect,
+    Reveal,
   ],
   templateUrl: './contact-form.html',
   styleUrl: './contact-form.scss',
@@ -86,6 +96,7 @@ const STATUS_CLASSES = {
 })
 export class ContactForm {
   private readonly submitter = inject(ContactSubmitter);
+  private readonly errorHandler = inject(ErrorHandler);
   private readonly snackBar = inject(MatSnackBar);
 
   protected readonly content = useDictionary(contactFormContent);
@@ -144,7 +155,8 @@ export class ContactForm {
             this.form().reset({ ...DEFAULTS });
           }
           this.notify(status);
-        } catch {
+        } catch (error) {
+          this.errorHandler.handleError(error);
           this.notify('failed');
         }
         return undefined;

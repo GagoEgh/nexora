@@ -1,4 +1,11 @@
-<form #card class="form" novalidate (submit)="submit($event)" aria-labelledby="contact-form-title">
+<form
+  #card
+  class="form"
+  appReveal="load"
+  novalidate
+  (submit)="submit($event)"
+  aria-labelledby="contact-form-title"
+>
   <div class="form__head">
     <h2 class="form__title" id="contact-form-title">{{ content().title }}</h2>
     <p class="form__note">{{ content().requiredNote }}</p>

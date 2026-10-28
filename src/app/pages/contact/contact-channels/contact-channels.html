@@ -1,18 +1,16 @@
-<section class="channels" aria-labelledby="contact-channels-title">
+<section class="channels" appReveal="load" aria-labelledby="contact-channels-title">
   <h2 class="channels__title" id="contact-channels-title">{{ content().title }}</h2>
 
   <dl class="channels__list">
-    @for (item of content().items; track $index) {
+    @for (item of channels(); track $index) {
       <div class="channels__row">
-        <mat-icon class="channels__icon" aria-hidden="true" [svgIcon]="icon(item.icon.value)" />
+        @if (item.svgIcon; as svgIcon) {
+          <mat-icon class="channels__icon" aria-hidden="true" [svgIcon]="svgIcon" />
+        }
 
         <dt class="channels__label">{{ item.label }}</dt>
         <dd class="channels__value">
-          @if (item.href.value) {
-            <a class="channels__link" [href]="item.href.value">{{ item.detail }}</a>
-          } @else {
-            {{ item.detail }} — {{ content().pendingNote }}
-          }
+          <a class="channels__link" [href]="item.href">{{ item.detail }}</a>
         </dd>
       </div>
     }

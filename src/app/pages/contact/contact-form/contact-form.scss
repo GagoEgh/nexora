@@ -1,3 +1,5 @@
+@use 'mixins/reveal';
+@use 'mixins/visually-hidden';
 @use 'tokens/layout';
 @use 'tokens/spacing';
 
@@ -20,6 +22,12 @@
 
   @include layout.up(medium) {
     padding: spacing.space(40);
+  }
+
+  @include reveal.item($delay: 240ms);
+
+  &[data-reveal='out'] {
+    @include reveal.hidden($distance: 8px);
   }
 }
 
@@ -70,12 +78,7 @@
 }
 
 .form__honeypot {
-  position: absolute;
-  overflow: hidden;
-  clip-path: inset(50%);
-  width: 1px;
-  height: 1px;
-  white-space: nowrap;
+  @include visually-hidden.visually-hidden();
 }
 
 .form__actions {
@@ -85,20 +88,10 @@
   min-width: 0;
 
   @include layout.up(medium) {
-    grid-template-columns: auto minmax(0, 1fr);
+    justify-items: start;
   }
 
   button[type='submit'] {
     min-width: 220px;
-  }
-}
-
-.form__disclaimer {
-  margin: 0;
-  font: var(--mat-sys-body-small);
-  color: var(--nx-sys-on-surface-muted);
-
-  a {
-    color: var(--mat-sys-primary);
   }
 }

@@ -22,7 +22,7 @@ const STEPS = [
   'We suggest next steps',
 ];
 
-const CHANNELS = ['Email', 'Phone'];
+const CHANNELS = ['Email'];
 
 const INTERESTS = ['A new project', 'A dedicated team', 'A partnership', 'Something else'];
 
@@ -108,11 +108,8 @@ describe('Contact', () => {
 
     expect(text('.channels__label')).toEqual(CHANNELS);
 
-    // Email is approved and linked; the phone number is still an unapproved placeholder.
-    expect(text('.channels__value')).toEqual([
-      CONTACT_EMAIL,
-      '{CONTACT_PHONE} — add when approved',
-    ]);
+    // Email is the only published channel, and it is linked.
+    expect(text('.channels__value')).toEqual([CONTACT_EMAIL]);
 
     const mail = root.querySelector('.channels__link');
     expect(mail?.getAttribute('href')).toBe(`mailto:${CONTACT_EMAIL}`);
@@ -189,7 +186,9 @@ describe('Contact', () => {
     setLocale('ru');
     await go('/ru/contact');
 
-    expect(root.querySelector('h1')?.textContent?.trim()).toBe('Давайте создадим что-то значимое.');
+    expect(root.querySelector('h1')?.textContent?.trim()).toBe(
+      'Давайте вместе создадим нечто действительно ценное.',
+    );
     expect(root.querySelector('#contact-channels-title')?.textContent?.trim()).toBe(
       'Другие способы связаться с нами',
     );
@@ -206,9 +205,9 @@ describe('Contact', () => {
     expect(routed.every((href) => href === '/ru' || href?.startsWith('/ru/'))).toBe(true);
   });
 
-  it('keeps the dictionaries complete: three steps, three channels, four interests', () => {
+  it('keeps the dictionaries complete: three steps, one channel, four interests', () => {
     expect(contactNextContent.content.steps).toHaveLength(3);
-    expect(contactChannelsContent.content.items).toHaveLength(2);
+    expect(contactChannelsContent.content.items).toHaveLength(1);
     expect(contactFormContent.content.interestOptions).toHaveLength(4);
     expect(contactFormContent.content.methodOptions).toHaveLength(3);
     expect(contactFormContent.content.serviceOptions).toHaveLength(5);

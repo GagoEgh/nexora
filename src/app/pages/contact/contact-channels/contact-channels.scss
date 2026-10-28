@@ -1,3 +1,4 @@
+@use 'mixins/reveal';
 @use 'tokens/spacing';
 @use 'tokens/typography';
 
@@ -8,6 +9,12 @@
   border-radius: var(--mat-sys-corner-large);
   background-color: var(--mat-sys-surface);
   min-width: 0;
+
+  @include reveal.item($delay: 420ms);
+
+  &[data-reveal='out'] {
+    @include reveal.hidden($distance: 8px);
+  }
 }
 
 .channels__title {

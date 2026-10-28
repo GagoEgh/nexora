@@ -1,4 +1,6 @@
 @use 'mixins/eyebrow';
+@use 'mixins/reveal';
+@use 'mixins/visually-hidden';
 @use 'tokens/spacing';
 
 .next {
@@ -8,17 +10,12 @@
 }
 
 .next__title {
-  position: absolute;
-  overflow: hidden;
-  clip-path: inset(50%);
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  white-space: nowrap;
+  @include visually-hidden.visually-hidden();
 }
 
 .next__eyebrow {
   @include eyebrow.eyebrow();
+  @include reveal.item($delay: 240ms);
 }
 
 .next__list {
@@ -38,6 +35,16 @@
   grid-template-columns: var(--nx-next-badge) minmax(0, 1fr);
   gap: spacing.space(4) spacing.space(16);
   min-width: 0;
+
+  @include reveal.item();
+  @include reveal.stagger(3, 60ms, 300ms);
+}
+
+.next[data-reveal='out'] {
+  .next__eyebrow,
+  .next__step {
+    @include reveal.hidden($distance: 8px);
+  }
 }
 
 .next__step:not(:last-child)::before {

@@ -3,20 +3,14 @@
 @use 'tokens/typography';
 @use 'mixins/reveal';
 @use 'mixins/text';
+@use 'mixins/visually-hidden';
 
 :host {
   display: block;
 }
 
 .services__status {
-  position: absolute;
-  overflow: hidden;
-  clip-path: inset(50%);
-  width: 1px;
-  height: 1px;
-  margin: 0;
-  padding: 0;
-  white-space: nowrap;
+  @include visually-hidden.visually-hidden();
 }
 
 .services__results {
