@@ -9,7 +9,11 @@
 
 .page-intro {
   padding-inline: var(--nx-layout-margin);
-  background: linear-gradient(180deg, var(--mat-sys-primary-container), var(--mat-sys-background));
+  background: linear-gradient(
+    180deg,
+    var(--mat-sys-primary-container),
+    var(--mat-sys-background) var(--nx-page-intro-wash, 100%)
+  );
 }
 
 .page-intro__header {
@@ -29,6 +33,7 @@
 
 .page-intro__copy {
   display: grid;
+  align-content: start;
   gap: spacing.space(20);
   justify-items: start;
   min-width: 0;

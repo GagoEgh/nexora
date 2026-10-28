@@ -1,4 +1,5 @@
 @use '@angular/material' as mat;
+@use '../tokens/motion';
 @use '../tokens/spacing';
 
 @mixin theme() {
@@ -20,6 +21,10 @@
   @at-root {
     .mat-mdc-form-field-hint {
       color: var(--mat-sys-on-surface-variant);
+    }
+
+    .mat-mdc-form-field .mat-mdc-notch-piece {
+      transition: border-color motion.duration(fast) motion.easing(out);
     }
 
     .mat-mdc-form-field .mat-mdc-form-field-subscript-wrapper {

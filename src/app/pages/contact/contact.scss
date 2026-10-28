@@ -1,3 +1,4 @@
+@use 'tokens/layout';
 @use 'tokens/spacing';
 
 :host {
@@ -8,7 +9,9 @@
     756px,
     calc(100% - var(--nx-contact-narrative) - var(--nx-page-intro-gap))
   );
-  --nx-page-intro-align: start;
+
+  --nx-page-intro-align: stretch;
+  --nx-page-intro-wash: 560px;
 }
 
 .contact__aside {
@@ -16,4 +19,10 @@
   gap: spacing.space(40);
   width: 100%;
   min-width: 0;
+
+  @include layout.up(large) {
+    align-self: start;
+    position: sticky;
+    top: calc(var(--nx-layout-header-height) + #{spacing.space(40)});
+  }
 }

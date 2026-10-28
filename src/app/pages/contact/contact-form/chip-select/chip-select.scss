@@ -1,4 +1,22 @@
+@use 'tokens/motion';
+
 :host {
   display: block;
   --mat-chip-container-height: 40px;
+}
+
+mat-chip-option {
+  transition:
+    scale motion.duration(fast) motion.easing(out),
+    box-shadow motion.duration(fast) motion.easing(out);
+}
+
+mat-chip-option:active {
+  @media (prefers-reduced-motion: no-preference) {
+    scale: 0.97;
+  }
+}
+
+mat-chip-option.mdc-evolution-chip--selected {
+  box-shadow: var(--mat-sys-level1);
 }

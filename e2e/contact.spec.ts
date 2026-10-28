@@ -88,7 +88,7 @@ test.describe('contact at the desktop design width', () => {
   test('renders the channels card with a hairline row per channel', async ({ page }) => {
     const card = await box(page, '.channels');
     expect(card.w).toBe(460);
-    expect(await style(page, '.channels', 'border-top-left-radius')).toBe('16px');
+    expect(await style(page, '.channels', 'border-top-left-radius')).toBe('24px');
 
     const rows = await boxes(page, '.channels__row');
     expect(rows).toHaveLength(1);
@@ -332,5 +332,167 @@ test.describe('contact under a locale prefix', () => {
     const routed = hrefs.filter((href) => !href?.startsWith('mailto:'));
     expect(routed.length).toBeGreaterThan(0);
     expect(routed.every((href) => href === '/ru' || href?.startsWith('/ru/'))).toBe(true);
+  });
+});
+
+/**
+ * Interaction feedback added with the design pass. The rest of this file runs under
+ * `reducedMotion: 'reduce'` (playwright.config.ts), which is what keeps its geometry stable, so
+ * these specs opt back in where the behaviour under test is motion.
+ */
+test.describe('contact interaction feedback', () => {
+  test.use({ reducedMotion: 'no-preference', viewport: { width: 1440, height: 1400 } });
+
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/contact');
+    await page.locator('app-contact-form form.form').waitFor();
+  });
+
+  test('the channel row answers both hover and keyboard focus', async ({ page }) => {
+    const bg = () => style(page, '.channels__row', 'background-color');
+    const idle = await bg();
+
+    await page.locator('.channels__row').hover();
+    await expect.poll(bg, { timeout: 2000 }).not.toBe(idle);
+
+    await page.mouse.move(0, 0);
+    await expect.poll(bg, { timeout: 2000 }).toBe(idle);
+
+    // The row wraps a link, so reaching it by keyboard earns the same surface.
+    await page.locator('.channels__link').focus();
+    await expect.poll(bg, { timeout: 2000 }).not.toBe(idle);
+  });
+
+  test('a chip reports the press and keeps elevation once selected', async ({ page }) => {
+    const chip = page.locator('mat-chip-option').nth(1);
+    const read = () =>
+      chip.evaluate((el) => {
+        const c = getComputedStyle(el);
+        return { scale: c.scale, elevated: c.boxShadow !== 'none' };
+      });
+
+    expect(await read()).toEqual({ scale: 'none', elevated: false });
+
+    const box = (await chip.boundingBox())!;
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await page.mouse.down();
+    // The ripple is disabled on these chips, so this press feedback is the only one they have.
+    await expect.poll(async () => (await read()).scale, { timeout: 2000 }).not.toBe('none');
+    await page.mouse.up();
+
+    await expect.poll(async () => (await read()).elevated, { timeout: 2000 }).toBe(true);
+
+    // A transform must never change the resting geometry the layout specs assert - measured once
+    // the press has fully returned, since a scale caught mid-transition is a fraction short.
+    await expect.poll(async () => (await read()).scale, { timeout: 2000 }).toBe('none');
+    expect(Math.round((await chip.boundingBox())!.height)).toBe(40);
+  });
+
+  test('a caption answers hover and turns to the error colour with its field', async ({ page }) => {
+    const caption = page
+      .locator('app-field-label')
+      .filter({ has: page.locator('label[for="contact-name"]') });
+    const colour = () => caption.locator('label').evaluate((el) => getComputedStyle(el).color);
+
+    const idle = await colour();
+    await caption.hover();
+    await expect.poll(colour, { timeout: 2000 }).not.toBe(idle);
+
+    // Touch the control and leave it empty: the caption carries the error, not just the message.
+    await page.locator('#contact-name').click();
+    await page.locator('#contact-email').click();
+    await expect(caption).toHaveClass(/field-label--invalid/);
+    await expect.poll(colour, { timeout: 2000 }).not.toBe(idle);
+  });
+
+  test('the required mark is shown but left out of the accessible name', async ({ page }) => {
+    const mark = page.locator('.form__required').first();
+    await expect(mark).toHaveText('*');
+    await expect(mark).toHaveAttribute('aria-hidden', 'true');
+    // Requiredness still reaches assistive technology through the control itself.
+    await expect(page.locator('#contact-name')).toHaveAttribute('aria-required', 'true');
+  });
+
+  test('a submission in flight is announced and shown', async ({ page }) => {
+    let release!: () => void;
+    const held = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    await page.route('**/api/contact', async (route) => {
+      await held;
+      await route.fulfill({
+        status: 201,
+        contentType: 'application/json',
+        body: JSON.stringify({ success: true }),
+      });
+    });
+
+    await fillValidForm(page);
+    await page.locator('button[type="submit"]').click();
+
+    const form = page.locator('app-contact-form form.form');
+    await expect(form).toHaveAttribute('aria-busy', 'true');
+    await expect(page.locator('button[type="submit"]')).toBeDisabled();
+    const bar = await form.evaluate((el) => {
+      const b = getComputedStyle(el, '::before');
+      return { content: b.content, height: b.height, animated: b.animationName !== 'none' };
+    });
+    expect(bar.height).toBe('2px');
+    expect(bar.animated).toBe(true);
+
+    release();
+    await expect(form).toHaveAttribute('aria-busy', 'false');
+  });
+
+  test('the narrative column follows the form down the page', async ({ page }) => {
+    const aside = page.locator('.contact__aside');
+    expect(await aside.evaluate((el) => getComputedStyle(el).position)).toBe('sticky');
+
+    const topBefore = (await aside.boundingBox())!.y;
+    await page.evaluate(() => window.scrollTo(0, 500));
+    await page.waitForTimeout(250);
+    const topAfter = (await aside.boundingBox())!.y;
+
+    // It travelled less than the page scrolled, which is what sticking means.
+    expect(topBefore - topAfter).toBeLessThan(500);
+
+    // And it never reaches the footer.
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await page.waitForTimeout(250);
+    const clear = await page.evaluate(() => {
+      const a = document.querySelector('.contact__aside')!.getBoundingClientRect();
+      const f = document.querySelector('app-footer, footer')!.getBoundingClientRect();
+      return Math.round(f.top - a.bottom);
+    });
+    expect(clear).toBeGreaterThanOrEqual(0);
+  });
+});
+
+test.describe('contact interaction feedback with reduced motion', () => {
+  test.use({ reducedMotion: 'reduce', viewport: { width: 1440, height: 1400 } });
+
+  test('keeps every cue but removes the movement', async ({ page }) => {
+    await page.goto('/contact');
+    await page.locator('app-contact-form form.form').waitFor();
+    await page.waitForTimeout(800);
+
+    // Nothing is left hidden or displaced.
+    for (const selector of ['.next__eyebrow', '.next__step', '.channels', '.form']) {
+      await expect(page.locator(selector).first()).toHaveCSS('opacity', '1');
+    }
+    const badge = await page
+      .locator('.next__badge')
+      .first()
+      .evaluate((el) => getComputedStyle(el).scale);
+    expect(badge).toBe('none');
+
+    // The colour cues are not motion, so they still work.
+    const bg = () => style(page, '.channels__row', 'background-color');
+    const idle = await bg();
+    await page.locator('.channels__row').hover();
+    await expect.poll(bg, { timeout: 2000 }).not.toBe(idle);
+
+    // The icon nudge is movement, so it is gone.
+    expect(await style(page, '.channels__icon', 'translate')).toBe('none');
   });
 });

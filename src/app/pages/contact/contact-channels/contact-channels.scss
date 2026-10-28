@@ -1,12 +1,14 @@
 @use 'mixins/reveal';
+@use 'tokens/motion';
 @use 'tokens/spacing';
 @use 'tokens/typography';
 
 .channels {
   box-sizing: border-box;
-  padding: spacing.space(16) spacing.space(20) spacing.space(8);
+
+  padding: spacing.space(20);
   border: 1px solid var(--mat-sys-outline-variant);
-  border-radius: var(--mat-sys-corner-large);
+  border-radius: var(--nx-sys-corner-panel);
   background-color: var(--mat-sys-surface);
   min-width: 0;
 
@@ -25,7 +27,9 @@
 }
 
 .channels__list {
-  margin: 0;
+  display: grid;
+  gap: spacing.space(12);
+  margin: spacing.space(16) 0 calc(-1 * #{spacing.space(12)});
 }
 
 .channels__row {
@@ -38,6 +42,20 @@
   padding-block: spacing.space(12);
   border-block-start: 1px solid var(--mat-sys-outline-variant);
   min-width: 0;
+  transition: background-color motion.duration(fast) motion.easing(out);
+}
+
+.channels__row:hover,
+.channels__row:focus-within {
+  background-color: var(--mat-sys-surface-container-low);
+
+  .channels__icon {
+    color: var(--mat-sys-primary);
+
+    @media (prefers-reduced-motion: no-preference) {
+      translate: spacing.space(4) 0;
+    }
+  }
 }
 
 .channels__icon {
@@ -45,6 +63,9 @@
   width: var(--nx-channel-icon);
   height: var(--nx-channel-icon);
   color: var(--mat-sys-on-surface-variant);
+  transition:
+    color motion.duration(fast) motion.easing(out),
+    translate motion.duration(fast) motion.easing(out);
 }
 
 .channels__label {
@@ -58,6 +79,8 @@
   min-width: 0;
   margin: 0;
   font: typography.$code-font;
+  font-size: var(--mat-sys-body-small-size);
+  line-height: var(--mat-sys-body-small-line-height);
   color: var(--nx-sys-on-surface-muted);
   overflow-wrap: anywhere;
 }

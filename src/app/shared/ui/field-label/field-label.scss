@@ -1,3 +1,4 @@
+@use 'tokens/motion';
 @use 'tokens/spacing';
 @use 'tokens/typography';
 
@@ -12,4 +13,13 @@ label {
   font-weight: typography.$weight-semibold;
   color: var(--mat-sys-on-surface);
   cursor: pointer;
+  transition: color motion.duration(fast) motion.easing(out);
+}
+
+:host(:hover) label {
+  color: var(--mat-sys-primary);
+}
+
+:host(.field-label--invalid) label {
+  color: var(--mat-sys-error);
 }
