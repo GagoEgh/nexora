@@ -1,4 +1,6 @@
 @use 'mixins/reveal';
+@use 'tokens/layout';
+@use 'tokens/motion';
 @use 'mixins/container';
 @use 'mixins/eyebrow';
 @use 'mixins/section';
@@ -24,13 +26,11 @@
 }
 
 .comparison__eyebrow {
-  @include reveal.item();
-
   @include eyebrow.eyebrow();
 }
 
 .comparison__title {
-  @include reveal.item($delay: 60ms);
+  transition-delay: 60ms;
 
   min-width: 0;
   margin: 0;
@@ -41,7 +41,7 @@
 }
 
 .comparison__lead {
-  @include reveal.item($delay: 120ms);
+  transition-delay: 120ms;
 
   min-width: 0;
   margin: 0;
@@ -51,12 +51,17 @@
 }
 
 .comparison__scroller {
-  @include reveal.item($delay: 180ms);
+  transition-delay: 180ms;
 
   overflow-x: auto;
   border: 1px solid var(--mat-sys-outline-variant);
   border-radius: var(--nx-sys-corner-panel);
   background-color: var(--mat-sys-surface);
+  mask-image: linear-gradient(to right, #000000 calc(100% - #{spacing.space(48)}), transparent);
+
+  @include layout.up(large) {
+    mask-image: none;
+  }
 }
 
 .comparison__table {
@@ -88,14 +93,30 @@
   font: var(--mat-sys-body-large);
   font-weight: typography.$weight-semibold;
   color: var(--mat-sys-on-surface);
+  border-block-end: 1px solid var(--mat-sys-outline-variant);
+}
+
+.comparison__column + .comparison__column,
+.comparison__cell + .comparison__cell {
+  border-inline-start: 1px solid var(--mat-sys-outline-variant);
 }
 
 .comparison__label,
 .comparison__cell {
   border-block-start: 1px solid var(--mat-sys-outline-variant);
+  transition: background-color motion.duration(fast) motion.easing(out);
+}
+
+.comparison__corner,
+.comparison__label {
+  position: sticky;
+  inset-inline-start: 0;
+  z-index: 1;
+  box-shadow: 1px 0 0 var(--mat-sys-outline-variant);
 }
 
 .comparison__label {
+  background-color: var(--mat-sys-surface);
   font: var(--mat-sys-label-large);
   color: var(--mat-sys-on-surface);
 }
@@ -105,8 +126,13 @@
   color: var(--mat-sys-on-surface-variant);
 }
 
+tbody tr:hover .comparison__label,
+tbody tr:hover .comparison__cell {
+  background-color: var(--mat-sys-surface-container-low);
+}
+
 .comparison__note {
-  @include reveal.item($delay: 240ms);
+  transition-delay: 240ms;
 
   margin: spacing.space(48) 0 0;
   font: var(--mat-sys-body-small);
@@ -122,4 +148,12 @@
   .comparison__note {
     @include reveal.hidden($distance: 8px);
   }
+}
+
+.comparison__eyebrow,
+.comparison__title,
+.comparison__lead,
+.comparison__scroller,
+.comparison__note {
+  @include reveal.item();
 }

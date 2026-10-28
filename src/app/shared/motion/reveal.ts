@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { afterNextRender, Directive, DestroyRef, ElementRef, inject, input } from '@angular/core';
 
-const THRESHOLD = 0.15;
+const THRESHOLD = 0;
 const ROOT_MARGIN = '0px 0px -10% 0px';
 
 @Directive({

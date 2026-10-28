@@ -5,10 +5,10 @@
   [heading]="content().heading.value"
   [lead]="content().lead.value"
 >
-  <app-model-finder />
+  <app-model-finder [current]="current()" />
 </app-page-intro>
 
-<app-model-details />
+<app-model-details [current]="current()" />
 
 <app-model-comparison />
 

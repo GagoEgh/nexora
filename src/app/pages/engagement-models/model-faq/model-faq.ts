@@ -14,5 +14,4 @@ import { Reveal } from '../../../shared/motion/reveal';
 export class ModelFaq {
   protected readonly content = useDictionary(modelFaqContent);
   protected readonly plusIcon = appIcon('plus');
-  protected readonly minusIcon = appIcon('minus');
 }

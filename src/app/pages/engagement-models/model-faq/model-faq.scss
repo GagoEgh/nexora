@@ -1,4 +1,5 @@
 @use 'mixins/reveal';
+@use 'tokens/motion';
 @use 'mixins/container';
 @use 'mixins/eyebrow';
 @use 'tokens/layout';
@@ -64,6 +65,7 @@
   padding-block: spacing.space(24);
   cursor: pointer;
   list-style: none;
+  transition: background-color motion.duration(fast) motion.easing(out);
 
   &::-webkit-details-marker {
     display: none;
@@ -72,6 +74,16 @@
 
 .faq__disclosure[open] .faq__summary {
   padding-block-end: spacing.space(12);
+}
+
+.faq__summary:hover,
+.faq__summary:focus-visible {
+  background-color: var(--mat-sys-surface-container-low);
+}
+
+.faq__summary:hover .faq__icon,
+.faq__summary:focus-visible .faq__icon {
+  color: var(--mat-sys-primary);
 }
 
 .faq__question {
@@ -87,15 +99,14 @@
   width: 20px;
   height: 20px;
   color: var(--mat-sys-on-surface-variant);
+  transition:
+    rotate motion.duration(fast) motion.easing(out),
+    color motion.duration(fast) motion.easing(out);
 }
 
-.faq__icon--less,
-.faq__disclosure[open] .faq__icon--more {
-  display: none;
-}
 
-.faq__disclosure[open] .faq__icon--less {
-  display: block;
+.faq__disclosure[open] .faq__icon {
+  rotate: 45deg;
 }
 
 .faq__answer {
@@ -111,5 +122,25 @@
   .faq__title,
   .faq__item {
     @include reveal.hidden($distance: 8px);
+  }
+}
+
+@supports selector(::details-content) and (interpolate-size: allow-keywords) {
+  @media (prefers-reduced-motion: no-preference) {
+    .faq__disclosure {
+      interpolate-size: allow-keywords;
+    }
+
+    .faq__disclosure::details-content {
+      block-size: 0;
+      overflow: hidden;
+      transition:
+        block-size motion.duration(base) motion.easing(out),
+        content-visibility motion.duration(base) motion.easing(out) allow-discrete;
+    }
+
+    .faq__disclosure[open]::details-content {
+      block-size: auto;
+    }
   }
 }

@@ -2,24 +2,29 @@
   <h2 class="models__title" id="models-title">{{ content().title }}</h2>
 
   <ol class="models__list">
-    @for (model of content().models; track $index; let index = $index) {
-      <li class="models__item">
+    @for (entry of models(); track entry.id; let index = $index) {
+      <li
+        class="models__item"
+        [id]="sectionId(entry.id)"
+        [class.models__item--current]="entry.id === current()"
+        [attr.aria-current]="entry.id === current() ? 'location' : null"
+      >
         <article class="model">
           <div class="model__identity">
             <div class="model__head">
-              <app-icon-tile [icon]="model.icon.value" tone="primary" />
+              <app-icon-tile [icon]="entry.model.icon.value" tone="primary" />
               <span class="model__ordinal" aria-hidden="true">{{ ordinal(index) }}</span>
             </div>
 
-            <h3 class="model__title">{{ model.title }}</h3>
-            <p class="model__description">{{ model.description }}</p>
+            <h3 class="model__title">{{ entry.model.title }}</h3>
+            <p class="model__description">{{ entry.model.description }}</p>
           </div>
 
           <div class="model__flow">
             <p class="model__eyebrow">{{ content().howItWorks }}</p>
 
             <ol class="model__steps">
-              @for (step of model.steps; track $index; let stepIndex = $index) {
+              @for (step of entry.model.steps; track $index; let stepIndex = $index) {
                 <li class="model__step">
                   <span class="model__step-number" aria-hidden="true">{{ stepIndex + 1 }}</span>
                   <span class="model__step-text">{{ step }}</span>
@@ -32,7 +37,7 @@
             <p class="model__eyebrow model__eyebrow--muted">{{ content().goodFitWhen }}</p>
 
             <ul class="model__fit-list">
-              @for (fit of model.fits; track $index) {
+              @for (fit of entry.model.fits; track $index) {
                 <li class="model__fit-item">
                   <mat-icon class="model__check" aria-hidden="true" [svgIcon]="checkIcon" />
                   <span class="model__fit-text">{{ fit }}</span>

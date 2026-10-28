@@ -1,3 +1,4 @@
+@use 'tokens/motion';
 @use 'mixins/reveal';
 @use 'mixins/container';
 @use 'mixins/visually-hidden';
@@ -26,6 +27,7 @@
 }
 
 .model {
+  transition: border-color motion.duration(fast) motion.easing(out);
   display: grid;
   gap: spacing.space(32);
   box-sizing: border-box;
@@ -69,6 +71,7 @@
 }
 
 .model__ordinal {
+  transition: color motion.duration(fast) motion.easing(out);
   font: typography.$code-font;
   color: var(--nx-sys-on-surface-muted);
 }
@@ -178,14 +181,28 @@
   overflow-wrap: anywhere;
 }
 
-// Carries the entrance only; its visual styling lives on the child.
 .models__item {
   @include reveal.item();
   @include reveal.stagger(5, 60ms, 120ms);
+
+  scroll-margin-block-start: spacing.space(96);
+}
+
+.models__item--current .model {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: -1px;
 }
 
 .models[data-reveal='out'] {
   .models__item {
     @include reveal.hidden($distance: 8px);
+  }
+}
+
+.model:hover {
+  border-color: var(--mat-sys-outline);
+
+  .model__ordinal {
+    color: var(--mat-sys-primary);
   }
 }

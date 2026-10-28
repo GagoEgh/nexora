@@ -93,6 +93,18 @@ describe('Reveal', () => {
     expect(FakeIntersectionObserver.instances[0].observed).toEqual([section(fixture)]);
   });
 
+  /*
+   * The observer must not carry a ratio threshold. An element taller than the viewport can only
+   * ever intersect by `effectiveViewport / elementHeight`, so any non-zero threshold puts a
+   * ceiling on how tall a revealing section may be - past it the callback never fires and the
+   * section stays hidden for good. /engagement-models hit exactly that in Armenian at 390x640.
+   */
+  it('observes with no ratio threshold, so a section taller than the viewport still reveals', async () => {
+    await create(ScrollHost);
+
+    expect(FakeIntersectionObserver.instances[0].options?.threshold).toBe(0);
+  });
+
   it('reveals when the element enters the viewport', async () => {
     const fixture = await create(ScrollHost);
 
