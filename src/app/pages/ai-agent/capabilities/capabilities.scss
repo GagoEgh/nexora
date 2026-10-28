@@ -1,5 +1,6 @@
 @use 'mixins/container';
 @use 'mixins/eyebrow';
+@use 'mixins/reveal';
 @use 'tokens/layout';
 @use 'tokens/spacing';
 
@@ -12,6 +13,8 @@
 }
 
 .capabilities__heading {
+  @include reveal.item();
+
   @include container.heading(20);
   margin-block-end: spacing.space(64);
 }
@@ -40,6 +43,9 @@
 }
 
 .capabilities__panel {
+  @include reveal.item(100ms);
+  @include reveal.stagger(2, 90ms, 100ms);
+
   box-sizing: border-box;
   min-height: 446px;
   padding: calc(#{spacing.space(24)} + #{spacing.space(4)}) spacing.space(32) spacing.space(16);
@@ -115,4 +121,11 @@
 .capabilities__label {
   font: var(--nx-sys-body-copy);
   color: var(--mat-sys-on-surface);
+}
+
+.capabilities[data-reveal='out'] {
+  .capabilities__heading,
+  .capabilities__panel {
+    @include reveal.hidden($distance: 8px);
+  }
 }

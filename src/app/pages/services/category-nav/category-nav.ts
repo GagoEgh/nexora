@@ -4,7 +4,7 @@ import {
   type ServiceCategoryId,
   type ServiceCategorySummary,
   serviceSectionId,
-} from '../service-category';
+} from '../../../shared/services-catalogue/service-category';
 
 @Component({
   selector: 'app-category-nav',

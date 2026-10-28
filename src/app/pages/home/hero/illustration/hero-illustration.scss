@@ -200,29 +200,40 @@
   }
 }
 
+/*
+ * One transition for every part of the diagram that reveals. `item()` writes the whole
+ * `transition`, so declaring it per tier repeated the duration and easing five times over;
+ * only the delay differs, and that is one declaration each.
+ */
 .art__dots,
-.art__path {
-  @include reveal.item(80ms);
+.art__path,
+.art__node,
+.art__pipeline > * {
+  @include reveal.item();
 }
 
+.art__dots,
+.art__path {
+  transition-delay: 80ms;
+}
+
+/* Two nodes a tier, 40ms apart, so a tier reads as a pair rather than a single block. */
 .art__tier:nth-child(1) .art__node {
-  @include reveal.item(140ms);
   @include reveal.stagger(2, 40ms, 140ms);
 }
 
 .art__tier:nth-child(3) .art__node {
-  @include reveal.item(280ms);
+  transition-delay: 280ms;
 }
 
 .art__tier:nth-child(5) .art__node {
-  @include reveal.item(400ms);
   @include reveal.stagger(2, 40ms, 400ms);
 }
 
 /* The diagram is dictionary-driven: `hero.content.ts` could gain a fourth tier, which would
  * sit at :nth-child(7) and otherwise reveal with no delay, ahead of the tier above it. */
 .art__tier:nth-child(n + 7) .art__node {
-  @include reveal.item(520ms);
+  transition-delay: 520ms;
 }
 
 .art__link:nth-child(n + 6) .art__link-line {
@@ -230,23 +241,11 @@
 }
 
 /* The pipeline fills left to right. Chips and arrows alternate as `li` siblings, so one rule
- * over every child staggers them in document order without having to tell them apart. */
+ * over every child staggers them in document order without having to tell them apart. Four
+ * steps today means seven children, counting the arrows; the catch-all keeps any further ones
+ * at the end of the sequence. */
 .art__pipeline > * {
-  transition:
-    opacity motion.duration(base) motion.easing(out),
-    transform motion.duration(base) motion.easing(out);
-
-  /* Four steps today means seven children, counting the arrows between them. A fifth step
-   * would add two more, which the catch-all keeps at the end of the sequence. */
-  @for $i from 1 through 7 {
-    &:nth-child(#{$i}) {
-      transition-delay: 460ms + ($i - 1) * 20ms;
-    }
-  }
-
-  &:nth-child(n + 8) {
-    transition-delay: 580ms;
-  }
+  @include reveal.stagger(4, 40ms, 460ms);
 }
 
 /*

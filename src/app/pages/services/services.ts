@@ -35,10 +35,10 @@ import {
   isServiceCategoryId,
   isServiceFilter,
   serviceSectionId,
-} from './service-category';
+} from '../../shared/services-catalogue/service-category';
 import { CategoryNav } from './category-nav/category-nav';
 import { FilterBar } from './filter-bar/filter-bar';
-import servicesCatalogueContent from './services-catalogue.content';
+import servicesCatalogueContent from '../../shared/services-catalogue/services-catalogue.content';
 import servicesContent from './services.content';
 
 const CATEGORY_PARAM = 'category';

@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { contrastRatio, parseCssColor } from './support/contrast';
 
 /**
  * AI agents page contract. hero.png fixes the opening band at 1440: the shared page intro on
@@ -132,6 +133,45 @@ test.describe('ai agents page at the desktop design width', () => {
       'rgba(0, 0, 0, 0)',
     );
     expect(await style(page, 'app-header .header__link--active', 'color')).toBe('rgb(15, 85, 232)');
+  });
+});
+
+/**
+ * Text contrast on the bands that invert their background.
+ *
+ * The dark workflow step shipped with its label still on `--mat-sys-primary`, which measures
+ * 3.08:1 against the inverted background - the sibling `__detail` rule had been re-coloured
+ * and the label had not. Both lines are normal-weight text under 24px, so AA is 4.5:1.
+ */
+test.describe('ai agents contrast on inverted surfaces', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/services/ai_agent');
+  });
+
+  const ratio = async (page: Page, foreground: string, background: string) =>
+    contrastRatio(
+      parseCssColor(await style(page, foreground, 'color')),
+      parseCssColor(await style(page, background, 'background-color')),
+    );
+
+  for (const tone of ['dark', 'accent'] as const) {
+    test(`the ${tone} workflow step keeps both of its lines readable`, async ({ page }) => {
+      const step = `.workflow__step[data-tone='${tone}']`;
+      for (const part of ['__label', '__detail'] as const) {
+        expect(await ratio(page, `${step} .workflow${part}`, step), `${tone}${part}`) //
+          .toBeGreaterThanOrEqual(4.5);
+      }
+    });
+  }
+
+  test('the business value cards stay readable on the inverse surface', async ({ page }) => {
+    for (const part of ['-title', '-text'] as const) {
+      expect(
+        await ratio(page, `.business-value__card${part}`, '.business-value__card'),
+        part,
+      ).toBeGreaterThanOrEqual(4.5);
+    }
   });
 });
 
@@ -740,6 +780,136 @@ test.describe('ai agents conversation band', () => {
         expect(state.minTouch, `touch target ${route} @${width}`).toBeGreaterThanOrEqual(44);
       }
     }
+  });
+});
+
+/**
+ * The page entrance.
+ *
+ * Everything else in this file runs under the suite-wide `reducedMotion: 'reduce'`
+ * (playwright.config.ts), which is what keeps its pixel assertions stable: under `reduce` no
+ * hidden state applies at all. These specs opt back in.
+ */
+const BANDS = [
+  ['app-overview', '.overview'],
+  ['app-problems', '.problems'],
+  ['app-capabilities', '.capabilities'],
+  ['app-audiences', '.audiences'],
+  ['app-business-value', '.business-value'],
+  ['app-related-services', '.related'],
+] as const;
+
+test.describe('ai agents entrance', () => {
+  test.use({ reducedMotion: 'no-preference', viewport: { width: 1440, height: 900 } });
+
+  test('assembles the example flow on load, drawing each connector into its step', async ({
+    page,
+  }) => {
+    await page.goto('/services/ai_agent');
+    await expect
+      .poll(() => page.locator('.workflow').getAttribute('data-reveal'), { timeout: 5000 })
+      .toBe('in');
+
+    // Each step waits a little longer than the one above it.
+    const delays = await page
+      .locator('.workflow__step')
+      .evaluateAll((els) => els.map((el) => getComputedStyle(el).transitionDelay));
+    expect(delays).toEqual(['0.08s', '0.15s', '0.22s', '0.29s', '0.36s', '0.43s']);
+
+    // And the rule above each step is drawn 40ms ahead of it, so it leads rather than follows.
+    const connectors = await page
+      .locator('.workflow__step')
+      .evaluateAll((els) =>
+        els.slice(1).map((el) => getComputedStyle(el, '::before').transitionDelay),
+      );
+    expect(connectors).toEqual(['0.11s', '0.18s', '0.25s', '0.32s', '0.39s']);
+
+    await page.waitForTimeout(1600);
+    for (const step of await page.locator('.workflow__step').all()) {
+      await expect(step).toHaveCSS('opacity', '1');
+      await expect(step).toHaveCSS('transform', 'none');
+    }
+    const drawn = await page
+      .locator('.workflow__step')
+      .evaluateAll((els) =>
+        els
+          .slice(1)
+          .map((el) => new DOMMatrixReadOnly(getComputedStyle(el, '::before').transform).d),
+      );
+    expect(drawn).toEqual([1, 1, 1, 1, 1]);
+  });
+
+  test('holds every band below the fold until it is reached, then settles it', async ({ page }) => {
+    await page.goto('/services/ai_agent');
+    await expect
+      .poll(() => page.locator('.workflow').getAttribute('data-reveal'), { timeout: 5000 })
+      .toBe('in');
+
+    for (const [, root] of BANDS) {
+      expect(await page.locator(root).getAttribute('data-reveal'), root).toBe('out');
+    }
+
+    for (const [host, root] of BANDS) {
+      await page.locator(host).scrollIntoViewIfNeeded();
+      await expect
+        .poll(() => page.locator(root).getAttribute('data-reveal'), { timeout: 5000 }) //
+        .toBe('in');
+    }
+
+    await page.waitForTimeout(1200);
+    for (const selector of [
+      '.problems__card',
+      '.capabilities__panel',
+      '.business-value__card',
+      '.related__grid > li',
+      '.audiences__row',
+    ]) {
+      const first = page.locator(selector).first();
+      await expect(first, selector).toHaveCSS('opacity', '1');
+      await expect(first, selector).toHaveCSS('transform', 'none');
+    }
+  });
+
+  test('scrolling back up does not replay a band', async ({ page }) => {
+    await page.goto('/services/ai_agent');
+    await page.locator('app-problems').scrollIntoViewIfNeeded();
+    await expect
+      .poll(() => page.locator('.problems').getAttribute('data-reveal'), { timeout: 5000 })
+      .toBe('in');
+
+    await page.locator('app-related-services').scrollIntoViewIfNeeded();
+    await page.locator('app-problems').scrollIntoViewIfNeeded();
+
+    expect(await page.locator('.problems').getAttribute('data-reveal')).toBe('in');
+  });
+});
+
+test.describe('ai agents entrance with reduced motion', () => {
+  test.use({ reducedMotion: 'reduce', viewport: { width: 1440, height: 900 } });
+
+  test('hides nothing, draws the connectors and runs no animation', async ({ page }) => {
+    await page.goto('/services/ai_agent');
+
+    for (const step of await page.locator('.workflow__step').all()) {
+      await expect(step).toHaveCSS('opacity', '1');
+      await expect(step).toHaveCSS('transform', 'none');
+    }
+    const drawn = await page
+      .locator('.workflow__step')
+      .evaluateAll((els) =>
+        els
+          .slice(1)
+          .map((el) => new DOMMatrixReadOnly(getComputedStyle(el, '::before').transform).d),
+      );
+    expect(drawn).toEqual([1, 1, 1, 1, 1]);
+    expect(
+      await page
+        .locator('.workflow__badge')
+        .evaluate((el) => getComputedStyle(el, '::before').animationName),
+    ).toBe('none');
+
+    await page.locator('app-problems').scrollIntoViewIfNeeded();
+    await expect(page.locator('.problems__card').first()).toHaveCSS('opacity', '1');
   });
 });
 

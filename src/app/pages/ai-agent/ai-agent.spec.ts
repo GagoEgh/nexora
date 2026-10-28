@@ -7,9 +7,8 @@ import { provideIntlayer, useLocale } from 'angular-intlayer';
 import { routes } from '../../app.routes';
 import { provideAppIcons } from '../../core/icons/provide-app-icons';
 import { ordinal } from '../../shared/ordinal';
-import servicesCatalogueContent from '../services/services-catalogue.content';
+import servicesCatalogueContent from '../../shared/services-catalogue/services-catalogue.content';
 import { AiAgent } from './ai-agent';
-import relatedServicesContent from './related-services/related-services.content';
 
 const ICON_SVG =
   '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"></svg>';
@@ -356,22 +355,31 @@ describe('AiAgent', () => {
     expect(related?.querySelector('.service-card__title')?.tagName).toBe('H3');
   });
 
-  it('keeps the three cards identical to the services dictionary in every locale', () => {
-    // 08, 06 and 10 are services items 7, 5 and 9 - this page must not drift from that list.
-    const cards = relatedServicesContent.content.items;
+  /**
+   * The band reads the shared catalogue by position, so the copy can no longer drift. What can
+   * drift is the selection: reordering the catalogue would silently point these three cards at
+   * different services, and the numbers - which a reader also sees on the services page - would
+   * follow along. This asserts the rendered cards against the source they are taken from.
+   */
+  it('renders catalogue items 7, 5 and 9, numbered by their catalogue position', async () => {
+    await go('/services/ai_agent');
+
     const source = servicesCatalogueContent.content.items;
+    const picks = [7, 5, 9] as const;
 
-    expect(cards.map((card) => card.number)).toEqual([ordinal(7), ordinal(5), ordinal(9)]);
-
-    for (const [card, index] of [
-      [cards[0], 7],
-      [cards[1], 5],
-      [cards[2], 9],
-    ] as const) {
-      expect(card.title).toEqual(source[index].title);
-      expect(card.summary).toEqual(source[index].summary);
-      expect(card.tags).toEqual(source[index].tags);
+    // In range, so the selection cannot silently fall off the end of the catalogue.
+    for (const index of picks) {
+      expect(index).toBeLessThan(source.length);
     }
+    // The number a reader sees here is the service's position in that catalogue, so these two
+    // must agree with the services page.
+    expect(text('.service-card__number')).toEqual(picks.map((index) => ordinal(index)));
+    expect(text('.service-card__title')).toEqual([
+      'AI Development & Integration',
+      'Backend Development & API Integration',
+      'Claude & AI Workflow Engineering',
+    ]);
+    expect(text('.service-card__tag').slice(0, 3)).toEqual(['RAG', 'Assistants', 'Document AI']);
   });
 
   it('closes the page with the shared conversation band and no step list', async () => {

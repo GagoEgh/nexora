@@ -1,8 +1,8 @@
-<section class="audiences">
-  <div class="audiences__column">
+<div class="audiences" appReveal>
+  <section class="audiences__column" aria-labelledby="audiences-projects-title">
     <div class="audiences__heading">
       <p class="audiences__eyebrow">{{ content().projects.eyebrow }}</p>
-      <h2 class="audiences__title">{{ content().projects.title }}</h2>
+      <h2 class="audiences__title" id="audiences-projects-title">{{ content().projects.title }}</h2>
     </div>
 
     <ol class="audiences__list">
@@ -14,12 +14,12 @@
         </li>
       }
     </ol>
-  </div>
+  </section>
 
-  <div class="audiences__column">
+  <section class="audiences__column" aria-labelledby="audiences-fit-title">
     <div class="audiences__heading">
       <p class="audiences__eyebrow">{{ content().fit.eyebrow }}</p>
-      <h2 class="audiences__title">{{ content().fit.title }}</h2>
+      <h2 class="audiences__title" id="audiences-fit-title">{{ content().fit.title }}</h2>
     </div>
 
     <ul class="audiences__chips">
@@ -36,5 +36,5 @@
     </ul>
 
     <p class="audiences__note">{{ content().fit.note }}</p>
-  </div>
-</section>
+  </section>
+</div>

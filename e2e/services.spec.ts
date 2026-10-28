@@ -187,11 +187,15 @@ test.describe('services page at the desktop design width', () => {
     expect([cards[2].x, cards[2].w]).toEqual([930, 430]);
     expect(cards[2].x - (cards[1].x + cards[1].w)).toBe(16);
     expect(cards[3].y - (cards[1].y + cards[1].h)).toBe(16);
-    // A card alone on its row keeps the reference width rather than stretching.
-    for (const i of [0, 9, 12]) {
-      expect(cards[i].w).toBe(455);
-    }
+    // Every card is one column wide, including the ones alone on their row. They used to be
+    // pinned to a 455px reference width, which made them 25px wider than their siblings here
+    // and 9px *narrower* at 1024 - a fixed pixel cap cannot track a fluid column.
+    expect(cards.every((card) => card.w === cards[1].w)).toBe(true);
     expect(cards.every((card) => card.h === cards[1].h)).toBe(true);
+    // A lone card stays in the first column rather than spanning the row.
+    for (const i of [0, 9, 12]) {
+      expect(cards[i].x).toBe(484);
+    }
 
     expect(await style(page, '.services__group', 'padding-top')).toBe('64px');
     expect(await style(page, '.services__group + .services__group', 'border-top-width')).toBe(

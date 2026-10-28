@@ -6,9 +6,13 @@ import { RouterTestingHarness } from '@angular/router/testing';
 import { provideIntlayer, useLocale } from 'angular-intlayer';
 import { routes } from '../../app.routes';
 import { provideAppIcons } from '../../core/icons/provide-app-icons';
-import { SERVICE_CATEGORY_IDS, isServiceCategoryId, serviceSectionId } from './service-category';
+import {
+  SERVICE_CATEGORY_IDS,
+  isServiceCategoryId,
+  serviceSectionId,
+} from '../../shared/services-catalogue/service-category';
 import { Services } from './services';
-import servicesCatalogueContent from './services-catalogue.content';
+import servicesCatalogueContent from '../../shared/services-catalogue/services-catalogue.content';
 
 const ICON_SVG =
   '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"></svg>';
@@ -155,7 +159,7 @@ describe('Services', () => {
     const current = Array.from(root.querySelectorAll('.category-nav__item')).map((el) =>
       el.getAttribute('aria-current'),
     );
-    expect(current).toEqual([null, null, 'true', null, null]);
+    expect(current).toEqual([null, null, 'location', null, null]);
     expect(root.querySelectorAll('.category-nav__item--active')).toHaveLength(1);
   });
 

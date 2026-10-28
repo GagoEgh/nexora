@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { useDictionary } from 'angular-intlayer';
+import { Reveal } from '../../../shared/motion/reveal';
 import { IconTile, type IconTileTone } from '../../../shared/ui/icon-tile/icon-tile';
 import workflowContent, { type WorkflowTone } from './workflow.content';
 
@@ -11,7 +12,7 @@ const TILE_TONES: Readonly<Record<WorkflowTone, IconTileTone>> = {
 
 @Component({
   selector: 'app-workflow',
-  imports: [IconTile],
+  imports: [IconTile, Reveal],
   templateUrl: './workflow.html',
   styleUrl: './workflow.scss',
 })

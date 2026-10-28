@@ -7,26 +7,30 @@ const workflowContent = {
   key: 'ai-agent-workflow',
   content: {
     caption: 'workflow / inbound-request',
-    badge: t({ en: 'example flow', hy: 'օրինակային հոսք', ru: 'пример потока' }),
+    badge: t({
+      en: 'example flow',
+      hy: 'աշխատանքի օրինակելի հոսք',
+      ru: 'пример рабочего процесса',
+    }),
     steps: [
       {
         icon: 'mail' satisfies AppIconName,
         tone: 'plain' satisfies WorkflowTone,
-        label: t({ en: 'Trigger', hy: 'Գործարկիչ', ru: 'Триггер' }),
+        label: t({ en: 'Trigger', hy: 'Գործարկման իրադարձություն', ru: 'Триггер' }),
         text: t({
           en: 'New request arrives by email or form',
-          hy: 'Նոր հարցումը ստացվում է էլ. փոստով կամ ձևով',
-          ru: 'Новый запрос приходит по почте или через форму',
+          hy: 'Նոր հարցում է ստացվում էլեկտրոնային փոստով կամ ձևաթղթի միջոցով',
+          ru: 'Поступает новый запрос по электронной почте или через форму',
         }),
       },
       {
         icon: 'sparkle' satisfies AppIconName,
         tone: 'dark' satisfies WorkflowTone,
-        label: t({ en: 'Agent', hy: 'Գործակալ', ru: 'Агент' }),
+        label: t({ en: 'Agent', hy: 'AI գործակալ', ru: 'AI-агент' }),
         text: t({
           en: 'Classify intent and extract key details',
-          hy: 'Դասակարգում է մտադրությունը և առանձնացնում հիմնական մանրամասները',
-          ru: 'Классифицирует намерение и извлекает ключевые детали',
+          hy: 'Որոշում է հարցման նպատակը և առանձնացնում կարևոր մանրամասները',
+          ru: 'Определяет цель запроса и извлекает ключевые данные',
         }),
       },
       {
@@ -35,28 +39,28 @@ const workflowContent = {
         label: t({ en: 'Tool', hy: 'Գործիք', ru: 'Инструмент' }),
         text: t({
           en: 'Look up the account in the CRM',
-          hy: 'Գտնում է հաշիվը CRM-ում',
-          ru: 'Находит аккаунт в CRM',
+          hy: 'CRM համակարգում գտնում է հաճախորդի հաշիվը',
+          ru: 'Находит учётную запись клиента в CRM',
         }),
       },
       {
         icon: 'git-branch' satisfies AppIconName,
         tone: 'plain' satisfies WorkflowTone,
-        label: t({ en: 'Decision', hy: 'Որոշում', ru: 'Решение' }),
+        label: t({ en: 'Decision', hy: 'Որոշման կայացում', ru: 'Принятие решения' }),
         text: t({
           en: 'Route by type, region and priority',
-          hy: 'Ուղղորդում ըստ տեսակի, տարածաշրջանի և առաջնահերթության',
-          ru: 'Маршрутизирует по типу, региону и приоритету',
+          hy: 'Ուղղորդում է հարցումը՝ ըստ տեսակի, տարածաշրջանի և առաջնահերթության',
+          ru: 'Направляет запрос с учётом типа, региона и приоритета',
         }),
       },
       {
         icon: 'users' satisfies AppIconName,
         tone: 'accent' satisfies WorkflowTone,
-        label: t({ en: 'Human review', hy: 'Մարդկային ստուգում', ru: 'Проверка человеком' }),
+        label: t({ en: 'Human review', hy: 'Մարդու կողմից ստուգում', ru: 'Проверка человеком' }),
         text: t({
           en: 'Approve the drafted reply when needed',
-          hy: 'Հաստատում է պատրաստված պատասխանը, երբ անհրաժեշտ է',
-          ru: 'Утверждает подготовленный ответ, когда это нужно',
+          hy: 'Անհրաժեշտության դեպքում հաստատում է նախապատրաստված պատասխանը',
+          ru: 'При необходимости сотрудник утверждает подготовленный ответ',
         }),
       },
       {
@@ -65,8 +69,8 @@ const workflowContent = {
         label: t({ en: 'Action', hy: 'Գործողություն', ru: 'Действие' }),
         text: t({
           en: 'Assign owner and notify the team',
-          hy: 'Նշանակում է պատասխանատու և տեղեկացնում թիմին',
-          ru: 'Назначает ответственного и уведомляет команду',
+          hy: 'Նշանակում է պատասխանատու աշխատակցին և տեղեկացնում թիմին',
+          ru: 'Назначает ответственного сотрудника и уведомляет команду',
         }),
       },
     ],

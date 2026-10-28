@@ -5,7 +5,10 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideAppIcons } from '../../../core/icons/provide-app-icons';
 import { Reveal } from '../../../shared/motion/reveal';
-import type { ServiceCategorySummary, ServiceFilter } from '../service-category';
+import type {
+  ServiceCategorySummary,
+  ServiceFilter,
+} from '../../../shared/services-catalogue/service-category';
 import { FilterBar } from './filter-bar';
 
 const CHEVRON_SVG =

@@ -48,13 +48,24 @@
   }
 }
 
+/*
+ * One transition for everything that reveals in this band. `item()` writes the whole
+ * `transition`, so calling it per element repeated the duration and easing each time; only the
+ * delay ever differs. Declaring it on its own rule also keeps the plain declarations in
+ * `.ai__card` from being split into a second rule, which is what Sass does when declarations
+ * follow a nested one.
+ */
+.ai__copy,
+.ai__card,
+.ai__footer {
+  @include reveal.item($hover: true);
+}
+
 .ai__copy {
   @include text.contained();
   display: grid;
   gap: spacing.space(24);
   justify-items: start;
-
-  @include reveal.item(0ms);
 }
 
 .ai__eyebrow {
@@ -110,8 +121,7 @@
     flex-shrink: 0;
   }
 
-  @include reveal.item(120ms, $hover: true);
-  @include reveal.stagger(6, 60ms, 120ms);
+  @include reveal.stagger(3, 80ms, 120ms, $hover: true);
 
   /* The project had no hover state anywhere on the home page; this adds one,
    * paired with :focus-visible so keyboard users get the same affordance. */
@@ -151,7 +161,7 @@
     grid-column: 1 / -1;
   }
 
-  @include reveal.item(240ms);
+  transition-delay: 240ms;
 }
 
 .ai__pipeline {

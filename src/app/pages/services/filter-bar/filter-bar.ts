@@ -8,7 +8,7 @@ import {
   type ServiceCategorySummary,
   type ServiceFilter,
   isServiceFilter,
-} from '../service-category';
+} from '../../../shared/services-catalogue/service-category';
 
 @Component({
   selector: 'app-filter-bar',

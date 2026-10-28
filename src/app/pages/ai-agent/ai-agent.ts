@@ -3,7 +3,7 @@ import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { useDictionary } from 'angular-intlayer';
-import { CONTACT_PATH, SERVICES_PATH } from '../../core/routing/paths';
+import { CONTACT_PATH, SERVICES_PATH, SOLUTIONS_PATH } from '../../core/routing/paths';
 import { LocalizedPathPipe } from '../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../core/icons/icons';
 import { PageIntro, type PageIntroCrumb } from '../../shared/ui/page-intro/page-intro';
@@ -44,6 +44,8 @@ import { Workflow } from './workflow/workflow';
 export class AiAgent {
   protected readonly content = useDictionary(aiAgentContent);
   protected readonly arrowIcon = appIcon('arrow-right');
+  protected readonly contactPath = CONTACT_PATH;
+  protected readonly solutionsPath = SOLUTIONS_PATH;
 
   protected readonly conversationCopy = computed<ConversationCopy>(() => {
     const copy = this.content().conversation;

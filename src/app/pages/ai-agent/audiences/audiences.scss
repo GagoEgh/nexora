@@ -1,5 +1,6 @@
 @use 'mixins/container';
 @use 'mixins/eyebrow';
+@use 'mixins/reveal';
 @use 'tokens/layout';
 @use 'tokens/spacing';
 @use 'tokens/typography';
@@ -28,6 +29,9 @@
 }
 
 .audiences__heading {
+  @include reveal.item();
+  @include reveal.stagger(2, 120ms);
+
   @include container.heading(20);
 }
 
@@ -49,6 +53,9 @@
 }
 
 .audiences__row {
+  @include reveal.item(140ms);
+  @include reveal.stagger(6, 50ms, 140ms);
+
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   gap: spacing.space(16);
@@ -79,6 +86,8 @@
 }
 
 .audiences__chips {
+  @include reveal.item(200ms);
+
   display: flex;
   flex-wrap: wrap;
   gap: spacing.space(12);
@@ -106,7 +115,22 @@
 }
 
 .audiences__note {
+  @include reveal.item(260ms);
+
   margin: 0;
   font: var(--mat-sys-body-small);
   color: var(--mat-sys-on-surface-variant);
+}
+
+/*
+ * The columns are not animated - their contents are. Moving a column and the rows inside it
+ * would compound two transforms on the same pixels and read as a slide within a slide.
+ */
+.audiences[data-reveal='out'] {
+  .audiences__heading,
+  .audiences__row,
+  .audiences__chips,
+  .audiences__note {
+    @include reveal.hidden($distance: 8px);
+  }
 }

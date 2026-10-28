@@ -29,13 +29,22 @@
   }
 }
 
+/*
+ * One transition for everything that reveals in this band: `item()` writes the whole
+ * `transition`, so calling it per element repeated the duration and easing each time. Only the
+ * delay ever differs.
+ */
+.how-we-work__heading,
+.how-we-work__intro,
+.how-we-work__step {
+  @include reveal.item();
+}
+
 .how-we-work__heading {
   @include text.contained();
   display: grid;
   gap: spacing.space(24);
   justify-items: start;
-
-  @include reveal.item(0ms);
 }
 
 .how-we-work__eyebrow {
@@ -56,7 +65,7 @@
   font: var(--nx-sys-body-copy);
   color: var(--mat-sys-on-surface-variant);
 
-  @include reveal.item(60ms);
+  transition-delay: 60ms;
 }
 
 .how-we-work__steps {
@@ -80,8 +89,7 @@
   display: grid;
   align-content: start;
 
-  @include reveal.item(120ms);
-  @include reveal.stagger(6, 60ms, 120ms);
+  @include reveal.stagger(3, 80ms, 120ms);
 }
 
 .how-we-work__track {

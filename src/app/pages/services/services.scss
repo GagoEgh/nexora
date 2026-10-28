@@ -92,13 +92,6 @@
   }
 }
 
-.services__list > li:last-child:nth-child(odd) {
-  @include layout.up(medium) {
-    grid-column: 1 / -1;
-    max-width: 455px;
-  }
-}
-
 .services__cta {
   padding-block: spacing.space(32) 0;
   padding-inline: var(--nx-layout-margin);

@@ -5,7 +5,7 @@ import { provideRouter } from '@angular/router';
 import { provideIntlayer, useLocale } from 'angular-intlayer';
 import { routes } from '../../../app.routes';
 import { provideAppIcons } from '../../../core/icons/provide-app-icons';
-import { isServiceCategoryId } from '../../services/service-category';
+import { isServiceCategoryId } from '../../../shared/services-catalogue/service-category';
 import { Expertise } from './expertise';
 
 const ICON_SVG =

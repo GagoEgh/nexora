@@ -3,7 +3,10 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { Component, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideAppIcons } from '../../../core/icons/provide-app-icons';
-import type { ServiceCategoryId, ServiceCategorySummary } from '../service-category';
+import type {
+  ServiceCategoryId,
+  ServiceCategorySummary,
+} from '../../../shared/services-catalogue/service-category';
 import { CategoryNav } from './category-nav';
 
 const ICON_SVG =

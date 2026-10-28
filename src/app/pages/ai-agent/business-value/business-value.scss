@@ -1,5 +1,6 @@
 @use 'mixins/container';
 @use 'mixins/eyebrow';
+@use 'mixins/reveal';
 @use 'tokens/layout';
 @use 'tokens/spacing';
 
@@ -14,6 +15,8 @@
 }
 
 .business-value__heading {
+  @include reveal.item();
+
   @include container.heading(20);
   margin-block-end: spacing.space(40);
 }
@@ -48,6 +51,9 @@
 }
 
 .business-value__card {
+  @include reveal.item(100ms);
+  @include reveal.stagger(4, 60ms, 100ms);
+
   display: grid;
   align-content: start;
   justify-items: start;
@@ -75,7 +81,17 @@
 }
 
 .business-value__note {
+  @include reveal.item(360ms);
+
   margin: spacing.space(48) 0 0;
   font: var(--mat-sys-body-small);
   color: var(--nx-sys-inverse-on-surface-variant);
+}
+
+.business-value[data-reveal='out'] {
+  .business-value__heading,
+  .business-value__card,
+  .business-value__note {
+    @include reveal.hidden($distance: 8px);
+  }
 }

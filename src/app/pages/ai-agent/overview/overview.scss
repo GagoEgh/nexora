@@ -1,5 +1,6 @@
 @use 'mixins/container';
 @use 'mixins/eyebrow';
+@use 'mixins/reveal';
 @use 'tokens/layout';
 @use 'tokens/spacing';
 
@@ -21,6 +22,8 @@
 }
 
 .overview__heading {
+  @include reveal.item();
+
   @include container.heading(20);
 }
 
@@ -36,6 +39,8 @@
 }
 
 .overview__copy {
+  @include reveal.item(80ms);
+
   display: grid;
   gap: spacing.space(20);
 }
@@ -50,4 +55,11 @@
   margin: 0;
   font: var(--nx-sys-body-lead);
   color: var(--mat-sys-on-surface-variant);
+}
+
+.overview[data-reveal='out'] {
+  .overview__heading,
+  .overview__copy {
+    @include reveal.hidden($distance: 8px);
+  }
 }

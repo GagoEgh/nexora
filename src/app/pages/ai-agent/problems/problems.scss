@@ -1,8 +1,8 @@
 @use 'mixins/container';
 @use 'mixins/eyebrow';
+@use 'mixins/reveal';
 @use 'tokens/layout';
 @use 'tokens/spacing';
-@use 'tokens/typography';
 
 :host {
   @include container.section();
@@ -13,6 +13,8 @@
 }
 
 .problems__header {
+  @include reveal.item();
+
   display: grid;
   gap: spacing.space(24);
   margin-block-end: spacing.space(64);
@@ -62,6 +64,9 @@
 }
 
 .problems__card {
+  @include reveal.item(100ms);
+  @include reveal.stagger(4, 60ms, 100ms);
+
   display: grid;
   align-content: start;
   justify-items: start;
@@ -74,9 +79,7 @@
 
 .problems__card-title {
   margin: spacing.space(8) 0 0;
-  font-size: 0.75rem;
-  line-height: 1.25rem;
-  font-weight: typography.$weight-semibold;
+  font: var(--nx-sys-title-step);
   letter-spacing: var(--nx-sys-display-tracking);
   color: var(--mat-sys-on-surface);
 }
@@ -85,4 +88,11 @@
   margin: 0;
   font: var(--mat-sys-body-small);
   color: var(--mat-sys-on-surface-variant);
+}
+
+.problems[data-reveal='out'] {
+  .problems__header,
+  .problems__card {
+    @include reveal.hidden($distance: 8px);
+  }
 }

@@ -54,6 +54,10 @@ class ScrollHost {}
 })
 class LoadHost {}
 
+/** Two animation frames: what the directive waits for before flipping the attribute. */
+const frames = () =>
+  new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
 describe('Reveal', () => {
   let original: typeof IntersectionObserver | undefined;
 
@@ -94,6 +98,11 @@ describe('Reveal', () => {
 
     FakeIntersectionObserver.instances[0].enter();
 
+    // The reveal is deferred by two frames so the browser paints the hidden state first;
+    // flipping the attribute in the same frame would skip the transition entirely.
+    expect(section(fixture).getAttribute('data-reveal')).toBe('out');
+    await frames();
+
     expect(section(fixture).getAttribute('data-reveal')).toBe('in');
   });
 
@@ -130,7 +139,7 @@ describe('Reveal', () => {
     expect(FakeIntersectionObserver.instances).toHaveLength(0);
     expect(section(fixture).getAttribute('data-reveal')).toBe('out');
 
-    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    await frames();
 
     expect(section(fixture).getAttribute('data-reveal')).toBe('in');
   });

@@ -6,11 +6,11 @@
   [lead]="content().lead.value"
 >
   <div class="ai-agent__actions" intro-actions>
-    <a matButton="filled" [routerLink]="'/contact' | localizedPath">
+    <a matButton="filled" [routerLink]="contactPath | localizedPath">
       {{ content().primaryCta }}
       <mat-icon iconPositionEnd [svgIcon]="arrowIcon" />
     </a>
-    <a matButton [routerLink]="'/solutions' | localizedPath">
+    <a matButton [routerLink]="solutionsPath | localizedPath">
       {{ content().secondaryCta }}
     </a>
   </div>

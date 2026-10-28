@@ -1,5 +1,6 @@
 @use 'mixins/container';
 @use 'mixins/eyebrow';
+@use 'mixins/reveal';
 @use 'tokens/layout';
 @use 'tokens/spacing';
 
@@ -14,6 +15,8 @@
 }
 
 .related__heading {
+  @include reveal.item();
+
   display: grid;
   gap: spacing.space(20);
   margin-block-end: spacing.space(48);
@@ -43,5 +46,22 @@
 
   @include layout.up(large) {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.related__grid > li {
+  @include reveal.item(100ms);
+  @include reveal.stagger(3, 70ms, 100ms);
+}
+
+app-engagement-panel {
+  @include reveal.item(320ms);
+}
+
+.related[data-reveal='out'] {
+  .related__heading,
+  .related__grid > li,
+  app-engagement-panel {
+    @include reveal.hidden($distance: 8px);
   }
 }
