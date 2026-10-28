@@ -8,7 +8,9 @@
   aria-labelledby="contact-form-title"
 >
   <div class="form__head">
-    <h2 class="form__title" id="contact-form-title">{{ content().title }}</h2>
+    <h2 #heading class="form__title" id="contact-form-title" tabindex="-1">
+      {{ content().title }}
+    </h2>
     <p class="form__note">{{ content().requiredNote }}</p>
   </div>
 
@@ -17,8 +19,10 @@
       labelId="contact-interest-label"
       (activate)="interestChips.focus()"
       [invalid]="form.interest().touched() && form.interest().invalid()"
-      >{{ content().interestLabel }}</app-field-label
     >
+      {{ content().interestLabel }}
+      <span class="form__required" aria-hidden="true">{{ content().requiredMark }}</span>
+    </app-field-label>
     <app-chip-select
       #interestChips
       id="contact-interest"
@@ -159,7 +163,9 @@
         } @else {
           <mat-hint>{{ content().descriptionHint }}</mat-hint>
         }
-        <mat-hint align="end">{{ descriptionLength() }} / {{ descriptionMax }}</mat-hint>
+        <mat-hint align="end" class="form__counter" [attr.data-count]="descriptionCount()">
+          {{ descriptionLength() }} / {{ descriptionMax }}
+        </mat-hint>
       </mat-form-field>
     </div>
 
@@ -217,6 +223,7 @@
       [field]="form.method"
       [options]="methodOptions()"
     />
+    <p class="form__hint">{{ content().optionalHint }}</p>
   </div>
 
   <hr class="form__divider" />

@@ -496,3 +496,115 @@ test.describe('contact interaction feedback with reduced motion', () => {
     expect(await style(page, '.channels__icon', 'translate')).toBe('none');
   });
 });
+
+/** Field, control and submit-outcome states added with the form design pass. */
+test.describe('contact form states', () => {
+  test.use({ reducedMotion: 'no-preference', viewport: { width: 1440, height: 1500 } });
+
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/contact');
+    await page.locator('app-contact-form form.form').waitFor();
+  });
+
+  const outlineColour = (page: Page) =>
+    page
+      .locator('#contact-name')
+      .evaluate(
+        (el) =>
+          getComputedStyle(
+            (el as HTMLElement).closest('mat-form-field')!.querySelector('.mat-mdc-notch-piece')!,
+          ).borderTopColor,
+      );
+
+  test('an input outline answers the pointer', async ({ page }) => {
+    const resting = await outlineColour(page);
+    await page.locator('#contact-name').hover();
+    // Previously the hover colour was the resting colour, so seven controls had no affordance.
+    await expect.poll(() => outlineColour(page), { timeout: 2000 }).not.toBe(resting);
+  });
+
+  test('the select panel is rounded like every other surface', async ({ page }) => {
+    await page.locator('#contact-service').click();
+    const panel = page.locator('.mat-mdc-select-panel');
+    await expect(panel).toBeVisible();
+    // Material's own value is `0 0 4px 4px`, which belongs to no step on the project's scale.
+    expect(await panel.evaluate((el) => getComputedStyle(el).borderRadius)).toBe('12px');
+  });
+
+  test('every required field is marked, and only those', async ({ page }) => {
+    // Six validators are `required`: interest, name, email, company, service, description.
+    await expect(page.locator('.form__required')).toHaveCount(6);
+    const marked = await page
+      .locator('app-field-label:has(.form__required) label')
+      .allTextContents();
+    expect(marked.map((t) => t.replace(/\s+/g, ' ').trim())).toEqual([
+      'I’m interested in *',
+      'Full name *',
+      'Work email *',
+      'Company name *',
+      'Service of interest *',
+      'Project description *',
+    ]);
+    // The interest group reports requiredness to assistive tech as well as showing it.
+    await expect(page.locator('mat-chip-listbox').first()).toHaveAttribute('aria-required', 'true');
+  });
+
+  test('the optional contact-method group says so', async ({ page }) => {
+    await expect(page.locator('.form__hint')).toHaveText('Optional');
+  });
+
+  test('the counter warns before the cap and again at it', async ({ page }) => {
+    const counter = page.locator('.form__counter');
+    await expect(counter).toHaveAttribute('data-count', 'ok');
+
+    await page.locator('#contact-description').fill('y'.repeat(1800));
+    await expect(counter).toHaveAttribute('data-count', 'near');
+
+    await page.locator('#contact-description').fill('y'.repeat(2000));
+    await expect(counter).toHaveAttribute('data-count', 'full');
+    // The validator projects `maxlength`, so input stops rather than becoming invalid.
+    expect(await page.locator('#contact-description').inputValue()).toHaveLength(2000);
+  });
+
+  test('a successful send returns focus and clears itself', async ({ page }) => {
+    await page.route('**/api/contact', (route) =>
+      route.fulfill({
+        status: 201,
+        contentType: 'application/json',
+        body: JSON.stringify({ success: true }),
+      }),
+    );
+
+    await fillValidForm(page);
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await page.locator('button[type="submit"]').click();
+
+    // Focus lands on the heading rather than being dropped on <body>.
+    await expect
+      .poll(() => page.evaluate(() => document.activeElement?.id ?? ''), { timeout: 4000 })
+      .toBe('contact-form-title');
+    await expect(page.locator('#contact-name')).toHaveValue('');
+    // The success message has done its job, so it leaves on its own.
+    await expect(page.locator('.mat-mdc-snack-bar-container')).toHaveCount(0, { timeout: 9000 });
+  });
+
+  test('a failed send keeps the visitor, their input and the message', async ({ page }) => {
+    await page.route('**/api/contact', (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ success: false }),
+      }),
+    );
+
+    await fillValidForm(page);
+    await page.locator('button[type="submit"]').click();
+    await expect(page.locator('.mat-mdc-snack-bar-container')).toBeVisible();
+
+    // Nothing is reset and focus is not moved: there is something here to act on.
+    await expect(page.locator('#contact-name')).toHaveValue('Ada Lovelace');
+    await expect(page.locator('#contact-form-title')).not.toBeFocused();
+    await page.waitForTimeout(7000);
+    await expect(page.locator('.mat-mdc-snack-bar-container')).toBeVisible();
+  });
+});

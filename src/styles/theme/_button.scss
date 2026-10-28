@@ -1,4 +1,5 @@
 @use '@angular/material' as mat;
+@use '../tokens/motion';
 
 $_disabled-container: color-mix(in srgb, var(--mat-sys-on-surface) 8%, transparent);
 $_disabled-label: var(--nx-sys-on-surface-muted);
@@ -55,6 +56,10 @@ $_pressed-opacity: calc(var(--mat-sys-pressed-state-layer-opacity) * 100%);
 
     .mat-mdc-unelevated-button {
       --mat-focus-indicator-border-color: var(--mat-sys-on-surface);
+    }
+
+    .mat-mdc-button-base .mat-mdc-button-persistent-ripple::before {
+      transition: opacity motion.duration(fast) motion.easing(out);
     }
   }
 }

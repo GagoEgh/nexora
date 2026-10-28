@@ -9,7 +9,7 @@
       container-vertical-padding: 14px,
       outlined-container-shape: var(--mat-sys-corner-medium),
       outlined-outline-color: var(--mat-sys-outline),
-      outlined-hover-outline-color: var(--mat-sys-outline),
+      outlined-hover-outline-color: var(--mat-sys-on-surface-variant),
       outlined-error-hover-outline-color: var(--mat-sys-error),
       outlined-input-text-placeholder-color: var(--nx-sys-on-surface-muted),
       outlined-disabled-outline-color: var(--nx-sys-disabled-outline),
@@ -21,6 +21,10 @@
   @at-root {
     .mat-mdc-form-field-hint {
       color: var(--mat-sys-on-surface-variant);
+    }
+
+    .mat-mdc-select-panel.mdc-menu-surface {
+      border-radius: var(--mat-sys-corner-medium);
     }
 
     .mat-mdc-form-field .mat-mdc-notch-piece {

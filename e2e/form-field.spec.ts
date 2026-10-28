@@ -27,7 +27,7 @@ test.describe('text field theme', () => {
     }); // #CBD5E1
   });
 
-  test('focus and error borders: 2px primary / 2px error; hover does not change the border', async ({
+  test('focus, error and hover borders: 2px primary / 2px error / on-surface-variant hover', async ({
     page,
     request,
   }) => {
@@ -40,8 +40,11 @@ test.describe('text field theme', () => {
     await untouched(page, '--mat-form-field-outlined-focus-outline-width'); // 2px
     await untouched(page, '--mat-form-field-outlined-error-outline-color'); // error
     await untouched(page, '--mat-form-field-outlined-error-focus-outline-color'); // error
+    // Hover darkens the outline to on-surface-variant. This replaces an earlier decision that
+    // left hover identical to the resting outline, which gave seven controls no pointer
+    // affordance at all; the transition that carries it is in theme/_form-field.scss.
     expect(await resolveColorToken(page, '--mat-form-field-outlined-hover-outline-color')).toEqual(
-      await resolveColorToken(page, '--mat-sys-outline'),
+      await resolveColorToken(page, '--mat-sys-on-surface-variant'),
     );
     expect(
       await resolveColorToken(page, '--mat-form-field-outlined-error-hover-outline-color'),

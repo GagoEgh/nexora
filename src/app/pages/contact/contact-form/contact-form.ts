@@ -46,7 +46,10 @@ import {
   type ContactSubmitStatus,
 } from './contact-submitter';
 
+const SENT_DURATION_MS = 6000;
+
 export const DESCRIPTION_MAX = 2000;
+const DESCRIPTION_WARN_AT = Math.floor(DESCRIPTION_MAX * 0.9);
 export const NAME_MAX = 120;
 export const COMPANY_MAX = 160;
 
@@ -105,6 +108,7 @@ export class ContactForm {
   protected readonly descriptionMax = DESCRIPTION_MAX;
 
   private readonly card = viewChild.required<ElementRef<HTMLElement>>('card');
+  private readonly heading = viewChild.required<ElementRef<HTMLElement>>('heading');
 
   private readonly model = signal<ContactInquiry>({ ...DEFAULTS });
 
@@ -130,6 +134,14 @@ export class ContactForm {
 
   protected readonly descriptionLength = computed(() => this.form.description().value().length);
 
+  protected readonly descriptionCount = computed<'ok' | 'near' | 'full'>(() => {
+    const length = this.descriptionLength();
+    if (length >= DESCRIPTION_MAX) {
+      return 'full';
+    }
+    return length >= DESCRIPTION_WARN_AT ? 'near' : 'ok';
+  });
+
   protected readonly interestOptions = computed<readonly ChipOption[]>(() =>
     this.content().interestOptions.map((option) => ({
       value: option.value.value,
@@ -153,6 +165,7 @@ export class ContactForm {
           const { status } = await this.submitter.submit(this.model());
           if (status === 'sent') {
             this.form().reset({ ...DEFAULTS });
+            this.heading().nativeElement.focus();
           }
           this.notify(status);
         } catch (error) {
@@ -187,6 +200,10 @@ export class ContactForm {
       failed: { message: copy.failedMessage.value, icon: 'x', tone: 'error' } as const,
     }[status];
 
-    this.snackBar.openFromComponent(SnackBar, { ...SNACK_BAR_CONFIG, data: tone });
+    this.snackBar.openFromComponent(SnackBar, {
+      ...SNACK_BAR_CONFIG,
+      ...(status === 'sent' ? { duration: SENT_DURATION_MS } : {}),
+      data: tone,
+    });
   }
 }

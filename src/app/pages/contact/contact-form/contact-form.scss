@@ -120,6 +120,24 @@ mat-error {
   min-width: 0;
 }
 
+.form__counter {
+  transition: color motion.duration(fast) motion.easing(out);
+
+  &[data-count='near'] {
+    color: var(--mat-sys-on-surface);
+  }
+
+  &[data-count='full'] {
+    color: var(--mat-sys-error);
+  }
+}
+
+.form__hint {
+  margin: spacing.space(8) 0 0;
+  font: var(--mat-sys-body-small);
+  color: var(--mat-sys-on-surface-variant);
+}
+
 .form__required {
   margin-inline-start: spacing.space(4);
   font-weight: typography.$weight-regular;
@@ -163,5 +181,16 @@ mat-error {
 
   button[type='submit'] {
     min-width: 220px;
+  }
+}
+
+.form__actions button[type='submit'] mat-icon {
+  transition: translate motion.duration(fast) motion.easing(out);
+}
+
+.form__actions button[type='submit']:not(:disabled):hover mat-icon,
+.form__actions button[type='submit']:not(:disabled):focus-visible mat-icon {
+  @media (prefers-reduced-motion: no-preference) {
+    translate: spacing.space(4) 0;
   }
 }
