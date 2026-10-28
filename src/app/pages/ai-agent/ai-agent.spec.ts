@@ -431,17 +431,21 @@ describe('AiAgent', () => {
   it('renders every string and both links under a locale prefix', async () => {
     await go('/ru/services/ai_agent');
 
-    expect(root.querySelector('h1')?.textContent?.trim()).toBe('AI-агенты и автоматизация бизнеса');
+    expect(root.querySelector('h1')?.textContent?.trim()).toBe(
+      'AI-агенты и автоматизация бизнес-процессов',
+    );
     expect(root.querySelector('.page-intro__eyebrow')?.textContent?.trim()).toBe(
       'Искусственный интеллект · Услуга 09',
     );
     expect(text('.workflow__label')[0]).toBe('Триггер');
-    expect(text('.capabilities__panel-title')).toEqual(['Возможности', 'Результаты']);
+    expect(text('.capabilities__panel-title')).toEqual(['Возможности', 'Что вы получаете']);
     expect(text('.audiences__eyebrow')).toEqual(['Типичные проекты', 'Для кого это']);
     expect(root.querySelector('.business-value__title')?.textContent?.trim()).toBe(
-      'Что меняется, когда рутина выполняется сама.',
+      'Что меняется, когда рутинные задачи выполняются автоматически.',
     );
-    expect(root.querySelector('.related__eyebrow')?.textContent?.trim()).toBe('Смежные услуги');
+    expect(root.querySelector('.related__eyebrow')?.textContent?.trim()).toBe(
+      'Сопутствующие услуги',
+    );
     expect(text('.service-card__title')[1]).toBe('Backend-разработка и интеграция API');
     expect(root.querySelector('.start-conversation__eyebrow')?.textContent?.trim()).toBe(
       'Обсудим эту услугу',
@@ -452,10 +456,10 @@ describe('AiAgent', () => {
       ),
     ).toEqual(['/ru/contact', '/ru/services']);
     expect(root.querySelector('.problems__card-title')?.textContent?.trim()).toBe(
-      'Данные копируются вручную',
+      'Ручной перенос данных',
     );
     expect(root.querySelector('.overview__title')?.textContent?.trim()).toBe(
-      'Автоматизация, которая понимает контекст, а не только правила.',
+      'Автоматизация, которая понимает не только правила, но и контекст.',
     );
     expect(
       Array.from(root.querySelectorAll<HTMLAnchorElement>('.ai-agent__actions a')).map((a) =>
@@ -465,17 +469,22 @@ describe('AiAgent', () => {
 
     await go('/hy/services/ai_agent');
     expect(root.querySelector('h1')?.textContent?.trim()).toBe(
-      'AI գործակալներ և բիզնես ավտոմատացում',
+      'AI գործակալներ և բիզնես գործընթացների ավտոմատացում',
     );
-    expect(text('.workflow__label')[1]).toBe('Գործակալ');
-    expect(root.querySelector('.overview__eyebrow')?.textContent?.trim()).toBe('Ակնարկ');
+    expect(text('.workflow__label')[1]).toBe('AI գործակալ');
+    expect(root.querySelector('.overview__eyebrow')?.textContent?.trim()).toBe(
+      'Ընդհանուր նկարագիր',
+    );
     expect(root.querySelector('.problems__card-title')?.textContent?.trim()).toBe(
-      'Ձեռքով պատճենվող տվյալներ',
+      'Տվյալների ձեռքով փոխանցում',
     );
-    expect(text('.capabilities__panel-title')).toEqual(['Հնարավորություններ', 'Արդյունքներ']);
+    expect(text('.capabilities__panel-title')).toEqual([
+      'Հնարավորություններ',
+      'Մատուցվող արդյունքներ',
+    ]);
     expect(text('.audiences__eyebrow')).toEqual(['Բնորոշ նախագծեր', 'Ում համար է']);
     expect(root.querySelector('.business-value__title')?.textContent?.trim()).toBe(
-      'Ինչ է փոխվում, երբ առօրյա գործընթացներն ինքնաշխատ են դառնում։',
+      'Ի՞նչ է փոխվում, երբ կրկնվող աշխատանքն ավտոմատացվում է։',
     );
     expect(root.querySelector('.related__eyebrow')?.textContent?.trim()).toBe(
       'Առնչվող ծառայություններ',

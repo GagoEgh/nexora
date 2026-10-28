@@ -123,23 +123,21 @@ describe('EngagementModels', () => {
     setLocale('hy');
     await fixture.whenStable();
     expect(root.querySelector('h2')?.textContent?.trim()).toBe(
-      'Համագործակցություն, որը համապատասխանում է ձեր իրավիճակին։',
+      'Համագործակցություն՝ ձեր կարիքներին համապատասխան։',
     );
     expect(root.querySelector('.engagement-models__card-title')?.textContent?.trim()).toBe(
       'Նախագծային մշակում',
     );
-    expect(root.querySelector('.engagement-models__label')?.textContent?.trim()).toBe(
-      'Լավագույնն է',
-    );
+    expect(root.querySelector('.engagement-models__label')?.textContent?.trim()).toBe('Հարմար է');
     expect(root.querySelector('a')?.getAttribute('href')).toBe('/hy/about');
 
     setLocale('ru');
     await fixture.whenStable();
     expect(root.querySelector('h2')?.textContent?.trim()).toBe(
-      'Сотрудничество, которое подходит вашей ситуации.',
+      'Сотрудничество, соответствующее вашим задачам.',
     );
     expect(root.querySelector('.engagement-models__value')?.textContent?.trim()).toBe(
-      'Определённый продукт, функция или модернизация.',
+      'Разработка конкретного продукта или функциональности, а также модернизация существующей системы.',
     );
   });
 });

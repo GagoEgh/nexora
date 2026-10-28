@@ -177,6 +177,7 @@ describe('Header', () => {
       '/ru',
       '/ru/solutions',
       '/ru/about',
+      '/ru/engagement-models',
       '/ru/partnerships',
       '/ru/contact',
     ]);

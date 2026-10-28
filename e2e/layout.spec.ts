@@ -319,7 +319,7 @@ test.describe('routing', () => {
 
     await items.nth(1).click();
     await expect(page).toHaveURL(/\/ru\/services\/ai_agent$/);
-    await expect(page.locator('main h1')).toHaveText('AI-агенты и автоматизация бизнеса');
+    await expect(page.locator('main h1')).toHaveText('AI-агенты и автоматизация бизнес-процессов');
   });
 
   test('every header and footer route resolves to its page', async ({ page }) => {
@@ -345,7 +345,7 @@ test.describe('routing', () => {
   }) => {
     await page.goto('/ru/services');
     await expect(page.locator('main h1')).toHaveText(
-      'Пятнадцать услуг на всём жизненном цикле программного обеспечения.',
+      '15 услуг на всех этапах жизненного цикла программного обеспечения.',
     );
     await expect(page.locator('html')).toHaveAttribute('lang', 'ru');
     await expect(page).toHaveTitle('Услуги | Nexora');
@@ -369,7 +369,7 @@ test.describe('routing', () => {
     await page.locator('app-footer .footer__language', { hasText: 'Հայերեն' }).click();
     await expect(page).toHaveURL(/\/hy\/services$/);
     await expect(page.locator('main h1')).toHaveText(
-      'Տասնհինգ ծառայություն՝ ծրագրային ապահովման ողջ կենսափուլի ընթացքում։',
+      '15 ծառայություն՝ ծրագրային ապահովման ողջ կենսացիկլի համար։',
     );
 
     // Unknown paths keep their own address and locale; a bare entry honours the last choice.

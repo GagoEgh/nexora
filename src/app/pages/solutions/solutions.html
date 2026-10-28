@@ -3,11 +3,12 @@
   [breadcrumbLabel]="content().breadcrumbLabel.value"
   [eyebrow]="content().eyebrow.value"
   [heading]="content().heading.value"
+  [lead]="content().lead.value"
+  leadPlacement="aside"
 >
-  <p class="solutions__lead">{{ content().lead }}</p>
 </app-page-intro>
 
-<app-challenge-index (challengeSelect)="onChallengeSelect($event)" />
+<app-challenge-index />
 
 <app-challenge-details />
 

@@ -123,10 +123,10 @@ describe('Expertise', () => {
     setLocale('hy');
     await fixture.whenStable();
     expect(root.querySelector('h2')?.textContent?.trim()).toBe(
-      'Ամբողջական ինժեներիա՝ մեկ հարկի տակ։',
+      'Ինժեներական լուծումների ամբողջական ցիկլ՝ մեկ թիմում։',
     );
     expect(root.querySelector('.expertise__card h3')?.textContent?.trim()).toBe(
-      'Ծրագրային և վեբ մշակում',
+      'Ծրագրային ապահովման և վեբ մշակում',
     );
     expect(root.querySelector('a.expertise__link')?.textContent?.trim()).toBe(
       'Ծանոթանալ ծառայությանը',

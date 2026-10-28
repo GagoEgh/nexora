@@ -208,14 +208,14 @@ test.describe('start a conversation at the desktop design width', () => {
     await page.goto('/ru');
     await page.locator('app-start-conversation').scrollIntoViewIfNeeded();
     await expect(page.locator('app-start-conversation h2')).toHaveText(
-      'Есть сложная техническая задача? Решим её вместе.',
+      'Столкнулись со сложной технической задачей? Давайте решим её вместе.',
     );
     await expect(page.locator('app-start-conversation .start-conversation__eyebrow')).toHaveText(
-      'Начнём разговор',
+      'Начнём обсуждение',
     );
     await expect(
       page.locator('app-start-conversation .start-conversation__step').first(),
-    ).toContainText('Поделитесь контекстом');
+    ).toContainText('Расскажите о своей задаче');
     expect(
       await page
         .locator('app-start-conversation a')

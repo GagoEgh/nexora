@@ -34,7 +34,10 @@
   content: '';
   position: absolute;
   box-sizing: border-box;
-  inset: -1px;
+
+  /* The padding box rather than the border box: a 1px literal is not on the spacing scale, and
+   * one pixel is not perceptible on a ring that expands and fades as this one does. */
+  inset: 0;
   border: 1px solid var(--mat-sys-primary);
   border-radius: var(--mat-sys-corner-full);
   opacity: 0;

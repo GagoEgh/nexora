@@ -60,9 +60,8 @@ test.describe('solutions at the desktop design width', () => {
     await expect(page.locator('h1')).toHaveCount(1);
     await expect(page.locator('h1')).toHaveText('Start from the problem, not the technology.');
 
-    // The lead sits in the aside column, not under the heading.
-    await expect(page.locator('.page-intro__lead')).toHaveCount(0);
-    const lead = await box(page, '.solutions__lead');
+    // The lead sits in the aside column, not under the heading - one element either way.
+    const lead = await box(page, '.page-intro__lead');
     expect(lead.w).toBe(440);
     expect(lead.x + lead.w).toBe(1360);
 
@@ -161,6 +160,78 @@ test.describe('solutions at the desktop design width', () => {
   });
 });
 
+/**
+ * Reaching a challenge.
+ *
+ * The index cards used to cancel their own navigation and scroll imperatively, so the position
+ * was unreachable: the URL never changed, opening a card in a new tab landed at the top of the
+ * page, and Back did nothing. They now carry the same `?challenge=` contract the footer links
+ * use, which is the one mechanism the page handles.
+ */
+test.describe('reaching a challenge', () => {
+  test.use({ viewport: { width: 1440, height: 900 } });
+
+  const PANEL = '#challenge-introduce-ai';
+  const top = (page: Page) =>
+    page.locator(PANEL).evaluate((el) => Math.round(el.getBoundingClientRect().top));
+
+  test('a card addresses the panel it points at', async ({ page }) => {
+    await page.goto('/solutions');
+
+    await expect(page.locator('.challenge-index__card').nth(3)).toHaveAttribute(
+      'href',
+      '/solutions?challenge=introduce-ai',
+    );
+  });
+
+  test('clicking a card records the challenge and lands on the panel', async ({ page }) => {
+    await page.goto('/solutions');
+
+    await page.locator('.challenge-index__card').nth(3).click();
+
+    await expect(page).toHaveURL(/\?challenge=introduce-ai$/);
+    await expect.poll(() => top(page)).toBe(0);
+  });
+
+  test('the same card works twice, after scrolling away', async ({ page }) => {
+    await page.goto('/solutions');
+    await page.locator('.challenge-index__card').nth(3).click();
+    await expect.poll(() => top(page)).toBe(0);
+
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.locator('.challenge-index__card').nth(3).click();
+
+    await expect.poll(() => top(page)).toBe(0);
+  });
+
+  test('back leaves the challenge behind', async ({ page }) => {
+    await page.goto('/solutions');
+    await page.locator('.challenge-index__card').nth(3).click();
+    await expect(page).toHaveURL(/\?challenge=introduce-ai$/);
+
+    await page.goBack();
+
+    await expect(page).toHaveURL(/\/solutions$/);
+  });
+
+  /** The contract the footer depends on, from a cold load rather than an in-page click. */
+  test('a cold load of the address lands on the panel', async ({ page }) => {
+    await page.goto('/solutions?challenge=introduce-ai');
+
+    await expect.poll(() => top(page)).toBe(0);
+    expect(await page.evaluate(() => Math.round(window.scrollY))).toBeGreaterThan(0);
+  });
+
+  test('keeps the locale prefix on the card addresses', async ({ page }) => {
+    await page.goto('/ru/solutions');
+
+    await expect(page.locator('.challenge-index__card').first()).toHaveAttribute(
+      'href',
+      '/ru/solutions?challenge=launch-digital-product',
+    );
+  });
+});
+
 test.describe('solutions responsiveness', () => {
   for (const width of [320, 375, 768, 1024, 1199, 1200, 1920]) {
     test(`fits ${width}px without horizontal scroll`, async ({ page }) => {
@@ -206,6 +277,82 @@ test.describe('solutions responsiveness', () => {
       expect(clipped).toBe(0);
     });
   }
+});
+
+/**
+ * The page entrance.
+ *
+ * Everything else in this file runs under the suite-wide `reducedMotion: 'reduce'`
+ * (playwright.config.ts), which is what keeps its pixel assertions stable: under `reduce` no
+ * hidden state applies at all.
+ */
+test.describe('solutions entrance', () => {
+  test.use({ reducedMotion: 'no-preference', viewport: { width: 1440, height: 900 } });
+
+  test('holds each panel until it is reached rather than firing all eight at once', async ({
+    page,
+  }) => {
+    await page.goto('/solutions');
+    await expect
+      .poll(() => page.locator('.challenge-index').getAttribute('data-reveal'), { timeout: 5000 })
+      .toBe('in');
+
+    const panels = page.locator('.challenge-details__panel');
+    const atLoad = await panels.evaluateAll((els) =>
+      els.map((el) => el.getAttribute('data-reveal')),
+    );
+    // The first is already on screen; the rest are not.
+    expect(atLoad.slice(1).every((state) => state === 'out')).toBe(true);
+
+    await panels.nth(7).scrollIntoViewIfNeeded();
+    await expect
+      .poll(() => panels.nth(7).getAttribute('data-reveal'), { timeout: 5000 })
+      .toBe('in');
+
+    await page.waitForTimeout(900);
+    for (const selector of ['.challenge-details__summary', '.challenge-details__services']) {
+      const part = panels.nth(7).locator(selector);
+      await expect(part, selector).toHaveCSS('opacity', '1');
+      await expect(part, selector).toHaveCSS('transform', 'none');
+    }
+  });
+
+  test('staggers the index across the row', async ({ page }) => {
+    await page.goto('/solutions');
+
+    const delays = await page
+      .locator('.challenge-index__item')
+      .evaluateAll((els) => [...new Set(els.map((el) => getComputedStyle(el).transitionDelay))]);
+    expect(delays).toEqual(['0s', '0.05s', '0.1s', '0.15s']);
+  });
+
+  /**
+   * A panel that starts hidden still occupies its space, so the scroll target is unaffected -
+   * which is what keeps the footer's deep links landing on the right panel.
+   */
+  test('a deep link still lands on a panel that has not revealed yet', async ({ page }) => {
+    await page.goto('/solutions?challenge=improve-reliability');
+
+    const panel = page.locator('#challenge-improve-reliability');
+    await expect
+      .poll(() => panel.evaluate((el) => Math.round(el.getBoundingClientRect().top)))
+      .toBe(0);
+    await expect(panel.locator('.challenge-details__summary')).toHaveCSS('opacity', '1');
+  });
+});
+
+test.describe('solutions entrance with reduced motion', () => {
+  test.use({ reducedMotion: 'reduce', viewport: { width: 1440, height: 900 } });
+
+  test('hides nothing', async ({ page }) => {
+    await page.goto('/solutions');
+
+    await expect(page.locator('.challenge-index__item').first()).toHaveCSS('opacity', '1');
+    await page.locator('.challenge-details__panel').nth(4).scrollIntoViewIfNeeded();
+    await expect(
+      page.locator('.challenge-details__panel').nth(4).locator('.challenge-details__summary'),
+    ).toHaveCSS('opacity', '1');
+  });
 });
 
 test.describe('solutions conversation band', () => {

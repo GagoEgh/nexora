@@ -88,13 +88,15 @@ describe('Hero', () => {
     setLocale('ru');
     await fixture.whenStable();
     expect(root.querySelector('h1')?.textContent?.trim()).toBe(
-      'Создаём цифровые решения, которые двигают бизнес вперёд.',
+      'Создаём цифровые решения, которые помогают бизнесу развиваться.',
     );
     expect(root.querySelector('.hero__actions a')?.textContent?.trim()).toBe('Обсудить ваш проект');
     // The illustration and its notes receive the localized content through their inputs.
     expect(root.querySelector('.art__node-label--full')?.textContent?.trim()).toBe(
       'Веб-приложение',
     );
-    expect(root.querySelector('.notes__title')?.textContent?.trim()).toBe('Рабочий процесс агента');
+    expect(root.querySelector('.notes__title')?.textContent?.trim()).toBe(
+      'Рабочий процесс AI-агента',
+    );
   });
 });

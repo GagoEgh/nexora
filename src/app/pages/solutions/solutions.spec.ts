@@ -6,6 +6,7 @@ import { provideRouter } from '@angular/router';
 import { provideIntlayer, useLocale } from 'angular-intlayer';
 import { routes } from '../../app.routes';
 import { provideAppIcons } from '../../core/icons/provide-app-icons';
+import { CHALLENGE_IDS, isChallengeId } from './challenge';
 import { Solutions } from './solutions';
 import challengesContent from './challenges.content';
 
@@ -74,9 +75,9 @@ describe('Solutions', () => {
     expect(headings).toHaveLength(1);
     expect(headings[0].textContent?.trim()).toBe('Start from the problem, not the technology.');
 
-    // The lead is projected into the aside, so page-intro renders no copy-column lead.
-    expect(root.querySelector('.page-intro__lead')).toBeNull();
-    expect(root.querySelector('.solutions__lead')?.textContent?.trim()).toBe(
+    // The lead is rendered by page-intro into the aside column rather than under the heading.
+    expect(root.querySelector('.solutions__lead')).toBeNull();
+    expect(root.querySelector('.page-intro__lead')?.textContent?.trim()).toBe(
       'Eight business challenges we help companies solve — each mapped to the services and engagement models that address it.',
     );
   });
@@ -95,6 +96,24 @@ describe('Solutions', () => {
       '07',
       '08',
     ]);
+  });
+
+  /**
+   * Each card addresses its panel through the query parameter the page handles, which is also
+   * what the footer links use. An `href` is what makes the position shareable and lets the
+   * card be opened in a new tab.
+   */
+  it('addresses each challenge through the query parameter', async () => {
+    await go('/solutions');
+
+    const hrefs = Array.from(
+      root.querySelectorAll<HTMLAnchorElement>('a.challenge-index__card'),
+    ).map((card) => card.getAttribute('href'));
+
+    expect(hrefs).toEqual(CHALLENGE_IDS.map((id) => `/solutions?challenge=${id}`));
+    for (const id of CHALLENGE_IDS) {
+      expect(isChallengeId(id)).toBe(true);
+    }
   });
 
   it('expands every challenge into a panel with its counter, copy, help list and services', async () => {
@@ -181,7 +200,7 @@ describe('Solutions', () => {
     );
     expect(text('.challenge-index__title')[0]).toBe('Գործարկել նոր թվային արտադրանք');
     expect(root.querySelector('.challenge-details__label')?.textContent?.trim()).toBe(
-      'Մարտահրավերը',
+      'Մարտահրավեր',
     );
     expect(root.querySelector('.challenge-details__cta')?.getAttribute('href')).toBe('/hy/contact');
     expect(root.querySelector('.page-intro__crumb-link')?.getAttribute('href')).toBe('/hy');
@@ -230,7 +249,7 @@ describe('Solutions', () => {
     setLocale('hy');
     await go('/hy/solutions');
     expect(root.querySelector('.start-conversation__title')?.textContent?.trim()).toBe(
-      'Ձեր մարտահրավերը ցանկում չկա՞։',
+      'Ձեր խնդիրը ցանկում ներառվա՞ծ չէ։',
     );
     expect(hrefs()).toEqual(['/hy/contact', '/hy/services']);
 

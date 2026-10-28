@@ -1,6 +1,6 @@
 <ul class="challenge-details">
   @for (item of content().items; track $index) {
-    <li class="challenge-details__panel" [id]="sectionId(item.id.value)">
+    <li class="challenge-details__panel" appReveal [id]="sectionId(item.id.value)">
       <div class="challenge-details__summary">
         <div class="challenge-details__head">
           <app-icon-tile [icon]="item.icon.value" [tone]="tileTone(item.tone.value)" />
@@ -34,7 +34,7 @@
         <a
           class="challenge-details__cta"
           [attr.aria-label]="content().discuss.value + ': ' + item.title.value"
-          [routerLink]="'/contact' | localizedPath"
+          [routerLink]="contactPath | localizedPath"
         >
           {{ content().discuss }}
           <mat-icon aria-hidden="true" [svgIcon]="arrowIcon" />
@@ -48,11 +48,6 @@
           @for (service of item.services; track $index) {
             <li class="challenge-details__service">
               <span class="challenge-details__service-name">{{ service }}</span>
-              <mat-icon
-                class="challenge-details__service-arrow"
-                aria-hidden="true"
-                [svgIcon]="linkIcon"
-              />
             </li>
           }
         </ul>

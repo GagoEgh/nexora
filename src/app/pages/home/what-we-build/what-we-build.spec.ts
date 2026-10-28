@@ -87,7 +87,7 @@ describe('WhatWeBuild', () => {
     setLocale('hy');
     await fixture.whenStable();
     expect(root.querySelector('h2')?.textContent?.trim()).toBe(
-      'Համակարգեր՝ կառուցված ձեր բիզնեսի աշխատելու ձևի շուրջ։',
+      'Համակարգեր, որոնք հարմարեցված են ձեր բիզնեսի աշխատանքային գործընթացներին։',
     );
     expect(root.querySelector('.what-we-build__card h3')?.textContent?.trim()).toBe(
       'SaaS հարթակներ',

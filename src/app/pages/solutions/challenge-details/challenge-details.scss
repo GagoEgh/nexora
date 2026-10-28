@@ -1,4 +1,5 @@
 @use 'mixins/container';
+@use 'mixins/reveal';
 @use 'tokens/layout';
 @use 'tokens/spacing';
 @use 'tokens/typography';
@@ -43,6 +44,8 @@
 .challenge-details__summary,
 .challenge-details__help,
 .challenge-details__services {
+  @include reveal.item();
+
   display: grid;
   gap: spacing.space(12);
   align-content: start;
@@ -116,10 +119,6 @@
   align-items: center;
 }
 
-.challenge-details__service {
-  justify-content: space-between;
-}
-
 .challenge-details__check {
   display: inline-flex;
   flex-shrink: 0;
@@ -173,15 +172,21 @@
 }
 
 .challenge-details__services {
+  transition-delay: 120ms;
   box-sizing: border-box;
   padding: spacing.space(20);
   border-radius: var(--mat-sys-corner-large);
   background-color: var(--mat-sys-surface-container-low);
 }
 
-.challenge-details__service-arrow {
-  flex-shrink: 0;
-  width: 16px;
-  height: 16px;
-  color: var(--mat-sys-primary);
+.challenge-details__help {
+  transition-delay: 60ms;
+}
+
+.challenge-details__panel[data-reveal='out'] {
+  .challenge-details__summary,
+  .challenge-details__help,
+  .challenge-details__services {
+    @include reveal.hidden($distance: 8px);
+  }
 }

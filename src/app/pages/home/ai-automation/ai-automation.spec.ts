@@ -126,9 +126,11 @@ describe('AiAutomation', () => {
     setLocale('ru');
     await fixture.whenStable();
     expect(root.querySelector('h2')?.textContent?.trim()).toBe(
-      'Практичный AI, встроенный в то, как вы уже работаете.',
+      'Практические AI-решения, интегрированные в ваши рабочие процессы.',
     );
-    expect(root.querySelector('.ai__card h3')?.textContent?.trim()).toBe('Умные ассистенты');
-    expect(root.querySelector('.ai__actions a')?.textContent?.trim()).toBe('AI-услуги');
+    expect(root.querySelector('.ai__card h3')?.textContent?.trim()).toBe(
+      'Интеллектуальные AI-ассистенты',
+    );
+    expect(root.querySelector('.ai__actions a')?.textContent?.trim()).toBe('Наши AI-услуги');
   });
 });

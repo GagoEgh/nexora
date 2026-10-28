@@ -168,7 +168,7 @@ describe('StartConversation', () => {
     setLocale('hy');
     await fixture.whenStable();
     expect(root.querySelector('h2')?.textContent?.trim()).toBe(
-      'Ունե՞ք բարդ տեխնիկական մարտահրավեր։ Լուծենք այն միասին։',
+      'Ունե՞ք բարդ տեխնիկական խնդիր։ Եկեք լուծենք այն միասին։',
     );
     expect(Array.from(root.querySelectorAll('a')).map((a) => a.getAttribute('href'))).toEqual([
       '/hy/contact',
@@ -178,12 +178,12 @@ describe('StartConversation', () => {
     setLocale('ru');
     await fixture.whenStable();
     expect(root.querySelector('.start-conversation__eyebrow')?.textContent?.trim()).toBe(
-      'Начнём разговор',
+      'Начнём обсуждение',
     );
     expect(steps().map((s) => s.textContent?.replace(/\s+/g, ' ').trim())).toEqual([
-      '1 Поделитесь контекстом',
-      '2 Ознакомительный разговор',
-      '3 Предлагаемый подход',
+      '1 Расскажите о своей задаче',
+      '2 Первичная консультация',
+      '3 Предлагаемый план действий',
     ]);
     expect(root.querySelectorAll('a')[1].getAttribute('href')).toBe('/ru/partnerships');
   });

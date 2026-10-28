@@ -1,23 +1,17 @@
-import { Component, output } from '@angular/core';
+import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { useDictionary } from 'angular-intlayer';
+import { Reveal } from '../../../shared/motion/reveal';
 import { ordinal } from '../../../shared/ordinal';
-import { challengeSectionId, type ChallengeId } from '../challenge';
 import challengesContent from '../challenges.content';
 
 @Component({
   selector: 'app-challenge-index',
+  imports: [RouterLink, Reveal],
   templateUrl: './challenge-index.html',
   styleUrl: './challenge-index.scss',
 })
 export class ChallengeIndex {
-  readonly challengeSelect = output<ChallengeId>();
-
   protected readonly content = useDictionary(challengesContent);
   protected readonly ordinal = ordinal;
-  protected readonly sectionId = challengeSectionId;
-
-  protected onSelect(event: Event, id: ChallengeId): void {
-    event.preventDefault();
-    this.challengeSelect.emit(id);
-  }
 }

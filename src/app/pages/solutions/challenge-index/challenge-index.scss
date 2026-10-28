@@ -1,4 +1,5 @@
 @use 'mixins/container';
+@use 'mixins/reveal';
 @use 'tokens/layout';
 @use 'tokens/spacing';
 @use 'tokens/typography';
@@ -29,6 +30,9 @@
 }
 
 .challenge-index__item {
+  @include reveal.item();
+  @include reveal.stagger(4, 50ms);
+
   display: grid;
 }
 
@@ -44,7 +48,8 @@
   background-color: var(--mat-sys-surface);
   text-decoration: none;
 
-  &:hover {
+  &:hover,
+  &:focus-visible {
     background-color: var(--mat-sys-surface-container-low);
   }
 }
@@ -62,4 +67,8 @@
   font-weight: typography.$weight-semibold;
   color: var(--mat-sys-on-surface);
   overflow-wrap: anywhere;
+}
+
+.challenge-index[data-reveal='out'] .challenge-index__item {
+  @include reveal.hidden($distance: 8px);
 }

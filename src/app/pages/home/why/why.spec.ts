@@ -124,7 +124,7 @@ describe('Why', () => {
   it('re-renders in another locale', async () => {
     setLocale('ru');
     await fixture.whenStable();
-    expect(root.querySelector('.why__eyebrow')?.textContent?.trim()).toBe('Почему Nexora');
+    expect(root.querySelector('.why__eyebrow')?.textContent?.trim()).toBe('Почему выбирают Nexora');
     expect(reasonTitles()[0]).toBe('Senior и Senior+ инженеры');
     expect(options()[0].textContent?.trim()).toBe('Архитектура решений');
   });

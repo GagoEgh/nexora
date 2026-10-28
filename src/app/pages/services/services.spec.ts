@@ -249,10 +249,10 @@ describe('Services', () => {
     await go('/ru/services');
 
     expect(root.querySelector('.services__cta-title')?.textContent?.trim()).toBe(
-      'Не уверены, какая услуга подойдёт?',
+      'Не знаете, какую услугу выбрать?',
     );
     expect(root.querySelector('a.services__cta-action')?.textContent?.trim()).toContain(
-      'Смотреть решения',
+      'Посмотреть решения',
     );
     expect(root.querySelector('a.services__cta-action')?.getAttribute('href')).toBe(
       '/ru/solutions',
@@ -260,7 +260,7 @@ describe('Services', () => {
 
     await go('/hy/services');
     expect(root.querySelector('.services__cta-title')?.textContent?.trim()).toBe(
-      'Վստահ չե՞ք, թե որ ծառայությունն է հարմար։',
+      'Չգիտե՞ք՝ որ ծառայությունն ընտրել։',
     );
     expect(root.querySelector('a.services__cta-action')?.getAttribute('href')).toBe(
       '/hy/solutions',
@@ -305,7 +305,7 @@ describe('Services', () => {
 
     const band = () => root.querySelector('app-start-conversation');
     expect(band()?.querySelector('.start-conversation__title')?.textContent?.trim()).toBe(
-      'Нужно несколько услуг в одном проекте?',
+      'Нужно несколько услуг в рамках одного проекта?',
     );
     expect(
       Array.from(band()?.querySelectorAll('a') ?? []).map((a) => a.getAttribute('href')),
@@ -313,7 +313,7 @@ describe('Services', () => {
 
     await go('/hy/services');
     expect(band()?.querySelector('.start-conversation__title')?.textContent?.trim()).toBe(
-      'Մեկ նախագծում մի քանի ծառայությո՞ւն է անհրաժեշտ։',
+      'Մեկ նախագծի համար մի քանի ծառայությո՞ւն է անհրաժեշտ։',
     );
     expect(
       Array.from(band()?.querySelectorAll('a') ?? []).map((a) => a.getAttribute('href')),
@@ -394,7 +394,7 @@ describe('Services', () => {
     await go('/ru/services');
 
     expect(root.querySelector('h1')?.textContent?.trim()).toBe(
-      'Пятнадцать услуг на всём жизненном цикле программного обеспечения.',
+      '15 услуг на всех этапах жизненного цикла программного обеспечения.',
     );
     expect(text('.page-intro__crumb')).toEqual(['Главная', 'Услуги']);
     expect(root.querySelector('.page-intro__crumb-link')?.getAttribute('href')).toBe('/ru');

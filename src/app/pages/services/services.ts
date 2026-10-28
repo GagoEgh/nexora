@@ -18,6 +18,7 @@ import { AI_AGENT_PATH, CONTACT_PATH, SOLUTIONS_PATH } from '../../core/routing/
 import { LocalizedPathPipe } from '../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../core/icons/icons';
 import { Reveal } from '../../shared/motion/reveal';
+import { scrollToSection } from '../../shared/motion/scroll-to-section';
 import { ordinal } from '../../shared/ordinal';
 import { IconTile, type IconTileTone } from '../../shared/ui/icon-tile/icon-tile';
 import { PageIntro, type PageIntroCrumb } from '../../shared/ui/page-intro/page-intro';
@@ -200,9 +201,7 @@ export class Services {
       await this.applyFilter(ALL);
       await this.app.whenStable();
     }
-    this.document
-      .getElementById(serviceSectionId(category))
-      ?.scrollIntoView({ behavior: this.scrollBehavior(), block: 'start' });
+    scrollToSection(this.document, serviceSectionId(category));
   }
 
   private applyFilter(value: ServiceFilter): Promise<boolean> {
@@ -212,11 +211,5 @@ export class Services {
       queryParamsHandling: 'merge',
       scroll: 'manual',
     });
-  }
-
-  private scrollBehavior(): ScrollBehavior {
-    return this.document.defaultView?.matchMedia('(prefers-reduced-motion: reduce)').matches
-      ? 'auto'
-      : 'smooth';
   }
 }

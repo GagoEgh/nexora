@@ -19,12 +19,16 @@
 
       <p class="page-intro__eyebrow">{{ eyebrow() }}</p>
       <h1 class="page-intro__title">{{ heading() }}</h1>
-      @if (lead(); as leadCopy) {
+      @if (copyLead(); as leadCopy) {
         <p class="page-intro__lead">{{ leadCopy }}</p>
       }
 
       <ng-content select="[intro-actions]" />
     </div>
+
+    @if (asideLead(); as leadCopy) {
+      <p class="page-intro__lead">{{ leadCopy }}</p>
+    }
 
     <ng-content />
   </div>

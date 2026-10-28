@@ -358,7 +358,7 @@ test.describe('services page at the desktop design width', () => {
   test('keeps the locale prefix and localizes the whole page', async ({ page }) => {
     await page.goto('/ru/services?category=design-product');
     await expect(page.locator('app-services h1')).toHaveText(
-      'Пятнадцать услуг на всём жизненном цикле программного обеспечения.',
+      '15 услуг на всех этапах жизненного цикла программного обеспечения.',
     );
     await expect(page.locator('.page-intro__crumb-link')).toHaveAttribute('href', '/ru');
     await expect(page.locator('app-service-card')).toHaveCount(1);

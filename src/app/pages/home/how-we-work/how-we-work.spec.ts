@@ -108,10 +108,10 @@ describe('HowWeWork', () => {
     setLocale('hy');
     await fixture.whenStable();
     expect(root.querySelector('h2')?.textContent?.trim()).toBe(
-      'Հստակ ճանապարհ գաղափարից մինչև արտադրություն։',
+      'Հստակ ճանապարհ՝ գաղափարից մինչև գործարկում։',
     );
     expect(root.querySelector('.how-we-work__step h3')?.textContent?.trim()).toBe(
-      'Բացահայտել և հասկանալ',
+      'Ուսումնասիրել և հասկանալ',
     );
   });
 });

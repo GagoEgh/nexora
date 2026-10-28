@@ -225,14 +225,14 @@ test.describe('engagement models at the desktop design width', () => {
     await page.goto('/ru');
     await page.locator('app-engagement-models').scrollIntoViewIfNeeded();
     await expect(page.locator('app-engagement-models h2')).toHaveText(
-      'Сотрудничество, которое подходит вашей ситуации.',
+      'Сотрудничество, соответствующее вашим задачам.',
     );
     await expect(
       page.locator('app-engagement-models .engagement-models__card-title').first(),
     ).toHaveText('Проектная разработка');
     await expect(
       page.locator('app-engagement-models .engagement-models__label').first(),
-    ).toHaveText('Лучше всего для');
+    ).toHaveText('Подходит для');
     await expect(
       page.locator('app-engagement-models a.engagement-models__compare'),
     ).toHaveAttribute('href', '/ru/about');

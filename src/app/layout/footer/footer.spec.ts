@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
 import { provideIntlayer, useLocale } from 'angular-intlayer';
 import { routes } from '../../app.routes';
+import { isChallengeId } from '../../pages/solutions/challenge';
 import { isServiceCategoryId } from '../../shared/services-catalogue/service-category';
 import { Footer } from './footer';
 
@@ -46,6 +47,29 @@ describe('Footer', () => {
     const pending = root.querySelector('.footer__muted');
     expect(pending?.textContent?.trim()).toBe('Contact details — pending');
     expect(pending?.querySelector('a')).toBeNull();
+  });
+
+  /**
+   * The solutions column deep-links into a page that scrolls to the matching panel. An id the
+   * page does not recognise is silently ignored - the reader lands at the top with no error -
+   * so the ids are checked against the ones the page actually accepts, as the services column
+   * above already is.
+   */
+  it('deep-links every solutions challenge to a challenge the page accepts', () => {
+    const columns = root.querySelectorAll<HTMLElement>('.footer__column');
+    const solutions = Array.from(columns[1].querySelectorAll('a')).map((a) =>
+      a.getAttribute('href'),
+    );
+
+    expect(solutions.length).toBeGreaterThan(0);
+    for (const href of solutions) {
+      expect(href?.startsWith('/solutions')).toBe(true);
+      const challenge = href?.split('challenge=')[1];
+      if (challenge) {
+        expect(isChallengeId(challenge), href ?? '').toBe(true);
+      }
+    }
+    expect(new Set(solutions).size).toBe(solutions.length);
   });
 
   it('deep-links every services category to its own filter on the services page', () => {

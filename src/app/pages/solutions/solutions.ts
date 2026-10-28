@@ -5,6 +5,7 @@ import { ActivatedRoute, Router, Scroll } from '@angular/router';
 import { useDictionary } from 'angular-intlayer';
 import { filter } from 'rxjs';
 import { CONTACT_PATH, SERVICES_PATH } from '../../core/routing/paths';
+import { scrollToSection } from '../../shared/motion/scroll-to-section';
 import { PageIntro, type PageIntroCrumb } from '../../shared/ui/page-intro/page-intro';
 import {
   type ConversationCopy,
@@ -62,19 +63,7 @@ export class Solutions {
       });
   }
 
-  protected onChallengeSelect(challenge: ChallengeId): void {
-    this.scrollTo(challenge);
-  }
-
   private scrollTo(challenge: ChallengeId): void {
-    this.document
-      .getElementById(challengeSectionId(challenge))
-      ?.scrollIntoView({ behavior: this.scrollBehavior(), block: 'start' });
-  }
-
-  private scrollBehavior(): ScrollBehavior {
-    return this.document.defaultView?.matchMedia('(prefers-reduced-motion: reduce)').matches
-      ? 'auto'
-      : 'smooth';
+    scrollToSection(this.document, challengeSectionId(challenge));
   }
 }

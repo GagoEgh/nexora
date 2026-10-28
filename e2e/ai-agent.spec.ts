@@ -1139,16 +1139,18 @@ test.describe('ai agents entrance with reduced motion', () => {
 test.describe('ai agents page in other locales', () => {
   test('renders the whole band in Russian and Armenian', async ({ page }) => {
     await page.goto('/ru/services/ai_agent');
-    await expect(page.locator('app-ai-agent h1')).toHaveText('AI-агенты и автоматизация бизнеса');
+    await expect(page.locator('app-ai-agent h1')).toHaveText(
+      'AI-агенты и автоматизация бизнес-процессов',
+    );
     await expect(page.locator('.page-intro__eyebrow')).toHaveText(
       'Искусственный интеллект · Услуга 09',
     );
     await expect(page.locator('.workflow__label').first()).toHaveText('Триггер');
     await expect(page.locator('.overview__eyebrow')).toHaveText('Обзор');
-    await expect(page.locator('.problems__eyebrow')).toHaveText('Задачи, которые мы решаем');
+    await expect(page.locator('.problems__eyebrow')).toHaveText('Проблемы, которые мы решаем');
     await expect(page.locator('.capabilities__panel-title')).toHaveText([
       'Возможности',
-      'Результаты',
+      'Что вы получаете',
     ]);
     await expect(page.locator('.audiences__eyebrow')).toHaveText([
       'Типичные проекты',
@@ -1157,7 +1159,7 @@ test.describe('ai agents page in other locales', () => {
     await expect(page.locator('.business-value__card-title').first()).toHaveText(
       'Меньше ручной работы',
     );
-    await expect(page.locator('.related__eyebrow')).toHaveText('Смежные услуги');
+    await expect(page.locator('.related__eyebrow')).toHaveText('Сопутствующие услуги');
     await expect(page.locator('.service-card__number')).toHaveText(['08', '06', '10']);
     await expect(page.locator('.start-conversation__eyebrow')).toHaveText('Обсудим эту услугу');
     await expect(page.locator('app-start-conversation a').nth(1)).toHaveAttribute(
@@ -1171,18 +1173,18 @@ test.describe('ai agents page in other locales', () => {
 
     await page.goto('/hy/services/ai_agent');
     await expect(page.locator('app-ai-agent h1')).toHaveText(
-      'AI գործակալներ և բիզնես ավտոմատացում',
+      'AI գործակալներ և բիզնես գործընթացների ավտոմատացում',
     );
     await expect(page.locator('.page-intro__crumb').nth(1)).toHaveText('Ծառայություններ');
-    await expect(page.locator('.overview__eyebrow')).toHaveText('Ակնարկ');
+    await expect(page.locator('.overview__eyebrow')).toHaveText('Ընդհանուր նկարագիր');
     await expect(page.locator('.problems__card-title').first()).toHaveText(
-      'Ձեռքով պատճենվող տվյալներ',
+      'Տվյալների ձեռքով փոխանցում',
     );
     await expect(page.locator('.capabilities__panel-title').first()).toHaveText(
       'Հնարավորություններ',
     );
     await expect(page.locator('.audiences__eyebrow').first()).toHaveText('Բնորոշ նախագծեր');
-    await expect(page.locator('.business-value__eyebrow')).toHaveText('Բիզնես արժեք');
+    await expect(page.locator('.business-value__eyebrow')).toHaveText('Բիզնեսի արժեքը');
     await expect(page.locator('.related__eyebrow')).toHaveText('Առնչվող ծառայություններ');
     await expect(page.locator('app-start-conversation a').nth(0)).toHaveAttribute(
       'href',
