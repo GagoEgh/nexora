@@ -1,7 +1,6 @@
 import { t, type Dictionary } from 'intlayer';
 import type { AppIconName } from '../../../core/icons/icons';
 
-
 const heroContent = {
   key: 'hero',
   content: {
@@ -172,6 +171,5 @@ const heroContent = {
     },
   },
 } as const satisfies Dictionary;
-
 
 export default heroContent;
