@@ -8,8 +8,27 @@ export const SERVICE_CATEGORY_IDS = [
   'engineering-partnerships',
 ] as const;
 
+export const SERVICE_IDS = [
+  'web-ui-ux-design',
+  'web-development',
+  'mobile-app-development',
+  'custom-software-development',
+  'saas-development',
+  'backend-api-integration',
+  'legacy-modernization',
+  'ai-development-integration',
+  'ai-agents-automation',
+  'ai-workflow-engineering',
+  'cloud-infrastructure',
+  'devops-automation',
+  'software-maintenance-support',
+  'dedicated-teams',
+  'white-label-development',
+] as const;
+
 export const ALL_SERVICES = 'all';
 export type ServiceCategoryId = (typeof SERVICE_CATEGORY_IDS)[number];
+export type ServiceId = (typeof SERVICE_IDS)[number];
 export type ServiceFilter = ServiceCategoryId | typeof ALL_SERVICES;
 
 export interface ServiceCategorySummary {

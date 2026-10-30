@@ -1,5 +1,6 @@
 import { t, type Dictionary } from 'intlayer';
 import type { AppIconName } from '../../../core/icons/icons';
+import type { ModelId } from '../engagement-model';
 
 const modelDetailsContent = {
   key: 'engagement-models-details',
@@ -13,6 +14,7 @@ const modelDetailsContent = {
     goodFitWhen: t({ en: 'A good fit when', hy: 'Հարմար է, եթե', ru: 'Подходит, если' }),
     models: [
       {
+        id: 'project-based' satisfies ModelId,
         icon: 'target' satisfies AppIconName,
         title: t({
           en: 'Project-Based Development',
@@ -55,6 +57,7 @@ const modelDetailsContent = {
         ],
       },
       {
+        id: 'dedicated-team' satisfies ModelId,
         icon: 'users' satisfies AppIconName,
         title: t({
           en: 'Dedicated Engineering Teams',
@@ -97,6 +100,7 @@ const modelDetailsContent = {
         ],
       },
       {
+        id: 'long-term-partnership' satisfies ModelId,
         icon: 'handshake' satisfies AppIconName,
         title: t({
           en: 'Long-Term Technology Partnership',
@@ -139,6 +143,7 @@ const modelDetailsContent = {
         ],
       },
       {
+        id: 'maintenance-support' satisfies ModelId,
         icon: 'wrench' satisfies AppIconName,
         title: t({
           en: 'Maintenance & Technical Support',
@@ -181,6 +186,7 @@ const modelDetailsContent = {
         ],
       },
       {
+        id: 'white-label' satisfies ModelId,
         icon: 'tag' satisfies AppIconName,
         title: t({
           en: 'White-Label Development',

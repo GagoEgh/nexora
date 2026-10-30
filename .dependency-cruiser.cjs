@@ -68,12 +68,14 @@ module.exports = {
       severity: 'error',
       comment:
         'A *.content.ts file holds copy. It may depend on core types, but importing a ' +
-        'component pulls presentation into the dictionary and risks a cycle.',
+        'component pulls presentation into the dictionary and risks a cycle. The exempt ' +
+        'modules are id/type leaves with no imports of their own, which is what lets a ' +
+        'dictionary entry name its own identifier instead of being matched by position.',
       from: { path: '\\.content\\.ts$' },
       to: {
         path: '^src/app/(pages|layout|shared)/.+\\.ts$',
         pathNot:
-          '\\.content\\.ts$|/challenge\\.ts$|/service-category\\.ts$|/what-we-build-illustration\\.ts$',
+          '\\.content\\.ts$|/challenge\\.ts$|/engagement-model\\.ts$|/service-category\\.ts$|/what-we-build-illustration\\.ts$',
       },
     },
   ],

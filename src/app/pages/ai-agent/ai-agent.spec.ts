@@ -366,24 +366,28 @@ describe('AiAgent', () => {
   });
 
   /**
-   * The band reads the shared catalogue by position, so the copy can no longer drift. What can
-   * drift is the selection: reordering the catalogue would silently point these three cards at
-   * different services, and the numbers - which a reader also sees on the services page - would
-   * follow along. This asserts the rendered cards against the source they are taken from.
+   * The band names the three services it promotes by id, so reordering the catalogue renumbers
+   * these cards without changing which services they are. The expected numbers are therefore
+   * looked up from the catalogue rather than written down: that is what makes this assert the
+   * rule, instead of asserting today's ordering a second time.
    */
-  it('renders catalogue items 7, 5 and 9, numbered by their catalogue position', async () => {
+  it('renders the three named catalogue services, numbered by their catalogue position', async () => {
     await go('/services/ai_agent');
 
     const source = servicesCatalogueContent.content.items;
-    const picks = [7, 5, 9] as const;
+    const featured = [
+      'ai-development-integration',
+      'backend-api-integration',
+      'ai-workflow-engineering',
+    ] as const;
+    const positions = featured.map((id) => source.findIndex((item) => item.id === id));
 
-    // In range, so the selection cannot silently fall off the end of the catalogue.
-    for (const index of picks) {
-      expect(index).toBeLessThan(source.length);
-    }
+    // Every named service is in the catalogue, so the band cannot quietly render fewer cards.
+    expect(positions.filter((position) => position < 0)).toEqual([]);
+
     // The number a reader sees here is the service's position in that catalogue, so these two
     // must agree with the services page.
-    expect(text('.service-card__number')).toEqual(picks.map((index) => ordinal(index)));
+    expect(text('.service-card__number')).toEqual(positions.map((position) => ordinal(position)));
     expect(text('.service-card__title')).toEqual([
       'AI Development & Integration',
       'Backend Development & API Integration',

@@ -206,10 +206,10 @@ test.describe('partnerships under a locale prefix', () => {
     await page.locator('app-partner-terms .terms__row').first().waitFor();
 
     await expect(page.locator('h1')).toHaveText(
-      'Senior-инженерия за вашими клиентскими отношениями.',
+      'Инженерная экспертиза уровня Senior для реализации проектов ваших клиентов.',
     );
     await expect(page.locator('#audience-title')).toHaveText(
-      'Создано для компаний, которые продают технологии или консультируют по ним.',
+      'Для компаний, которые предлагают технологические решения или консультируют в сфере технологий.',
     );
 
     const hrefs = await page

@@ -153,24 +153,26 @@ describe('About', () => {
     await go('/hy/about');
 
     expect(root.querySelector('h1')?.textContent?.trim()).toBe(
-      'Senior ինժեներական գործընկեր այն բիզնեսների համար, որոնք կառուցում են տեխնոլոգիայով։',
+      'Փորձառու ինժեներական գործընկեր տեխնոլոգիաների վրա հիմնված բիզնեսների համար։',
     );
-    expect(root.querySelector('.glance__title')?.textContent?.trim()).toBe('Nexora-ն համառոտ');
-    expect(text('.glance__label')[0]).toBe('Ուղղություն');
+    expect(root.querySelector('.glance__title')?.textContent?.trim()).toBe('Nexora-ն՝ համառոտ');
+    expect(text('.glance__label')[0]).toBe('Մասնագիտացում');
     expect(root.querySelector('.page-intro__crumb-link')?.getAttribute('href')).toBe('/hy');
 
     setLocale('ru');
     await go('/ru/about');
     expect(root.querySelector('h1')?.textContent?.trim()).toBe(
-      'Senior-инженерный партнёр для компаний, которые строят на технологиях.',
+      'Опытный инженерный партнёр для компаний, развивающих бизнес с помощью технологий.',
     );
-    expect(root.querySelector('.glance__title')?.textContent?.trim()).toBe('Nexora вкратце');
+    expect(root.querySelector('.glance__title')?.textContent?.trim()).toBe(
+      'Nexora в кратком обзоре',
+    );
     expect(text('.glance__label')).toEqual([
-      'Фокус',
+      'Специализация',
       'Команда',
       'Рынки',
       'Клиенты',
-      'Форматы работы',
+      'Форматы сотрудничества',
     ]);
   });
 
@@ -221,17 +223,17 @@ describe('About', () => {
     setLocale('hy');
     await go('/hy/about');
     expect(root.querySelector('.philosophy__title')?.textContent?.trim()).toBe(
-      'Լավ ծրագրակազմը հիմնականում լավ որոշումներ են։',
+      'Լավ ծրագրային ապահովման հիմքում ճիշտ որոշումներն են։',
     );
-    expect(text('.philosophy__card-title')[0]).toBe('Հասկանալ նախքան կառուցելը');
+    expect(text('.philosophy__card-title')[0]).toBe('Նախ հասկանալ, ապա մշակել');
     expect(text('.philosophy__number')).toEqual(['01', '02', '03', '04']);
 
     setLocale('ru');
     await go('/ru/about');
     expect(root.querySelector('.philosophy__title')?.textContent?.trim()).toBe(
-      'Хорошее ПО — это прежде всего хорошие решения.',
+      'Качественное программное обеспечение начинается с правильных решений.',
     );
-    expect(text('.philosophy__card-title')[0]).toBe('Понять до того, как строить');
+    expect(text('.philosophy__card-title')[0]).toBe('Сначала понять, потом разрабатывать');
   });
 
   it('closes the page with the senior model section and its three points', async () => {
@@ -313,17 +315,19 @@ describe('About', () => {
     setLocale('hy');
     await go('/hy/about');
     expect(root.querySelector('.senior__title')?.textContent?.trim()).toBe(
-      'Փորձառություն այնտեղ, որտեղ կայացվում են որոշումները։',
+      'Փորձառություն՝ որոշումների կայացման մակարդակում։',
     );
-    expect(text('.senior__panel-label')).toEqual(['Սովորական բուրգ', 'Nexora-ի մոդել']);
+    expect(text('.senior__panel-label')).toEqual(['Տարածված թիմային մոդել', 'Nexora-ի մոդել']);
 
     setLocale('ru');
     await go('/ru/about');
     expect(root.querySelector('.senior__title')?.textContent?.trim()).toBe(
-      'Опыт там, где принимаются решения.',
+      'Опыт на уровне принятия решений.',
     );
-    expect(text('.senior__panel-label')).toEqual(['Обычная пирамида', 'Модель Nexora']);
-    expect(text('.senior__point-text')[2]).toBe('Меньше команды, яснее зона ответственности');
+    expect(text('.senior__panel-label')).toEqual(['Типичная модель команды', 'Модель Nexora']);
+    expect(text('.senior__point-text')[2]).toBe(
+      'Небольшие команды и чёткое распределение ответственности',
+    );
   });
 
   it('closes the page with the business flow header', async () => {
@@ -389,21 +393,21 @@ describe('About', () => {
     setLocale('hy');
     await go('/hy/about');
     expect(root.querySelector('.flow__title')?.textContent?.trim()).toBe(
-      'Մենք սկսում ենք արդյունքից, հետո ընտրում տեխնոլոգիան։',
+      'Սկսում ենք ցանկալի արդյունքից, ապա ընտրում համապատասխան տեխնոլոգիաները։',
     );
-    expect(text('.flow__step-title')[0]).toBe('Բիզնես նպատակ');
+    expect(text('.flow__step-title')[0]).toBe('Բիզնեսի նպատակ');
 
     setLocale('ru');
     await go('/ru/about');
     expect(root.querySelector('.flow__title')?.textContent?.trim()).toBe(
-      'Мы начинаем с результата, а технологию выбираем потом.',
+      'Сначала определяем желаемый результат, затем выбираем технологии.',
     );
     expect(text('.flow__step-title')).toEqual([
       'Бизнес-цель',
       'Ограничения',
-      'Архитектура',
-      'Поставка',
-      'Развитие',
+      'Архитектура системы',
+      'Разработка и внедрение',
+      'Непрерывное развитие',
     ]);
   });
 
@@ -473,18 +477,20 @@ describe('About', () => {
   it('translates both capability panels into Armenian and Russian', async () => {
     setLocale('hy');
     await go('/hy/about');
-    expect(text('.quality__title')[0]).toBe('Պրակտիկաներ, որոնք ներդրված են հենց աշխատանքի մեջ։');
-    expect(text('.quality__chip-label')[0]).toBe('Ճարտարապետության վերանայումներ');
+    expect(text('.quality__title')[0]).toBe(
+      'Որակի ապահովման պրակտիկաները՝ մշակման գործընթացի անբաժանելի մաս։',
+    );
+    expect(text('.quality__chip-label')[0]).toBe('Ճարտարապետական լուծումների վերանայում');
 
     setLocale('ru');
     await go('/ru/about');
     expect(text('.quality__title')[1]).toBe(
-      'Все дисциплины, которые нужны проекту, в одной команде.',
+      'Все необходимые проекту компетенции — в одной команде.',
     );
     expect(text('.quality__chip-label').slice(6, 9)).toEqual([
       'UI/UX-дизайн',
-      'Frontend',
-      'Backend и API',
+      'Frontend-разработка',
+      'Backend-разработка и API',
     ]);
   });
 
@@ -531,7 +537,7 @@ describe('About', () => {
     setLocale('hy');
     await go('/hy/about');
     expect(root.querySelector('.long-term__title')?.textContent?.trim()).toBe(
-      'Մենք կառուցում ենք համակարգեր, որոնք հարմար կլինեին մեզ՝ ինքներս սպասարկելու համար։',
+      'Ստեղծում ենք համակարգեր, որոնց սպասարկումը վստահությամբ կստանձնեինք նաև ինքներս։',
     );
     expect(text('.long-term__text')).toHaveLength(2);
 
@@ -541,7 +547,7 @@ describe('About', () => {
       'Долгосрочное партнёрство',
     );
     expect(root.querySelector('.long-term__title')?.textContent?.trim()).toBe(
-      'Мы строим системы, которые нам самим было бы комфортно поддерживать.',
+      'Мы создаём системы, сопровождение которых готовы уверенно взять на себя.',
     );
   });
 
@@ -591,7 +597,7 @@ describe('About', () => {
     setLocale('ru');
     await go('/ru/about');
     expect(text('.markets__title')).toEqual(['Армения', 'Международные рынки']);
-    expect(text('.markets__text')[0]).toContain('Мы работаем со стартапами');
+    expect(text('.markets__text')[0]).toContain('Мы сотрудничаем со стартапами');
   });
 
   it('keeps the markets dictionary complete: two entries, both on the globe icon', () => {
@@ -644,14 +650,14 @@ describe('About', () => {
     setLocale('hy');
     await go('/hy/about');
     expect(root.querySelector('.start-conversation__title')?.textContent?.trim()).toBe(
-      'Եկեք խոսենք համատեղ աշխատանքի մասին։',
+      'Եկե՛ք քննարկենք համագործակցության հնարավորությունները։',
     );
     expect(hrefs()).toEqual(['/hy/contact', '/hy/partnerships']);
 
     setLocale('ru');
     await go('/ru/about');
     expect(root.querySelector('.start-conversation__title')?.textContent?.trim()).toBe(
-      'Давайте обсудим совместную работу.',
+      'Давайте обсудим возможности сотрудничества.',
     );
     expect(hrefs()).toEqual(['/ru/contact', '/ru/partnerships']);
   });

@@ -1,11 +1,12 @@
 import { t, type Dictionary } from 'intlayer';
-import type { ServiceCategoryId } from './service-category';
+import type { ServiceCategoryId, ServiceId } from './service-category';
 
 const servicesCatalogueContent = {
   key: 'services-catalogue',
   content: {
     items: [
       {
+        id: 'web-ui-ux-design' satisfies ServiceId,
         category: 'design-product' satisfies ServiceCategoryId,
         title: t({
           en: 'Web Design & UI/UX Design',
@@ -24,6 +25,7 @@ const servicesCatalogueContent = {
         ],
       },
       {
+        id: 'web-development' satisfies ServiceId,
         category: 'software-engineering' satisfies ServiceCategoryId,
         title: t({ en: 'Web Development', hy: 'Վեբ մշակում', ru: 'Веб-разработка' }),
         summary: t({
@@ -38,6 +40,7 @@ const servicesCatalogueContent = {
         ],
       },
       {
+        id: 'mobile-app-development' satisfies ServiceId,
         category: 'software-engineering' satisfies ServiceCategoryId,
         title: t({
           en: 'Mobile App Development',
@@ -56,6 +59,7 @@ const servicesCatalogueContent = {
         ],
       },
       {
+        id: 'custom-software-development' satisfies ServiceId,
         category: 'software-engineering' satisfies ServiceCategoryId,
         title: t({
           en: 'Custom Software Development',
@@ -74,6 +78,7 @@ const servicesCatalogueContent = {
         ],
       },
       {
+        id: 'saas-development' satisfies ServiceId,
         category: 'software-engineering' satisfies ServiceCategoryId,
         title: t({ en: 'SaaS Development', hy: 'SaaS մշակում', ru: 'SaaS-разработка' }),
         summary: t({
@@ -88,6 +93,7 @@ const servicesCatalogueContent = {
         ],
       },
       {
+        id: 'backend-api-integration' satisfies ServiceId,
         category: 'software-engineering' satisfies ServiceCategoryId,
         title: t({
           en: 'Backend Development & API Integration',
@@ -106,6 +112,7 @@ const servicesCatalogueContent = {
         ],
       },
       {
+        id: 'legacy-modernization' satisfies ServiceId,
         category: 'software-engineering' satisfies ServiceCategoryId,
         title: t({
           en: 'Legacy System Modernization',
@@ -124,6 +131,7 @@ const servicesCatalogueContent = {
         ],
       },
       {
+        id: 'ai-development-integration' satisfies ServiceId,
         category: 'artificial-intelligence' satisfies ServiceCategoryId,
         title: t({
           en: 'AI Development & Integration',
@@ -142,6 +150,7 @@ const servicesCatalogueContent = {
         ],
       },
       {
+        id: 'ai-agents-automation' satisfies ServiceId,
         category: 'artificial-intelligence' satisfies ServiceCategoryId,
         title: t({
           en: 'AI Agents & Business Automation',
@@ -160,6 +169,7 @@ const servicesCatalogueContent = {
         ],
       },
       {
+        id: 'ai-workflow-engineering' satisfies ServiceId,
         category: 'artificial-intelligence' satisfies ServiceCategoryId,
         title: t({
           en: 'Claude & AI Workflow Engineering',
@@ -178,6 +188,7 @@ const servicesCatalogueContent = {
         ],
       },
       {
+        id: 'cloud-infrastructure' satisfies ServiceId,
         category: 'infrastructure-operations' satisfies ServiceCategoryId,
         title: t({
           en: 'Server Management & Cloud Infrastructure',
@@ -196,6 +207,7 @@ const servicesCatalogueContent = {
         ],
       },
       {
+        id: 'devops-automation' satisfies ServiceId,
         category: 'infrastructure-operations' satisfies ServiceCategoryId,
         title: t({
           en: 'DevOps & Deployment Automation',
@@ -214,6 +226,7 @@ const servicesCatalogueContent = {
         ],
       },
       {
+        id: 'software-maintenance-support' satisfies ServiceId,
         category: 'infrastructure-operations' satisfies ServiceCategoryId,
         title: t({
           en: 'Software Maintenance & Technical Support',
@@ -232,6 +245,7 @@ const servicesCatalogueContent = {
         ],
       },
       {
+        id: 'dedicated-teams' satisfies ServiceId,
         category: 'engineering-partnerships' satisfies ServiceCategoryId,
         title: t({
           en: 'Dedicated Development Teams',
@@ -250,6 +264,7 @@ const servicesCatalogueContent = {
         ],
       },
       {
+        id: 'white-label-development' satisfies ServiceId,
         category: 'engineering-partnerships' satisfies ServiceCategoryId,
         title: t({
           en: 'White-Label Development',

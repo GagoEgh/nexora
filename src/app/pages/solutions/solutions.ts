@@ -6,10 +6,10 @@ import { useDictionary } from 'angular-intlayer';
 import { filter } from 'rxjs';
 import { CONTACT_PATH, SERVICES_PATH } from '../../core/routing/paths';
 import { scrollToSection } from '../../shared/motion/scroll-to-section';
-import { PageIntro, type PageIntroCrumb } from '../../shared/ui/page-intro/page-intro';
+import { PageIntro, pageCrumbs } from '../../shared/ui/page-intro/page-intro';
 import {
-  type ConversationCopy,
   StartConversation,
+  toConversationCopy,
 } from '../../shared/ui/start-conversation/start-conversation';
 import { challengeSectionId, isChallengeId, type ChallengeId } from './challenge';
 import { ChallengeDetails } from './challenge-details/challenge-details';
@@ -38,21 +38,11 @@ export class Solutions {
     return isChallengeId(value) ? value : null;
   });
 
-  protected readonly crumbs = computed<readonly PageIntroCrumb[]>(() => {
-    const copy = this.content();
-    return [{ label: copy.breadcrumbHome.value, path: '/' }, { label: copy.title.value }];
-  });
+  protected readonly crumbs = computed(() => pageCrumbs(this.content()));
 
-  protected readonly conversationCopy = computed<ConversationCopy>(() => {
-    const copy = this.content().conversation;
-    return {
-      eyebrow: copy.eyebrow.value,
-      title: copy.title.value,
-      lead: copy.lead.value,
-      primary: { label: copy.primaryCta.value, path: CONTACT_PATH },
-      secondary: { label: copy.secondaryCta.value, path: SERVICES_PATH },
-    };
-  });
+  protected readonly conversationCopy = computed(() =>
+    toConversationCopy(this.content().conversation, CONTACT_PATH, SERVICES_PATH),
+  );
 
   constructor() {
     this.router.events

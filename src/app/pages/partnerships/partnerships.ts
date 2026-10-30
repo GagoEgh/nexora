@@ -6,10 +6,10 @@ import { useDictionary } from 'angular-intlayer';
 import { LocalizedPathPipe } from '../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../core/icons/icons';
 import { CONTACT_PATH, ENGAGEMENT_MODELS_PATH, SERVICES_PATH } from '../../core/routing/paths';
-import { PageIntro, type PageIntroCrumb } from '../../shared/ui/page-intro/page-intro';
+import { PageIntro, pageCrumbs } from '../../shared/ui/page-intro/page-intro';
 import {
-  type ConversationCopy,
   StartConversation,
+  toConversationCopy,
 } from '../../shared/ui/start-conversation/start-conversation';
 import { PartnerAudience } from './partner-audience/partner-audience';
 import { PartnerFlow } from './partner-flow/partner-flow';
@@ -44,19 +44,9 @@ export class Partnerships {
   protected readonly engagementPath = ENGAGEMENT_MODELS_PATH;
   protected readonly servicesPath = SERVICES_PATH;
 
-  protected readonly crumbs = computed<readonly PageIntroCrumb[]>(() => {
-    const copy = this.content();
-    return [{ label: copy.breadcrumbHome.value, path: '/' }, { label: copy.title.value }];
-  });
+  protected readonly crumbs = computed(() => pageCrumbs(this.content()));
 
-  protected readonly conversationCopy = computed<ConversationCopy>(() => {
-    const copy = this.content().conversation;
-    return {
-      eyebrow: copy.eyebrow.value,
-      title: copy.title.value,
-      lead: copy.lead.value,
-      primary: { label: copy.primaryCta.value, path: this.contactPath },
-      secondary: { label: copy.secondaryCta.value, path: this.servicesPath },
-    };
-  });
+  protected readonly conversationCopy = computed(() =>
+    toConversationCopy(this.content().conversation, this.contactPath, this.servicesPath),
+  );
 }

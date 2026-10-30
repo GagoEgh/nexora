@@ -240,10 +240,10 @@ describe('Partnerships', () => {
     await go('/ru/partnerships');
 
     expect(root.querySelector('h1')?.textContent?.trim()).toBe(
-      'Senior-инженерия за вашими клиентскими отношениями.',
+      'Инженерная экспертиза уровня Senior для реализации проектов ваших клиентов.',
     );
     expect(root.querySelector('#audience-title')?.textContent?.trim()).toBe(
-      'Создано для компаний, которые продают технологии или консультируют по ним.',
+      'Для компаний, которые предлагают технологические решения или консультируют в сфере технологий.',
     );
 
     const hrefs = Array.from(root.querySelectorAll('a')).map((el) => el.getAttribute('href'));

@@ -88,7 +88,7 @@ describe('Hero', () => {
     setLocale('ru');
     await fixture.whenStable();
     expect(root.querySelector('h1')?.textContent?.trim()).toBe(
-      'Создаём цифровые решения, которые помогают бизнесу развиваться.',
+      'Создаём цифровые решения, которые двигают бизнес вперёд.',
     );
     expect(root.querySelector('.hero__actions a')?.textContent?.trim()).toBe('Обсудить ваш проект');
     // The illustration and its notes receive the localized content through their inputs.

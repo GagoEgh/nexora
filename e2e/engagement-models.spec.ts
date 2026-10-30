@@ -225,7 +225,7 @@ test.describe('engagement models at the desktop design width', () => {
     await page.goto('/ru');
     await page.locator('app-engagement-models').scrollIntoViewIfNeeded();
     await expect(page.locator('app-engagement-models h2')).toHaveText(
-      'Сотрудничество, соответствующее вашим задачам.',
+      'Форматы сотрудничества под ваши задачи.',
     );
     await expect(
       page.locator('app-engagement-models .engagement-models__card-title').first(),

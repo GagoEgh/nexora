@@ -177,10 +177,10 @@ test.describe('engagement models with reduced motion', () => {
 /**
  * The finder chips select a model.
  *
- * The selection lives in the URL, so it is shareable and survives a reload. The two
- * dictionaries behind the page carry no shared key - only translated display copy - so the
- * finder row and the detail card are paired by position through `MODEL_IDS`. These specs assert
- * the pairing end to end, which is what would catch a reorder of either dictionary.
+ * The selection lives in the URL, so it is shareable and survives a reload. Each entry in both
+ * dictionaries carries its own `ModelId`, so the finder row and the detail card are paired by
+ * that key rather than by their position in the two arrays. These specs assert the pairing end
+ * to end, which is what would catch an id typed onto the wrong entry.
  */
 const PAIRS = [
   ['project-based', 'Project-Based Development'],

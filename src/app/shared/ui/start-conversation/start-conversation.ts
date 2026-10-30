@@ -4,6 +4,7 @@ import { MatIcon } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { useDictionary } from 'angular-intlayer';
 import { Reveal } from '../../motion/reveal';
+import type { LocalizedText } from '../../../core/i18n/localized-text';
 import { LocalizedPathPipe } from '../../../core/i18n/localized-path.pipe';
 import { CONTACT_PATH, PARTNERSHIPS_PATH } from '../../../core/routing/paths';
 import { appIcon } from '../../../core/icons/icons';
@@ -25,6 +26,28 @@ export interface ConversationCopy {
   readonly steps?: readonly string[];
   readonly primary: ConversationAction;
   readonly secondary: ConversationAction;
+}
+
+export interface ConversationCopySource {
+  readonly eyebrow: LocalizedText;
+  readonly title: LocalizedText;
+  readonly lead: LocalizedText;
+  readonly primaryCta: LocalizedText;
+  readonly secondaryCta: LocalizedText;
+}
+
+export function toConversationCopy(
+  copy: ConversationCopySource,
+  primaryPath: string,
+  secondaryPath: string,
+): ConversationCopy {
+  return {
+    eyebrow: copy.eyebrow.value,
+    title: copy.title.value,
+    lead: copy.lead.value,
+    primary: { label: copy.primaryCta.value, path: primaryPath },
+    secondary: { label: copy.secondaryCta.value, path: secondaryPath },
+  };
 }
 
 type ConversationBand = Omit<ConversationCopy, 'steps'> & { readonly steps: readonly string[] };
@@ -51,12 +74,8 @@ export class StartConversation {
 
     const content = this.content();
     return {
-      eyebrow: content.eyebrow.value,
-      title: content.title.value,
-      lead: content.lead.value,
+      ...toConversationCopy(content, CONTACT_PATH, PARTNERSHIPS_PATH),
       steps: content.steps.map((step) => step.value),
-      primary: { label: content.primaryCta.value, path: CONTACT_PATH },
-      secondary: { label: content.secondaryCta.value, path: PARTNERSHIPS_PATH },
     };
   });
 }

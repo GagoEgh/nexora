@@ -11,7 +11,7 @@ import {
   RouterLinkActive,
 } from '@angular/router';
 import { useDictionary } from 'angular-intlayer';
-import { filter } from 'rxjs';
+import { filter, map } from 'rxjs';
 import { getPathWithoutLocale } from 'intlayer';
 
 import { AI_AGENT_PATH, SERVICES_PATH } from '../../core/routing/paths';
@@ -60,13 +60,16 @@ export class Header {
   protected readonly menuIcon = appIcon('menu');
   protected readonly closeIcon = appIcon('x');
 
-  private readonly navigated = toSignal(
-    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)),
+  private readonly currentPath = toSignal(
+    this.router.events.pipe(
+      filter((event) => event instanceof NavigationEnd),
+      map(() => this.pathWithoutLocale()),
+    ),
+    { initialValue: this.pathWithoutLocale() },
   );
 
   protected readonly servicesActive = computed(() => {
-    this.navigated();
-    const path = getPathWithoutLocale(this.router.url.split(/[?#]/)[0]);
+    const path = this.currentPath();
     return path === SERVICES_PATH || path.startsWith(`${SERVICES_PATH}/`);
   });
 
@@ -90,6 +93,10 @@ export class Header {
 
   protected closeMenu(): void {
     this.menuOpen.set(false);
+  }
+
+  private pathWithoutLocale(): string {
+    return getPathWithoutLocale(this.router.url.split(/[?#]/)[0]);
   }
 
   protected onEscape(): void {

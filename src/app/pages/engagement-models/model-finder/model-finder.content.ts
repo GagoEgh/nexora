@@ -1,4 +1,5 @@
 import { t, type Dictionary } from 'intlayer';
+import type { ModelId } from '../engagement-model';
 
 const modelFinderContent = {
   key: 'engagement-models-finder',
@@ -15,6 +16,7 @@ const modelFinderContent = {
     }),
     rows: [
       {
+        id: 'project-based' satisfies ModelId,
         statement: t({
           en: 'A clearly defined scope',
           hy: 'Հստակ սահմանված աշխատանքի ծավալ',
@@ -27,6 +29,7 @@ const modelFinderContent = {
         }),
       },
       {
+        id: 'dedicated-team' satisfies ModelId,
         statement: t({
           en: 'Ongoing extra senior capacity',
           hy: 'Senior մակարդակի լրացուցիչ մասնագետների շարունակական ներգրավում',
@@ -39,6 +42,7 @@ const modelFinderContent = {
         }),
       },
       {
+        id: 'long-term-partnership' satisfies ModelId,
         statement: t({
           en: 'A product that keeps evolving',
           hy: 'Շարունակաբար զարգացող թվային արտադրանք',
@@ -51,6 +55,7 @@ const modelFinderContent = {
         }),
       },
       {
+        id: 'maintenance-support' satisfies ModelId,
         statement: t({
           en: 'A live system that needs care',
           hy: 'Գործող համակարգ, որը կանոնավոր տեխնիկական սպասարկման կարիք ունի',
@@ -63,6 +68,7 @@ const modelFinderContent = {
         }),
       },
       {
+        id: 'white-label' satisfies ModelId,
         statement: t({
           en: 'Delivery for your own clients',
           hy: 'Տեխնիկական լուծումների մշակում ձեր հաճախորդների համար',

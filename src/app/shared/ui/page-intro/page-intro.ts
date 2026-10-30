@@ -1,11 +1,24 @@
 import { Component, computed, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import type { LocalizedText } from '../../../core/i18n/localized-text';
 import { LocalizedPathPipe } from '../../../core/i18n/localized-path.pipe';
 import { Reveal } from '../../motion/reveal';
 
 export interface PageIntroCrumb {
   readonly label: string;
   readonly path?: string;
+}
+
+export interface PageCrumbCopy {
+  readonly breadcrumbHome: LocalizedText;
+  readonly title: LocalizedText;
+}
+
+export function pageCrumbs(
+  copy: PageCrumbCopy,
+  ...between: readonly PageIntroCrumb[]
+): readonly PageIntroCrumb[] {
+  return [{ label: copy.breadcrumbHome.value, path: '/' }, ...between, { label: copy.title.value }];
 }
 
 @Component({

@@ -7,10 +7,10 @@ import { CONTACT_PATH, SERVICES_PATH, SOLUTIONS_PATH } from '../../core/routing/
 import { LocalizedPathPipe } from '../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../core/icons/icons';
 import { Reveal } from '../../shared/motion/reveal';
-import { PageIntro, type PageIntroCrumb } from '../../shared/ui/page-intro/page-intro';
+import { PageIntro, pageCrumbs } from '../../shared/ui/page-intro/page-intro';
 import {
-  type ConversationCopy,
   StartConversation,
+  toConversationCopy,
 } from '../../shared/ui/start-conversation/start-conversation';
 import aiAgentContent from './ai-agent.content';
 import { Audiences } from './audiences/audiences';
@@ -49,23 +49,12 @@ export class AiAgent {
   protected readonly contactPath = CONTACT_PATH;
   protected readonly solutionsPath = SOLUTIONS_PATH;
 
-  protected readonly conversationCopy = computed<ConversationCopy>(() => {
-    const copy = this.content().conversation;
-    return {
-      eyebrow: copy.eyebrow.value,
-      title: copy.title.value,
-      lead: copy.lead.value,
-      primary: { label: copy.primaryCta.value, path: CONTACT_PATH },
-      secondary: { label: copy.secondaryCta.value, path: SERVICES_PATH },
-    };
-  });
+  protected readonly conversationCopy = computed(() =>
+    toConversationCopy(this.content().conversation, CONTACT_PATH, SERVICES_PATH),
+  );
 
-  protected readonly crumbs = computed<readonly PageIntroCrumb[]>(() => {
+  protected readonly crumbs = computed(() => {
     const copy = this.content();
-    return [
-      { label: copy.breadcrumbHome.value, path: '/' },
-      { label: copy.breadcrumbServices.value, path: SERVICES_PATH },
-      { label: copy.title.value },
-    ];
+    return pageCrumbs(copy, { label: copy.breadcrumbServices.value, path: SERVICES_PATH });
   });
 }

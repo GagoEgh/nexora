@@ -2,11 +2,11 @@
   <h2 class="finder__title" id="finder-title">{{ content().title }}</h2>
 
   <dl class="finder__rows">
-    @for (entry of rows(); track $index) {
+    @for (row of content().rows; track row.id.value) {
       <div class="finder__row">
         <dt class="finder__need">
           <span class="finder__label">{{ content().need }}</span>
-          <span class="finder__statement">{{ entry.row.statement }}</span>
+          <span class="finder__statement">{{ row.statement }}</span>
         </dt>
 
         <dd class="finder__model">
@@ -14,11 +14,11 @@
 
           <a
             class="finder__chip"
-            [class.finder__chip--current]="entry.id === current()"
-            [attr.aria-current]="entry.id === current() ? 'location' : null"
+            [class.finder__chip--current]="row.id.value === current()"
+            [attr.aria-current]="row.id.value === current() ? 'location' : null"
             [routerLink]="[]"
-            [queryParams]="{ model: entry.id }"
-            >{{ entry.row.model }}</a
+            [queryParams]="{ model: row.id.value }"
+            >{{ row.model }}</a
           >
         </dd>
       </div>

@@ -123,7 +123,7 @@ describe('EngagementModels', () => {
     setLocale('hy');
     await fixture.whenStable();
     expect(root.querySelector('h2')?.textContent?.trim()).toBe(
-      'Համագործակցություն՝ ձեր կարիքներին համապատասխան։',
+      'Համագործակցության ձևաչափեր՝ ձեր կարիքներին համապատասխան։',
     );
     expect(root.querySelector('.engagement-models__card-title')?.textContent?.trim()).toBe(
       'Նախագծային մշակում',
@@ -134,7 +134,7 @@ describe('EngagementModels', () => {
     setLocale('ru');
     await fixture.whenStable();
     expect(root.querySelector('h2')?.textContent?.trim()).toBe(
-      'Сотрудничество, соответствующее вашим задачам.',
+      'Форматы сотрудничества под ваши задачи.',
     );
     expect(root.querySelector('.engagement-models__value')?.textContent?.trim()).toBe(
       'Разработка конкретного продукта или функциональности, а также модернизация существующей системы.',

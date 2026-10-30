@@ -21,11 +21,11 @@ import { Reveal } from '../../shared/motion/reveal';
 import { scrollToSection } from '../../shared/motion/scroll-to-section';
 import { ordinal } from '../../shared/ordinal';
 import { IconTile, type IconTileTone } from '../../shared/ui/icon-tile/icon-tile';
-import { PageIntro, type PageIntroCrumb } from '../../shared/ui/page-intro/page-intro';
+import { PageIntro, pageCrumbs } from '../../shared/ui/page-intro/page-intro';
 import { ServiceCard, type ServiceCardCopy } from '../../shared/ui/service-card/service-card';
 import {
-  type ConversationCopy,
   StartConversation,
+  toConversationCopy,
 } from '../../shared/ui/start-conversation/start-conversation';
 import {
   ALL_SERVICES,
@@ -114,10 +114,7 @@ export class Services {
     }));
   });
 
-  protected readonly crumbs = computed<readonly PageIntroCrumb[]>(() => {
-    const copy = this.content();
-    return [{ label: copy.breadcrumbHome.value, path: '/' }, { label: copy.title.value }];
-  });
+  protected readonly crumbs = computed(() => pageCrumbs(this.content()));
 
   protected readonly categoryTotal = ordinal(SERVICE_CATEGORY_IDS.length - 1);
 
@@ -135,16 +132,9 @@ export class Services {
 
   protected readonly total = computed(() => this.catalogue().items.length);
 
-  protected readonly conversationCopy = computed<ConversationCopy>(() => {
-    const copy = this.content().conversation;
-    return {
-      eyebrow: copy.eyebrow.value,
-      title: copy.title.value,
-      lead: copy.lead.value,
-      primary: { label: copy.primaryCta.value, path: CONTACT_PATH },
-      secondary: { label: copy.secondaryCta.value, path: AI_AGENT_PATH },
-    };
-  });
+  protected readonly conversationCopy = computed(() =>
+    toConversationCopy(this.content().conversation, CONTACT_PATH, AI_AGENT_PATH),
+  );
 
   protected readonly visibleGroups = computed(() => {
     const filter = this.filter();
