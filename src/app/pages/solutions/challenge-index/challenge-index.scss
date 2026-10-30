@@ -4,6 +4,7 @@
 @use 'tokens/motion';
 @use 'tokens/spacing';
 @use 'tokens/typography';
+@use 'mixins/surface';
 
 :host {
   display: block;
@@ -44,9 +45,8 @@
   box-sizing: border-box;
   min-height: 70px;
   padding: spacing.space(12) spacing.space(16);
-  border: 1px solid var(--mat-sys-outline-variant);
+  @include surface.outlined();
   border-radius: var(--mat-sys-corner-medium);
-  background-color: var(--mat-sys-surface);
   text-decoration: none;
   transition:
     background-color motion.duration(fast) motion.easing(out),

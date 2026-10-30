@@ -4,6 +4,7 @@
 @use 'tokens/layout';
 @use 'tokens/motion';
 @use 'tokens/spacing';
+@use 'mixins/surface';
 
 :host {
   @include container.section();
@@ -73,9 +74,8 @@
   justify-items: start;
   gap: spacing.space(12);
   padding: spacing.space(24);
-  border: 1px solid var(--mat-sys-outline-variant);
+  @include surface.outlined();
   border-radius: var(--mat-sys-corner-large);
-  background-color: var(--mat-sys-surface);
 }
 
 .problems__card:hover,

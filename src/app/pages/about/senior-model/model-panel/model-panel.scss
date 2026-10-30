@@ -1,6 +1,7 @@
 @use 'mixins/reveal';
 @use 'tokens/motion';
 @use 'tokens/spacing';
+@use 'mixins/surface';
 
 :host {
   display: block;
@@ -19,8 +20,7 @@
 }
 
 :host([data-tone='plain']) .senior__panel {
-  border: 1px solid var(--mat-sys-outline-variant);
-  background-color: var(--mat-sys-surface);
+  @include surface.outlined();
 }
 
 :host([data-tone='inverse']) .senior__panel {

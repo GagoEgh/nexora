@@ -5,6 +5,7 @@
 @use 'tokens/motion';
 @use 'tokens/spacing';
 @use 'tokens/typography';
+@use 'mixins/surface';
 
 :host {
   @include container.section();
@@ -130,9 +131,8 @@
   gap: spacing.space(8);
   align-items: center;
   padding: spacing.space(8) spacing.space(16);
-  border: 1px solid var(--mat-sys-outline-variant);
+  @include surface.outlined();
   border-radius: var(--mat-sys-corner-full);
-  background-color: var(--mat-sys-surface);
   font: var(--mat-sys-label-large);
   color: var(--mat-sys-on-surface);
 }

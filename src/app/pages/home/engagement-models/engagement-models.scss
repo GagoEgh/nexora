@@ -3,6 +3,7 @@
 @use 'mixins/eyebrow';
 @use 'mixins/reveal';
 @use 'mixins/text';
+@use 'mixins/surface';
 
 :host {
   display: block;
@@ -95,9 +96,8 @@
   flex-direction: column;
   min-width: 0;
   padding: spacing.space(24);
-  border: 1px solid var(--mat-sys-outline-variant);
+  @include surface.outlined();
   border-radius: var(--mat-sys-corner-large);
-  background-color: var(--mat-sys-surface);
 
   @include reveal.stagger(3, 80ms, 120ms, $hover: true);
 

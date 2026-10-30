@@ -1,0 +1,4 @@
+@mixin outlined($background: var(--mat-sys-surface)) {
+  border: 1px solid var(--mat-sys-outline-variant);
+  background-color: $background;
+}

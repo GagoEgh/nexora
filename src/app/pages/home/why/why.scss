@@ -4,6 +4,7 @@
 @use 'mixins/eyebrow';
 @use 'mixins/reveal';
 @use 'mixins/text';
+@use 'mixins/surface';
 
 :host {
   display: block;
@@ -59,9 +60,8 @@
   gap: spacing.space(16);
   justify-self: stretch;
   padding: spacing.space(24);
-  border: 1px solid var(--mat-sys-outline-variant);
+  @include surface.outlined($background: var(--mat-sys-surface-container-low));
   border-radius: var(--mat-sys-corner-large);
-  background-color: var(--mat-sys-surface-container-low);
 }
 
 .why__card-title {

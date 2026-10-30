@@ -1,6 +1,7 @@
 @use 'tokens/motion';
 @use 'tokens/spacing';
 @use 'tokens/typography';
+@use 'mixins/surface';
 
 :host {
   display: flex;
@@ -9,9 +10,8 @@
   min-width: 0;
   height: 100%;
   padding: spacing.space(24);
-  border: 1px solid var(--mat-sys-outline-variant);
+  @include surface.outlined();
   border-radius: var(--mat-sys-corner-large);
-  background-color: var(--mat-sys-surface);
 
   transition:
     border-color motion.duration(fast) motion.easing(out),
@@ -77,9 +77,8 @@
 
 .service-card__tag {
   padding: spacing.space(4) spacing.space(8);
-  border: 1px solid var(--mat-sys-outline-variant);
+  @include surface.outlined($background: var(--mat-sys-surface-container-low));
   border-radius: var(--mat-sys-corner-small);
-  background-color: var(--mat-sys-surface-container-low);
   font: var(--mat-sys-label-medium);
   color: var(--mat-sys-on-surface-variant);
 }

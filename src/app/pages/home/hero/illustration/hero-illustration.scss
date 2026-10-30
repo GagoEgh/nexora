@@ -3,6 +3,7 @@
 @use 'tokens/layout';
 @use 'tokens/typography';
 @use 'mixins/reveal';
+@use 'mixins/surface';
 
 :host {
   display: block;
@@ -18,9 +19,8 @@
 
 .art__window {
   overflow: hidden;
-  border: 1px solid var(--mat-sys-outline-variant);
+  @include surface.outlined();
   border-radius: var(--mat-sys-corner-large);
-  background-color: var(--mat-sys-surface);
   box-shadow: var(--mat-sys-level2);
 
   transition: transform motion.duration(base) motion.easing(out);

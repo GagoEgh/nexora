@@ -2,14 +2,14 @@
 @use 'tokens/motion';
 @use 'tokens/spacing';
 @use 'tokens/typography';
+@use 'mixins/surface';
 
 .channels {
   box-sizing: border-box;
 
   padding: spacing.space(20);
-  border: 1px solid var(--mat-sys-outline-variant);
+  @include surface.outlined();
   border-radius: var(--nx-sys-corner-panel);
-  background-color: var(--mat-sys-surface);
   min-width: 0;
 
   @include reveal.item($delay: 420ms);

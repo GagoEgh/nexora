@@ -1,15 +1,15 @@
 @use 'tokens/layout';
 @use 'tokens/spacing';
 @use 'tokens/typography';
+@use 'mixins/surface';
 
 :host {
   display: flex;
   align-items: center;
   gap: spacing.space(12);
   padding: spacing.space(8) spacing.space(12);
-  border: 1px solid var(--mat-sys-outline-variant);
+  @include surface.outlined();
   border-radius: var(--mat-sys-corner-medium);
-  background-color: var(--mat-sys-surface);
   box-shadow: var(--mat-sys-level1);
 }
 

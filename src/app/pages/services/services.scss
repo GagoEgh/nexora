@@ -4,6 +4,7 @@
 @use 'mixins/reveal';
 @use 'mixins/text';
 @use 'mixins/visually-hidden';
+@use 'mixins/surface';
 
 :host {
   display: block;
@@ -100,9 +101,8 @@
   max-width: var(--nx-layout-container-max);
   margin-inline: auto;
   padding: spacing.space(24);
-  border: 1px solid var(--mat-sys-outline-variant);
+  @include surface.outlined();
   border-radius: var(--mat-sys-corner-large);
-  background-color: var(--mat-sys-surface);
 }
 
 .services__cta-main {

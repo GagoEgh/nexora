@@ -4,6 +4,7 @@
 @use 'tokens/motion';
 @use 'tokens/spacing';
 @use 'tokens/typography';
+@use 'mixins/surface';
 
 :host {
   @include container.section();
@@ -30,9 +31,8 @@
   gap: spacing.space(32);
   box-sizing: border-box;
   padding: spacing.space(24);
-  border: 1px solid var(--mat-sys-outline-variant);
+  @include surface.outlined();
   border-radius: var(--nx-sys-corner-panel);
-  background-color: var(--mat-sys-surface);
 
   @include layout.up(large) {
     grid-template-columns: minmax(0, 488px) minmax(0, 1fr) 300px;

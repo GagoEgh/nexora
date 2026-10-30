@@ -4,6 +4,7 @@
 @use 'tokens/layout';
 @use 'tokens/spacing';
 @use 'tokens/typography';
+@use 'mixins/surface';
 
 :host {
   display: block;
@@ -17,9 +18,8 @@
   gap: spacing.space(32);
   box-sizing: border-box;
   padding: spacing.space(24);
-  border: 1px solid var(--mat-sys-outline-variant);
+  @include surface.outlined();
   border-radius: var(--nx-sys-corner-panel);
-  background-color: var(--mat-sys-surface);
   box-shadow: var(--mat-sys-level1);
   min-width: 0;
 

@@ -2,13 +2,13 @@
 @use 'mixins/reveal';
 @use 'tokens/layout';
 @use 'tokens/spacing';
+@use 'mixins/surface';
 
 .finder {
   box-sizing: border-box;
   padding: spacing.space(24) spacing.space(24) spacing.space(12);
-  border: 1px solid var(--mat-sys-outline-variant);
+  @include surface.outlined();
   border-radius: var(--nx-sys-corner-panel);
-  background-color: var(--mat-sys-surface);
   box-shadow: var(--mat-sys-level2);
 }
 

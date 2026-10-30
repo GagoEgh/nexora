@@ -4,6 +4,7 @@
 @use 'tokens/layout';
 @use 'tokens/spacing';
 @use 'tokens/typography';
+@use 'mixins/surface';
 
 :host {
   @include container.section();
@@ -38,9 +39,8 @@
   align-items: start;
   box-sizing: border-box;
   padding: spacing.space(32);
-  border: 1px solid var(--mat-sys-outline-variant);
+  @include surface.outlined();
   border-radius: var(--nx-sys-corner-panel);
-  background-color: var(--mat-sys-surface);
 }
 
 .markets__copy {

@@ -2,13 +2,13 @@
 @use 'tokens/motion';
 @use 'tokens/layout';
 @use 'tokens/spacing';
+@use 'mixins/surface';
 
 .glance {
   box-sizing: border-box;
   padding: spacing.space(24) calc(#{spacing.space(24)} + #{spacing.space(4)}) spacing.space(12);
-  border: 1px solid var(--mat-sys-outline-variant);
+  @include surface.outlined();
   border-radius: var(--nx-sys-corner-panel);
-  background-color: var(--mat-sys-surface);
 }
 
 .glance__head {

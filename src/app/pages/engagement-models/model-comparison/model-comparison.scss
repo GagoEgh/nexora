@@ -6,6 +6,7 @@
 @use 'mixins/section';
 @use 'tokens/spacing';
 @use 'tokens/typography';
+@use 'mixins/surface';
 
 :host {
   @include container.section();
@@ -54,9 +55,8 @@
   transition-delay: 180ms;
 
   overflow-x: auto;
-  border: 1px solid var(--mat-sys-outline-variant);
+  @include surface.outlined();
   border-radius: var(--nx-sys-corner-panel);
-  background-color: var(--mat-sys-surface);
   mask-image: linear-gradient(to right, #000000 calc(100% - #{spacing.space(48)}), transparent);
 
   @include layout.up(large) {

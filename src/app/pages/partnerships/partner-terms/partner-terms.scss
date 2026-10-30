@@ -3,6 +3,7 @@
 @use 'tokens/typography';
 @use 'tokens/layout';
 @use 'tokens/spacing';
+@use 'mixins/surface';
 
 :host {
   @include container.section();
@@ -17,9 +18,8 @@
   gap: spacing.space(48);
   box-sizing: border-box;
   padding: spacing.space(48);
-  border: 1px solid var(--mat-sys-outline-variant);
+  @include surface.outlined();
   border-radius: var(--mat-sys-corner-extra-large);
-  background-color: var(--mat-sys-surface);
 
   @include layout.up(large) {
     grid-template-columns: minmax(0, 1fr) minmax(0, 698px);

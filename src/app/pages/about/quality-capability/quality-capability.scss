@@ -3,6 +3,7 @@
 @use 'mixins/eyebrow';
 @use 'tokens/layout';
 @use 'tokens/spacing';
+@use 'mixins/surface';
 
 :host {
   @include container.section();
@@ -34,8 +35,7 @@
 }
 
 .quality__panel[data-tone='plain'] {
-  border: 1px solid var(--mat-sys-outline-variant);
-  background-color: var(--mat-sys-surface);
+  @include surface.outlined();
 }
 
 .quality__panel[data-tone='accent'] {

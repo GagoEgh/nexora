@@ -5,6 +5,7 @@
 @use 'tokens/layout';
 @use 'tokens/spacing';
 @use 'tokens/typography';
+@use 'mixins/surface';
 
 :host {
   @include container.section();
@@ -32,9 +33,8 @@
   gap: spacing.space(32);
   box-sizing: border-box;
   padding: spacing.space(24);
-  border: 1px solid var(--mat-sys-outline-variant);
+  @include surface.outlined();
   border-radius: var(--nx-sys-corner-panel);
-  background-color: var(--mat-sys-surface);
 
   @include layout.up(medium) {
     padding: spacing.space(40);

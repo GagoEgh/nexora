@@ -1,6 +1,7 @@
 @use 'sass:map';
 @use 'tokens/spacing';
 @use 'tokens/typography';
+@use 'mixins/surface';
 
 $nav-compact-min: (
   en: 1000px,
@@ -191,9 +192,8 @@ $nav-min: (
   gap: spacing.space(4);
   height: 38px;
   padding-inline: spacing.space(8);
-  border: 1px solid var(--mat-sys-outline-variant);
+  @include surface.outlined();
   border-radius: var(--mat-sys-corner-full);
-  background-color: var(--mat-sys-surface);
   font: var(--mat-sys-label-large);
   color: var(--mat-sys-on-surface);
   cursor: pointer;

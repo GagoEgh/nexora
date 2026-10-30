@@ -1,6 +1,7 @@
 @use 'tokens/motion';
 @use 'tokens/spacing';
 @use 'tokens/typography';
+@use 'mixins/surface';
 
 :host {
   display: block;
@@ -9,9 +10,8 @@
 .category-nav {
   box-sizing: border-box;
   padding: spacing.space(8);
-  border: 1px solid var(--mat-sys-outline-variant);
+  @include surface.outlined();
   border-radius: var(--mat-sys-corner-extra-large);
-  background-color: var(--mat-sys-surface);
 }
 
 .category-nav__list {
