@@ -29,6 +29,7 @@ const isStale = () => {
   try {
     pid = Number.parseInt(readFileSync(OWNER_FILE, 'utf8'), 10);
   } catch {
+    // Unreadable owner: fall through to the age fallback below.
   }
 
   if (Number.isInteger(pid)) {
@@ -94,15 +95,28 @@ const acquire = async (task) => {
 
 const release = () => rmSync(LOCK_DIR, { recursive: true, force: true });
 
+/** @param {number} since Milliseconds; generation that predates the spawn does not count. */
 const generatedSince = (since) => {
   try {
     const state = JSON.parse(readFileSync(PREPARED_FILE, 'utf8'));
     return state.status === 'done' && Number(state.timestamp) >= since;
   } catch {
+    // Absent, half-written, or from an Intlayer that no longer writes it: not done yet.
     return false;
   }
 };
 
+/**
+ * Waits for the watch task's own Intlayer generation to finish.
+ *
+ * The lock exists to stop two Intlayer runs rewriting `.intlayer/` and `intlayer-types/` at
+ * once, and that overlap is only possible while one is generating. A dev server generates once
+ * at startup and then sits watching, so holding the lock for its whole life blocked every later
+ * `npm test` and `npm run build` behind it. Waiting for the marker instead keeps the startup
+ * window exclusive and then lets go.
+ *
+ * @param {number} since
+ */
 const waitForGeneration = async (since) => {
   const deadline = Date.now() + GENERATION_TIMEOUT_MS;
   while (Date.now() < deadline) {

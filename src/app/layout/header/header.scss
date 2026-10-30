@@ -1,7 +1,12 @@
 @use 'sass:map';
 @use 'tokens/spacing';
-@use 'tokens/layout';
 @use 'tokens/typography';
+
+$nav-compact-min: (
+  en: 1000px,
+  ru: 1024px,
+  hy: 1244px,
+);
 
 $nav-min: (
   en: 1242px,
@@ -9,23 +14,35 @@ $nav-min: (
   hy: 1420px,
 );
 
-@mixin nav-up() {
-  @media (min-width: map.get($nav-min, en)) {
+@mixin _from($widths) {
+  @media (min-width: map.get($widths, en)) {
     :host-context(html:not([lang='hy'], [lang='ru'])) & {
       @content;
     }
   }
 
-  @media (min-width: map.get($nav-min, ru)) {
+  @media (min-width: map.get($widths, ru)) {
     :host-context(html[lang='ru']) & {
       @content;
     }
   }
 
-  @media (min-width: map.get($nav-min, hy)) {
+  @media (min-width: map.get($widths, hy)) {
     :host-context(html[lang='hy']) & {
       @content;
     }
+  }
+}
+
+@mixin nav-up() {
+  @include _from($nav-compact-min) {
+    @content;
+  }
+}
+
+@mixin nav-full-up() {
+  @include _from($nav-min) {
+    @content;
   }
 }
 
@@ -38,10 +55,12 @@ $nav-min: (
   padding-inline: var(--nx-layout-margin);
   border-block-end: 1px solid var(--mat-sys-outline-variant);
 
-  @include layout.up(large) {
-    --app-logo-height: 32px;
-
+  @include nav-up() {
     border-block-end: 0;
+  }
+
+  @include nav-full-up() {
+    --app-logo-height: 32px;
   }
 }
 
@@ -97,8 +116,12 @@ $nav-min: (
     flex-direction: row;
     grid-column: auto;
     justify-self: center;
-    gap: spacing.space(8);
+    gap: spacing.space(4);
     padding-block: 0;
+  }
+
+  @include nav-full-up() {
+    gap: spacing.space(8);
   }
 }
 
@@ -119,7 +142,15 @@ $nav-min: (
   cursor: pointer;
 
   @include nav-up() {
+    padding-inline: spacing.space(4);
+    font: var(--mat-sys-label-medium);
+    font-weight: typography.$weight-medium;
+  }
+
+  @include nav-full-up() {
     padding-inline: spacing.space(8);
+    font: var(--mat-sys-label-large);
+    font-weight: typography.$weight-medium;
   }
 }
 
@@ -145,7 +176,12 @@ $nav-min: (
   @include nav-up() {
     display: flex;
     grid-column: auto;
+    gap: spacing.space(8);
     padding-block: 0;
+  }
+
+  @include nav-full-up() {
+    gap: spacing.space(12);
   }
 }
 
@@ -154,13 +190,17 @@ $nav-min: (
   align-items: center;
   gap: spacing.space(4);
   height: 38px;
-  padding-inline: spacing.space(12);
+  padding-inline: spacing.space(8);
   border: 1px solid var(--mat-sys-outline-variant);
   border-radius: var(--mat-sys-corner-full);
   background-color: var(--mat-sys-surface);
   font: var(--mat-sys-label-large);
   color: var(--mat-sys-on-surface);
   cursor: pointer;
+
+  @include nav-full-up() {
+    padding-inline: spacing.space(12);
+  }
 }
 
 .header__lang-icon {

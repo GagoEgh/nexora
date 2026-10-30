@@ -151,6 +151,69 @@ test.describe('header at the desktop design width', () => {
   });
 });
 
+/**
+ * The compact desktop band (header.scss `$nav-compact-min`: en 1000, ru 1024, hy 1244).
+ *
+ * Between that width and the full-size breakpoint the same header renders at a smaller scale -
+ * Label/Medium labels, 4px gaps, the 28px logo - so that a 1024px laptop gets the navigation
+ * inline instead of behind the menu button. The slack either side of the nav is what decides
+ * whether that is honest: the grid centres the nav in a `1fr` track, so logo-to-nav and
+ * nav-to-actions are equal, and a label change that pushes either to zero means the design has
+ * outgrown the band and the breakpoint needs re-measuring.
+ */
+test.describe('header in the compact desktop band', () => {
+  /** @returns the equal slack either side of the centred nav, in px. */
+  const slack = async (page: Page) => {
+    const brand = await box(page, 'app-header .header__brand');
+    const nav = await box(page, 'app-header nav.header__nav');
+    return Math.round(nav.x - (brand.x + brand.w));
+  };
+
+  test('at 1024px English shows the whole navigation, scaled down', async ({ page }) => {
+    await page.setViewportSize({ width: 1024, height: 900 });
+    await page.goto('/');
+
+    await expect(page.locator('app-header button.header__menu')).toBeHidden();
+    await expect(page.locator('app-header nav.header__nav')).toBeVisible();
+    await expect(page.locator('app-header nav a.header__link')).toHaveCount(6);
+    await expect(page.locator(SERVICES_TRIGGER)).toHaveCount(1);
+
+    expect(await style(page, 'app-header a.header__link', 'font-size')).toBe('13px');
+    expect((await box(page, 'app-header app-logo')).h).toBe(28);
+    // The hairline belongs to the menu-button layout; inline nav reads as part of the page.
+    expect(await style(page, 'app-header', 'border-bottom-width')).toBe('0px');
+    expect(await slack(page)).toBeGreaterThan(16);
+  });
+
+  test('every locale clears its own breakpoint without crowding the nav', async ({ page }) => {
+    for (const [path, width] of [
+      ['/', 1000],
+      ['/ru', 1024],
+      ['/hy', 1244],
+    ] as const) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(path);
+      await expect(page.locator('app-header nav.header__nav')).toBeVisible();
+      expect(await slack(page), `${path} at ${width}px`).toBeGreaterThan(0);
+
+      // One pixel below it, the navigation belongs to the menu button instead.
+      await page.setViewportSize({ width: width - 1, height: 900 });
+      await page.goto(path);
+      await expect(page.locator('app-header nav.header__nav')).toBeHidden();
+      await expect(page.locator('app-header button.header__menu')).toBeVisible();
+    }
+  });
+
+  test('the full-size design takes over at its own breakpoint', async ({ page }) => {
+    await page.setViewportSize({ width: 1242, height: 900 });
+    await page.goto('/');
+
+    expect(await style(page, 'app-header a.header__link', 'font-size')).toBe('15px');
+    expect((await box(page, 'app-header app-logo')).h).toBe(32);
+    expect(await slack(page)).toBeGreaterThan(0);
+  });
+});
+
 test.describe('header at the mobile design width', () => {
   test.use({ viewport: { width: 390, height: 844 } });
 
@@ -268,8 +331,8 @@ test.describe('footer at the desktop design width', () => {
 
 test.describe('routing', () => {
   /*
-   * The desktop nav appears per locale (header.scss $nav-min: en 1270, ru 1328, hy 1448),
-   * so these locale-prefixed tests need a width that clears the widest of the three.
+   * The inline nav turns on per locale (header.scss `$nav-min`: en 1242, ru 1300, hy 1420), so
+   * these locale-prefixed tests need a width that clears the widest of the three.
    */
   test.use({ viewport: { width: 1448, height: 900 } });
 
