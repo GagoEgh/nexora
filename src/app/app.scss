@@ -6,8 +6,31 @@
   min-height: 100dvh;
 }
 
+.app__skip {
+  position: fixed;
+  z-index: 2;
+  inset-block-start: spacing.space(8);
+  inset-inline-start: spacing.space(8);
+  translate: 0 calc(-100% - #{spacing.space(16)});
+  padding: spacing.space(8) spacing.space(16);
+  border-radius: var(--mat-sys-corner-full);
+  background-color: var(--mat-sys-primary);
+  font: var(--mat-sys-label-large);
+  color: var(--mat-sys-on-primary);
+  text-decoration: none;
+}
+
+/* `:focus` rather than `:focus-visible`: off-screen, the link is keyboard-reachable only. */
+.app__skip:focus {
+  translate: 0;
+}
+
 .app__main {
   flex: 1 0 auto;
+}
+
+.app__main:focus {
+  outline: none;
 }
 
 .app__main:has(> [data-layout='immersive']) {

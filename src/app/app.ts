@@ -1,7 +1,8 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, effect, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { useLocale } from 'angular-intlayer';
+import { useDictionary, useLocale } from 'angular-intlayer';
+import appContent from './app.content';
 import { Footer } from './layout/footer/footer';
 import { Header } from './layout/header/header';
 
@@ -14,6 +15,8 @@ import { Header } from './layout/header/header';
 export class App {
   private readonly document = inject(DOCUMENT);
   private readonly locale = useLocale().locale;
+
+  protected readonly content = useDictionary(appContent);
 
   constructor() {
     effect(() => {
