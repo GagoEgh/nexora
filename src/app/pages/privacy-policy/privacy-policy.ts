@@ -11,6 +11,14 @@ import privacyPolicyContent from './privacy-policy.content';
     :host {
       @include container.page();
     }
+
+    h1 {
+      margin: 0;
+      overflow-wrap: anywhere;
+      font: var(--nx-sys-display-page);
+      letter-spacing: var(--nx-sys-display-tracking);
+      color: var(--mat-sys-on-surface);
+    }
   `,
 })
 export class PrivacyPolicy {
