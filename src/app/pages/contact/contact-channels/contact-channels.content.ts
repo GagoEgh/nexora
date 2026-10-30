@@ -1,7 +1,7 @@
 import { t, type Dictionary } from 'intlayer';
 import type { AppIconName } from '../../../core/icons/icons';
-
-export const CONTACT_EMAIL = 'info@nexoratechnology.org';
+import { ORGANIZATION } from '../../../core/seo/organization';
+export const CONTACT_EMAIL = ORGANIZATION.email;
 
 const contactChannelsContent = {
   key: 'contact-channels',

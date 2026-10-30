@@ -125,6 +125,34 @@ const documentMetaContent = {
         }),
       },
     },
+    breadcrumbs: {
+      home: t({ en: 'Home', hy: 'Գլխավոր', ru: 'Главная' }),
+      services: t({ en: 'Services', hy: 'Ծառայություններ', ru: 'Услуги' }),
+      'services/ai_agent': t({
+        en: 'AI Agents & Business Automation',
+        hy: 'AI գործակալներ և բիզնես գործընթացների ավտոմատացում',
+        ru: 'AI-агенты и автоматизация бизнес-процессов',
+      }),
+      solutions: t({ en: 'Solutions', hy: 'Լուծումներ', ru: 'Решения' }),
+      about: t({ en: 'About', hy: 'Մեր մասին', ru: 'О нас' }),
+      'engagement-models': t({
+        en: 'Engagement Models',
+        hy: 'Համագործակցության ձևաչափեր',
+        ru: 'Форматы сотрудничества',
+      }),
+      partnerships: t({ en: 'Partnerships', hy: 'Գործընկերություն', ru: 'Партнёрство' }),
+      contact: t({ en: 'Contact', hy: 'Կապ', ru: 'Контакты' }),
+      'privacy-policy': t({
+        en: 'Privacy Policy',
+        hy: 'Գաղտնիության քաղաքականություն',
+        ru: 'Политика конфиденциальности',
+      }),
+      'terms-of-use': t({
+        en: 'Terms of Use',
+        hy: 'Օգտագործման պայմաններ',
+        ru: 'Условия использования',
+      }),
+    },
   },
 } as const satisfies Dictionary;
 export default documentMetaContent;

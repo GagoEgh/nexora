@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Every public route, in all three locales. `not-found` is deliberately absent: it is a 404,
+  not a page to index. Each entry carries the same hreflang set the pages themselves emit
+  from core/seo/document-meta.ts, so the sitemap and the documents agree.
+
+  Kept in step with DOCUMENT_META_PAGES by src/app/core/seo/sitemap.spec.ts.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://nexoratechnology.org/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/hy</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/ru</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/services</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/services" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/services" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/services" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/hy/services</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/services" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/services" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/services" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/ru/services</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/services" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/services" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/services" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/services" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/services/ai_agent</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/services/ai_agent" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/services/ai_agent" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/services/ai_agent" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/services/ai_agent" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/hy/services/ai_agent</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/services/ai_agent" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/services/ai_agent" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/services/ai_agent" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/services/ai_agent" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/ru/services/ai_agent</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/services/ai_agent" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/services/ai_agent" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/services/ai_agent" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/services/ai_agent" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/solutions</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/solutions" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/solutions" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/solutions" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/solutions" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/hy/solutions</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/solutions" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/solutions" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/solutions" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/solutions" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/ru/solutions</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/solutions" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/solutions" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/solutions" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/solutions" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/about</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/about" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/about" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/about" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/about" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/hy/about</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/about" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/about" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/about" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/about" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/ru/about</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/about" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/about" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/about" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/about" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/engagement-models</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/engagement-models" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/engagement-models" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/engagement-models" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/engagement-models" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/hy/engagement-models</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/engagement-models" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/engagement-models" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/engagement-models" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/engagement-models" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/ru/engagement-models</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/engagement-models" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/engagement-models" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/engagement-models" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/engagement-models" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/partnerships</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/partnerships" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/partnerships" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/partnerships" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/partnerships" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/hy/partnerships</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/partnerships" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/partnerships" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/partnerships" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/partnerships" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/ru/partnerships</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/partnerships" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/partnerships" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/partnerships" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/partnerships" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/contact</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/contact" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/contact" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/contact" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/contact" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/hy/contact</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/contact" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/contact" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/contact" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/contact" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/ru/contact</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/contact" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/contact" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/contact" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/contact" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/privacy-policy</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/privacy-policy" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/hy/privacy-policy</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/privacy-policy" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/ru/privacy-policy</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/privacy-policy" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/terms-of-use</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/terms-of-use" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/terms-of-use" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/terms-of-use" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/terms-of-use" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/hy/terms-of-use</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/terms-of-use" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/terms-of-use" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/terms-of-use" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/terms-of-use" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/ru/terms-of-use</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/terms-of-use" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/terms-of-use" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/terms-of-use" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/terms-of-use" />
+  </url>
+</urlset>
