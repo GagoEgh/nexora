@@ -6,7 +6,6 @@
 @use 'chip';
 @use 'form-field';
 @use 'snack-bar';
-@use 'checkbox';
 
 @mixin theme() {
   @include mat.theme(
@@ -30,5 +29,4 @@
   @include chip.theme();
   @include form-field.theme();
   @include snack-bar.theme();
-  @include checkbox.theme();
 }

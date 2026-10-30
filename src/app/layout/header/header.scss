@@ -17,19 +17,19 @@ $nav-min: (
 
 @mixin _from($widths) {
   @media (min-width: map.get($widths, en)) {
-    :host-context(html:not([lang='hy'], [lang='ru'])) & {
+    :host-context(html:not([lang='hy'], [lang='ru'])) {
       @content;
     }
   }
 
   @media (min-width: map.get($widths, ru)) {
-    :host-context(html[lang='ru']) & {
+    :host-context(html[lang='ru']) {
       @content;
     }
   }
 
   @media (min-width: map.get($widths, hy)) {
-    :host-context(html[lang='hy']) & {
+    :host-context(html[lang='hy']) {
       @content;
     }
   }
@@ -55,14 +55,6 @@ $nav-min: (
   display: block;
   padding-inline: var(--nx-layout-margin);
   border-block-end: 1px solid var(--mat-sys-outline-variant);
-
-  @include nav-up() {
-    border-block-end: 0;
-  }
-
-  @include nav-full-up() {
-    --app-logo-height: 32px;
-  }
 }
 
 .header {
@@ -72,10 +64,6 @@ $nav-min: (
   align-items: center;
   max-width: var(--nx-layout-container-max);
   margin-inline: auto;
-
-  @include nav-up() {
-    grid-template-columns: auto 1fr auto;
-  }
 }
 
 .header__brand {
@@ -91,10 +79,6 @@ $nav-min: (
   align-items: center;
   justify-content: center;
   justify-self: end;
-
-  @include nav-up() {
-    display: none;
-  }
 }
 
 .header__nav,
@@ -111,19 +95,6 @@ $nav-min: (
 .header__nav {
   flex-direction: column;
   padding-block: spacing.space(8);
-
-  @include nav-up() {
-    display: flex;
-    flex-direction: row;
-    grid-column: auto;
-    justify-self: center;
-    gap: spacing.space(4);
-    padding-block: 0;
-  }
-
-  @include nav-full-up() {
-    gap: spacing.space(8);
-  }
 }
 
 .header__link {
@@ -141,18 +112,6 @@ $nav-min: (
   color: var(--mat-sys-on-surface);
   text-decoration: none;
   cursor: pointer;
-
-  @include nav-up() {
-    padding-inline: spacing.space(4);
-    font: var(--mat-sys-label-medium);
-    font-weight: typography.$weight-medium;
-  }
-
-  @include nav-full-up() {
-    padding-inline: spacing.space(8);
-    font: var(--mat-sys-label-large);
-    font-weight: typography.$weight-medium;
-  }
 }
 
 .header__link--active {
@@ -173,17 +132,6 @@ $nav-min: (
   align-items: center;
   gap: spacing.space(12);
   padding-block: spacing.space(8) spacing.space(16);
-
-  @include nav-up() {
-    display: flex;
-    grid-column: auto;
-    gap: spacing.space(8);
-    padding-block: 0;
-  }
-
-  @include nav-full-up() {
-    gap: spacing.space(12);
-  }
 }
 
 .header__lang {
@@ -197,13 +145,65 @@ $nav-min: (
   font: var(--mat-sys-label-large);
   color: var(--mat-sys-on-surface);
   cursor: pointer;
-
-  @include nav-full-up() {
-    padding-inline: spacing.space(12);
-  }
 }
 
 .header__lang-icon {
   width: 20px;
   height: 20px;
+}
+
+@include nav-up() {
+  border-block-end: 0;
+
+  .header {
+    grid-template-columns: auto 1fr auto;
+  }
+
+  .header__menu {
+    display: none;
+  }
+
+  .header__nav {
+    display: flex;
+    flex-direction: row;
+    grid-column: auto;
+    justify-self: center;
+    gap: spacing.space(4);
+    padding-block: 0;
+  }
+
+  .header__link {
+    padding-inline: spacing.space(4);
+    font: var(--mat-sys-label-medium);
+  }
+
+  .header__actions {
+    display: flex;
+    grid-column: auto;
+    gap: spacing.space(8);
+    padding-block: 0;
+  }
+}
+
+/* The full-size design. Must follow the compact band so it wins where the two overlap. */
+@include nav-full-up() {
+  --app-logo-height: 32px;
+
+  .header__nav {
+    gap: spacing.space(8);
+  }
+
+  .header__link {
+    padding-inline: spacing.space(8);
+    font: var(--mat-sys-label-large);
+    font-weight: typography.$weight-medium;
+  }
+
+  .header__actions {
+    gap: spacing.space(12);
+  }
+
+  .header__lang {
+    padding-inline: spacing.space(12);
+  }
 }
