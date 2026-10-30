@@ -2,7 +2,7 @@ import { Component, computed } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
-import { useDictionary } from 'angular-intlayer';
+import { useDictionary, useLocale } from 'angular-intlayer';
 import { LocalizedPathPipe } from '../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../core/icons/icons';
 import { CONTACT_PATH, ENGAGEMENT_MODELS_PATH, SERVICES_PATH } from '../../core/routing/paths';
@@ -39,6 +39,7 @@ import partnershipsContent from './partnerships.content';
 })
 export class Partnerships {
   protected readonly content = useDictionary(partnershipsContent);
+  protected readonly locale = useLocale().locale;
   protected readonly arrowIcon = appIcon('arrow-right');
   protected readonly contactPath = CONTACT_PATH;
   protected readonly engagementPath = ENGAGEMENT_MODELS_PATH;

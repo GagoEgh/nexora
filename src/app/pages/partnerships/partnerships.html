@@ -6,12 +6,12 @@
   [lead]="content().lead.value"
 >
   <div class="partnerships__actions" intro-actions>
-    <a matButton="filled" [routerLink]="contactPath | localizedPath">
+    <a matButton="filled" [routerLink]="contactPath | localizedPath: locale()">
       {{ content().primaryCta }}
       <mat-icon iconPositionEnd [svgIcon]="arrowIcon" />
     </a>
 
-    <a matButton="outlined" [routerLink]="engagementPath | localizedPath">
+    <a matButton="outlined" [routerLink]="engagementPath | localizedPath: locale()">
       {{ content().secondaryCta }}
     </a>
   </div>

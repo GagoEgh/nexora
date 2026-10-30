@@ -1,7 +1,7 @@
 import { Component, computed, input } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
-import { useDictionary } from 'angular-intlayer';
+import { useDictionary, useLocale } from 'angular-intlayer';
 import { LocalizedPathPipe } from '../../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../../core/icons/icons';
 import { CONTACT_PATH } from '../../../core/routing/paths';
@@ -26,6 +26,7 @@ export class ChallengeDetails {
   readonly current = input<ChallengeId | null>(null);
 
   protected readonly content = useDictionary(challengesContent);
+  protected readonly locale = useLocale().locale;
   protected readonly ordinal = ordinal;
   protected readonly sectionId = challengeSectionId;
   protected readonly total = computed(() => ordinal(this.content().items.length - 1));

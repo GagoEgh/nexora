@@ -1,5 +1,6 @@
 import { Component, computed, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { useLocale } from 'angular-intlayer';
 import type { LocalizedText } from '../../../core/i18n/localized-text';
 import { LocalizedPathPipe } from '../../../core/i18n/localized-path.pipe';
 import { Reveal } from '../../motion/reveal';
@@ -28,6 +29,7 @@ export function pageCrumbs(
   styleUrl: './page-intro.scss',
 })
 export class PageIntro {
+  protected readonly locale = useLocale().locale;
   readonly crumbs = input.required<readonly PageIntroCrumb[]>();
   readonly breadcrumbLabel = input.required<string>();
   readonly eyebrow = input.required<string>();

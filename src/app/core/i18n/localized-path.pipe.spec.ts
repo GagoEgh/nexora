@@ -4,11 +4,18 @@ import { RouterLink, provideRouter } from '@angular/router';
 import { provideIntlayer, useLocale } from 'angular-intlayer';
 import { LocalizedPathPipe } from './localized-path.pipe';
 
+/**
+ * The pipe is pure, so the host reads the locale signal itself and passes it in. That read is
+ * what ties the binding to the locale: the first test changes the locale and expects the href
+ * to follow, which is the behaviour a forgotten argument would lose.
+ */
 @Component({
   imports: [RouterLink, LocalizedPathPipe],
-  template: `<a [routerLink]="'/services' | localizedPath">Services</a>`,
+  template: `<a [routerLink]="'/services' | localizedPath: locale()">Services</a>`,
 })
-class Host {}
+class Host {
+  protected readonly locale = useLocale().locale;
+}
 
 describe('LocalizedPathPipe', () => {
   let fixture: ComponentFixture<Host>;
@@ -40,5 +47,15 @@ describe('LocalizedPathPipe', () => {
     setLocale('en');
     await fixture.whenStable();
     expect(href()).toBe('/services');
+  });
+
+  /** Pure now, so it is also just a function of its two arguments. */
+  it('prefixes every declared locale but the default one', () => {
+    const pipe = new LocalizedPathPipe();
+
+    expect(pipe.transform('/services', 'en')).toBe('/services');
+    expect(pipe.transform('/services', 'hy')).toBe('/hy/services');
+    expect(pipe.transform('/services', 'ru')).toBe('/ru/services');
+    expect(pipe.transform('/', 'hy')).toBe('/hy');
   });
 });

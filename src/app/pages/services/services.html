@@ -64,7 +64,11 @@
       </div>
     </div>
 
-    <a class="services__cta-action" matButton="tonal" [routerLink]="solutionsPath | localizedPath">
+    <a
+      class="services__cta-action"
+      matButton="tonal"
+      [routerLink]="solutionsPath | localizedPath: locale()"
+    >
       {{ content().ctaLabel }}
       <mat-icon iconPositionEnd [svgIcon]="ctaArrowIcon" />
     </a>

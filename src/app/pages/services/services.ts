@@ -13,7 +13,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { useDictionary } from 'angular-intlayer';
+import { useDictionary, useLocale } from 'angular-intlayer';
 import { AI_AGENT_PATH, CONTACT_PATH, SOLUTIONS_PATH } from '../../core/routing/paths';
 import { LocalizedPathPipe } from '../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../core/icons/icons';
@@ -77,6 +77,7 @@ export class Services {
   private readonly document = inject(DOCUMENT);
 
   protected readonly content = useDictionary(servicesContent);
+  protected readonly locale = useLocale().locale;
   protected readonly catalogue = useDictionary(servicesCatalogueContent);
   protected readonly sectionId = serviceSectionId;
 

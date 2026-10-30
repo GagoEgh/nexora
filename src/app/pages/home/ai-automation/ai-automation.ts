@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
-import { useDictionary } from 'angular-intlayer';
+import { useDictionary, useLocale } from 'angular-intlayer';
 import { LocalizedPathPipe } from '../../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../../core/icons/icons';
 import { IconTile } from '../../../shared/ui/icon-tile/icon-tile';
@@ -18,5 +18,6 @@ import { AiPipeline } from './pipeline/ai-pipeline';
 })
 export class AiAutomation {
   protected readonly content = useDictionary(aiAutomationContent);
+  protected readonly locale = useLocale().locale;
   protected readonly arrowIcon = appIcon('arrow-right');
 }

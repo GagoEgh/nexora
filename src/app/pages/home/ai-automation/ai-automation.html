@@ -5,11 +5,11 @@
     <p class="ai__lead">{{ content().lead }}</p>
 
     <div class="ai__actions">
-      <a matButton="filled" [routerLink]="'/services' | localizedPath">
+      <a matButton="filled" [routerLink]="'/services' | localizedPath: locale()">
         {{ content().primaryCta }}
         <mat-icon iconPositionEnd [svgIcon]="arrowIcon" />
       </a>
-      <a class="ai__secondary" matButton [routerLink]="'/contact' | localizedPath">
+      <a class="ai__secondary" matButton [routerLink]="'/contact' | localizedPath: locale()">
         {{ content().secondaryCta }}
       </a>
     </div>

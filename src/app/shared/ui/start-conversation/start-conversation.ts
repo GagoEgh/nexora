@@ -2,7 +2,7 @@ import { Component, computed, input } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
-import { useDictionary } from 'angular-intlayer';
+import { useDictionary, useLocale } from 'angular-intlayer';
 import { Reveal } from '../../motion/reveal';
 import type { LocalizedText } from '../../../core/i18n/localized-text';
 import { LocalizedPathPipe } from '../../../core/i18n/localized-path.pipe';
@@ -22,7 +22,6 @@ export interface ConversationCopy {
   readonly eyebrow: string;
   readonly title: string;
   readonly lead: string;
-  /** Omit to hide the numbered list entirely. */
   readonly steps?: readonly string[];
   readonly primary: ConversationAction;
   readonly secondary: ConversationAction;
@@ -61,6 +60,7 @@ type ConversationBand = Omit<ConversationCopy, 'steps'> & { readonly steps: read
 })
 export class StartConversation {
   private readonly content = useDictionary(startConversationContent);
+  protected readonly locale = useLocale().locale;
   protected readonly arrowIcon = appIcon('arrow-right');
 
   readonly copy = input<ConversationCopy>();

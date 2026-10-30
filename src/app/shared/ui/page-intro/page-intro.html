@@ -6,7 +6,7 @@
           @for (crumb of crumbs(); track crumb.label) {
             <li class="page-intro__crumb" [attr.aria-current]="crumb.path ? null : 'page'">
               @if (crumb.path; as path) {
-                <a class="page-intro__crumb-link" [routerLink]="path | localizedPath">
+                <a class="page-intro__crumb-link" [routerLink]="path | localizedPath: locale()">
                   {{ crumb.label }}
                 </a>
               } @else {

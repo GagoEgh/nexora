@@ -8,9 +8,11 @@ const LOCK_DIR = join(ROOT, 'node_modules', '.cache', 'intlayer-task.lock');
 const OWNER_FILE = join(LOCK_DIR, 'owner');
 const TASK_FILE = join(LOCK_DIR, 'task');
 const POLL_MS = 250;
-/** How often the wait notice repeats, so a long block stays visible. */
 const NOTICE_MS = 30 * 1000;
 const STALE_MS = 20 * 60 * 1000;
+const PREPARED_FILE = join(ROOT, '.intlayer', 'cache', 'intlayer-prepared.lock');
+const WATCH_COMMAND = /(?:^|\s)(?:serve|e2e)(?:\s|$)|--watch(?:=true)?(?:\s|$)/;
+const GENERATION_TIMEOUT_MS = 3 * 60 * 1000;
 
 /** @param {number} pid */
 const isRunning = (pid) => {
@@ -27,7 +29,6 @@ const isStale = () => {
   try {
     pid = Number.parseInt(readFileSync(OWNER_FILE, 'utf8'), 10);
   } catch {
-    // Unreadable owner: fall through to the age fallback below.
   }
 
   if (Number.isInteger(pid)) {
@@ -42,10 +43,6 @@ const isStale = () => {
   }
 };
 
-/**
- * Describes the current holder for the wait notice. Without this the message names no task, so
- * a blocked dev server looks like a hang rather than a queue.
- */
 const describeHolder = () => {
   const read = (/** @type {string} */ file) => {
     try {
@@ -73,7 +70,6 @@ const acquire = async (task) => {
   let waiting = 0;
   for (;;) {
     try {
-      // mkdir is atomic across processes, which is what makes this a lock.
       mkdirSync(LOCK_DIR);
       writeFileSync(OWNER_FILE, String(process.pid));
       writeFileSync(TASK_FILE, task);
@@ -98,13 +94,34 @@ const acquire = async (task) => {
 
 const release = () => rmSync(LOCK_DIR, { recursive: true, force: true });
 
+const generatedSince = (since) => {
+  try {
+    const state = JSON.parse(readFileSync(PREPARED_FILE, 'utf8'));
+    return state.status === 'done' && Number(state.timestamp) >= since;
+  } catch {
+    return false;
+  }
+};
+
+const waitForGeneration = async (since) => {
+  const deadline = Date.now() + GENERATION_TIMEOUT_MS;
+  while (Date.now() < deadline) {
+    if (generatedSince(since)) {
+      return true;
+    }
+    await new Promise((resolve) => setTimeout(resolve, POLL_MS));
+  }
+  return false;
+};
+
 const [command, ...args] = process.argv.slice(2);
 if (!command) {
   process.stderr.write('usage: node scripts/intlayer-lock.mjs <command> [args...]\n');
   process.exit(2);
 }
 
-await acquire([command, ...args].join(' '));
+const task = [command, ...args].join(' ');
+await acquire(task);
 
 let released = false;
 const releaseOnce = () => {
@@ -121,6 +138,7 @@ for (const signal of ['SIGINT', 'SIGTERM', 'SIGHUP']) {
   });
 }
 
+const startedAt = Date.now();
 const child = spawn(command, args, { stdio: 'inherit', shell: true });
 child.on('error', (error) => {
   process.stderr.write(`[intlayer-lock] ${error.message}\n`);
@@ -131,3 +149,15 @@ child.on('close', (code, signal) => {
   releaseOnce();
   process.exit(signal ? 1 : (code ?? 0));
 });
+
+if (WATCH_COMMAND.test(task)) {
+  const settled = await waitForGeneration(startedAt);
+  if (!released) {
+    process.stderr.write(
+      settled
+        ? '[intlayer-lock] dictionaries generated; releasing the lock so builds and tests can run\n'
+        : '[intlayer-lock] no generation marker after 3m; releasing the lock rather than blocking\n',
+    );
+    releaseOnce();
+  }
+}

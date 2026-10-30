@@ -52,6 +52,13 @@ by hand. The declarations sit outside `.intlayer/` deliberately: Angular's dev s
 watch dot-directories, so types generated there stay stale until `ng serve` restarts.
 
 Because every one of those tasks regenerates the same files, `start`, `build`, `watch`, `test`
-and `e2e` run through `scripts/intlayer-lock.mjs`, which holds an exclusive lock for the
-duration of the command. Running two of them at once is therefore serialized rather than
-corrupting the shared declarations; the second one prints a line saying it is waiting.
+and `e2e` run through `scripts/intlayer-lock.mjs`, which takes an exclusive lock while Intlayer
+generates. Running two of them at once is therefore serialized rather than corrupting the shared
+declarations; the second one prints a line saying it is waiting.
+
+A one-shot task (`build`, `test`) holds the lock until it exits. A watching task (`start`,
+`watch`, `e2e`) hands it back as soon as Intlayer reports the files are written — it watches for
+`status: "done"` in `.intlayer/cache/intlayer-prepared.lock` — so a dev server no longer blocks
+`npm test` and `npm run build` for as long as it is running. The trade is that a regeneration
+triggered by editing a content file is not covered by the lock, so a build started in that same
+moment can still overlap it.

@@ -16,14 +16,14 @@
     }
 
     <div class="start-conversation__actions">
-      <a matButton="filled" [routerLink]="band().primary.path | localizedPath">
+      <a matButton="filled" [routerLink]="band().primary.path | localizedPath: locale()">
         {{ band().primary.label }}
         <mat-icon iconPositionEnd [svgIcon]="arrowIcon" />
       </a>
       <a
         class="start-conversation__secondary"
         matButton="outlined"
-        [routerLink]="band().secondary.path | localizedPath"
+        [routerLink]="band().secondary.path | localizedPath: locale()"
       >
         {{ band().secondary.label }}
       </a>

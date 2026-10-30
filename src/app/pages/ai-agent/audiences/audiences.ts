@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
-import { useDictionary } from 'angular-intlayer';
+import { useDictionary, useLocale } from 'angular-intlayer';
 import { Reveal } from '../../../shared/motion/reveal';
 import { LocalizedPathPipe } from '../../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../../core/icons/icons';
@@ -17,6 +17,7 @@ import audiencesContent from './audiences.content';
 })
 export class Audiences {
   protected readonly content = useDictionary(audiencesContent);
+  protected readonly locale = useLocale().locale;
   protected readonly arrowIcon = appIcon('arrow-right');
   protected readonly ordinal = ordinal;
   protected readonly chipIcon = appIcon;

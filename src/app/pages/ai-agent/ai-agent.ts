@@ -2,7 +2,7 @@ import { Component, computed } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
-import { useDictionary } from 'angular-intlayer';
+import { useDictionary, useLocale } from 'angular-intlayer';
 import { CONTACT_PATH, SERVICES_PATH, SOLUTIONS_PATH } from '../../core/routing/paths';
 import { LocalizedPathPipe } from '../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../core/icons/icons';
@@ -45,6 +45,7 @@ import { Workflow } from './workflow/workflow';
 })
 export class AiAgent {
   protected readonly content = useDictionary(aiAgentContent);
+  protected readonly locale = useLocale().locale;
   protected readonly arrowIcon = appIcon('arrow-right');
   protected readonly contactPath = CONTACT_PATH;
   protected readonly solutionsPath = SOLUTIONS_PATH;

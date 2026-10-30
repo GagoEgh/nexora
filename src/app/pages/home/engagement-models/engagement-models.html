@@ -7,7 +7,11 @@
 
     <div class="engagement-models__intro">
       <p class="engagement-models__text">{{ content().intro }}</p>
-      <a class="engagement-models__compare" matButton [routerLink]="'/about' | localizedPath">
+      <a
+        class="engagement-models__compare"
+        matButton
+        [routerLink]="'/about' | localizedPath: locale()"
+      >
         {{ content().compare }}
         <mat-icon iconPositionEnd [svgIcon]="arrowIcon" />
       </a>

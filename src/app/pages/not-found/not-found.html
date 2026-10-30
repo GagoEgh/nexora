@@ -20,18 +20,20 @@
   <p class="notfound__lead">{{ content().lead }}</p>
 
   <div class="notfound__actions">
-    <a matButton="filled" [routerLink]="homePath | localizedPath">
+    <a matButton="filled" [routerLink]="homePath | localizedPath: locale()">
       {{ content().primaryCta }}
     </a>
 
-    <a matButton="outlined" [routerLink]="servicesPath | localizedPath">
+    <a matButton="outlined" [routerLink]="servicesPath | localizedPath: locale()">
       {{ content().secondaryCta }}
     </a>
   </div>
 
   <nav class="notfound__links" [attr.aria-label]="content().linksLabel.value">
     @for (link of content().links; track link.path.value) {
-      <a class="notfound__chip" [routerLink]="link.path.value | localizedPath">{{ link.label }}</a>
+      <a class="notfound__chip" [routerLink]="link.path.value | localizedPath: locale()">{{
+        link.label
+      }}</a>
     }
   </nav>
 </section>

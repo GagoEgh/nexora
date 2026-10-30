@@ -47,6 +47,9 @@ const lockDir = join(sandbox, 'node_modules', '.cache', 'intlayer-task.lock');
 const ownerFile = join(lockDir, 'owner');
 const flagFile = join(sandbox, 'ran.flag');
 const runner = join(sandbox, 'ran.mjs');
+const serveRunner = join(sandbox, 'serve.mjs');
+/** Where the sandboxed script looks for Intlayer's generation state. */
+const preparedFile = join(sandbox, '.intlayer', 'cache', 'intlayer-prepared.lock');
 
 /** A real, living process to attribute a held lock to. */
 let owner = /** @type {import('node:child_process').ChildProcess | undefined} */ (undefined);
@@ -110,12 +113,65 @@ const noticeFor = (/** @type {number} */ timeoutMs) => {
   return `${result.stdout ?? ''}${result.stderr ?? ''}`;
 };
 
+/** The wrapper polls for the generation marker every 250ms; ample to observe the release. */
+const WATCH_RELEASE_MS = 8000;
+
+/**
+ * Runs the wrapper over a child that mimics a dev server: it writes Intlayer's "done" marker
+ * and then keeps running. `tail` lands on the command line, which is what the wrapper reads to
+ * decide whether the task watches or is one-shot.
+ * @param {string} tail
+ */
+const startWatchTask = (tail) => {
+  rmSync(preparedFile, { force: true });
+  mkdirSync(dirname(preparedFile), { recursive: true });
+  return spawn(process.execPath, [script, 'node', `"${serveRunner}"`, tail], { stdio: 'ignore' });
+};
+
+/**
+ * @param {number} timeoutMs
+ * @param {boolean} present What to wait for: the lock appearing, or going away again.
+ */
+const lockBecomes = async (present, timeoutMs) => {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    if (existsSync(lockDir) === present) {
+      return true;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+  return false;
+};
+
+/**
+ * Waits for the task to take the lock before asking whether it gives it back, so that a wrapper
+ * still starting up is never mistaken for one that has already released.
+ * @param {number} timeoutMs
+ */
+const lockGoneWithin = async (timeoutMs) => {
+  assert.equal(await lockBecomes(true, timeoutMs), true, 'the task never took the lock');
+  return lockBecomes(false, timeoutMs);
+};
+
 before(async () => {
   mkdirSync(dirname(script), { recursive: true });
   copyFileSync(join(HERE, 'intlayer-lock.mjs'), script);
   writeFileSync(
     runner,
     `import { writeFileSync } from 'node:fs';\nwriteFileSync(${JSON.stringify(flagFile)}, 'ok');\n`,
+  );
+  writeFileSync(
+    serveRunner,
+    [
+      "import { mkdirSync, writeFileSync } from 'node:fs';",
+      "import { dirname } from 'node:path';",
+      `const target = ${JSON.stringify(preparedFile)};`,
+      'mkdirSync(dirname(target), { recursive: true });',
+      "const state = { version: '9.7.0', timestamp: Date.now(), status: 'done', pid: process.pid };",
+      'writeFileSync(target, JSON.stringify(state));',
+      'setTimeout(() => {}, 60000);',
+      '',
+    ].join('\n'),
   );
 
   owner = spawn(process.execPath, ['-e', 'setTimeout(() => {}, 120000)'], { stdio: 'ignore' });
@@ -191,5 +247,33 @@ describe('intlayer-lock', () => {
   it('waits while the owner file is unparseable but recent', () => {
     placeLock({ owner: 'not-a-pid' });
     assert.equal(attempt(WAIT_MS), 'waited');
+  });
+
+  /**
+   * A dev server generates once and then watches. Holding the lock for the rest of its life is
+   * what wedged `npm test` and `npm run build` behind it, so a watch task hands the lock back
+   * as soon as Intlayer reports the shared files are written.
+   */
+  it('releases the lock once a watch task has generated, while it keeps running', async () => {
+    rmSync(lockDir, { recursive: true, force: true });
+    const watcher = startWatchTask('serve');
+    try {
+      assert.equal(await lockGoneWithin(WATCH_RELEASE_MS), true);
+      assert.equal(watcher.exitCode, null, 'the watch task should still be running');
+    } finally {
+      watcher.kill();
+    }
+  });
+
+  /** `ng test --watch=false` is a one-shot run, so it must keep the lock for its duration. */
+  it('keeps the lock for a one-shot task even when its arguments mention --watch', async () => {
+    rmSync(lockDir, { recursive: true, force: true });
+    const watcher = startWatchTask('--watch=false');
+    try {
+      assert.equal(await lockGoneWithin(WATCH_RELEASE_MS), false);
+      assert.equal(existsSync(lockDir), true, 'a one-shot task released the lock early');
+    } finally {
+      watcher.kill();
+    }
   });
 });

@@ -6,11 +6,11 @@
   [lead]="content().lead.value"
 >
   <div class="ai-agent__actions" appReveal="load" intro-actions>
-    <a matButton="filled" [routerLink]="contactPath | localizedPath">
+    <a matButton="filled" [routerLink]="contactPath | localizedPath: locale()">
       {{ content().primaryCta }}
       <mat-icon iconPositionEnd [svgIcon]="arrowIcon" />
     </a>
-    <a matButton [routerLink]="solutionsPath | localizedPath">
+    <a matButton [routerLink]="solutionsPath | localizedPath: locale()">
       {{ content().secondaryCta }}
     </a>
   </div>

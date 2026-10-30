@@ -39,7 +39,7 @@
         <a
           class="challenge-details__cta"
           [attr.aria-label]="content().discuss.value + ': ' + item.title.value"
-          [routerLink]="contactPath | localizedPath"
+          [routerLink]="contactPath | localizedPath: locale()"
         >
           {{ content().discuss }}
           <mat-icon aria-hidden="true" [svgIcon]="arrowIcon" />

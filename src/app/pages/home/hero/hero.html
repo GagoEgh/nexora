@@ -10,11 +10,11 @@
     <p class="hero__lead">{{ content().lead }}</p>
 
     <div class="hero__actions">
-      <a matButton="filled" [routerLink]="'/contact' | localizedPath">
+      <a matButton="filled" [routerLink]="'/contact' | localizedPath: locale()">
         {{ content().primaryCta }}
         <mat-icon iconPositionEnd [svgIcon]="arrowIcon" />
       </a>
-      <a matButton="outlined" [routerLink]="'/services' | localizedPath">
+      <a matButton="outlined" [routerLink]="'/services' | localizedPath: locale()">
         {{ content().secondaryCta }}
       </a>
     </div>

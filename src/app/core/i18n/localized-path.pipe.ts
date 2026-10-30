@@ -1,12 +1,10 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { useLocale } from 'angular-intlayer';
 import { getLocalizedUrl } from 'intlayer';
+import type { AppLocale } from './locale-labels';
 
-@Pipe({ name: 'localizedPath', pure: false })
+@Pipe({ name: 'localizedPath' })
 export class LocalizedPathPipe implements PipeTransform {
-  private readonly locale = useLocale().locale;
-
-  transform(path: string): string {
-    return getLocalizedUrl(path, this.locale());
+  transform(path: string, locale: AppLocale): string {
+    return getLocalizedUrl(path, locale);
   }
 }
