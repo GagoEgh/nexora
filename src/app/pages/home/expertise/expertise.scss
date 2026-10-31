@@ -1,5 +1,6 @@
 @use 'tokens/motion';
 @use 'tokens/spacing';
+@use 'tokens/typography';
 @use 'tokens/layout';
 @use 'mixins/container';
 @use 'mixins/eyebrow';
@@ -9,6 +10,11 @@
 
 :host {
   @include container.section();
+  padding-block: spacing.space(40);
+
+  @include layout.up(large) {
+    padding-block: spacing.space(64);
+  }
 }
 
 .expertise {
@@ -19,11 +25,12 @@
 .expertise__header {
   display: grid;
   gap: spacing.space(24);
-  margin-block-end: spacing.space(64);
+  margin-block-end: spacing.space(48);
 
   @include layout.up(large) {
     grid-template-columns: minmax(0, 1fr) minmax(0, 440px);
     gap: spacing.space(48);
+    align-items: end;
   }
 }
 
@@ -101,8 +108,27 @@
   @media (hover: hover) {
     &:hover {
       border-color: var(--mat-sys-primary);
+
+      .expertise__card-index {
+        color: var(--mat-sys-primary);
+      }
     }
   }
+}
+
+.expertise__card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: spacing.space(16);
+  justify-self: stretch;
+}
+
+.expertise__card-index {
+  flex-shrink: 0;
+  font: typography.$code-font;
+  color: var(--nx-sys-on-surface-muted);
+  transition: color motion.duration(fast) motion.easing(out);
 }
 
 .expertise__card-title {
@@ -114,7 +140,7 @@
 
 .expertise__card-text {
   @include text.contained();
-  margin: 0 0 spacing.space(20);
+  margin: 0 0 spacing.space(16);
   font: var(--nx-sys-body-copy);
   color: var(--mat-sys-on-surface-variant);
   align-self: start;

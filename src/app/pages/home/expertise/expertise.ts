@@ -7,6 +7,7 @@ import { getLocalizedUrl } from 'intlayer';
 import { LocalizedPathPipe } from '../../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../../core/icons/icons';
 import { SERVICES_PATH } from '../../../core/routing/paths';
+import { ordinal } from '../../../shared/ordinal';
 import { IconTile } from '../../../shared/ui/icon-tile/icon-tile';
 import expertiseContent from './expertise.content';
 import { Reveal } from '../../../shared/motion/reveal';
@@ -24,6 +25,7 @@ export class Expertise {
   protected readonly locale = useLocale().locale;
   protected readonly arrowIcon = appIcon('arrow-right');
   protected readonly servicesPath = SERVICES_PATH;
+  protected readonly ordinal = ordinal;
 
   protected readonly serviceLinks = computed<readonly UrlTree[]>(() => {
     const locale = this.locale();

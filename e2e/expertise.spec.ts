@@ -36,12 +36,12 @@ test.describe('expertise at the desktop design width', () => {
     page,
   }) => {
     await expect(page.locator('app-hero + app-expertise')).toHaveCount(1);
-    // The shared section rhythm from `styles/mixins/_container.scss` at `large`.
-    expect(await style(page, 'app-expertise', 'padding-top')).toBe('80px');
+    // One step tighter than the shared section rhythm; the card grid carries the weight.
+    expect(await style(page, 'app-expertise', 'padding-top')).toBe('64px');
     expect(await style(page, 'app-expertise .expertise__header', 'grid-template-columns')).toMatch(
       /^\d+(\.\d+)?px 440px$/,
     );
-    expect(await style(page, 'app-expertise .expertise__header', 'margin-bottom')).toBe('64px');
+    expect(await style(page, 'app-expertise .expertise__header', 'margin-bottom')).toBe('48px');
 
     await expect(page.locator('app-expertise .expertise__eyebrow')).toHaveText('What we do');
     expect(await style(page, 'app-expertise .expertise__eyebrow', 'color')).toBe(
