@@ -140,11 +140,6 @@ const footerContent = {
         ],
       },
     ],
-    contactPending: t({
-      en: 'Contact details — pending',
-      hy: 'Կոնտակտային տվյալներ — սպասվում է',
-      ru: 'Контактные данные — скоро',
-    }),
     legal: [
       {
         path: '/privacy-policy',

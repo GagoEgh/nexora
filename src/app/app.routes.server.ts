@@ -15,5 +15,6 @@ const localisedPages = () =>
 export const serverRoutes: ServerRoute[] = [
   { path: ':locale', renderMode: RenderMode.Prerender, getPrerenderParams: localeHomes },
   { path: ':locale/**', renderMode: RenderMode.Prerender, getPrerenderParams: localisedPages },
+  { path: 'not-found', renderMode: RenderMode.Prerender },
   { path: '**', renderMode: RenderMode.Prerender },
 ];

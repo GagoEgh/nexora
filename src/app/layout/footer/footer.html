@@ -20,9 +20,6 @@
               </a>
             </li>
           }
-          @if (lastColumn) {
-            <li class="footer__muted">{{ content().contactPending }}</li>
-          }
         </ul>
       </nav>
     }
@@ -41,17 +38,22 @@
         </a>
       }
 
-      <div class="footer__languages" role="group" [attr.aria-label]="content().language.value">
+      <div
+        id="footer-languages"
+        class="footer__languages"
+        role="group"
+        [attr.aria-label]="content().language.value"
+      >
         @for (code of i18n.locales; track code) {
-          <button
+          <a
             class="footer__language"
-            type="button"
             [attr.lang]="code"
+            [href]="i18n.urlFor(code)"
             [attr.aria-current]="code === i18n.locale() ? 'true' : null"
-            (click)="i18n.switchTo(code)"
+            (click)="switchLocale($event, code)"
           >
             {{ i18n.names[code] }}
-          </button>
+          </a>
         }
       </div>
     </div>

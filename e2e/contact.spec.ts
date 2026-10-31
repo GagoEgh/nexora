@@ -186,6 +186,41 @@ test.describe('contact at the desktop design width', () => {
     });
   });
 
+  test('delivers the inquiry once when the form is submitted twice', async ({ page }) => {
+    const posted: Record<string, unknown>[] = [];
+    // The executor runs synchronously, so `release` is assigned before anything can call it.
+    let release!: () => void;
+    const held = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+
+    // Hold the response open so both submissions are in flight at the same time; otherwise the
+    // first resolves and resets the form before the second click lands, and the duplicate the
+    // submitter guards against never actually occurs.
+    await page.route('**/api/contact', async (route) => {
+      posted.push(route.request().postDataJSON() as Record<string, unknown>);
+      await held;
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ success: true }),
+      });
+    });
+
+    await fillValidForm(page);
+    const submit = page.locator('app-contact-form button[type="submit"]');
+
+    await submit.click();
+    // Submitting again through the form itself, since the button is disabled during the send.
+    await page.locator('app-contact-form form.form').evaluate((form: HTMLFormElement) => {
+      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    });
+
+    release();
+    await expect(page.locator('app-snack-bar')).toContainText('on its way');
+    expect(posted).toHaveLength(1);
+  });
+
   test('never claims success when the API cannot deliver', async ({ page }) => {
     await page.route('**/api/contact', (route) =>
       route.fulfill({

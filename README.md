@@ -20,18 +20,20 @@ single-page Angular application with localized content in English, Armenian and 
 
 ## Commands
 
-| Command                | What it does                                                             |
-| ---------------------- | ------------------------------------------------------------------------ |
-| `npm ci`               | Installs dependencies and the pre-commit formatting hook                 |
-| `npm start`            | Serves the application on `http://localhost:4200/` with live reload      |
-| `npm run build`        | Production build into `dist/nexora`                                      |
-| `npm run watch`        | Development build that rebuilds on change                                |
-| `npm test`             | Unit tests with Vitest                                                   |
-| `npm run typecheck`    | Type-checks the app, the unit specs and the Playwright specs             |
-| `npm run lint`         | ESLint for TypeScript and templates                                      |
-| `npm run e2e`          | Playwright tests against a dev server on port 4300 (Chromium only)       |
-| `npm run format`       | Formats the project with Prettier                                        |
-| `npm run format:check` | Verifies formatting; also run by the pre-commit hook and the CI workflow |
+| Command                    | What it does                                                             |
+| -------------------------- | ------------------------------------------------------------------------ |
+| `npm ci`                   | Installs dependencies and the pre-commit formatting hook                 |
+| `npm start`                | Serves the application on `http://localhost:4200/` with live reload      |
+| `npm run build`            | Production build into `dist/nexora`                                      |
+| `npm run watch`            | Development build that rebuilds on change                                |
+| `npm test`                 | Unit tests with Vitest                                                   |
+| `npm run test:scripts`     | Tests for the build and verification scripts in `scripts/`               |
+| `npm run typecheck`        | Type-checks the app, the unit specs and the Playwright specs             |
+| `npm run lint`             | ESLint for TypeScript and templates                                      |
+| `npm run e2e`              | Playwright tests against a dev server on port 4300 (Chromium only)       |
+| `npm run verify:prerender` | Checks the built pages still work without JavaScript (needs a build)     |
+| `npm run format`           | Formats the project with Prettier                                        |
+| `npm run format:check`     | Verifies formatting; also run by the pre-commit hook and the CI workflow |
 
 ## Project layout
 
@@ -42,7 +44,37 @@ single-page Angular application with localized content in English, Armenian and 
 - `src/app/shared/ui`: reusable presentational components
 - `src/styles`: design tokens, Material theme overrides and mixins
 - `public`: brand assets, self-hosted fonts and the SVG icon catalogue
+- `src/environments`: build-time configuration; the production build swaps `environment.ts` for
+  `environment.production.ts` through `fileReplacements`
 - `e2e`: Playwright specs that check the sections against the design mockups
+
+## Configuration
+
+`src/environments/environment.ts` holds the values that differ between a local run and a
+deployment. Only two exist:
+
+- `apiOrigin` — where the contact API is served from. **Empty in production, because no contact
+  API is deployed**: the form reports "not configured" and points the visitor at the published
+  email address rather than posting into the void. See [CONTACT_API.md](CONTACT_API.md) for the
+  request and response contract a backend has to implement, and the steps to switch the form on.
+- `siteOrigin` — the canonical origin for `<link rel="canonical">`, Open Graph URLs and
+  `sitemap.xml`. Deliberately identical in both files so a preview build cannot advertise itself
+  as the canonical copy.
+
+## Hosting
+
+The build is fully static (`outputMode: "static"`, 33 prerendered routes), so the host only has
+to serve files and answer an unknown URL with the prerendered 404 document.
+`public/_redirects` does that for Netlify, mapping each locale prefix to its own `not-found`
+page with a real `404` status. A different host needs the equivalent rewrite rules; without them
+an unknown URL falls through to the host's own error page instead of the localized one.
+
+Because the pages are prerendered, the header's Services and language controls have to work
+before Angular boots - they sit in `@defer` placeholders, and a placeholder is what gets
+prerendered. Both are ordinary links, with the language pill pointing at the footer switcher.
+`npm run verify:prerender` asserts that over every built page; it cannot be a Playwright spec,
+because `ng serve` answers with an empty `<app-root>` rather than prerendered markup, so there
+is nothing for a scriptless browser to use there.
 
 ## Generated content
 

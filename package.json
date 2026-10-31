@@ -8,6 +8,7 @@
     "watch": "node scripts/intlayer-lock.mjs ng build --watch --configuration development",
     "test": "node scripts/intlayer-lock.mjs ng test",
     "test:scripts": "node --test \"scripts/**/*.test.mjs\"",
+    "verify:prerender": "node scripts/verify-prerender.mjs",
     "e2e": "node scripts/intlayer-lock.mjs ng e2e",
     "typecheck": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit && tsc -p e2e/tsconfig.json --noEmit && tsc -p tsconfig.scripts.json --noEmit",
     "lint": "ng lint && npm run lint:deps && npm run lint:styles",

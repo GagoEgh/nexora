@@ -56,15 +56,15 @@
             </a>
           </mat-menu>
         } @placeholder {
-          <button
+          <a
             class="header__link"
-            type="button"
             data-services-pending
+            [routerLink]="item.path.value | localizedPath: i18n.locale()"
             [class.header__link--active]="servicesActive()"
           >
             {{ item.label }}
             <mat-icon class="header__chevron" [svgIcon]="chevronIcon" />
-          </button>
+          </a>
         }
       } @else {
         <a
@@ -106,16 +106,16 @@
         }
       </mat-menu>
     } @placeholder {
-      <button
+      <a
         class="header__lang"
-        type="button"
+        href="#footer-languages"
         data-lang-pending
         [attr.aria-label]="content().language.value"
       >
         <mat-icon class="header__lang-icon" [svgIcon]="globeIcon" />
         <span class="header__lang-code">{{ i18n.locale().toUpperCase() }}</span>
         <mat-icon class="header__lang-icon" [svgIcon]="chevronIcon" />
-      </button>
+      </a>
     }
 
     <a

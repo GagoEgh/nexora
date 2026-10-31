@@ -10,6 +10,7 @@ import type { ContactInquiry } from './contact-submitter';
 import { HttpContactSubmitter } from './http-contact-submitter';
 
 const ORIGIN = 'https://api.test.invalid';
+const PATH = '/api/contact';
 
 const inquiry: ContactInquiry = {
   interest: 'new-project',
@@ -49,7 +50,7 @@ describe('HttpContactSubmitter', () => {
     const submitter = create();
     const pending = submitter.submit(inquiry);
 
-    const request: TestRequest = http.expectOne(`${ORIGIN}/api/contact`);
+    const request: TestRequest = http.expectOne(`${ORIGIN}${PATH}`);
     expect(request.request.method).toBe('POST');
     expect(request.request.body).toEqual(inquiry);
 
@@ -61,7 +62,7 @@ describe('HttpContactSubmitter', () => {
     const submitter = create();
     const pending = submitter.submit(inquiry);
 
-    http.expectOne(`${ORIGIN}/api/contact`).flush({ success: false });
+    http.expectOne(`${ORIGIN}${PATH}`).flush({ success: false });
     await expect(pending).resolves.toEqual({ status: 'failed' });
   });
 
@@ -70,7 +71,7 @@ describe('HttpContactSubmitter', () => {
     const pending = submitter.submit(inquiry);
 
     http
-      .expectOne(`${ORIGIN}/api/contact`)
+      .expectOne(`${ORIGIN}${PATH}`)
       .flush({ success: false }, { status: 503, statusText: 'Service Unavailable' });
 
     await expect(pending).resolves.toEqual({ status: 'failed' });
@@ -80,7 +81,7 @@ describe('HttpContactSubmitter', () => {
     const submitter = create();
     const pending = submitter.submit(inquiry);
 
-    http.expectOne(`${ORIGIN}/api/contact`).error(new ProgressEvent('error'));
+    http.expectOne(`${ORIGIN}${PATH}`).error(new ProgressEvent('error'));
     await expect(pending).resolves.toEqual({ status: 'failed' });
   });
 
@@ -89,5 +90,33 @@ describe('HttpContactSubmitter', () => {
 
     await expect(submitter.submit(inquiry)).resolves.toEqual({ status: 'not-configured' });
     http.expectNone(() => true);
+  });
+
+  // The form disables its button while a send is in flight, but that only guards the button.
+  // Delivering the same inquiry twice is the failure this prevents.
+  it('coalesces a second submission into the send already in flight', async () => {
+    const submitter = create();
+
+    const first = submitter.submit(inquiry);
+    const second = submitter.submit(inquiry);
+
+    // `expectOne` fails the test if a second request was opened.
+    http.expectOne(`${ORIGIN}${PATH}`).flush({ success: true });
+
+    await expect(first).resolves.toEqual({ status: 'sent' });
+    await expect(second).resolves.toEqual({ status: 'sent' });
+  });
+
+  it('accepts a new submission once the previous one has settled', async () => {
+    const submitter = create();
+
+    const failed = submitter.submit(inquiry);
+    http.expectOne(`${ORIGIN}${PATH}`).error(new ProgressEvent('error'));
+    await expect(failed).resolves.toEqual({ status: 'failed' });
+
+    // A failed send must not latch the guard shut - retrying is the expected next action.
+    const retried = submitter.submit(inquiry);
+    http.expectOne(`${ORIGIN}${PATH}`).flush({ success: true });
+    await expect(retried).resolves.toEqual({ status: 'sent' });
   });
 });

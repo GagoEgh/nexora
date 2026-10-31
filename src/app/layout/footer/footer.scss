@@ -80,11 +80,6 @@
   border-radius: var(--mat-sys-corner-extra-small);
 }
 
-.footer__muted {
-  font: var(--mat-sys-body-medium);
-  color: var(--nx-sys-on-surface-muted);
-}
-
 .footer__bottom {
   display: flex;
   flex-wrap: wrap;
@@ -118,12 +113,9 @@
 }
 
 .footer__language {
-  appearance: none;
-  border: 0;
-  padding: 0;
-  background: none;
   font: var(--mat-sys-body-small);
   color: var(--mat-sys-on-surface-variant);
+  text-decoration: none;
   cursor: pointer;
   border-radius: var(--mat-sys-corner-extra-small);
 

@@ -1,0 +1,17 @@
+# Netlify fallback rules.
+#
+# Every real page is prerendered to its own document, and Netlify serves an existing file
+# before it consults this file - so these rules only ever fire for a URL that does not exist.
+#
+# The 404 on the right-hand side is the status Netlify returns. It matters: a rewrite that
+# answered 200 would tell crawlers the mistyped URL is a real page, and the branded NotFound
+# content would start competing with the pages it is meant to replace. Unknown URLs are
+# deliberately not sent to the homepage either - that loses the address the visitor typed and
+# hides the mistake from them.
+#
+# Locale order is most-specific first, so a bad URL under /hy or /ru answers in that language
+# rather than falling through to English.
+
+/hy/*   /hy/not-found/index.html   404
+/ru/*   /ru/not-found/index.html   404
+/*      /not-found/index.html      404

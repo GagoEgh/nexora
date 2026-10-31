@@ -280,10 +280,7 @@ test.describe('footer at the desktop design width', () => {
     expect(await style(page, 'app-footer .footer__link', 'color')).toBe('rgb(71, 85, 105)');
 
     await expect(page.locator('app-footer .footer__column a.footer__link')).toHaveCount(17);
-    const pending = page.locator('app-footer .footer__muted');
-    await expect(pending).toHaveText('Contact details — pending');
-    expect(await style(page, 'app-footer .footer__muted', 'color')).toBe('rgb(100, 116, 139)');
-    await expect(pending.locator('a')).toHaveCount(0);
+    await expect(page.locator('app-footer .footer__muted')).toHaveCount(0);
   });
 
   test('legal row: divider, copyright with the current year, legal links, languages', async ({

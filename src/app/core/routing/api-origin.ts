@@ -1,31 +1,30 @@
-import { isPlatformBrowser } from '@angular/common';
-import { DOCUMENT, InjectionToken, PLATFORM_ID, inject } from '@angular/core';
+import { InjectionToken } from '@angular/core';
+import { environment } from '../../../environments/environment';
 
-export interface ApiConfig {
-  readonly origin: string;
+export function normalizeOrigin(configured: string): string {
+  return configured.replace(/\/+$/, '');
 }
 
-export const API_CONFIG: ApiConfig = {
-  origin: '',
-};
-
-const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '[::1]', '::1']);
-
-const LOCAL_API_PORT = 3000;
-
-export function resolveApiOrigin(configured: string, hostname: string | null): string {
-  if (hostname && LOCAL_HOSTS.has(hostname)) {
-    return `http://${hostname}:${LOCAL_API_PORT}`;
+export function isUsableOrigin(value: string): boolean {
+  let parsed: URL;
+  try {
+    parsed = new URL(value);
+  } catch {
+    return false;
   }
-  return configured.replace(/\/+$/, '');
+
+  return (
+    (parsed.protocol === 'https:' || parsed.protocol === 'http:') &&
+    parsed.host !== '' &&
+    !parsed.search &&
+    !parsed.hash
+  );
 }
 
 export const API_ORIGIN = new InjectionToken<string>('API_ORIGIN', {
   providedIn: 'root',
   factory: () => {
-    const hostname = isPlatformBrowser(inject(PLATFORM_ID))
-      ? inject(DOCUMENT).location.hostname
-      : null;
-    return resolveApiOrigin(API_CONFIG.origin, hostname);
+    const configured = normalizeOrigin(environment.apiOrigin);
+    return isUsableOrigin(configured) ? configured : '';
   },
 });
