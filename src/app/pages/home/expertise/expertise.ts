@@ -1,8 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { Router, RouterLink, type UrlTree } from '@angular/router';
 import { useDictionary, useLocale } from 'angular-intlayer';
+import { getLocalizedUrl } from 'intlayer';
 import { LocalizedPathPipe } from '../../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../../core/icons/icons';
 import { SERVICES_PATH } from '../../../core/routing/paths';
@@ -24,7 +25,10 @@ export class Expertise {
   protected readonly arrowIcon = appIcon('arrow-right');
   protected readonly servicesPath = SERVICES_PATH;
 
-  protected toUrl(path: string): UrlTree {
-    return this.router.parseUrl(path);
-  }
+  protected readonly serviceLinks = computed<readonly UrlTree[]>(() => {
+    const locale = this.locale();
+    return this.content().services.map((service) =>
+      this.router.parseUrl(getLocalizedUrl(service.path.value, locale)),
+    );
+  });
 }

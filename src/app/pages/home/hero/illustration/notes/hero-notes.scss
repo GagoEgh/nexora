@@ -22,7 +22,7 @@
 
 .notes__workflow {
   top: spacing.space(32);
-  transform: translateY(-100%);
+  transform: translateY(-90%);
   right: calc(-1 * #{spacing.space(40)});
   width: 240px;
   @include surface.outlined();

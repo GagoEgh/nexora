@@ -36,7 +36,8 @@ test.describe('expertise at the desktop design width', () => {
     page,
   }) => {
     await expect(page.locator('app-hero + app-expertise')).toHaveCount(1);
-    expect(await style(page, 'app-expertise', 'padding-top')).toBe('96px');
+    // The shared section rhythm from `styles/mixins/_container.scss` at `large`.
+    expect(await style(page, 'app-expertise', 'padding-top')).toBe('80px');
     expect(await style(page, 'app-expertise .expertise__header', 'grid-template-columns')).toMatch(
       /^\d+(\.\d+)?px 440px$/,
     );
@@ -92,7 +93,7 @@ test.describe('expertise at the desktop design width', () => {
     expect(await style(page, 'app-expertise app-icon-tile', 'background-color')).toBe(
       'rgb(238, 244, 255)',
     );
-    expect(await style(page, 'app-expertise .expertise__card-title', 'font-size')).toBe('24px');
+    await expectTypeFromRole(page, 'app-expertise .expertise__card-title', '--nx-sys-title-card');
     expect(await style(page, 'app-expertise .expertise__card-title', 'font-weight')).toBe('600');
     await expectTypeFromRole(page, 'app-expertise .expertise__card-text', '--nx-sys-body-copy');
     await expectTypeFromRole(page, 'app-expertise a.expertise__link', '--mat-sys-label-large');

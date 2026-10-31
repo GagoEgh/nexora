@@ -15,15 +15,12 @@
   </div>
 
   <ul class="expertise__grid">
-    @for (service of content().services; track $index) {
+    @for (service of content().services; track $index; let i = $index) {
       <li class="expertise__card">
         <app-icon-tile [icon]="service.icon.value" tone="primary" />
         <h3 class="expertise__card-title">{{ service.title }}</h3>
         <p class="expertise__card-text">{{ service.description }}</p>
-        <a
-          class="expertise__link"
-          [routerLink]="toUrl(service.path.value | localizedPath: locale())"
-        >
+        <a class="expertise__link" [routerLink]="serviceLinks()[i]">
           {{ content().explore }}
           <mat-icon class="expertise__link-icon" [svgIcon]="arrowIcon" />
         </a>

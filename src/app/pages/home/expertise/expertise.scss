@@ -1,6 +1,6 @@
+@use 'tokens/motion';
 @use 'tokens/spacing';
 @use 'tokens/layout';
-@use 'tokens/typography';
 @use 'mixins/container';
 @use 'mixins/eyebrow';
 @use 'mixins/reveal';
@@ -84,23 +84,31 @@
 
 .expertise__card {
   display: grid;
-  align-content: start;
+  grid-template-rows: auto auto 1fr auto;
   justify-items: start;
-  padding: spacing.space(32);
+  padding: spacing.space(24);
   @include surface.outlined();
   border-radius: var(--mat-sys-corner-large);
 
   @include reveal.item(120ms, $hover: true);
   @include reveal.stagger(6, 60ms, 120ms);
   @include reveal.lift();
+
+  @include layout.up(large) {
+    padding: spacing.space(32);
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      border-color: var(--mat-sys-primary);
+    }
+  }
 }
 
 .expertise__card-title {
   @include text.contained();
-  margin: spacing.space(20) 0 spacing.space(8);
-  font: var(--mat-sys-headline-small);
-  font-weight: typography.$weight-semibold;
-  letter-spacing: var(--nx-sys-display-tracking);
+  margin: spacing.space(16) 0 spacing.space(8);
+  font: var(--nx-sys-title-card);
   color: var(--mat-sys-on-surface);
 }
 
@@ -109,6 +117,7 @@
   margin: 0 0 spacing.space(20);
   font: var(--nx-sys-body-copy);
   color: var(--mat-sys-on-surface-variant);
+  align-self: start;
 }
 
 .expertise__link {
@@ -124,6 +133,13 @@
 .expertise__link-icon {
   width: 16px;
   height: 16px;
+  transition: translate motion.duration(fast) motion.easing(out);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .expertise__card:hover .expertise__link-icon {
+    translate: spacing.space(4) 0;
+  }
 }
 
 .expertise[data-reveal='out'] {
