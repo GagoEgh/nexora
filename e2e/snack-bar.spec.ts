@@ -35,7 +35,7 @@ test.describe('snack bar theme', () => {
     );
   });
 
-  test('message in Body/Large 16/24 Regular, action in Label/Large 15/20 Semibold', async ({
+  test('message in Body/Large 16/24 Regular, action in Label/Large 14/19 Semibold', async ({
     page,
   }) => {
     expect(await rootTokenValue(page, '--mat-snack-bar-supporting-text-size')).toBe('1rem');
@@ -47,7 +47,7 @@ test.describe('snack bar theme', () => {
     // The action is a Material text button: it reads label-large through the button tokens.
     await untouched(page, '--mat-button-text-label-text-size');
     await untouched(page, '--mat-button-text-label-text-weight');
-    expect(await rootTokenValue(page, '--mat-sys-label-large-size')).toBe('0.9375rem');
+    expect(await rootTokenValue(page, '--mat-sys-label-large-size')).toBe('0.875rem');
     expect(await rootTokenValue(page, '--mat-sys-label-large-weight')).toBe('600');
   });
 

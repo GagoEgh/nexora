@@ -142,9 +142,6 @@ test.describe('how-we-work at the desktop design width', () => {
       'app-how-we-work .how-we-work__step-title',
       '--nx-sys-title-step',
     );
-    expect(await style(page, 'app-how-we-work .how-we-work__step-title', 'line-height')).toBe(
-      '26px',
-    );
     expect(await style(page, 'app-how-we-work .how-we-work__step-title', 'font-weight')).toBe(
       '600',
     );
@@ -152,9 +149,6 @@ test.describe('how-we-work at the desktop design width', () => {
       page,
       'app-how-we-work .how-we-work__step-text',
       '--mat-sys-body-small',
-    );
-    expect(await style(page, 'app-how-we-work .how-we-work__step-text', 'line-height')).toBe(
-      '22px',
     );
     expect(await style(page, 'app-how-we-work .how-we-work__step-text', 'color')).toBe(
       'rgb(71, 85, 105)',

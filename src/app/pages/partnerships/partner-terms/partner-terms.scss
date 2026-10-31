@@ -35,6 +35,10 @@
   gap: spacing.space(16);
   justify-items: start;
   min-width: 0;
+
+  @include layout.up(large) {
+    align-self: center;
+  }
 }
 
 .terms__title {

@@ -170,14 +170,23 @@ test.describe('hero illustration entrance', () => {
         offsets: Array.from(document.querySelectorAll('.art__link-line')).map(
           (path) => getComputedStyle(path).strokeDashoffset,
         ),
+        dashes: Array.from(document.querySelectorAll('.art__link-line')).map(
+          (path) => getComputedStyle(path).strokeDasharray,
+        ),
       };
     });
 
     expect(hidden.node).toBe('0');
     expect(hidden.chip).toBe('0');
     expect(hidden.workflow).toBe('0');
-    // `pathLength="1"` means one full dash unit of offset, so the line is not drawn yet.
-    expect(hidden.offsets).toEqual(['1px', '1px']);
+    /*
+     * The line is fully retracted: the offset equals the dash, so no part of the path is
+     * painted. Both are screen pixels rather than a `pathLength`-normalised ratio, because
+     * `vector-effect="non-scaling-stroke"` measures the dash in screen space - see the note
+     * in `hero-illustration.scss`. Comparing the two rather than pinning a figure keeps this
+     * honest if the dash length is ever retuned.
+     */
+    expect(hidden.offsets).toEqual(hidden.dashes);
   });
 
   test('assembles the diagram and draws both connectors', async ({ page }) => {
@@ -225,8 +234,16 @@ test.describe('hero illustration entrance', () => {
     expect(Math.abs(translateY + height)).toBeLessThan(1.5);
   });
 
-  /** The regression this guards: a positive, height-independent overlap in every locale. */
-  test.describe('the workflow card overlaps the CRM / ERP node in every locale', () => {
+  /**
+   * The regression this guards: a height-independent gap above the node, in every locale.
+   *
+   * It used to assert an overlap, which is what the implementation did before the illustration
+   * was matched to hero.png. Sampling that reference puts the card's bottom border at y=191 and
+   * the CRM / ERP node's top border at y=228 - the card clears the node by 37px rather than
+   * covering its corner. The clearance must also be identical across locales: the card is
+   * anchored by its bottom edge, so a longer translation grows it upward and must not move it.
+   */
+  test.describe('the workflow card clears the CRM / ERP node in every locale', () => {
     for (const [locale, path] of LOCALES) {
       test(`${locale}`, async ({ page }) => {
         await page.goto(path);
@@ -241,8 +258,10 @@ test.describe('hero illustration entrance', () => {
           return Math.round(card.getBoundingClientRect().bottom - crm.getBoundingClientRect().top);
         });
 
-        expect(overlap).toBeGreaterThan(0);
-        expect(overlap).toBeLessThan(40);
+        // Negative here means the card sits clear of the node.
+        expect(overlap).toBeLessThan(0);
+        expect(Math.abs(overlap)).toBeGreaterThan(30);
+        expect(Math.abs(overlap)).toBeLessThan(60);
       });
     }
   });

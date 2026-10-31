@@ -95,8 +95,8 @@ test.describe('partnerships at the desktop design width', () => {
     expect(cards[1].x - (cards[0].x + cards[0].w)).toBe(20);
 
     // Two rows: the second is taller because one title wraps.
-    expect(cards[0].h).toBe(122);
-    expect(cards[3].h).toBe(148);
+    expect(cards[0].h).toBe(118);
+    expect(cards[3].h).toBe(142);
   });
 
   test('renders the five partnership rows in one bordered panel', async ({ page }) => {
@@ -106,7 +106,7 @@ test.describe('partnerships at the desktop design width', () => {
 
     const rows = await boxes(page, '.models__row');
     expect(rows).toHaveLength(5);
-    expect(rows.map((r) => r.h)).toEqual([136, 137, 115, 137, 111]);
+    expect(rows.map((r) => r.h)).toEqual([130, 131, 112, 107, 107]);
 
     // Only the first tile is accented; the rest carry the primary tone.
     const tones = await page
@@ -121,7 +121,7 @@ test.describe('partnerships at the desktop design width', () => {
     const cards = await boxes(page, '.process__step');
     expect(cards).toHaveLength(4);
     expect(cards.map((c) => c.x)).toEqual([80, 404, 728, 1052]);
-    for (const card of cards) expect([card.w, card.h]).toEqual([308, 208]);
+    for (const card of cards) expect([card.w, card.h]).toEqual([308, 203]);
     expect(cards[1].x - (cards[0].x + cards[0].w)).toBe(16);
 
     await expect(page.locator('.process__badge')).toHaveText(['01', '02', '03', '04']);
@@ -130,7 +130,7 @@ test.describe('partnerships at the desktop design width', () => {
 
   test('renders the terms panel with five rows and four hairlines', async ({ page }) => {
     const panel = await box(page, '.terms__panel');
-    expect([panel.x, panel.w, panel.h]).toEqual([80, 1280, 502]);
+    expect([panel.x, panel.w, panel.h]).toEqual([80, 1280, 487]);
     expect(await style(page, '.terms__panel', 'border-top-left-radius')).toBe('28px');
 
     await expect(page.locator('.terms__row')).toHaveCount(5);

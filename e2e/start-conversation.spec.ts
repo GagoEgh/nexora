@@ -80,8 +80,7 @@ test.describe('start a conversation at the desktop design width', () => {
     expect(await style(page, 'app-start-conversation h2', 'color')).toBe('rgb(11, 19, 36)');
 
     const lead = 'app-start-conversation .start-conversation__lead';
-    expect(await style(page, lead, 'font-size')).toBe('18px');
-    expect(await style(page, lead, 'line-height')).toBe('30px');
+    await expectTypeFromRole(page, lead, '--nx-sys-body-lead');
     expect(await style(page, lead, 'color')).toBe('rgb(71, 85, 105)');
   });
 
@@ -98,7 +97,7 @@ test.describe('start a conversation at the desktop design width', () => {
     const marker = 'app-start-conversation .start-conversation__marker';
     expect(await style(page, marker, 'background-color')).toBe('rgb(255, 255, 255)');
     expect(await style(page, marker, 'color')).toBe('rgb(15, 85, 232)');
-    expect(await style(page, marker, 'font-size')).toBe('13px');
+    expect(await style(page, marker, 'font-size')).toBe('12px');
     await expect(page.locator(marker)).toHaveText(['1', '2', '3']);
 
     for (const [i, label] of STEPS.entries()) {

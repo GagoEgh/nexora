@@ -82,11 +82,10 @@ test.describe('engagement models at the desktop design width', () => {
 
     const [intro] = await boxes(page, 'app-engagement-models .engagement-models__intro');
     expect(intro.x).toBe(920);
-    expect(await style(page, 'app-engagement-models .engagement-models__text', 'font-size')).toBe(
-      '16px',
-    );
-    expect(await style(page, 'app-engagement-models .engagement-models__text', 'line-height')).toBe(
-      '26px',
+    await expectTypeFromRole(
+      page,
+      'app-engagement-models .engagement-models__text',
+      '--nx-sys-body-copy',
     );
     expect(await style(page, 'app-engagement-models .engagement-models__text', 'color')).toBe(
       'rgb(71, 85, 105)',
@@ -148,21 +147,19 @@ test.describe('engagement models at the desktop design width', () => {
     );
     const [cardTitle] = await boxes(page, 'app-engagement-models .engagement-models__card-title');
     expect(cardTitle.y - (tiles[0].y + tiles[0].h)).toBe(16);
-    expect(
-      await style(page, 'app-engagement-models .engagement-models__card-title', 'font-size'),
-    ).toBe('18px');
-    expect(
-      await style(page, 'app-engagement-models .engagement-models__card-title', 'line-height'),
-    ).toBe('26px');
+    await expectTypeFromRole(
+      page,
+      'app-engagement-models .engagement-models__card-title',
+      '--nx-sys-title-step',
+    );
     expect(
       await style(page, 'app-engagement-models .engagement-models__card-title', 'font-weight'),
     ).toBe('600');
-    expect(
-      await style(page, 'app-engagement-models .engagement-models__description', 'font-size'),
-    ).toBe('14px');
-    expect(
-      await style(page, 'app-engagement-models .engagement-models__description', 'line-height'),
-    ).toBe('22px');
+    await expectTypeFromRole(
+      page,
+      'app-engagement-models .engagement-models__description',
+      '--mat-sys-body-small',
+    );
     expect(
       await style(page, 'app-engagement-models .engagement-models__description', 'color'),
     ).toBe('rgb(71, 85, 105)');
@@ -190,8 +187,10 @@ test.describe('engagement models at the desktop design width', () => {
     expect(
       await style(page, 'app-engagement-models .engagement-models__label', 'text-transform'),
     ).toBe('uppercase');
-    expect(await style(page, 'app-engagement-models .engagement-models__label', 'font-size')).toBe(
-      '13px',
+    await expectTypeFromRole(
+      page,
+      'app-engagement-models .engagement-models__label',
+      '--mat-sys-label-medium',
     );
     expect(await style(page, 'app-engagement-models .engagement-models__label', 'color')).toBe(
       'rgb(100, 116, 139)',
@@ -200,8 +199,10 @@ test.describe('engagement models at the desktop design width', () => {
     await expect(page.locator('app-engagement-models .engagement-models__value')).toHaveText(
       BEST_FOR,
     );
-    expect(await style(page, 'app-engagement-models .engagement-models__value', 'font-size')).toBe(
-      '14px',
+    await expectTypeFromRole(
+      page,
+      'app-engagement-models .engagement-models__value',
+      '--mat-sys-body-small',
     );
     expect(await style(page, 'app-engagement-models .engagement-models__value', 'color')).toBe(
       'rgb(11, 19, 36)',

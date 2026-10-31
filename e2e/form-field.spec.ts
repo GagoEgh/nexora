@@ -75,12 +75,12 @@ test.describe('text field theme', () => {
     await expectAlpha('--mat-form-field-disabled-input-text-placeholder-color', 0.38);
   });
 
-  test('hint and error: Body/Small 14/22, on-surface-variant hint, 8px below, edge-aligned', async ({
+  test('hint and error: Body/Small 13/21, on-surface-variant hint, 8px below, edge-aligned', async ({
     page,
     request,
   }) => {
     expect(await rootTokenValue(page, '--mat-sys-body-small')).toMatch(
-      /^400 0?\.875rem \/ 1\.375rem Inter\b/,
+      /^400 0?\.8125rem \/ 1\.3125rem Inter\b/,
     );
     await untouched(page, '--mat-form-field-subscript-text-size'); // bound to body-small
     await untouched(page, '--mat-form-field-error-text-color'); // error

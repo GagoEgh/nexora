@@ -73,9 +73,10 @@ test.describe('why at the desktop design width', () => {
     expect(chipBoxes.every((c) => c.h === 36)).toBe(true);
     expect(chipBoxes[1].x - (chipBoxes[0].x + chipBoxes[0].w)).toBe(8);
     expect(chipBoxes[3].y - chipBoxes[0].y).toBe(36 + 8);
+    // Chip labels bind to the Material label-medium typescale.
     expect(
       await style(page, 'app-why mat-chip-option .mdc-evolution-chip__text-label', 'font-size'),
-    ).toBe('13px');
+    ).toBe('12px');
 
     await expect(page.locator('app-why mat-chip-option.mat-mdc-chip-selected')).toHaveText(
       'Solution architecture',

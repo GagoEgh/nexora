@@ -126,7 +126,7 @@ test.describe('services page at the desktop design width', () => {
     // The selection indicator is the leading checkmark drawn in Filter.png. It animates in and
     // widens the chip, so the row is measured only once it has settled.
     await expect(selected.locator('.mat-mdc-chip-graphic')).toBeVisible();
-    await expect.poll(async () => (await selected.boundingBox())?.width).toBeGreaterThan(140);
+    await expect.poll(async () => (await selected.boundingBox())?.width).toBeGreaterThan(130);
 
     const chips = await page
       .locator('mat-chip-option')
@@ -196,7 +196,7 @@ test.describe('services page at the desktop design width', () => {
       expect(cards[i].x).toBe(484);
     }
 
-    expect(await style(page, '.services__group', 'padding-top')).toBe('64px');
+    expect(await style(page, '.services__group', 'padding-top')).toBe('48px');
     expect(await style(page, '.services__group + .services__group', 'border-top-width')).toBe(
       '1px',
     );

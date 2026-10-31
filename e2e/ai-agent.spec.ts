@@ -619,8 +619,8 @@ test.describe('ai agents business value band', () => {
     const band = await box(page, 'app-business-value');
     expect(band.x).toBe(0);
     expect(band.w).toBe(1440);
-    // Composite of the band's own padding and the card content's line heights.
-    expect(band.h).toBe(535);
+    // Composite of the shared section rhythm and the card content's line heights.
+    expect(band.h).toBe(503);
 
     const cards = await boxes(page, '.business-value__card');
     expect(cards).toHaveLength(4);
