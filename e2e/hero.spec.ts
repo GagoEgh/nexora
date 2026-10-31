@@ -40,14 +40,14 @@ test.describe('hero at the desktop design width', () => {
     expect((await box(page, 'app-hero')).y).toBe(0);
     expect(await style(page, 'app-header', 'background-color')).toBe('rgba(0, 0, 0, 0)');
     expect(await style(page, 'app-header', 'border-bottom-width')).toBe('0px');
-    expect(await style(page, 'app-hero .hero', 'padding-top')).toBe(`${76 + 80}px`); // header height + 80
+    expect(await style(page, 'app-hero .hero', 'padding-top')).toBe(`${76 + 64}px`); // header height + 64
     expect(await style(page, 'app-hero .hero', 'grid-template-columns')).toMatch(
       /^\d+(\.\d+)?px \d+(\.\d+)?px$/,
     );
     expect((await box(page, 'app-hero .hero__copy')).x).toBe(80);
   });
 
-  test('eyebrow, 64/72 headline, 18/30 lead, buttons and trust row', async ({ page }) => {
+  test('eyebrow, 56/64 headline, 17/28 lead, buttons and trust row', async ({ page }) => {
     await expect(page.locator('app-hero .hero__eyebrow-text--full')).toBeVisible();
     await expect(page.locator('app-hero .hero__eyebrow-text--short')).toBeHidden();
     expect(await style(page, 'app-hero .hero__eyebrow', 'color')).toBe('rgb(15, 85, 232)');
@@ -57,7 +57,7 @@ test.describe('hero at the desktop design width', () => {
     await expect(h1).toHaveText(HEADLINE);
     await expectTypeFromRole(page, 'main h1', '--nx-sys-display-hero');
     expect(await style(page, 'main h1', 'font-weight')).toBe('600');
-    expect(await style(page, 'main h1', 'letter-spacing')).toBe('-1.28px'); // -0.02em at 64px
+    expect(await style(page, 'main h1', 'letter-spacing')).toBe('-1.12px'); // -0.02em at 56px
     expect(await style(page, 'main h1', 'color')).toBe('rgb(11, 19, 36)');
 
     await expectTypeFromRole(page, 'app-hero .hero__lead', '--nx-sys-body-lead');

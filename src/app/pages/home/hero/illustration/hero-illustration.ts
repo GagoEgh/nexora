@@ -21,5 +21,6 @@ export type HeroIllustrationContent = DeepTransformContent<
 })
 export class HeroIllustration {
   readonly content = input.required<HeroIllustrationContent>();
-  protected readonly links = ['M18 0V28H82V0M50 28V56', 'M50 0V28H18V56M82 28V56'] as const;
+  protected readonly links = ['M18 0V28H82V0M50 28V56', 'M18 56V28H82V56M50 0V28'] as const;
+  protected readonly junctions = 'M18 28h0M82 28h0';
 }

@@ -21,7 +21,7 @@
 }
 
 .notes__workflow {
-  top: spacing.space(96);
+  top: spacing.space(32);
   transform: translateY(-100%);
   right: calc(-1 * #{spacing.space(40)});
   width: 240px;
@@ -80,6 +80,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  box-sizing: border-box;
   width: 20px;
   height: 20px;
   border: 1px solid var(--mat-sys-outline);

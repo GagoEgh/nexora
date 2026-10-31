@@ -12,15 +12,14 @@
             <path
               class="art__link-line"
               [attr.d]="links[i - 1]"
-              pathLength="1"
               vector-effect="non-scaling-stroke"
             />
             <path
               class="art__link-pulse"
               [attr.d]="links[i - 1]"
-              pathLength="1"
               vector-effect="non-scaling-stroke"
             />
+            <path class="art__link-dot" [attr.d]="junctions" vector-effect="non-scaling-stroke" />
           </svg>
         }
         <div class="art__tier">
