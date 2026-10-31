@@ -52,14 +52,12 @@ import { PartnerProcess } from './pages/partnerships/partner-process/partner-pro
 import { PartnerTerms } from './pages/partnerships/partner-terms/partner-terms';
 import { Partnerships } from './pages/partnerships/partnerships';
 import { NotFound } from './pages/not-found/not-found';
-import { PrivacyPolicy } from './pages/privacy-policy/privacy-policy';
 import { CategoryNav } from './pages/services/category-nav/category-nav';
 import { FilterBar } from './pages/services/filter-bar/filter-bar';
 import { Services } from './pages/services/services';
 import { ChallengeDetails } from './pages/solutions/challenge-details/challenge-details';
 import { ChallengeIndex } from './pages/solutions/challenge-index/challenge-index';
 import { Solutions } from './pages/solutions/solutions';
-import { TermsOfUse } from './pages/terms-of-use/terms-of-use';
 import { FieldLabel } from './shared/ui/field-label/field-label';
 import { IconTile } from './shared/ui/icon-tile/icon-tile';
 import { Logo } from './shared/ui/logo/logo';
@@ -144,8 +142,6 @@ const COMPONENTS: readonly [string, Type<unknown>][] = [
   ['ContactForm', ContactForm],
   ['ChipSelect', ChipSelect],
   ['NotFound', NotFound],
-  ['PrivacyPolicy', PrivacyPolicy],
-  ['TermsOfUse', TermsOfUse],
   ['Logo', Logo],
   ['IconTile', IconTile],
   ['PageIntro', PageIntro],
@@ -166,7 +162,7 @@ describe('change detection', () => {
   });
 
   it('every component in the application resolves to OnPush', () => {
-    expect(COMPONENTS).toHaveLength(68);
+    expect(COMPONENTS).toHaveLength(66);
     const eager = COMPONENTS.filter(([, component]) => !isOnPush(component)).map(([name]) => name);
     expect(eager, 'these components are checked eagerly').toEqual([]);
   });

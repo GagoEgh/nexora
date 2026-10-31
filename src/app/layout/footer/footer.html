@@ -29,15 +29,6 @@
     <p class="footer__copyright">&copy; {{ year }} Nexora. {{ content().rightsReserved }}</p>
 
     <div class="footer__legal">
-      @for (link of content().legal; track link.path.value) {
-        <a
-          class="footer__link"
-          [routerLink]="toUrl(link.path.value | localizedPath: i18n.locale())"
-        >
-          {{ link.label }}
-        </a>
-      }
-
       <div
         id="footer-languages"
         class="footer__languages"

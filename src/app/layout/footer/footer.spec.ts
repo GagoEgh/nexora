@@ -93,9 +93,8 @@ describe('Footer', () => {
     expect(new Set(services).size).toBe(services.length);
   });
 
-  it('shows the legal links and the current year', () => {
-    const legal = Array.from(root.querySelectorAll('.footer__legal a.footer__link'));
-    expect(legal.map((a) => a.getAttribute('href'))).toEqual(['/privacy-policy', '/terms-of-use']);
+  it('shows the current year and no legal links', () => {
+    expect(root.querySelectorAll('.footer__legal a.footer__link')).toHaveLength(0);
     expect(root.querySelector('.footer__copyright')?.textContent).toContain(
       `© ${new Date().getFullYear()} Nexora. All rights reserved.`,
     );

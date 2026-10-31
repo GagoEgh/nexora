@@ -140,20 +140,6 @@ const footerContent = {
         ],
       },
     ],
-    legal: [
-      {
-        path: '/privacy-policy',
-        label: t({
-          en: 'Privacy Policy',
-          hy: 'Գաղտնիության քաղաքականություն',
-          ru: 'Политика конфиденциальности',
-        }),
-      },
-      {
-        path: '/terms-of-use',
-        label: t({ en: 'Terms of Use', hy: 'Օգտագործման պայմաններ', ru: 'Условия использования' }),
-      },
-    ],
     rightsReserved: t({
       en: 'All rights reserved.',
       hy: 'Բոլոր իրավունքները պաշտպանված են։',

@@ -155,18 +155,6 @@ describe('Contact', () => {
     expect(root.querySelector('app-contact-form textarea')?.getAttribute('maxlength')).toBe('2000');
   });
 
-  it('points every privacy link in the form at the policy route', async () => {
-    await go('/contact');
-
-    // There were two: one in the consent block, now removed, and one in the disclaimer block,
-    // which is currently commented out in the template. So this can legitimately find none -
-    // the count is deliberately not asserted. It regains teeth when the disclaimer returns.
-    const links = Array.from(root.querySelectorAll('app-contact-form a'));
-    for (const link of links) {
-      expect(link.getAttribute('href')).toBe('/privacy-policy');
-    }
-  });
-
   it('keeps one h1 and never skips a heading level', async () => {
     await go('/contact');
 

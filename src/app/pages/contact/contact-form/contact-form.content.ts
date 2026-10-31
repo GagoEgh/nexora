@@ -275,22 +275,10 @@ const contactFormContent = {
       },
     ],
 
-    privacyLabel: t({
-      en: 'Privacy Policy',
-      hy: 'Գաղտնիության քաղաքականություն',
-      ru: 'Политика конфиденциальности',
-    }),
-    sentenceEnd: '.',
-
     submitLabel: t({
       en: 'Send inquiry',
       hy: 'Ուղարկել հարցումը',
       ru: 'Отправить запрос',
-    }),
-    noteBefore: t({
-      en: 'Your details are used only to respond to this inquiry. See our',
-      hy: 'Ձեր տվյալներն օգտագործվում են բացառապես այս հարցմանը պատասխանելու համար։ Ծանոթացեք մեր',
-      ru: 'Ваши данные используются исключительно для ответа на ваш запрос. Ознакомьтесь с нашей',
     }),
 
     errorRequired: t({

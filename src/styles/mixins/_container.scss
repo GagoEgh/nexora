@@ -1,18 +1,6 @@
 @use '../tokens/layout';
 @use '../tokens/spacing';
 
-/* Page shell: a prose page (privacy, terms) rather than a composed section stack. */
-@mixin page() {
-  display: block;
-  padding-block: spacing.space(40);
-  padding-inline: var(--nx-layout-margin);
-
-  > * {
-    max-width: var(--nx-layout-container-max);
-    margin-inline: auto;
-  }
-}
-
 /*
  * The vertical rhythm every full-width section shares.
  *

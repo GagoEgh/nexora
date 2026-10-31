@@ -31,7 +31,6 @@ import { MatOption, MatSelect } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { useDictionary } from 'angular-intlayer';
 import { appIcon } from '../../../core/icons/icons';
-import { PRIVACY_POLICY_PATH } from '../../../core/routing/paths';
 import { Reveal } from '../../../shared/motion/reveal';
 import {
   SNACK_BAR_CONFIG,
@@ -105,7 +104,6 @@ export class ContactForm {
 
   protected readonly content = useDictionary(contactFormContent);
   protected readonly arrowIcon = appIcon('arrow-right');
-  protected readonly privacyPath = PRIVACY_POLICY_PATH;
   protected readonly descriptionMax = DESCRIPTION_MAX;
 
   private readonly card = viewChild.required<ElementRef<HTMLElement>>('card');

@@ -51,17 +51,6 @@ const pages: Routes = [
     data: { meta: 'contact' } satisfies DocumentMetaRouteData,
   },
   {
-    path: 'privacy-policy',
-    loadComponent: () =>
-      import('./pages/privacy-policy/privacy-policy').then((m) => m.PrivacyPolicy),
-    data: { meta: 'privacy-policy' } satisfies DocumentMetaRouteData,
-  },
-  {
-    path: 'terms-of-use',
-    loadComponent: () => import('./pages/terms-of-use/terms-of-use').then((m) => m.TermsOfUse),
-    data: { meta: 'terms-of-use' } satisfies DocumentMetaRouteData,
-  },
-  {
     path: 'not-found',
     loadComponent: () => import('./pages/not-found/not-found').then((m) => m.NotFound),
     data: { meta: 'not-found' } satisfies DocumentMetaRouteData,

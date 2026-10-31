@@ -1,6 +1,5 @@
 export const CONTACT_PATH = '/contact';
 export const ENGAGEMENT_MODELS_PATH = '/engagement-models';
-export const PRIVACY_POLICY_PATH = '/privacy-policy';
 export const PARTNERSHIPS_PATH = '/partnerships';
 export const SERVICES_PATH = '/services';
 export const SOLUTIONS_PATH = '/solutions';

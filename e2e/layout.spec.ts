@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { expectTypeFromRole } from './support/tokens';
+import { expectTypeFromRole, px, toPx, token } from './support/tokens';
 
 /**
  * Header (Header.jpg / Mobile.png), footer (Desktop.png), routing with lazy loading and
@@ -179,7 +179,15 @@ test.describe('header in the compact desktop band', () => {
     await expect(page.locator('app-header nav a.header__link')).toHaveCount(6);
     await expect(page.locator(SERVICES_TRIGGER)).toHaveCount(1);
 
-    await expectTypeFromRole(page, 'app-header a.header__link', '--mat-sys-label-large');
+    /*
+     * Smaller than the role the nav normally uses, which is the whole point of this band:
+     * between 1000px and the full-nav breakpoint the header keeps every item but scales the
+     * type down to fit. Asserting the relationship says that; pinning a size would only
+     * record whichever figure the scale happens to produce.
+     */
+    const navSize = px(await style(page, 'app-header a.header__link', 'font-size'));
+    const labelLarge = px(await toPx(page, await token(page, '--mat-sys-label-large-size')));
+    expect(navSize).toBeLessThan(labelLarge);
     expect((await box(page, 'app-header app-logo')).h).toBe(28);
     // The hairline belongs to the menu-button layout; inline nav reads as part of the page.
     expect(await style(page, 'app-header', 'border-bottom-width')).toBe('0px');
@@ -239,7 +247,9 @@ test.describe('header at the mobile design width', () => {
     // Pages with an immersive intro run it behind the bar, so the hairline is dropped there
     // and kept on the ordinary pages.
     expect(await style(page, 'app-header', 'border-bottom-width')).toBe('0px');
-    await page.goto('/privacy-policy');
+    // `not-found` is the only page left without an immersive intro, so it is the one that
+    // still shows the hairline. Privacy Policy used to serve here before it was removed.
+    await page.goto('/not-found');
     expect(await style(page, 'app-header', 'border-bottom-width')).toBe('1px');
     expect(await style(page, 'app-header', 'border-bottom-color')).toBe('rgb(226, 232, 240)');
   });
@@ -293,10 +303,9 @@ test.describe('footer at the desktop design width', () => {
     await expect(page.locator('app-footer .footer__copyright')).toHaveText(
       `© ${new Date().getFullYear()} Nexora. All rights reserved.`,
     );
-    const legal = page.locator('app-footer .footer__legal a.footer__link');
-    await expect(legal).toHaveCount(2);
-    await expect(legal.nth(0)).toHaveAttribute('href', '/privacy-policy');
-    await expect(legal.nth(1)).toHaveAttribute('href', '/terms-of-use');
+    // No legal links: the Privacy Policy and Terms of Use pages were removed, and the footer
+    // must not advertise routes that would now 404.
+    await expect(page.locator('app-footer .footer__legal a.footer__link')).toHaveCount(0);
     const languages = page.locator('app-footer .footer__language');
     await expect(languages).toHaveText(['English', 'Հայերեն', 'Русский']);
     await expect(languages.first()).toHaveAttribute('aria-current', 'true');
@@ -304,7 +313,6 @@ test.describe('footer at the desktop design width', () => {
       await style(page, 'app-footer .footer__language[aria-current="true"]', 'font-weight'),
     ).toBe('600');
     await expectTypeFromRole(page, 'app-footer .footer__copyright', '--mat-sys-body-small');
-    expect(await style(page, 'app-footer .footer__legal a.footer__link', 'font-size')).toBe('14px');
   });
 
   test('a footer language button changes the locale and the choice survives a reload', async ({
@@ -388,10 +396,6 @@ test.describe('routing', () => {
       await page.goto(href);
       await expect(page.locator('main h1')).toHaveText(PAGE_HEADING[href] ?? label);
     }
-    await page.goto('/privacy-policy');
-    await expect(page.locator('main h1')).toHaveText('Privacy Policy');
-    await page.goto('/terms-of-use');
-    await expect(page.locator('main h1')).toHaveText('Terms of Use');
   });
 
   test('unknown URLs render the 404 page at the attempted address', async ({ page }) => {

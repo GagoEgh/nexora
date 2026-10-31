@@ -88,18 +88,6 @@ const documentMetaContent = {
           ru: 'Начните проект или станьте партнёром: свяжитесь с инженерной командой Nexora, чтобы обсудить вашу задачу и возможные пути её решения.',
         }),
       },
-      'privacy-policy': {
-        title: t({
-          en: 'Privacy Policy | Nexora',
-          hy: 'Գաղտնիության քաղաքականություն | Nexora',
-          ru: 'Политика конфиденциальности | Nexora',
-        }),
-        description: t({
-          en: 'How Nexora collects, uses and protects personal data when you use the website and get in touch.',
-          hy: 'Ինչպես է Nexora-ն հավաքում, օգտագործում և պաշտպանում անձնական տվյալները, երբ այցելում եք կայք և կապվում մեզ հետ։',
-          ru: 'Как Nexora собирает, использует и защищает персональные данные при посещении сайта и обращении к компании.',
-        }),
-      },
       'not-found': {
         title: t({
           en: 'Page not found | Nexora',
@@ -110,18 +98,6 @@ const documentMetaContent = {
           en: 'The page you are looking for does not exist or has moved. Continue from the Nexora homepage, services or contact page.',
           hy: 'Ձեր փնտրած էջը գոյություն չունի կամ տեղափոխվել է։ Շարունակեք դիտումը Nexora-ի գլխավոր էջից, ծառայությունների բաժնից կամ կապի էջից։',
           ru: 'Страница, которую вы ищете, не существует или была перемещена. Перейдите на главную страницу Nexora, в раздел услуг или на страницу контактов.',
-        }),
-      },
-      'terms-of-use': {
-        title: t({
-          en: 'Terms of Use | Nexora',
-          hy: 'Օգտագործման պայմաններ | Nexora',
-          ru: 'Условия использования | Nexora',
-        }),
-        description: t({
-          en: 'The terms that apply to using the Nexora website and its content.',
-          hy: 'Nexora-ի կայքի և դրա բովանդակության օգտագործման նկատմամբ կիրառվող պայմանները։',
-          ru: 'Условия использования сайта Nexora и размещённого на нём контента.',
         }),
       },
     },
@@ -142,16 +118,6 @@ const documentMetaContent = {
       }),
       partnerships: t({ en: 'Partnerships', hy: 'Գործընկերություն', ru: 'Партнёрство' }),
       contact: t({ en: 'Contact', hy: 'Կապ', ru: 'Контакты' }),
-      'privacy-policy': t({
-        en: 'Privacy Policy',
-        hy: 'Գաղտնիության քաղաքականություն',
-        ru: 'Политика конфиденциальности',
-      }),
-      'terms-of-use': t({
-        en: 'Terms of Use',
-        hy: 'Օգտագործման պայմաններ',
-        ru: 'Условия использования',
-      }),
     },
   },
 } as const satisfies Dictionary;

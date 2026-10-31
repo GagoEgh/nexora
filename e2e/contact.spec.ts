@@ -278,16 +278,6 @@ test.describe('contact at the desktop design width', () => {
     }
   });
 
-  test('points every privacy link in the form at the policy route', async ({ page }) => {
-    // There were two: one in the consent block, now removed, and one in the disclaimer block,
-    // which is currently commented out in the template. So this can legitimately find none -
-    // the count is deliberately not asserted. It regains teeth when the disclaimer returns.
-    const links = page.locator('app-contact-form a');
-    for (const href of await links.evaluateAll((els) => els.map((el) => el.getAttribute('href')))) {
-      expect(href).toBe('/privacy-policy');
-    }
-  });
-
   test('names every section for assistive technology', async ({ page }) => {
     const named = await page
       .locator('app-contact section[aria-labelledby], app-contact form[aria-labelledby]')
