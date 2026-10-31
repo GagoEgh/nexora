@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { expectTypeFromRole } from './support/tokens';
 
 /**
  * Start-a-conversation contract (CTA.png at 1440): a primary-container panel holding the copy
@@ -73,8 +74,7 @@ test.describe('start a conversation at the desktop design width', () => {
     const title = page.locator('app-start-conversation h2');
     await expect(title).toHaveCount(1);
     await expect(title).toHaveText('Have a Complex Technical Challenge? Let’s Solve It Together.');
-    expect(await style(page, 'app-start-conversation h2', 'font-size')).toBe('40px');
-    expect(await style(page, 'app-start-conversation h2', 'line-height')).toBe('48px');
+    await expectTypeFromRole(page, 'app-start-conversation h2', '--nx-sys-display-section');
     expect(await style(page, 'app-start-conversation h2', 'font-weight')).toBe('600');
     expect(await style(page, 'app-start-conversation h2', 'color')).toBe('rgb(11, 19, 36)');
 

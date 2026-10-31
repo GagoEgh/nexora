@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { expectTypeFromRole } from './support/tokens';
 
 /**
  * Services page contract. Pag.png fixes the header and the category card at 1440, Filter.png
@@ -74,12 +75,10 @@ test.describe('services page at the desktop design width', () => {
     await expect(h1).toHaveCount(1);
     await expect(h1).toHaveText('Fifteen services across the full software lifecycle.');
     // Pag.png solves to 50/60: between display-section (40/48) and display-hero (64/72).
-    expect(await style(page, 'app-services h1', 'font-size')).toBe('50px');
-    expect(await style(page, 'app-services h1', 'line-height')).toBe('60px');
+    await expectTypeFromRole(page, 'app-services h1', '--nx-sys-display-page');
     expect(await style(page, 'app-services h1', 'color')).toBe('rgb(11, 19, 36)');
 
-    expect(await style(page, '.page-intro__lead', 'font-size')).toBe('18px');
-    expect(await style(page, '.page-intro__lead', 'line-height')).toBe('30px');
+    await expectTypeFromRole(page, '.page-intro__lead', '--nx-sys-body-lead');
     expect(await style(page, '.page-intro__lead', 'color')).toBe('rgb(71, 85, 105)');
   });
 
@@ -117,7 +116,7 @@ test.describe('services page at the desktop design width', () => {
       'rgb(238, 244, 255)',
     );
 
-    expect(await style(page, '.category-nav__label', 'font-size')).toBe('16px');
+    await expectTypeFromRole(page, '.category-nav__label', '--nx-sys-body-copy');
     expect(await style(page, '.category-nav__label', 'font-weight')).toBe('600');
     expect(await style(page, '.category-nav__count', 'color')).toBe('rgb(100, 116, 139)');
   });
@@ -233,7 +232,7 @@ test.describe('services page at the desktop design width', () => {
     expect(await style(page, '.services__group-count', 'color')).toBe('rgb(15, 85, 232)');
     expect(await style(page, '.services__group-position', 'color')).toBe('rgb(100, 116, 139)');
     expect(await style(page, '.services__group-title', 'font-weight')).toBe('600');
-    expect(await style(page, '.services__group-text', 'font-size')).toBe('16px');
+    await expectTypeFromRole(page, '.services__group-text', '--nx-sys-body-copy');
   });
 
   test('marks Artificial Intelligence with the inverse AI accent', async ({ page }) => {
@@ -259,9 +258,8 @@ test.describe('services page at the desktop design width', () => {
     await expect(card.locator('.service-card__number')).toHaveText('01');
     expect(await style(page, '.service-card__number', 'color')).toBe('rgb(15, 85, 232)');
     await expect(card.locator('.service-card__title')).toHaveText('Web Design & UI/UX Design');
-    expect(await style(page, '.service-card__title', 'font-size')).toBe('18px');
-    expect(await style(page, '.service-card__summary', 'font-size')).toBe('14px');
-    expect(await style(page, '.service-card__summary', 'line-height')).toBe('22px');
+    await expectTypeFromRole(page, '.service-card__title', '--nx-sys-title-step');
+    await expectTypeFromRole(page, '.service-card__summary', '--mat-sys-body-small');
 
     const [arrow] = await boxes(page, '.service-card__arrow');
     expect([arrow.w, arrow.h]).toEqual([32, 32]);
@@ -283,7 +281,7 @@ test.describe('services page at the desktop design width', () => {
     await expect(page.locator('.service-card__tag')).toHaveCount(45);
     expect(await style(page, '.service-card__tag', 'background-color')).toBe('rgb(246, 248, 251)');
     expect(await style(page, '.service-card__tag', 'border-top-color')).toBe('rgb(226, 232, 240)');
-    expect(await style(page, '.service-card__tag', 'font-size')).toBe('13px');
+    await expectTypeFromRole(page, '.service-card__tag', '--mat-sys-label-medium');
     expect(await style(page, '.service-card__tag', 'color')).toBe('rgb(71, 85, 105)');
   });
 

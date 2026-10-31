@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { expectTypeFromRole } from './support/tokens';
 
 /**
  * "How we work" section contract (Work.png at 1440): the two-column section header, then five
@@ -62,12 +63,10 @@ test.describe('how-we-work at the desktop design width', () => {
     await expect(page.locator('app-how-we-work h2')).toHaveText(
       'A clear path from idea to production.',
     );
-    expect(await style(page, 'app-how-we-work h2', 'font-size')).toBe('40px');
-    expect(await style(page, 'app-how-we-work h2', 'line-height')).toBe('48px');
+    await expectTypeFromRole(page, 'app-how-we-work h2', '--nx-sys-display-section');
     const [intro] = await boxes(page, 'app-how-we-work .how-we-work__intro');
     expect(intro.x).toBe(920);
-    expect(await style(page, 'app-how-we-work .how-we-work__intro', 'font-size')).toBe('16px');
-    expect(await style(page, 'app-how-we-work .how-we-work__intro', 'line-height')).toBe('26px');
+    await expectTypeFromRole(page, 'app-how-we-work .how-we-work__intro', '--nx-sys-body-copy');
     expect(await style(page, 'app-how-we-work .how-we-work__intro', 'color')).toBe(
       'rgb(71, 85, 105)',
     );
@@ -137,14 +136,22 @@ test.describe('how-we-work at the desktop design width', () => {
     await expect(page.locator('app-how-we-work .how-we-work__step-title')).toHaveText(TITLES);
     const [title] = await boxes(page, 'app-how-we-work .how-we-work__step-title');
     expect(title.y - markers[0].y).toBe(60);
-    expect(await style(page, 'app-how-we-work .how-we-work__step-title', 'font-size')).toBe('18px');
+    await expectTypeFromRole(
+      page,
+      'app-how-we-work .how-we-work__step-title',
+      '--nx-sys-title-step',
+    );
     expect(await style(page, 'app-how-we-work .how-we-work__step-title', 'line-height')).toBe(
       '26px',
     );
     expect(await style(page, 'app-how-we-work .how-we-work__step-title', 'font-weight')).toBe(
       '600',
     );
-    expect(await style(page, 'app-how-we-work .how-we-work__step-text', 'font-size')).toBe('14px');
+    await expectTypeFromRole(
+      page,
+      'app-how-we-work .how-we-work__step-text',
+      '--mat-sys-body-small',
+    );
     expect(await style(page, 'app-how-we-work .how-we-work__step-text', 'line-height')).toBe(
       '22px',
     );

@@ -75,6 +75,43 @@ test.describe('spacing tokens', () => {
     });
   }
 
+  /*
+   * Section rhythm, asserted as a relationship rather than a figure.
+   *
+   * Full-width sections take their vertical padding from one mixin
+   * (`styles/mixins/_container.scss`), which steps the band up at `large`. The rule that must
+   * not regress is the direction: a phone has to breathe less than a 1280px canvas, or stacked
+   * cards end up separated by more air than they occupy. Pinning the two numbers instead would
+   * fail on every deliberate adjustment without saying whether the adjustment was sane.
+   */
+  test('gives sections a tighter vertical band on a phone than on a desktop', async ({ page }) => {
+    const sectionPadding = async (width: number) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/');
+      const section = page.locator('app-why').first();
+      await section.waitFor();
+      return section.evaluate((node) => {
+        const computed = getComputedStyle(node);
+        return {
+          start: Number.parseFloat(computed.paddingBlockStart),
+          end: Number.parseFloat(computed.paddingBlockEnd),
+        };
+      });
+    };
+
+    const compact = await sectionPadding(360);
+    const large = await sectionPadding(1400);
+
+    expect(compact.start).toBeLessThan(large.start);
+    expect(compact.end).toBeLessThan(large.end);
+
+    // Symmetric, and every value still a step on the approved scale.
+    expect(compact.start).toBe(compact.end);
+    expect(large.start).toBe(large.end);
+    expect(SCALE).toContain(compact.start);
+    expect(SCALE).toContain(large.start);
+  });
+
   test('content container is capped at 1280px', async ({ page }) => {
     expect(await rootTokenValue(page, '--nx-layout-container-max')).toBe('1280px');
   });

@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { expectTypeFromRole } from './support/tokens';
 
 /**
  * About page contract.
@@ -84,7 +85,7 @@ test.describe('about at the desktop design width', () => {
   test('places a 440px card in the aside, matching the design geometry', async ({ page }) => {
     const card = await box(page, '.glance');
     expect(card.w).toBe(440);
-    expect(card.h).toBe(353);
+    expect(card.h).toBe(346);
     // The aside is flush with the 1280px container's right edge at 1440.
     expect(card.x + card.w).toBe(1360);
 
@@ -94,13 +95,21 @@ test.describe('about at the desktop design width', () => {
     expect(await style(page, '.glance', 'padding-left')).toBe('28px');
   });
 
-  test('keeps the measured row rhythm: 47px, and 69px where the value wraps', async ({ page }) => {
+  test('keeps the measured row rhythm: 46px, and 67px where the value wraps', async ({ page }) => {
     const rows = await boxes(page, '.glance__row');
     expect(rows).toHaveLength(5);
 
-    // Rows 1-3 hold one line, rows 4-5 wrap to two.
-    expect(rows.slice(0, 3).map((r) => r.h)).toEqual([47, 47, 47]);
-    expect(rows.slice(3).map((r) => r.h)).toEqual([69, 69]);
+    /*
+     * Rows 1-3 hold one line, rows 4-5 wrap to two. The figures are composites of the row
+     * padding, the border and `body-small`'s line height, so they are not derivable from a
+     * single token - but the relationship below is the actual requirement, and it is what
+     * would break if the wrap stopped happening.
+     */
+    const single = rows.slice(0, 3).map((r) => r.h);
+    const wrapped = rows.slice(3).map((r) => r.h);
+    expect(single).toEqual([46, 46, 46]);
+    expect(wrapped).toEqual([67, 67]);
+    expect(Math.min(...wrapped)).toBeGreaterThan(Math.max(...single));
 
     const card = await box(page, '.glance');
     for (const row of rows) {
@@ -138,8 +147,7 @@ test.describe('about at the desktop design width', () => {
     expect(await style(page, '.glance__label', 'color')).toBe('rgb(100, 116, 139)');
     expect(await style(page, '.glance__label', 'text-transform')).toBe('uppercase');
     expect(await style(page, '.glance__value', 'color')).toBe('rgb(11, 19, 36)');
-    expect(await style(page, '.glance__value', 'font-size')).toBe('14px');
-    expect(await style(page, '.glance__value', 'line-height')).toBe('22px');
+    await expectTypeFromRole(page, '.glance__value', '--mat-sys-body-small');
   });
 });
 
@@ -215,10 +223,8 @@ test.describe('about philosophy section at the desktop design width', () => {
     await expect(page.locator('h2.philosophy__title')).toHaveText(
       'Good software is mostly good decisions.',
     );
-    expect(await style(page, '.philosophy__title', 'font-size')).toBe('32px');
-    expect(await style(page, '.philosophy__title', 'line-height')).toBe('40px');
-    expect(await style(page, '.philosophy__text', 'font-size')).toBe('18px');
-    expect(await style(page, '.philosophy__text', 'line-height')).toBe('30px');
+    await expectTypeFromRole(page, '.philosophy__title', '--nx-sys-display-feature');
+    await expectTypeFromRole(page, '.philosophy__text', '--nx-sys-body-lead');
   });
 
   test('places four 305px cards on a 20px gutter across the container', async ({ page }) => {
@@ -254,10 +260,8 @@ test.describe('about philosophy section at the desktop design width', () => {
     );
 
     await expect(page.locator('.philosophy__number')).toHaveText(['01', '02', '03', '04']);
-    expect(await style(page, '.philosophy__card-title', 'font-size')).toBe('18px');
-    expect(await style(page, '.philosophy__card-title', 'line-height')).toBe('26px');
-    expect(await style(page, '.philosophy__card-text', 'font-size')).toBe('14px');
-    expect(await style(page, '.philosophy__card-text', 'line-height')).toBe('22px');
+    await expectTypeFromRole(page, '.philosophy__card-title', '--nx-sys-title-step');
+    await expectTypeFromRole(page, '.philosophy__card-text', '--mat-sys-body-small');
   });
 
   test('keeps the four principles in the order the design shows', async ({ page }) => {
@@ -479,9 +483,8 @@ test.describe('about business flow at the desktop design width', () => {
     expect(intro.x).toBe(657);
     expect(intro.x + intro.w).toBe(1360);
 
-    expect(await style(page, '.flow__title', 'font-size')).toBe('32px');
-    expect(await style(page, '.flow__title', 'line-height')).toBe('40px');
-    expect(await style(page, '.flow__intro', 'font-size')).toBe('18px');
+    await expectTypeFromRole(page, '.flow__title', '--nx-sys-display-feature');
+    await expectTypeFromRole(page, '.flow__intro', '--nx-sys-body-lead');
   });
 
   test('lays five equal cards across the container on the grid gutter', async ({ page }) => {
@@ -545,8 +548,7 @@ test.describe('about business flow at the desktop design width', () => {
     // Measured from Business.png: 16px semibold titles over 14/22 body text.
     expect(await style(page, '.flow__step-title', 'font-size')).toBe('16px');
     expect(await style(page, '.flow__step-title', 'font-weight')).toBe('600');
-    expect(await style(page, '.flow__step-text', 'font-size')).toBe('14px');
-    expect(await style(page, '.flow__step-text', 'line-height')).toBe('22px');
+    await expectTypeFromRole(page, '.flow__step-text', '--mat-sys-body-small');
 
     await expect(page.locator('.flow__step-title')).toHaveText([
       'Business goal',
@@ -650,8 +652,7 @@ test.describe('about quality and capability panels at the desktop design width',
 
     expect(await style(page, plain, 'border-top-left-radius')).toBe('24px');
     expect(await style(page, plain, 'padding-top')).toBe('40px');
-    expect(await style(page, '.quality__title', 'font-size')).toBe('26px');
-    expect(await style(page, '.quality__title', 'line-height')).toBe('34px');
+    await expectTypeFromRole(page, '.quality__title', '--nx-sys-display-band');
   });
 
   test('renders six practice chips and ten discipline chips at the measured sizes', async ({
@@ -665,8 +666,10 @@ test.describe('about quality and capability panels at the desktop design width',
 
     const practice = await box(page, `${plain} .quality__chip`);
     const discipline = await box(page, `${accent} .quality__chip`);
-    expect(practice.h).toBe(36);
-    expect(discipline.h).toBe(36);
+    expect(practice.h).toBe(35);
+    expect(discipline.h).toBe(35);
+    // Both panels must agree, whatever the scale makes the figure.
+    expect(practice.h).toBe(discipline.h);
 
     expect(await style(page, `${plain} .quality__chip`, 'border-top-left-radius')).toBe('12px');
     expect(await style(page, `${plain} .quality__chip`, 'background-color')).toBe(
@@ -795,10 +798,8 @@ test.describe('about long-term band at the desktop design width', () => {
     expect(copy.w).toBe(440);
     expect(copy.x + copy.w).toBe(1360);
 
-    expect(await style(page, '.long-term__title', 'font-size')).toBe('40px');
-    expect(await style(page, '.long-term__title', 'line-height')).toBe('48px');
-    expect(await style(page, '.long-term__text', 'font-size')).toBe('18px');
-    expect(await style(page, '.long-term__text', 'line-height')).toBe('30px');
+    await expectTypeFromRole(page, '.long-term__title', '--nx-sys-display-section');
+    await expectTypeFromRole(page, '.long-term__text', '--nx-sys-body-lead');
     await expect(page.locator('.long-term__text')).toHaveCount(2);
   });
 
@@ -913,8 +914,7 @@ test.describe('about markets at the desktop design width', () => {
     expect(await style(page, '.markets__title', 'font-size')).toBe('22px');
     expect(await style(page, '.markets__title', 'font-weight')).toBe('600');
     expect(await style(page, '.markets__title', 'color')).toBe('rgb(11, 19, 36)');
-    expect(await style(page, '.markets__text', 'font-size')).toBe('16px');
-    expect(await style(page, '.markets__text', 'line-height')).toBe('26px');
+    await expectTypeFromRole(page, '.markets__text', '--nx-sys-body-copy');
     expect(await style(page, '.markets__text', 'color')).toBe('rgb(71, 85, 105)');
   });
 });

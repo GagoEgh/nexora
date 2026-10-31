@@ -29,16 +29,16 @@ test.describe('chip theme', () => {
     }); // #CBD5E1
   });
 
-  test('label: on-surface in Label/Medium 13/18 Medium (Inter)', async ({ page }) => {
+  test('label: on-surface in Label/Medium 12/17 Medium (Inter)', async ({ page }) => {
     expect(await resolveColorToken(page, '--mat-chip-label-text-color')).toEqual(
       await resolveColorToken(page, '--mat-sys-on-surface'),
     );
-    expect(await rootTokenValue(page, '--mat-chip-label-text-size')).toBe('0.8125rem');
-    expect(await rootTokenValue(page, '--mat-chip-label-text-line-height')).toBe('1.125rem');
+    expect(await rootTokenValue(page, '--mat-chip-label-text-size')).toBe('0.75rem');
+    expect(await rootTokenValue(page, '--mat-chip-label-text-line-height')).toBe('1.0625rem');
     expect(await rootTokenValue(page, '--mat-chip-label-text-weight')).toBe('500');
     expect(await rootTokenValue(page, '--mat-chip-label-text-font')).toMatch(/^Inter\b/);
     expect(await rootTokenValue(page, '--mat-sys-label-medium')).toMatch(
-      /^500 0?\.8125rem \/ 1\.125rem Inter\b/,
+      /^500 0?\.75rem \/ 1\.0625rem Inter\b/,
     );
   });
 

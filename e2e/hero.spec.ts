@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { expectTypeFromRole } from './support/tokens';
 
 /**
  * Home hero contract (Hero.png at 1440, Bero.png at 390): full-bleed gradient, Nexora hero
@@ -54,14 +55,12 @@ test.describe('hero at the desktop design width', () => {
 
     const h1 = page.locator('main h1');
     await expect(h1).toHaveText(HEADLINE);
-    expect(await style(page, 'main h1', 'font-size')).toBe('64px');
-    expect(await style(page, 'main h1', 'line-height')).toBe('72px');
+    await expectTypeFromRole(page, 'main h1', '--nx-sys-display-hero');
     expect(await style(page, 'main h1', 'font-weight')).toBe('600');
     expect(await style(page, 'main h1', 'letter-spacing')).toBe('-1.28px'); // -0.02em at 64px
     expect(await style(page, 'main h1', 'color')).toBe('rgb(11, 19, 36)');
 
-    expect(await style(page, 'app-hero .hero__lead', 'font-size')).toBe('18px');
-    expect(await style(page, 'app-hero .hero__lead', 'line-height')).toBe('30px');
+    await expectTypeFromRole(page, 'app-hero .hero__lead', '--nx-sys-body-lead');
     expect(await style(page, 'app-hero .hero__lead', 'color')).toBe('rgb(71, 85, 105)');
 
     const primary = page.locator('app-hero .hero__actions a').first();
@@ -151,10 +150,8 @@ test.describe('hero at the mobile design width', () => {
   }) => {
     await expect(page.locator('app-hero .hero__eyebrow-text--short')).toBeVisible();
     await expect(page.locator('app-hero .hero__eyebrow-text--full')).toBeHidden();
-    expect(await style(page, 'main h1', 'font-size')).toBe('40px');
-    expect(await style(page, 'main h1', 'line-height')).toBe('48px');
-    expect(await style(page, 'app-hero .hero__lead', 'font-size')).toBe('16px');
-    expect(await style(page, 'app-hero .hero__lead', 'line-height')).toBe('26px');
+    await expectTypeFromRole(page, 'main h1', '--nx-sys-display-hero');
+    await expectTypeFromRole(page, 'app-hero .hero__lead', '--nx-sys-body-lead');
 
     const buttons = page.locator('app-hero .hero__actions a');
     expect((await box(page, 'app-hero .hero__actions a')).w).toBe(350);

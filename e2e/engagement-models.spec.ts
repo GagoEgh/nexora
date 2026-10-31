@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { expectTypeFromRole } from './support/tokens';
 
 /**
  * Engagement models section contract (Models.png at 1440): the two-column section header with a
@@ -75,8 +76,7 @@ test.describe('engagement models at the desktop design width', () => {
     const title = page.locator('app-engagement-models h2');
     await expect(title).toHaveCount(1);
     await expect(title).toHaveText('Collaboration that fits your situation.');
-    expect(await style(page, 'app-engagement-models h2', 'font-size')).toBe('40px');
-    expect(await style(page, 'app-engagement-models h2', 'line-height')).toBe('48px');
+    await expectTypeFromRole(page, 'app-engagement-models h2', '--nx-sys-display-section');
     expect(await style(page, 'app-engagement-models h2', 'font-weight')).toBe('600');
 
     const [intro] = await boxes(page, 'app-engagement-models .engagement-models__intro');

@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { expectTypeFromRole } from './support/tokens';
 
 /**
  * "Why Nexora" section contract (Why.png at 1440): 480 : 704 columns, the one-team card whose
@@ -52,10 +53,8 @@ test.describe('why at the desktop design width', () => {
     expect(Math.abs(copy.y - list.y)).toBeLessThanOrEqual(2);
 
     await expect(page.locator('app-why .why__eyebrow')).toHaveText('Why Nexora');
-    expect(await style(page, 'app-why h2', 'font-size')).toBe('40px');
-    expect(await style(page, 'app-why h2', 'line-height')).toBe('48px');
-    expect(await style(page, 'app-why .why__lead', 'font-size')).toBe('18px');
-    expect(await style(page, 'app-why .why__lead', 'line-height')).toBe('30px');
+    await expectTypeFromRole(page, 'app-why h2', '--nx-sys-display-section');
+    await expectTypeFromRole(page, 'app-why .why__lead', '--nx-sys-body-lead');
     expect(await style(page, 'app-why .why__lead', 'color')).toBe('rgb(71, 85, 105)');
   });
 
@@ -67,7 +66,7 @@ test.describe('why at the desktop design width', () => {
     expect(await style(page, 'app-why .why__card', 'border-top-left-radius')).toBe('16px');
     expect(await style(page, 'app-why .why__card', 'padding-top')).toBe('24px');
     expect((await boxes(page, 'app-why .why__card app-logo'))[0].h).toBe(28);
-    expect(await style(page, 'app-why .why__card-title', 'font-size')).toBe('15px');
+    await expectTypeFromRole(page, 'app-why .why__card-title', '--mat-sys-label-large');
 
     const chipBoxes = await boxes(page, 'app-why mat-chip-option');
     expect(chipBoxes.every((c) => c.h === 36)).toBe(true);
@@ -109,8 +108,7 @@ test.describe('why at the desktop design width', () => {
     const [chip] = await boxes(page, 'app-why mat-chip-option.mat-mdc-chip-selected');
     const [dot] = await boxes(page, 'app-why mat-chip-option.mat-mdc-chip-selected .why__dot');
     expect(dot.x - chip.x).toBe(12);
-    expect(await style(page, 'app-why .why__card-note', 'font-size')).toBe('14px');
-    expect(await style(page, 'app-why .why__card-note', 'line-height')).toBe('22px');
+    await expectTypeFromRole(page, 'app-why .why__card-note', '--mat-sys-body-small');
   });
 
   test('only the selected chip renders its touch target', async ({ page }) => {
@@ -182,7 +180,7 @@ test.describe('why at the desktop design width', () => {
     expect(title.x).toBe(716);
     expect(await style(page, 'app-why .why__item-title', 'font-size')).toBe('24px');
     expect(await style(page, 'app-why .why__item-title', 'font-weight')).toBe('600');
-    expect(await style(page, 'app-why .why__item-text', 'line-height')).toBe('26px');
+    await expectTypeFromRole(page, 'app-why .why__item-text', '--nx-sys-body-copy');
   });
 });
 
@@ -197,7 +195,7 @@ test.describe('why at the mobile width', () => {
     expect([copy.x, copy.w]).toEqual([20, 350]);
     expect([list.x, list.w]).toEqual([20, 350]);
     expect(list.y).toBeGreaterThan(copy.y + copy.h);
-    expect(await style(page, 'app-why .why__lead', 'font-size')).toBe('16px');
+    await expectTypeFromRole(page, 'app-why .why__lead', '--nx-sys-body-lead');
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
     ).toBe(true);

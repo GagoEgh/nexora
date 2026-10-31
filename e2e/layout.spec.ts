@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { expectTypeFromRole } from './support/tokens';
 
 /**
  * Header (Header.jpg / Mobile.png), footer (Desktop.png), routing with lazy loading and
@@ -108,7 +109,7 @@ test.describe('header at the desktop design width', () => {
       'rgb(15, 85, 232)',
     );
     expect((await box(page, 'app-header a.header__link--active')).h).toBe(40);
-    expect(await style(page, 'app-header a.header__link', 'font-size')).toBe('15px');
+    await expectTypeFromRole(page, 'app-header a.header__link', '--mat-sys-label-large');
     expect(await style(page, 'app-header a.header__link', 'font-weight')).toBe('500');
     expect(await style(page, 'app-header a.header__link', 'border-top-left-radius')).toBe('9999px');
   });
@@ -178,7 +179,7 @@ test.describe('header in the compact desktop band', () => {
     await expect(page.locator('app-header nav a.header__link')).toHaveCount(6);
     await expect(page.locator(SERVICES_TRIGGER)).toHaveCount(1);
 
-    expect(await style(page, 'app-header a.header__link', 'font-size')).toBe('13px');
+    await expectTypeFromRole(page, 'app-header a.header__link', '--mat-sys-label-large');
     expect((await box(page, 'app-header app-logo')).h).toBe(28);
     // The hairline belongs to the menu-button layout; inline nav reads as part of the page.
     expect(await style(page, 'app-header', 'border-bottom-width')).toBe('0px');
@@ -208,7 +209,7 @@ test.describe('header in the compact desktop band', () => {
     await page.setViewportSize({ width: 1242, height: 900 });
     await page.goto('/');
 
-    expect(await style(page, 'app-header a.header__link', 'font-size')).toBe('15px');
+    await expectTypeFromRole(page, 'app-header a.header__link', '--mat-sys-label-large');
     expect((await box(page, 'app-header app-logo')).h).toBe(32);
     expect(await slack(page)).toBeGreaterThan(0);
   });
@@ -274,7 +275,7 @@ test.describe('footer at the desktop design width', () => {
     );
     expect(xs).toEqual([488, 718, 948, 1178]);
     expect(await style(page, 'app-footer .footer__heading', 'font-weight')).toBe('600');
-    expect(await style(page, 'app-footer .footer__heading', 'font-size')).toBe('15px');
+    await expectTypeFromRole(page, 'app-footer .footer__heading', '--mat-sys-label-large');
     expect(await style(page, 'app-footer .footer__link', 'font-size')).toBe('14px');
     expect(await style(page, 'app-footer .footer__link', 'line-height')).toBe('20px');
     expect(await style(page, 'app-footer .footer__link', 'color')).toBe('rgb(71, 85, 105)');
@@ -302,7 +303,7 @@ test.describe('footer at the desktop design width', () => {
     expect(
       await style(page, 'app-footer .footer__language[aria-current="true"]', 'font-weight'),
     ).toBe('600');
-    expect(await style(page, 'app-footer .footer__copyright', 'font-size')).toBe('14px');
+    await expectTypeFromRole(page, 'app-footer .footer__copyright', '--mat-sys-body-small');
     expect(await style(page, 'app-footer .footer__legal a.footer__link', 'font-size')).toBe('14px');
   });
 

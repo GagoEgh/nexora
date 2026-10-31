@@ -24,7 +24,7 @@
   gap: spacing.space(32);
   max-width: var(--nx-layout-container-max);
   margin-inline: auto;
-  padding-block: spacing.space(64);
+  padding-block: spacing.space(48);
   scroll-margin-block-start: spacing.space(32);
 
   & + & {

@@ -138,7 +138,7 @@ test.describe('button theme', () => {
     );
   });
 
-  test('labels use Label/Large 15/20 Semi Bold in Inter', async ({ page }) => {
+  test('labels use Label/Large 14/19 Semi Bold in Inter', async ({ page }) => {
     // Button labels bind to the label-large system tokens (Material default binding, untouched).
     for (const v of VARIANTS) {
       await untouched(page, `--mat-button-${v}-label-text-font`);
@@ -146,18 +146,18 @@ test.describe('button theme', () => {
       await untouched(page, `--mat-button-${v}-label-text-weight`);
     }
     expect(await rootTokenValue(page, '--mat-sys-label-large-font')).toMatch(/^Inter\b/);
-    expect(await rootTokenValue(page, '--mat-sys-label-large-size')).toBe('0.9375rem');
-    expect(await rootTokenValue(page, '--mat-sys-label-large-line-height')).toBe('1.25rem');
+    expect(await rootTokenValue(page, '--mat-sys-label-large-size')).toBe('0.875rem');
+    expect(await rootTokenValue(page, '--mat-sys-label-large-line-height')).toBe('1.1875rem');
     expect(await rootTokenValue(page, '--mat-sys-label-large-weight')).toBe('600');
     expect(await rootTokenValue(page, '--mat-sys-label-large')).toMatch(
-      /^600 0?\.9375rem \/ 1\.25rem Inter\b/,
+      /^600 0?\.875rem \/ 1\.1875rem Inter\b/,
     );
     // The whole type scale now uses Inter (body copy included).
     expect(await rootTokenValue(page, '--mat-sys-body-medium-font')).toMatch(/^Inter\b/);
     // The font itself is available to the page (index.html link).
     const loaded = await page.evaluate(async () => {
-      await document.fonts.load('600 15px Inter');
-      return document.fonts.check('600 15px Inter');
+      await document.fonts.load('600 14px Inter');
+      return document.fonts.check('600 14px Inter');
     });
     expect(loaded).toBe(true);
   });

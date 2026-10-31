@@ -1,13 +1,12 @@
 @use 'tokens/spacing';
 @use 'tokens/layout';
 @use 'tokens/motion';
+@use 'mixins/container';
 @use 'mixins/eyebrow';
 @use 'mixins/reveal';
 
 :host {
-  display: block;
-  padding-block: spacing.space(96);
-  padding-inline: var(--nx-layout-margin);
+  @include container.section();
 }
 
 :host([data-variant='compact']) {

@@ -10,7 +10,7 @@
   justify-items: center;
   box-sizing: border-box;
   min-height: calc(100dvh - var(--nx-layout-header-height));
-  padding-block: spacing.space(80);
+  padding-block: spacing.space(64);
   padding-inline: var(--nx-layout-margin);
   text-align: center;
 }

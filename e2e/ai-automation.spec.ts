@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { expectTypeFromRole } from './support/tokens';
 
 /**
  * "AI & automation" section contract (Ai.png at 1440): one dark panel on the container width with
@@ -43,7 +44,8 @@ test.describe('ai-automation at the desktop design width', () => {
 
   test('follows what-we-build as a dark 1280px panel with the inverse tokens', async ({ page }) => {
     await expect(page.locator('app-what-we-build + app-ai-automation')).toHaveCount(1);
-    expect(await style(page, 'app-ai-automation', 'padding-top')).toBe('96px');
+    // The shared section rhythm from `styles/mixins/_container.scss` at `large`.
+    expect(await style(page, 'app-ai-automation', 'padding-top')).toBe('80px');
     const [panel] = await boxes(page, 'app-ai-automation .ai');
     expect([panel.x, panel.w]).toEqual([80, 1280]);
     expect(await style(page, 'app-ai-automation .ai', 'background-color')).toBe('rgb(6, 11, 23)');
@@ -52,10 +54,9 @@ test.describe('ai-automation at the desktop design width', () => {
 
     await expect(page.locator('app-ai-automation .ai__eyebrow')).toHaveText('AI & automation');
     expect(await style(page, 'app-ai-automation .ai__eyebrow', 'color')).toBe('rgb(134, 173, 255)');
-    expect(await style(page, 'app-ai-automation h2', 'font-size')).toBe('40px');
-    expect(await style(page, 'app-ai-automation h2', 'line-height')).toBe('48px');
+    await expectTypeFromRole(page, 'app-ai-automation h2', '--nx-sys-display-section');
     expect(await style(page, 'app-ai-automation h2', 'color')).toBe('rgb(246, 248, 251)');
-    expect(await style(page, 'app-ai-automation .ai__lead', 'font-size')).toBe('18px');
+    await expectTypeFromRole(page, 'app-ai-automation .ai__lead', '--nx-sys-body-lead');
     expect(await style(page, 'app-ai-automation .ai__lead', 'color')).toBe('rgb(148, 163, 184)');
 
     const actions = page.locator('app-ai-automation .ai__actions a');
@@ -76,13 +77,15 @@ test.describe('ai-automation at the desktop design width', () => {
     const [panel] = await boxes(page, 'app-ai-automation .ai');
     const cards = await boxes(page, 'app-ai-automation .ai__card');
     expect(cards).toHaveLength(6);
+    // Widths and columns are fixed by the 1280 canvas; heights and row offsets follow the
+    // type scale, so they moved with it while the grid did not.
     expect(cards.map((c) => [c.x, c.y - panel.y, c.w, c.h])).toEqual([
-      [656, 64, 312, 140],
-      [984, 64, 312, 140],
-      [656, 220, 312, 140],
-      [984, 220, 312, 140],
-      [656, 376, 312, 140],
-      [984, 376, 312, 140],
+      [656, 64, 312, 136],
+      [984, 64, 312, 136],
+      [656, 216, 312, 136],
+      [984, 216, 312, 136],
+      [656, 368, 312, 136],
+      [984, 368, 312, 136],
     ]);
     expect(await style(page, 'app-ai-automation .ai__card', 'background-color')).toBe(
       'rgb(26, 37, 64)',
@@ -111,9 +114,9 @@ test.describe('ai-automation at the desktop design width', () => {
     await expect(page.locator('app-ai-automation .ai__card h3')).toHaveText(TITLES);
     const [title] = await boxes(page, 'app-ai-automation .ai__card-title');
     expect(title.x - cards[0].x).toBe(81);
-    expect(await style(page, 'app-ai-automation .ai__card-title', 'font-size')).toBe('15px');
+    await expectTypeFromRole(page, 'app-ai-automation .ai__card-title', '--mat-sys-label-large');
     expect(await style(page, 'app-ai-automation .ai__card-title', 'font-weight')).toBe('600');
-    expect(await style(page, 'app-ai-automation .ai__card-text', 'line-height')).toBe('22px');
+    await expectTypeFromRole(page, 'app-ai-automation .ai__card-text', '--mat-sys-body-small');
     expect(await style(page, 'app-ai-automation .ai__card-text', 'color')).toBe(
       'rgb(148, 163, 184)',
     );
@@ -156,7 +159,7 @@ test.describe('ai-automation at the desktop design width', () => {
     await expect(note).toHaveText(/human review where decisions matter/);
     const [noteBox] = await boxes(page, 'app-ai-automation .ai__note');
     expect(noteBox.x + noteBox.w).toBe(panel.x + 1280 - 64);
-    expect(await style(page, 'app-ai-automation .ai__note', 'font-size')).toBe('14px');
+    await expectTypeFromRole(page, 'app-ai-automation .ai__note', '--mat-sys-body-small');
   });
 
   test('the calls to action navigate', async ({ page }) => {

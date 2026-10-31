@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { expectTypeFromRole } from './support/tokens';
 import { contrastRatio, parseCssColor } from './support/contrast';
 
 /**
@@ -86,8 +87,7 @@ test.describe('ai agents page at the desktop design width', () => {
     await expect(h1).toHaveCount(1);
     await expect(h1).toHaveText('AI Agents & Business Automation');
     // Same display role the services page uses, inherited from the shared component.
-    expect(await style(page, 'app-ai-agent h1', 'font-size')).toBe('50px');
-    expect(await style(page, 'app-ai-agent h1', 'line-height')).toBe('60px');
+    await expectTypeFromRole(page, 'app-ai-agent h1', '--nx-sys-display-page');
   });
 
   test('the aside holds a 520px example-flow card', async ({ page }) => {
@@ -272,7 +272,7 @@ test.describe('ai agents problems band', () => {
 
     expect(await style(page, '.problems__card', 'border-top-width')).toBe('1px');
     expect(await style(page, '.problems__card', 'background-color')).toBe('rgb(255, 255, 255)');
-    expect(await style(page, '.problems__card-text', 'font-size')).toBe('14px');
+    await expectTypeFromRole(page, '.problems__card-text', '--mat-sys-body-small');
   });
 });
 
@@ -392,8 +392,7 @@ test.describe('ai agents audiences band', () => {
     expect(columns[0].y).toBe(columns[1].y);
 
     // 26/34 heading, which sits off the token scale and is therefore set explicitly.
-    expect(await style(page, '.audiences__title', 'font-size')).toBe('26px');
-    expect(await style(page, '.audiences__title', 'line-height')).toBe('34px');
+    await expectTypeFromRole(page, '.audiences__title', '--nx-sys-display-band');
     expect(await style(page, '.audiences__title', 'font-weight')).toBe('600');
     expect(await style(page, '.audiences__title', 'letter-spacing')).toBe('-0.5px');
     expect(await style(page, '.audiences__title', 'font-family')).toContain('Inter');
@@ -620,7 +619,8 @@ test.describe('ai agents business value band', () => {
     const band = await box(page, 'app-business-value');
     expect(band.x).toBe(0);
     expect(band.w).toBe(1440);
-    expect(band.h).toBe(576);
+    // Composite of the band's own padding and the card content's line heights.
+    expect(band.h).toBe(535);
 
     const cards = await boxes(page, '.business-value__card');
     expect(cards).toHaveLength(4);
@@ -641,8 +641,7 @@ test.describe('ai agents business value band', () => {
     expect(await style(page, '.business-value__card', 'border-top-left-radius')).toBe('24px');
     expect(await style(page, '.business-value__card', 'padding-top')).toBe('28px');
 
-    expect(await style(page, '.business-value__title', 'font-size')).toBe('32px');
-    expect(await style(page, '.business-value__title', 'line-height')).toBe('40px');
+    await expectTypeFromRole(page, '.business-value__title', '--nx-sys-display-feature');
     expect(await style(page, '.business-value__title', 'font-weight')).toBe('600');
     expect(await style(page, '.business-value__title', 'letter-spacing')).toBe('-1px');
   });
@@ -733,20 +732,19 @@ test.describe('ai agents related services band', () => {
       .evaluateAll((els) => [
         ...new Set(els.map((e) => Math.round(e.getBoundingClientRect().height))),
       ]);
-    expect(tagHeights).toEqual([28]);
+    // One height across every tag; the figure follows `label-medium`'s line height.
+    expect(tagHeights).toEqual([27]);
 
-    expect(await style(page, '.related__title', 'font-size')).toBe('32px');
-    expect(await style(page, '.related__title', 'line-height')).toBe('40px');
+    await expectTypeFromRole(page, '.related__title', '--nx-sys-display-feature');
     expect(await style(page, '.related__title', 'font-weight')).toBe('600');
     expect(await style(page, '.related__title', 'letter-spacing')).toBe('-1px');
 
-    expect(await style(page, '.engagement__title', 'font-size')).toBe('22px');
-    expect(await style(page, '.engagement__title', 'line-height')).toBe('28px');
+    await expectTypeFromRole(page, '.engagement__title', '--mat-sys-title-large');
     expect(await style(page, '.engagement__title', 'font-weight')).toBe('600');
 
-    expect(await style(page, '.service-card__title', 'font-size')).toBe('18px');
+    await expectTypeFromRole(page, '.service-card__title', '--nx-sys-title-step');
     expect(await style(page, '.engagement__model-title', 'font-size')).toBe('16px');
-    expect(await style(page, '.engagement__model-text', 'font-size')).toBe('14px');
+    await expectTypeFromRole(page, '.engagement__model-text', '--mat-sys-body-small');
 
     expect(await style(page, 'app-service-card', 'background-color')).toBe('rgb(255, 255, 255)');
     expect(await style(page, 'app-engagement-panel', 'background-color')).toBe(
@@ -888,10 +886,8 @@ test.describe('ai agents conversation band', () => {
 
     expect(await style(page, '.start-conversation', 'border-radius')).toBe('28px');
     expect(await style(page, '.start-conversation', 'background-color')).toBe('rgb(238, 244, 255)');
-    expect(await style(page, '.start-conversation__title', 'font-size')).toBe('40px');
-    expect(await style(page, '.start-conversation__title', 'line-height')).toBe('48px');
-    expect(await style(page, '.start-conversation__lead', 'font-size')).toBe('18px');
-    expect(await style(page, '.start-conversation__lead', 'line-height')).toBe('30px');
+    await expectTypeFromRole(page, '.start-conversation__title', '--nx-sys-display-section');
+    await expectTypeFromRole(page, '.start-conversation__lead', '--nx-sys-body-lead');
 
     const buttons = await boxes(page, '.start-conversation__actions a');
     expect(buttons).toHaveLength(2);

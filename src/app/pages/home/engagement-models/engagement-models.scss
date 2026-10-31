@@ -1,14 +1,13 @@
 @use 'tokens/spacing';
 @use 'tokens/layout';
+@use 'mixins/container';
 @use 'mixins/eyebrow';
 @use 'mixins/reveal';
 @use 'mixins/text';
 @use 'mixins/surface';
 
 :host {
-  display: block;
-  padding-block: spacing.space(96);
-  padding-inline: var(--nx-layout-margin);
+  @include container.section();
 }
 
 .engagement-models {

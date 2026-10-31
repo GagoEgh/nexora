@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { expectTypeFromRole } from './support/tokens';
 
 /**
  * "What we build" section contract (Build.png at 1440): a surface-container-low band, the
@@ -67,11 +68,10 @@ test.describe('what-we-build at the desktop design width', () => {
     await expect(page.locator('app-what-we-build h2')).toHaveText(
       'Systems shaped around how your business runs.',
     );
-    expect(await style(page, 'app-what-we-build h2', 'font-size')).toBe('40px');
-    expect(await style(page, 'app-what-we-build h2', 'line-height')).toBe('48px');
+    await expectTypeFromRole(page, 'app-what-we-build h2', '--nx-sys-display-section');
     expect(await style(page, 'app-what-we-build h2', 'font-weight')).toBe('600');
 
-    expect(await style(page, 'app-what-we-build .what-we-build__intro', 'font-size')).toBe('16px');
+    await expectTypeFromRole(page, 'app-what-we-build .what-we-build__intro', '--nx-sys-body-copy');
     expect(await style(page, 'app-what-we-build .what-we-build__intro', 'line-height')).toBe(
       '26px',
     );
@@ -174,7 +174,11 @@ test.describe('what-we-build at the desktop design width', () => {
     await expect(note).toHaveText(
       'Illustrations are conceptual and do not represent specific client projects.',
     );
-    expect(await style(page, 'app-what-we-build .what-we-build__note', 'font-size')).toBe('14px');
+    await expectTypeFromRole(
+      page,
+      'app-what-we-build .what-we-build__note',
+      '--mat-sys-body-small',
+    );
     expect(await style(page, 'app-what-we-build .what-we-build__note', 'color')).toBe(
       'rgb(100, 116, 139)',
     );

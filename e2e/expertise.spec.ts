@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { expectTypeFromRole } from './support/tokens';
 
 /**
  * Expertise section contract (Expertise.png at 1440): header block in two columns, six cards
@@ -47,12 +48,10 @@ test.describe('expertise at the desktop design width', () => {
     );
     const title = page.locator('app-expertise h2');
     await expect(title).toHaveText('End-to-end engineering, under one roof.');
-    expect(await style(page, 'app-expertise h2', 'font-size')).toBe('40px');
-    expect(await style(page, 'app-expertise h2', 'line-height')).toBe('48px');
+    await expectTypeFromRole(page, 'app-expertise h2', '--nx-sys-display-section');
     expect(await style(page, 'app-expertise h2', 'font-weight')).toBe('600');
 
-    expect(await style(page, 'app-expertise .expertise__text', 'font-size')).toBe('16px');
-    expect(await style(page, 'app-expertise .expertise__text', 'line-height')).toBe('26px');
+    await expectTypeFromRole(page, 'app-expertise .expertise__text', '--nx-sys-body-copy');
     expect(await style(page, 'app-expertise .expertise__text', 'color')).toBe('rgb(71, 85, 105)');
     const [intro] = await boxes(page, 'app-expertise .expertise__intro');
     expect(intro.x).toBe(920);
@@ -95,8 +94,8 @@ test.describe('expertise at the desktop design width', () => {
     );
     expect(await style(page, 'app-expertise .expertise__card-title', 'font-size')).toBe('24px');
     expect(await style(page, 'app-expertise .expertise__card-title', 'font-weight')).toBe('600');
-    expect(await style(page, 'app-expertise .expertise__card-text', 'line-height')).toBe('26px');
-    expect(await style(page, 'app-expertise a.expertise__link', 'font-size')).toBe('15px');
+    await expectTypeFromRole(page, 'app-expertise .expertise__card-text', '--nx-sys-body-copy');
+    await expectTypeFromRole(page, 'app-expertise a.expertise__link', '--mat-sys-label-large');
     expect(await style(page, 'app-expertise a.expertise__link', 'font-weight')).toBe('600');
     expect(await style(page, 'app-expertise a.expertise__link', 'color')).toBe('rgb(15, 85, 232)');
 
