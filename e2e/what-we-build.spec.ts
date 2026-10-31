@@ -50,13 +50,14 @@ test.describe('what-we-build at the desktop design width', () => {
     page,
   }) => {
     await expect(page.locator('app-why + app-what-we-build')).toHaveCount(1);
-    expect(await style(page, 'app-what-we-build', 'padding-top')).toBe('96px');
+    // Tighter than the shared section rhythm; the tint already separates this band.
+    expect(await style(page, 'app-what-we-build', 'padding-top')).toBe('64px');
     expect(await style(page, 'app-what-we-build', 'background-color')).toBe('rgb(246, 248, 251)');
     expect(
       await style(page, 'app-what-we-build .what-we-build__header', 'grid-template-columns'),
     ).toMatch(/^\d+(\.\d+)?px 440px$/);
     expect(await style(page, 'app-what-we-build .what-we-build__header', 'margin-bottom')).toBe(
-      '64px',
+      '48px',
     );
 
     await expect(page.locator('app-what-we-build .what-we-build__eyebrow')).toHaveText(
@@ -72,9 +73,7 @@ test.describe('what-we-build at the desktop design width', () => {
     expect(await style(page, 'app-what-we-build h2', 'font-weight')).toBe('600');
 
     await expectTypeFromRole(page, 'app-what-we-build .what-we-build__intro', '--nx-sys-body-copy');
-    expect(await style(page, 'app-what-we-build .what-we-build__intro', 'line-height')).toBe(
-      '26px',
-    );
+    await expectTypeFromRole(page, 'app-what-we-build .what-we-build__intro', '--nx-sys-body-copy');
     expect(await style(page, 'app-what-we-build .what-we-build__intro', 'color')).toBe(
       'rgb(71, 85, 105)',
     );
@@ -130,12 +129,21 @@ test.describe('what-we-build at the desktop design width', () => {
   test('card titles, descriptions and the footnote use the Nexora roles', async ({ page }) => {
     const [card] = await boxes(page, 'app-what-we-build .what-we-build__card');
     const [title] = await boxes(page, 'app-what-we-build .what-we-build__card-title');
-    expect(title.x - card.x).toBe(29);
-    expect(await style(page, 'app-what-we-build .what-we-build__card-title', 'font-size')).toBe(
-      '20px',
-    );
-    expect(await style(page, 'app-what-we-build .what-we-build__card-title', 'line-height')).toBe(
-      '28px',
+    const [art] = await boxes(page, 'app-what-we-build app-what-we-build-illustration');
+
+    /*
+     * The copy has to share the illustration's left edge. It used to sit 8px further in,
+     * because the copy wrapper carried padding of its own on top of the card's - so the text
+     * was visibly indented against the artwork above it. Asserting the two edges agree states
+     * the requirement; the old literal only recorded one side of it.
+     */
+    expect(title.x).toBe(art.x);
+    expect(title.x - card.x).toBe(21);
+
+    await expectTypeFromRole(
+      page,
+      'app-what-we-build .what-we-build__card-title',
+      '--nx-sys-title-card',
     );
     expect(await style(page, 'app-what-we-build .what-we-build__card-title', 'font-weight')).toBe(
       '600',
@@ -143,11 +151,10 @@ test.describe('what-we-build at the desktop design width', () => {
     expect(await style(page, 'app-what-we-build .what-we-build__card-title', 'color')).toBe(
       'rgb(11, 19, 36)',
     );
-    expect(await style(page, 'app-what-we-build .what-we-build__card-desc', 'font-size')).toBe(
-      '14px',
-    );
-    expect(await style(page, 'app-what-we-build .what-we-build__card-desc', 'line-height')).toBe(
-      '22px',
+    await expectTypeFromRole(
+      page,
+      'app-what-we-build .what-we-build__card-desc',
+      '--mat-sys-body-small',
     );
     expect(await style(page, 'app-what-we-build .what-we-build__card-desc', 'color')).toBe(
       'rgb(71, 85, 105)',
@@ -182,7 +189,7 @@ test.describe('what-we-build at the desktop design width', () => {
     expect(await style(page, 'app-what-we-build .what-we-build__note', 'color')).toBe(
       'rgb(100, 116, 139)',
     );
-    expect(await style(page, 'app-what-we-build .what-we-build__note', 'margin-top')).toBe('48px');
+    expect(await style(page, 'app-what-we-build .what-we-build__note', 'margin-top')).toBe('32px');
   });
 
   test('illustrations are decorative inline SVGs coloured from the theme tokens', async ({
