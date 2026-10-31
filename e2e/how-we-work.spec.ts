@@ -50,7 +50,8 @@ test.describe('how-we-work at the desktop design width', () => {
 
   test('follows ai-automation with the two-column header and the copy tokens', async ({ page }) => {
     await expect(page.locator('app-ai-automation + app-how-we-work')).toHaveCount(1);
-    expect(await style(page, 'app-how-we-work', 'padding-top')).toBe('96px');
+    // The shared section rhythm from `styles/mixins/_container.scss` at `large`.
+    expect(await style(page, 'app-how-we-work', 'padding-top')).toBe('64px');
     expect(
       await style(page, 'app-how-we-work .how-we-work__header', 'grid-template-columns'),
     ).toMatch(/^\d+(\.\d+)?px 440px$/);

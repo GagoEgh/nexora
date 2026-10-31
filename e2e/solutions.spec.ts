@@ -101,7 +101,7 @@ test.describe('solutions at the desktop design width', () => {
       expect(panel.w).toBe(1280);
     }
     for (let i = 1; i < panels.length; i++) {
-      expect(panels[i].y - (panels[i - 1].y + panels[i - 1].h)).toBe(20);
+      expect(panels[i].y - (panels[i - 1].y + panels[i - 1].h)).toBe(16);
     }
     expect(await style(page, '.challenge-details__panel', 'border-top-left-radius')).toBe('24px');
   });
@@ -113,10 +113,10 @@ test.describe('solutions at the desktop design width', () => {
     const help = await box(page, '.challenge-details__help');
     const services = await box(page, '.challenge-details__services');
 
-    expect(summary.x).toBe(121);
+    expect(summary.x).toBe(113);
     expect(summary.w).toBe(488);
-    expect(help.x).toBe(649);
-    expect(services.x).toBe(1019);
+    expect(help.x).toBe(641);
+    expect(services.x).toBe(1027);
     expect(services.w).toBe(300);
 
     // 40px column gap either side of the fluid middle column.
@@ -320,9 +320,12 @@ test.describe('solutions entrance', () => {
   test('staggers the index across the row', async ({ page }) => {
     await page.goto('/solutions');
 
-    const delays = await page
-      .locator('.challenge-index__item')
-      .evaluateAll((els) => [...new Set(els.map((el) => getComputedStyle(el).transitionDelay))]);
+    const items = page.locator('.challenge-index__item');
+    await expect(items).toHaveCount(8);
+
+    const delays = await items.evaluateAll((els) => [
+      ...new Set(els.map((el) => getComputedStyle(el).transitionDelay)),
+    ]);
     expect(delays).toEqual(['0s', '0.05s', '0.1s', '0.15s']);
   });
 

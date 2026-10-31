@@ -43,7 +43,8 @@ test.describe('start a conversation at the desktop design width', () => {
     page,
   }) => {
     await expect(page.locator('app-engagement-models + app-start-conversation')).toHaveCount(1);
-    expect(await style(page, 'app-start-conversation', 'padding-top')).toBe('96px');
+    // The shared section rhythm from `styles/mixins/_container.scss` at `large`.
+    expect(await style(page, 'app-start-conversation', 'padding-top')).toBe('64px');
 
     const [panel] = await boxes(page, 'app-start-conversation .start-conversation');
     expect([panel.x, panel.w]).toEqual([80, 1280]);

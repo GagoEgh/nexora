@@ -23,14 +23,14 @@
 .challenge-details {
   @include container.container();
 
-  gap: spacing.space(20);
+  gap: spacing.space(16);
 }
 
 .challenge-details__panel {
   display: grid;
-  gap: spacing.space(32);
+  gap: spacing.space(24);
   box-sizing: border-box;
-  padding: spacing.space(24);
+  padding: spacing.space(20);
   @include surface.outlined();
   border-radius: var(--nx-sys-corner-panel);
 
@@ -38,7 +38,18 @@
     grid-template-columns: minmax(0, 488px) minmax(0, 1fr) 300px;
     column-gap: spacing.space(40);
     align-items: start;
-    padding: spacing.space(40);
+    padding: spacing.space(32);
+  }
+
+  /* The outline and the counter answer the pointer together, as the card grids do. */
+  @media (hover: hover) {
+    &:hover {
+      border-color: var(--mat-sys-primary);
+
+      .challenge-details__counter {
+        color: var(--mat-sys-primary);
+      }
+    }
   }
 }
 
@@ -52,6 +63,14 @@
   gap: spacing.space(16);
 
   @include layout.up(large) {
+    /*
+     * Stretched on purpose. The rule between the summary and the help column is this
+     * element's own border, so with the panel's `align-items: start` it ended wherever the
+     * summary text happened to end - 6px short of the panel in English, but 42px in Russian
+     * and 90px in Armenian, where the help column runs longer. Stretching only this column
+     * makes the divider span the row; the other two keep their natural height.
+     */
+    align-self: stretch;
     padding-inline-end: spacing.space(40);
     border-inline-end: 1px solid var(--mat-sys-outline-variant);
   }
@@ -71,6 +90,7 @@
 .challenge-details__counter {
   font: typography.$code-font;
   color: var(--nx-sys-on-surface-muted);
+  transition: color motion.duration(fast) motion.easing(out);
 }
 
 .challenge-details__title,

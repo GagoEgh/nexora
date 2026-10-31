@@ -45,7 +45,8 @@ test.describe('why at the desktop design width', () => {
     page,
   }) => {
     await expect(page.locator('app-expertise + app-why')).toHaveCount(1);
-    expect(await style(page, 'app-why', 'padding-top')).toBe('96px');
+    // The shared section rhythm from `styles/mixins/_container.scss` at `large`.
+    expect(await style(page, 'app-why', 'padding-top')).toBe('64px');
     const [copy] = await boxes(page, 'app-why .why__copy');
     const [list] = await boxes(page, 'app-why .why__list');
     expect([copy.x, copy.w]).toEqual([80, 480]);

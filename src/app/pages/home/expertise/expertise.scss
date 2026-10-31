@@ -10,11 +10,6 @@
 
 :host {
   @include container.section();
-  padding-block: spacing.space(40);
-
-  @include layout.up(large) {
-    padding-block: spacing.space(64);
-  }
 }
 
 .expertise {

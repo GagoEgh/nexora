@@ -9,11 +9,6 @@
 :host {
   @include container.section();
   background-color: var(--mat-sys-surface-container-low);
-  padding-block: spacing.space(40);
-
-  @include layout.up(large) {
-    padding-block: spacing.space(64);
-  }
 }
 
 .what-we-build {

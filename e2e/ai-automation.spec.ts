@@ -45,7 +45,7 @@ test.describe('ai-automation at the desktop design width', () => {
   test('follows what-we-build as a dark 1280px panel with the inverse tokens', async ({ page }) => {
     await expect(page.locator('app-what-we-build + app-ai-automation')).toHaveCount(1);
     // The shared section rhythm from `styles/mixins/_container.scss` at `large`.
-    expect(await style(page, 'app-ai-automation', 'padding-top')).toBe('80px');
+    expect(await style(page, 'app-ai-automation', 'padding-top')).toBe('64px');
     const [panel] = await boxes(page, 'app-ai-automation .ai');
     expect([panel.x, panel.w]).toEqual([80, 1280]);
     expect(await style(page, 'app-ai-automation .ai', 'background-color')).toBe('rgb(6, 11, 23)');

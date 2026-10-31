@@ -1,27 +1,12 @@
 @use '../tokens/layout';
 @use '../tokens/spacing';
 
-/*
- * The vertical rhythm every full-width section shares.
- *
- * This is the one place the figure lives, so the page's breathing room is a single edit.
- * Seven components used to repeat these three declarations verbatim instead of including
- * the mixin, which is why the old value appeared scattered across the project.
- */
 @mixin section() {
   display: block;
-  padding-block: spacing.space(48);
+  padding-block: spacing.space(40);
   padding-inline: var(--nx-layout-margin);
-
-  /*
-   * Sections used to carry the same band on a phone as on a desktop, which is most of why a
-   * narrow page scrolled so far: the rhythm that frames a 1280px canvas is simply too much
-   * air between stacked cards on a 320px one. `hero` and `page-intro` already step their
-   * vertical padding up at this breakpoint, so sections were the outlier rather than this
-   * being a new idea.
-   */
   @include layout.up(large) {
-    padding-block: spacing.space(80);
+    padding-block: spacing.space(64);
   }
 }
 

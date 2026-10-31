@@ -55,7 +55,8 @@ test.describe('engagement models at the desktop design width', () => {
     page,
   }) => {
     await expect(page.locator('app-how-we-work + app-engagement-models')).toHaveCount(1);
-    expect(await style(page, 'app-engagement-models', 'padding-top')).toBe('96px');
+    // The shared section rhythm from `styles/mixins/_container.scss` at `large`.
+    expect(await style(page, 'app-engagement-models', 'padding-top')).toBe('64px');
     expect(
       await style(
         page,
