@@ -3,6 +3,7 @@
 @use 'mixins/eyebrow';
 @use 'mixins/section';
 @use 'tokens/layout';
+@use 'tokens/motion';
 @use 'tokens/spacing';
 @use 'mixins/surface';
 
@@ -65,6 +66,13 @@
   gap: spacing.space(16) spacing.space(32);
   align-items: center;
   padding: spacing.space(24) spacing.space(32);
+  transition: background-color motion.duration(fast) motion.easing(out);
+
+  @media (hover: hover) {
+    &:hover {
+      background-color: var(--mat-sys-surface-container-low);
+    }
+  }
 
   @include layout.up(expanded) {
     grid-template-columns: auto minmax(0, 1fr);

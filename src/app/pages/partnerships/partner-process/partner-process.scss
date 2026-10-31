@@ -2,6 +2,7 @@
 @use 'mixins/container';
 @use 'mixins/eyebrow';
 @use 'tokens/layout';
+@use 'tokens/motion';
 @use 'tokens/spacing';
 @use 'tokens/typography';
 
@@ -66,6 +67,13 @@
   border-radius: var(--nx-sys-corner-panel);
   background-color: var(--nx-sys-inverse-surface-container);
   padding: spacing.space(24);
+
+  @media (hover: hover) {
+    &:hover .process__badge:not(.process__badge--lead) {
+      background-color: var(--mat-sys-inverse-primary);
+      color: var(--mat-sys-inverse-surface);
+    }
+  }
 }
 
 .process__badge {
@@ -79,6 +87,9 @@
   border-radius: var(--mat-sys-corner-full);
   background-color: var(--mat-sys-inverse-surface);
   font: typography.$code-font;
+  transition:
+    background-color motion.duration(fast) motion.easing(out),
+    color motion.duration(fast) motion.easing(out);
   color: var(--mat-sys-inverse-primary);
 }
 

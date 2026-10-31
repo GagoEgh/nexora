@@ -2,6 +2,7 @@
 @use 'mixins/container';
 @use 'tokens/typography';
 @use 'tokens/layout';
+@use 'tokens/motion';
 @use 'tokens/spacing';
 @use 'mixins/surface';
 
@@ -73,6 +74,16 @@
   gap: spacing.space(16);
   align-items: center;
   padding-block: spacing.space(16);
+  padding-inline: spacing.space(12);
+  margin-inline: calc(-1 * #{spacing.space(12)});
+  border-radius: var(--mat-sys-corner-medium);
+  transition: background-color motion.duration(fast) motion.easing(out);
+
+  @media (hover: hover) {
+    &:hover {
+      background-color: var(--mat-sys-surface-container-low);
+    }
+  }
 }
 
 .terms__row + .terms__row {

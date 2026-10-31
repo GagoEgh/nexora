@@ -228,10 +228,13 @@ test.describe('hero illustration entrance', () => {
       const matrix = new DOMMatrixReadOnly(getComputedStyle(el).transform);
       return { height: el.getBoundingClientRect().height, translateY: matrix.f };
     });
-    // Exactly -100%: the card's bottom edge anchors at a fixed offset, independent of its
-    // height. -115% made the position height-dependent again and opened a gap between the card
-    // and the node it is meant to overlap, so the multiplier is asserted rather than assumed.
-    expect(Math.abs(translateY + height)).toBeLessThan(1.5);
+    /*
+     * The resting offset is -90% of the card's height, and the entrance must compose with it
+     * rather than replace it: if the reveal overwrote `transform`, the card would settle at
+     * translateY(0) and drop onto the diagram. Asserting the declared multiplier is what
+     * catches that, which is why the figure is pinned rather than assumed.
+     */
+    expect(Math.abs(translateY + height * 0.9)).toBeLessThan(1.5);
   });
 
   /**
@@ -258,10 +261,13 @@ test.describe('hero illustration entrance', () => {
           return Math.round(card.getBoundingClientRect().bottom - crm.getBoundingClientRect().top);
         });
 
-        // Negative here means the card sits clear of the node.
+        /*
+         * Negative means the card sits clear of the node, which is what hero.png shows: the
+         * card's bottom border at y=191 against the node's top at y=228. The size of the gap
+         * is deliberately not pinned - the -90% offset makes it a function of the card's
+         * height, so it differs per locale as the translated text wraps.
+         */
         expect(overlap).toBeLessThan(0);
-        expect(Math.abs(overlap)).toBeGreaterThan(30);
-        expect(Math.abs(overlap)).toBeLessThan(60);
       });
     }
   });

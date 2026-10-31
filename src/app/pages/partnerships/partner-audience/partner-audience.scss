@@ -3,6 +3,7 @@
 @use 'mixins/eyebrow';
 @use 'mixins/section';
 @use 'tokens/layout';
+@use 'tokens/motion';
 @use 'tokens/spacing';
 
 :host {
@@ -77,9 +78,15 @@
   padding: spacing.space(24);
   border-radius: var(--mat-sys-corner-large);
   background-color: var(--mat-sys-surface-container-low);
+  transition: background-color motion.duration(fast) motion.easing(out);
+
+  @media (hover: hover) {
+    &:hover {
+      background-color: var(--mat-sys-surface-container);
+    }
+  }
 }
 
-/* The title and its line of copy sit 4px apart, which is what brings the cards out at 122/148. */
 .audience__copy {
   display: grid;
   gap: spacing.space(4);
