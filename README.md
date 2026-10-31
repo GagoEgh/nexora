@@ -13,6 +13,24 @@ single-page Angular application with localized content in English, Armenian and 
 - Self-hosted Inter for Latin and Cyrillic, with Noto Sans Armenian for the Armenian script
   (Inter has no Armenian glyphs); both are subset by `unicode-range` in `src/styles/_fonts.scss`
 
+## Upgrading Angular
+
+The contact form is built on **`@angular/forms/signals`, an experimental API** - `form()`,
+`submitForm()`, `required()` and `readonly()` carry no stability guarantee, and they sit in the
+site's primary conversion path.
+
+The `@angular/*` packages are already locked in step by their own peer dependencies
+(`@angular/forms` requires `@angular/core` at an exact version), so they can only be upgraded
+together; pinning one of them on its own breaks resolution rather than protecting anything.
+What protects the form is running its tests on every upgrade:
+
+```bash
+npm test -- --include "src/app/pages/contact/**/*.spec.ts"
+npm run e2e          # contact.spec.ts covers submit, failure and duplicate handling
+```
+
+Treat a failure there as a blocking upgrade issue, not a flake.
+
 ## Requirements
 
 - Node.js 24 and npm 12 (the versions the project is developed and verified with; CI uses Node 24)
@@ -75,6 +93,15 @@ prerendered. Both are ordinary links, with the language pill pointing at the foo
 `npm run verify:prerender` asserts that over every built page; it cannot be a Playwright spec,
 because `ng serve` answers with an empty `<app-root>` rather than prerendered markup, so there
 is nothing for a scriptless browser to use there.
+
+## Troubleshooting
+
+**A production build appears to hang while `npm start` is running.** Both share
+`.angular/cache`, and the two writers contend: the build sits at near-zero CPU for minutes
+instead of failing. Stop the dev server and rebuild, or build from a separate checkout. The
+cache path is a single global setting (`cli.cache.path`), so it cannot be varied per
+configuration - using a second checkout is the only clean separation. CI is unaffected, since
+it builds from a clean tree with no server running.
 
 ## Generated content
 

@@ -23,8 +23,16 @@ const box = (page: Page, selector: string) =>
       };
     });
 
-const boxes = (page: Page, selector: string) =>
-  page.locator(selector).evaluateAll((els) =>
+/*
+ * `evaluateAll` is the one locator method that does not auto-wait. With nothing matched yet it
+ * returns an empty array, so the length assertions below fail with `[]` rather than waiting -
+ * which is the whole of this file's intermittent failures under parallel load. Waiting for the
+ * first match restores the auto-wait every other Playwright call already gives.
+ */
+const boxes = async (page: Page, selector: string) => {
+  await page.locator(selector).first().waitFor();
+
+  return page.locator(selector).evaluateAll((els) =>
     els.map((el) => {
       const r = el.getBoundingClientRect();
       return {
@@ -36,6 +44,7 @@ const boxes = (page: Page, selector: string) =>
       };
     }),
   );
+};
 
 const style = (page: Page, selector: string, prop: string) =>
   page
