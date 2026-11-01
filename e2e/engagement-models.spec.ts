@@ -193,7 +193,7 @@ test.describe('engagement models at the desktop design width', () => {
       '--mat-sys-label-medium',
     );
     expect(await style(page, 'app-engagement-models .engagement-models__label', 'color')).toBe(
-      'rgb(100, 116, 139)',
+      'rgb(91, 106, 125)',
     );
 
     await expect(page.locator('app-engagement-models .engagement-models__value')).toHaveText(

@@ -87,6 +87,22 @@ describe('the production environment', () => {
     }
   });
 
+  it('never points the API at the static site that serves this bundle', () => {
+    /*
+     * The one unusable value every other check in this file waves through. `siteOrigin` is a
+     * well-formed, resolving https origin, so `isUsableOrigin` accepts it and the submitter
+     * treats it as configured - then posts `/api/contact` to the static host, where the
+     * `_redirects` catch-all answers the prerendered 404 document. Every inquiry becomes
+     * `failed`, which is worse than the `not-configured` notice it replaced: that one at least
+     * gives the visitor a published email address. Nothing about the value looks wrong, which
+     * is exactly why it needs asserting.
+     */
+    if (production.apiOrigin !== '') {
+      expect(production.apiOrigin).not.toBe(production.siteOrigin);
+      expect(new URL(production.apiOrigin).host).not.toBe(new URL(production.siteOrigin).host);
+    }
+  });
+
   it('names the canonical site origin, with no trailing slash', () => {
     expect(production.siteOrigin).toMatch(/^https:\/\/[^/]+$/);
   });

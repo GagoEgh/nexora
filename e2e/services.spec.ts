@@ -118,7 +118,7 @@ test.describe('services page at the desktop design width', () => {
 
     await expectTypeFromRole(page, '.category-nav__label', '--nx-sys-body-copy');
     expect(await style(page, '.category-nav__label', 'font-weight')).toBe('600');
-    expect(await style(page, '.category-nav__count', 'color')).toBe('rgb(100, 116, 139)');
+    expect(await style(page, '.category-nav__count', 'color')).toBe('rgb(91, 106, 125)');
   });
 
   test('matches Filter.png: six 36px chips, 8px apart, all services selected', async ({ page }) => {
@@ -230,7 +230,7 @@ test.describe('services page at the desktop design width', () => {
       '2 services',
     ]);
     expect(await style(page, '.services__group-count', 'color')).toBe('rgb(15, 85, 232)');
-    expect(await style(page, '.services__group-position', 'color')).toBe('rgb(100, 116, 139)');
+    expect(await style(page, '.services__group-position', 'color')).toBe('rgb(91, 106, 125)');
     expect(await style(page, '.services__group-title', 'font-weight')).toBe('600');
     await expectTypeFromRole(page, '.services__group-text', '--nx-sys-body-copy');
   });

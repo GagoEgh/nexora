@@ -187,7 +187,7 @@ test.describe('what-we-build at the desktop design width', () => {
       '--mat-sys-body-small',
     );
     expect(await style(page, 'app-what-we-build .what-we-build__note', 'color')).toBe(
-      'rgb(100, 116, 139)',
+      'rgb(91, 106, 125)',
     );
     expect(await style(page, 'app-what-we-build .what-we-build__note', 'margin-top')).toBe('32px');
   });

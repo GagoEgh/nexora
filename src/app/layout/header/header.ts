@@ -68,6 +68,10 @@ export class Header {
     { initialValue: this.pathWithoutLocale() },
   );
 
+  protected readonly languageLabel = computed(
+    () => `${this.content().language.value}: ${this.i18n.locale().toUpperCase()}`,
+  );
+
   protected readonly servicesActive = computed(() => {
     const path = this.currentPath();
     return path === SERVICES_PATH || path.startsWith(`${SERVICES_PATH}/`);

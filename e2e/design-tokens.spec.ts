@@ -22,6 +22,11 @@ const TEXT_PAIRS: [string, string][] = [
   ['--mat-sys-on-surface-variant', '--mat-sys-surface'],
   ['--mat-sys-on-surface-variant', '--mat-sys-surface-container-high'],
   ['--nx-sys-on-surface-muted', '--mat-sys-surface'],
+  // Muted labels are drawn on the tinted containers too, and this pair used to stop at
+  // `surface`. That gap let the token sit at 4.47:1 on surface-container-low on every page.
+  // `surface-container-high` is deliberately absent: nothing draws text on it.
+  ['--nx-sys-on-surface-muted', '--mat-sys-surface-container-low'],
+  ['--nx-sys-on-surface-muted', '--mat-sys-surface-container'],
   ['--mat-sys-primary', '--mat-sys-surface'],
   ['--mat-sys-primary', '--mat-sys-background'],
   ['--mat-sys-inverse-on-surface', '--mat-sys-inverse-surface'],

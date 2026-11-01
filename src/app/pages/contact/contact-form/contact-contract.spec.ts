@@ -4,7 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { provideIntlayer } from 'angular-intlayer';
 import { provideAppIcons } from '../../../core/icons/provide-app-icons';
-import { COMPANY_MAX, ContactForm, DESCRIPTION_MAX, NAME_MAX } from './contact-form';
+import { COMPANY_MAX, ContactForm, DESCRIPTION_MAX, EMAIL_MAX, NAME_MAX } from './contact-form';
 import contactFormContent from './contact-form.content';
 import {
   ContactSubmitter,
@@ -12,21 +12,6 @@ import {
   type ContactSubmitResult,
 } from './contact-submitter';
 
-/**
- * The wire contract with `Nexora-back`, asserted from this side.
- *
- * The API validates with `whitelist: true` and `forbidNonWhitelisted: true`, so a field this
- * application adds, renames or drops does not degrade - it makes the API answer `400 property
- * <x> should not exist` for *every* submission. The same is true of an option value the API's
- * `IsIn` list does not contain. Nothing in either repository catches that today: the contract
- * is duplicated in prose, and it has already drifted once (the API's README still documents a
- * `consent` field that its own DTO rejects).
- *
- * `Nexora-back/src/modules/contact/dto/create-contact.dto.ts` is the authority. These values
- * are copied from it deliberately: duplicating ten field names in a test is cheaper than a
- * shared package, and it fails a build the moment either side moves. The matching assertions
- * live in that repository's `create-contact.dto.spec.ts`.
- */
 const CONTRACT = {
   fields: [
     'budget',
@@ -51,7 +36,7 @@ const CONTRACT = {
   timeline: ['asap', '1-3-months', '3-6-months', 'planning'],
   budget: ['under-10k', '10-25k', '25-50k', '50-100k', 'over-100k', 'unsure'],
   method: ['email', 'phone', 'video'],
-  limits: { name: 120, company: 160, description: 2000 },
+  limits: { name: 120, company: 160, description: 2000, email: 254 },
 } as const;
 
 const ICON_SVG =
@@ -109,6 +94,7 @@ describe('the contact API contract', () => {
     expect(NAME_MAX).toBe(CONTRACT.limits.name);
     expect(COMPANY_MAX).toBe(CONTRACT.limits.company);
     expect(DESCRIPTION_MAX).toBe(CONTRACT.limits.description);
+    expect(EMAIL_MAX).toBe(CONTRACT.limits.email);
   });
 });
 

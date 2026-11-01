@@ -1,6 +1,7 @@
 @use 'tokens/spacing';
 @use 'tokens/layout';
 @use 'tokens/typography';
+@use 'mixins/text';
 
 :host {
   display: grid;
@@ -30,9 +31,7 @@
 
 .engagement__eyebrow {
   margin: 0;
-  font: var(--mat-sys-label-medium);
-  letter-spacing: var(--mat-sys-label-medium-tracking);
-  text-transform: uppercase;
+  @include text.label-caps();
   color: var(--mat-sys-primary);
 }
 

@@ -4,7 +4,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { provideIntlayer } from 'angular-intlayer';
 import { provideAppIcons } from '../../../core/icons/provide-app-icons';
-import { COMPANY_MAX, ContactForm, DESCRIPTION_MAX, NAME_MAX } from './contact-form';
+import { COMPANY_MAX, ContactForm, DESCRIPTION_MAX, EMAIL_MAX, NAME_MAX } from './contact-form';
 import {
   ContactSubmitter,
   type ContactInquiry,
@@ -129,17 +129,20 @@ describe('ContactForm', () => {
     expect(inner.form.email().valid()).toBe(true);
   });
 
-  it('caps name, company and description at the advertised maximums', async () => {
-    expect([NAME_MAX, COMPANY_MAX, DESCRIPTION_MAX]).toEqual([120, 160, 2000]);
+  it('caps name, company, description and email at the advertised maximums', async () => {
+    expect([NAME_MAX, COMPANY_MAX, DESCRIPTION_MAX, EMAIL_MAX]).toEqual([120, 160, 2000, 254]);
 
     inner.form.name().value.set('x'.repeat(NAME_MAX + 1));
     inner.form.company().value.set('x'.repeat(COMPANY_MAX + 1));
     inner.form.description().value.set('x'.repeat(DESCRIPTION_MAX + 1));
+    // Shaped like an address so `email` passes and `maxLength` is what rejects it.
+    inner.form.email().value.set(`${'a'.repeat(EMAIL_MAX)}@example.com`);
     await fixture.whenStable();
 
     expect(inner.form.name().getError('maxLength')).toBeTruthy();
     expect(inner.form.company().getError('maxLength')).toBeTruthy();
     expect(inner.form.description().getError('maxLength')).toBeTruthy();
+    expect(inner.form.email().getError('maxLength')).toBeTruthy();
   });
 
   it('tracks the description length for the counter', async () => {

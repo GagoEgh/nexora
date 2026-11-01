@@ -1,3 +1,4 @@
+import { readFileSync, readdirSync } from 'node:fs';
 import { ChangeDetectionStrategy, type Type } from '@angular/core';
 import { App } from './app';
 import { Footer } from './layout/footer/footer';
@@ -80,6 +81,14 @@ import { StartConversation } from './shared/ui/start-conversation/start-conversa
  *
  * A component that genuinely needs eager checking must say `ChangeDetectionStrategy.Eager`
  * explicitly and be listed here as such — `Default` is a deprecated alias for `Eager`.
+ *
+ * `COMPONENTS` has to be written out, because the specs are compiled by esbuild rather than
+ * Vite's transform pipeline, so there is no `import.meta.glob` to enumerate them with. A hand
+ * list is only worth as much as its upkeep, and `expect(COMPONENTS).toHaveLength(66)` did not
+ * provide any: it caught an entry being deleted, but a *new* component that nobody added here
+ * was simply not checked - the one case the list exists for. So the third test reads the source
+ * tree and fails until every `@Component` under `src/app` appears above, which is what makes
+ * the claim "every component in the application" true rather than aspirational.
  */
 const COMPONENTS: readonly [string, Type<unknown>][] = [
   ['App', App],
@@ -150,6 +159,38 @@ const COMPONENTS: readonly [string, Type<unknown>][] = [
   ['SnackBar', SnackBar],
 ];
 
+/**
+ * Every class decorated with `@Component` under `root`, by name, read from the source rather
+ * than from the module graph - importing all of them eagerly here would mean a second copy of
+ * the list above.
+ *
+ * @param root directory to walk, relative to the project root (tests run from there)
+ */
+function declaredComponents(root: string): string[] {
+  const names: string[] = [];
+
+  for (const entry of readdirSync(root, { withFileTypes: true })) {
+    const path = `${root}/${entry.name}`;
+
+    if (entry.isDirectory()) {
+      names.push(...declaredComponents(path));
+      continue;
+    }
+    if (!entry.name.endsWith('.ts') || entry.name.endsWith('.spec.ts')) {
+      continue;
+    }
+
+    const source = readFileSync(path, 'utf8');
+    // `@Component({...}) export class Foo` - the decorator and the class it applies to. Only
+    // the first class in a file can carry it in this codebase, which is one component per file.
+    for (const match of source.matchAll(/@Component\(\{[\s\S]*?\}\)\s*export class (\w+)/g)) {
+      names.push(match[1]);
+    }
+  }
+
+  return names;
+}
+
 /** The compiled definition's resolved strategy, as `ɵɵdefineComponent` stored it. */
 const isOnPush = (component: Type<unknown>): boolean =>
   (component as unknown as { ɵcmp: { onPush: boolean } }).ɵcmp.onPush;
@@ -162,8 +203,18 @@ describe('change detection', () => {
   });
 
   it('every component in the application resolves to OnPush', () => {
-    expect(COMPONENTS).toHaveLength(66);
     const eager = COMPONENTS.filter(([, component]) => !isOnPush(component)).map(([name]) => name);
     expect(eager, 'these components are checked eagerly').toEqual([]);
+  });
+
+  it('covers every @Component declared under src/app', () => {
+    const declared = declaredComponents('src/app');
+    const listed = COMPONENTS.map(([name]) => name);
+
+    // Sorted set comparison, so the failure names the component rather than a count delta.
+    expect([...listed].sort(), 'register new components in COMPONENTS above').toEqual(
+      [...declared].sort(),
+    );
+    expect(declared.length).toBeGreaterThan(0);
   });
 });

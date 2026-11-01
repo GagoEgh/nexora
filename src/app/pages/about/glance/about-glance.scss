@@ -3,6 +3,7 @@
 @use 'tokens/layout';
 @use 'tokens/spacing';
 @use 'mixins/surface';
+@use 'mixins/text';
 
 .glance {
   box-sizing: border-box;
@@ -58,9 +59,7 @@
 .glance__label {
   transition: color motion.duration(fast) motion.easing(out);
   min-width: 0;
-  font: var(--mat-sys-label-medium);
-  letter-spacing: var(--mat-sys-label-medium-tracking);
-  text-transform: uppercase;
+  @include text.label-caps();
   color: var(--nx-sys-on-surface-muted);
   overflow-wrap: anywhere;
 }

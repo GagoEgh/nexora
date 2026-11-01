@@ -1,0 +1,30 @@
+# Response headers for the static deploy. Netlify reads this file from the publish root;
+# `angular.json` copies all of `public/` there, which is how `_redirects` already arrives.
+#
+# The CSP is enforced, not report-only, because its one fragile part is checked mechanically:
+# the prerendered documents carry three *executable* inline scripts - Angular's event-dispatch
+# contract, the jsaction bootstrap, and the critical-CSS media restore - and the bootstrap's
+# content varies by which event types a page's components use. Their hashes are listed below
+# and `npm run verify:headers` regenerates and re-checks them against the build, so an Angular
+# upgrade or a new event type fails CI instead of silently blocking hydration in production.
+#
+# `style-src` keeps 'unsafe-inline': the build inlines per-page critical CSS (12-30 <style>
+# blocks depending on the route), so hashing it would mean a different header per page, which a
+# single static rule cannot express. Inline *style* is a far smaller exposure than inline
+# script, and dropping it would mean turning critical CSS off and regressing LCP.
+#
+# `ng-state` and the JSON-LD block are `type="application/json"` and `application/ld+json`:
+# browsers do not execute them, so they need no hash.
+#
+# connect-src is 'self' only while `apiOrigin` is empty. When the contact API is deployed, add
+# its origin here as well - verify:headers asserts the two agree, so forgetting fails the build
+# rather than breaking the form under CSP.
+
+/*
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; manifest-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'sha256-4Shsq4upXbbPpfe2QbUbo/N3U0d2DURH8BWEHxqNqoc=' 'sha256-8sGKvDKC8crv9OBcqEMvqrNDWlm1/80h7NJpJzqOnLI=' 'sha256-LMY6wYoFV9I4wWzxaq1N/dTpl4iurQktw706UCHK3vM=' 'sha256-M6qhCCw9DBc5KyxuYZIh5RofAZa5LSAzE2Y+fYpyn5c=' 'sha256-VM2mZqyEQZoLzoTrp5EigFvzQ0+f1wSeBuoOn95WHCg='
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), camera=(), microphone=(), payment=(), usb=()
+  Cross-Origin-Opener-Policy: same-origin

@@ -87,7 +87,7 @@
         class="header__lang"
         type="button"
         [matMenuTriggerFor]="langMenu"
-        [attr.aria-label]="content().language.value"
+        [attr.aria-label]="languageLabel()"
       >
         <mat-icon class="header__lang-icon" [svgIcon]="globeIcon" />
         <span class="header__lang-code">{{ i18n.locale().toUpperCase() }}</span>
@@ -110,7 +110,7 @@
         class="header__lang"
         href="#footer-languages"
         data-lang-pending
-        [attr.aria-label]="content().language.value"
+        [attr.aria-label]="languageLabel()"
       >
         <mat-icon class="header__lang-icon" [svgIcon]="globeIcon" />
         <span class="header__lang-code">{{ i18n.locale().toUpperCase() }}</span>

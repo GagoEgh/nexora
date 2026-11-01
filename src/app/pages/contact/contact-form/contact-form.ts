@@ -52,6 +52,7 @@ export const DESCRIPTION_MAX = 2000;
 const DESCRIPTION_WARN_AT = Math.floor(DESCRIPTION_MAX * 0.9);
 export const NAME_MAX = 120;
 export const COMPANY_MAX = 160;
+export const EMAIL_MAX = 254;
 
 const DEFAULTS: ContactInquiry = {
   interest: 'new-project',
@@ -120,6 +121,7 @@ export class ContactForm {
 
     required(inquiry.email);
     email(inquiry.email);
+    maxLength(inquiry.email, EMAIL_MAX);
 
     required(inquiry.company);
     maxLength(inquiry.company, COMPANY_MAX);

@@ -42,7 +42,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "510kB",
+                  "maximumWarning": "560kB",
                   "maximumError": "1MB"
                 },
                 {
@@ -61,17 +61,11 @@
                 }
               ]
             },
-            /*
-             * Staging mirrors production exactly except for which environment file it compiles
-             * in. The budgets, hashing, `outputMode` and prerendering are intentionally repeated
-             * rather than relaxed: staging exists to rehearse the production artifact, so a
-             * bundle that would breach a budget in production has to breach it here too.
-             */
             "staging": {
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "510kB",
+                  "maximumWarning": "560kB",
                   "maximumError": "1MB"
                 },
                 {

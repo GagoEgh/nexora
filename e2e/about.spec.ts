@@ -1,14 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 import { expectTypeFromRole } from './support/tokens';
 
-/**
- * About page contract.
- *
- * hero.png fixes the opening band at 1440: the shared page intro on the left and a 440px
- * "Nexora at a glance" card in the aside, bottom-aligned with the lead. The card is a 5-row
- * description list on a 47px rhythm (69px where a value wraps to two lines), its rules inset
- * 28px inside the card fill, values starting 113px after the labels.
- */
 const box = (page: Page, selector: string) =>
   page
     .locator(selector)
@@ -24,12 +16,6 @@ const box = (page: Page, selector: string) =>
       };
     });
 
-/*
- * `evaluateAll` is the one locator method that does not auto-wait. With nothing matched yet it
- * returns an empty array, so the length assertions below fail with `[]` rather than waiting -
- * which is the whole of this file's intermittent failures under parallel load. Waiting for the
- * first match restores the auto-wait every other Playwright call already gives.
- */
 const boxes = async (page: Page, selector: string) => {
   await page.locator(selector).first().waitFor();
 
@@ -59,7 +45,6 @@ const noOverflow = (page: Page) =>
     return de.scrollWidth - de.clientWidth;
   });
 
-// textContent, not the CSS-uppercased rendering.
 const LABELS = ['Focus', 'Team', 'Markets', 'Clients', 'Engagement'];
 
 test.describe('about at the desktop design width', () => {
@@ -86,7 +71,6 @@ test.describe('about at the desktop design width', () => {
     const card = await box(page, '.glance');
     expect(card.w).toBe(440);
     expect(card.h).toBe(346);
-    // The aside is flush with the 1280px container's right edge at 1440.
     expect(card.x + card.w).toBe(1360);
 
     expect(await style(page, '.glance', 'border-top-left-radius')).toBe('24px');
@@ -99,12 +83,6 @@ test.describe('about at the desktop design width', () => {
     const rows = await boxes(page, '.glance__row');
     expect(rows).toHaveLength(5);
 
-    /*
-     * Rows 1-3 hold one line, rows 4-5 wrap to two. The figures are composites of the row
-     * padding, the border and `body-small`'s line height, so they are not derivable from a
-     * single token - but the relationship below is the actual requirement, and it is what
-     * would break if the wrap stopped happening.
-     */
     const single = rows.slice(0, 3).map((r) => r.h);
     const wrapped = rows.slice(3).map((r) => r.h);
     expect(single).toEqual([46, 46, 46]);
@@ -138,13 +116,12 @@ test.describe('about at the desktop design width', () => {
       'Projects, dedicated teams, partnership, white-label, support',
     ]);
 
-    // The card names itself through its own heading.
     const id = await title.getAttribute('id');
     await expect(page.locator('.glance')).toHaveAttribute('aria-labelledby', id ?? '');
   });
 
   test('uses the muted label and on-surface value tones from the design', async ({ page }) => {
-    expect(await style(page, '.glance__label', 'color')).toBe('rgb(100, 116, 139)');
+    expect(await style(page, '.glance__label', 'color')).toBe('rgb(91, 106, 125)');
     expect(await style(page, '.glance__label', 'text-transform')).toBe('uppercase');
     expect(await style(page, '.glance__value', 'color')).toBe('rgb(11, 19, 36)');
     await expectTypeFromRole(page, '.glance__value', '--mat-sys-body-small');
@@ -159,8 +136,6 @@ test.describe('about responsiveness', () => {
       await expect(page.locator('.glance__row')).toHaveCount(5);
 
       expect(await noOverflow(page)).toBeLessThanOrEqual(0);
-
-      // The label sits beside the value from `medium` up, and above it below that.
       const label = await box(page, '.glance__label');
       const value = await box(page, '.glance__value');
       if (width >= 600) {
@@ -216,7 +191,6 @@ test.describe('about philosophy section at the desktop design width', () => {
     const heading = await box(page, '.philosophy__heading');
     const intro = await box(page, '.philosophy__intro');
     expect(heading.y).toBe(intro.y);
-    // philosophy.png puts the right column at x=657 and runs it to the container edge.
     expect(intro.x).toBe(657);
     expect(intro.x + intro.w).toBe(1360);
 
@@ -231,7 +205,6 @@ test.describe('about philosophy section at the desktop design width', () => {
     const cards = await boxes(page, '.philosophy__card');
     expect(cards).toHaveLength(4);
 
-    // 4 x 305 + 3 x 20 lands exactly on the 1280px container.
     for (const card of cards) expect(card.w).toBe(305);
     for (let i = 1; i < cards.length; i++) {
       expect(cards[i].x - (cards[i - 1].x + cards[i - 1].w)).toBe(20);
@@ -239,7 +212,6 @@ test.describe('about philosophy section at the desktop design width', () => {
     expect(cards[0].x).toBe(80);
     expect(cards[3].x + cards[3].w).toBe(1360);
 
-    // The grid stretches every card to the tallest.
     const heights = new Set(cards.map((c) => c.h));
     expect(heights.size).toBe(1);
     expect(cards[0].y).toBe(cards[3].y);
@@ -351,16 +323,12 @@ test.describe('about senior model section at the desktop design width', () => {
     expect(panels[0].w).toBe(panels[1].w);
     expect(panels[0].h).toBe(panels[1].h);
     expect(panels[0].x).toBe(657);
-    // The 703px column splits into two 341.5px panels, so the right edge is read from the rect
-    // rather than added up from an independently rounded x and width.
     expect(panels[1].right).toBe(1360);
   });
 
   test('uses the inverse palette for the Nexora panel and a bordered surface for the pyramid', async ({
     page,
   }) => {
-    // `data-tone` is on the `app-model-panel` host, which is what `model-panel.scss` keys its
-    // `:host([data-tone=...])` rules on; the figure inside carries only the class.
     const plain = 'app-model-panel[data-tone="plain"] .senior__panel';
     const inverse = 'app-model-panel[data-tone="inverse"] .senior__panel';
 
@@ -388,8 +356,6 @@ test.describe('about senior model section at the desktop design width', () => {
 
     await expect(page.locator('.senior__block--apex')).toHaveCount(1);
     expect(await style(page, '.senior__block--apex', 'background-color')).toBe('rgb(15, 85, 232)');
-    // The apex is the first block in the pyramid, so the plain fill is read from a block that
-    // is not it.
     expect(
       await style(
         page,
@@ -398,7 +364,6 @@ test.describe('about senior model section at the desktop design width', () => {
       ),
     ).toBe('rgb(226, 232, 240)');
 
-    // Blocks measured 29-30px on a 38px pitch.
     const blocks = await boxes(
       page,
       'app-model-panel[data-tone="inverse"] .senior__row:first-child .senior__block',
@@ -516,7 +481,7 @@ test.describe('about business flow at the desktop design width', () => {
       expect(Math.abs(arrow.y + arrow.h / 2 - cardMid)).toBeLessThanOrEqual(1);
     });
 
-    expect(await style(page, '.flow__arrow', 'color')).toBe('rgb(100, 116, 139)');
+    expect(await style(page, '.flow__arrow', 'color')).toBe('rgb(91, 106, 125)');
   });
 
   test('accents the first step and tints the rest', async ({ page }) => {

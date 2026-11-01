@@ -50,6 +50,7 @@ Treat a failure there as a blocking upgrade issue, not a flake.
 | `npm run lint`             | ESLint for TypeScript and templates                                      |
 | `npm run e2e`              | Playwright tests against a dev server on port 4300 (Chromium only)       |
 | `npm run verify:prerender` | Checks the built pages still work without JavaScript (needs a build)     |
+| `npm run verify:headers`   | Checks `public/_headers` matches the build's inline scripts (needs one)  |
 | `npm run format`           | Formats the project with Prettier                                        |
 | `npm run format:check`     | Verifies formatting; also run by the pre-commit hook and the CI workflow |
 
@@ -81,11 +82,33 @@ deployment. Only two exist:
 
 ## Hosting
 
-The build is fully static (`outputMode: "static"`, 33 prerendered routes), so the host only has
-to serve files and answer an unknown URL with the prerendered 404 document.
-`public/_redirects` does that for Netlify, mapping each locale prefix to its own `not-found`
-page with a real `404` status. A different host needs the equivalent rewrite rules; without them
-an unknown URL falls through to the host's own error page instead of the localized one.
+The build is fully static (`outputMode: "static"`, 27 prerendered routes - the nine pages in
+`DOCUMENT_META_PAGES` times three locales), so the host only has to serve files and answer an
+unknown URL with the prerendered 404 document. `public/_redirects` does that for Netlify,
+mapping each locale prefix to its own `not-found` page with a real `404` status. A different
+host needs the equivalent rewrite rules; without them an unknown URL falls through to the
+host's own error page instead of the localized one.
+
+`public/_headers` carries the response headers: an enforced CSP plus HSTS, `nosniff`,
+`X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy` and `Cross-Origin-Opener-Policy`.
+Netlify reads it from the publish root, which is where `angular.json` copies all of `public/`.
+Another host needs the same headers expressed its own way - they are not in the bundle, so
+nothing in the application fails if they are missing.
+
+The CSP allows inline scripts **by hash**, not `'unsafe-inline'`. Three of the inline scripts
+in a prerendered document are executable - Angular's event-dispatch contract, the jsaction
+bootstrap and the critical-CSS media restore - and the bootstrap's body lists the event types
+the page's components use, so its hash changes when a component starts listening for something
+new. `npm run verify:headers` recomputes every hash from `dist/` and fails if the file and the
+build disagree in either direction; `-- --write` regenerates the list after an intentional
+change. CI runs it after the build. `style-src` does keep `'unsafe-inline'`: critical CSS is
+inlined per page (12-30 `<style>` blocks depending on the route), so one static header cannot
+hash it, and turning critical CSS off to avoid that would cost LCP.
+
+When the contact API is deployed, its origin goes in **two** places - `apiOrigin` in
+`src/environments/environment.production.ts` and `connect-src` in `public/_headers`. The form
+posts with XHR, so a CSP that does not list it blocks the request. `verify:headers` asserts the
+two agree, so changing one and forgetting the other fails the build.
 
 Because the pages are prerendered, the header's Services and language controls have to work
 before Angular boots - they sit in `@defer` placeholders, and a placeholder is what gets

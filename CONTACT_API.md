@@ -65,4 +65,8 @@ than posting into the void.
 4. Submit one real inquiry and confirm a stored row.
 
 Step 3 is the only client change required. `api-origin.spec.ts` asserts the value is either
-empty or genuinely usable, so a typo fails the build instead of quietly disabling the form.
+empty or genuinely usable, so a typo fails the build instead of quietly disabling the form. It
+also asserts the origin is not `siteOrigin`: that value is well-formed and resolves, so every
+other check accepts it, but it would post `/api/contact` to the static host and turn every
+inquiry into the prerendered 404 - a `failed` notice where `not-configured` at least published
+an email address.

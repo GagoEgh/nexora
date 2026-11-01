@@ -1,6 +1,7 @@
 @use 'tokens/spacing';
 @use 'tokens/layout';
 @use 'tokens/typography';
+@use 'mixins/text';
 
 :host {
   display: block;
@@ -53,9 +54,7 @@
 
 .footer__tagline {
   margin: 0;
-  font: var(--mat-sys-label-medium);
-  letter-spacing: var(--mat-sys-label-medium-tracking);
-  text-transform: uppercase;
+  @include text.label-caps();
   color: var(--nx-sys-on-surface-muted);
 }
 

@@ -3,6 +3,7 @@
 @use 'tokens/layout';
 @use 'tokens/spacing';
 @use 'mixins/surface';
+@use 'mixins/text';
 
 .finder {
   box-sizing: border-box;
@@ -51,9 +52,7 @@
 }
 
 .finder__label {
-  font: var(--mat-sys-label-medium);
-  letter-spacing: var(--mat-sys-label-medium-tracking);
-  text-transform: uppercase;
+  @include text.label-caps();
   color: var(--nx-sys-on-surface-muted);
 }
 
