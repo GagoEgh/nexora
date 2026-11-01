@@ -91,11 +91,19 @@ describe('the production environment', () => {
     /*
      * The one unusable value every other check in this file waves through. `siteOrigin` is a
      * well-formed, resolving https origin, so `isUsableOrigin` accepts it and the submitter
-     * treats it as configured - then posts `/api/contact` to the static host, where the
-     * `_redirects` catch-all answers the prerendered 404 document. Every inquiry becomes
-     * `failed`, which is worse than the `not-configured` notice it replaced: that one at least
-     * gives the visitor a published email address. Nothing about the value looks wrong, which
-     * is exactly why it needs asserting.
+     * treats it as configured - then posts `/api/contact` at the host that serves this bundle.
+     * Verified while writing this: that host answers every path from one static placeholder, so
+     * the POST comes back `405`. Every inquiry becomes `failed`, which is worse than the
+     * `not-configured` notice it replaced: that one at least gives the visitor a published
+     * email address. Nothing about the value looks wrong, which is exactly why it needs
+     * asserting.
+     *
+     * This is a tripwire, not a permanent rule. The API's README recommends serving it from
+     * the site's own origin behind an nginx `/api/` proxy, and in that topology this value is
+     * correct. No unit test can see whether that proxy is installed, so relaxing this
+     * assertion is a deliberate step of that deployment - after `curl -i -X POST
+     * https://<site>/api/contact` returns a validation `400` rather than `405` or HTML. See
+     * CONTACT_API.md, "Switching the form on".
      */
     if (production.apiOrigin !== '') {
       expect(production.apiOrigin).not.toBe(production.siteOrigin);

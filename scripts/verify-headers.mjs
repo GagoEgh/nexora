@@ -38,6 +38,11 @@ export const REQUIRED_DIRECTIVES = {
   'form-action': "'self'",
 };
 
+/**
+ * Whether a `<script>` tag runs code the CSP has to hash, judged from its attributes.
+ * @param {string} attributes The raw attribute text between `<script` and `>`.
+ * @returns {boolean}
+ */
 export function isExecutableScript(attributes) {
   if (/\bsrc=/.test(attributes)) {
     return false;
@@ -49,6 +54,11 @@ export function isExecutableScript(attributes) {
   return ['text/javascript', 'application/javascript', ''].includes(type[1].trim().toLowerCase());
 }
 
+/**
+ * Every `sha256-` hash the inline, executable scripts of one document require.
+ * @param {string} html
+ * @returns {string[]}
+ */
 export function inlineScriptHashes(html) {
   /** @type {string[]} */
   const hashes = [];
@@ -63,6 +73,11 @@ export function inlineScriptHashes(html) {
   return hashes;
 }
 
+/**
+ * The indented `Name: value` lines of a `_headers` file, keyed by header name.
+ * @param {string} text
+ * @returns {Map<string, string>}
+ */
 export function parseHeaders(text) {
   /** @type {Map<string, string>} */
   const headers = new Map();
@@ -79,10 +94,20 @@ export function parseHeaders(text) {
   return headers;
 }
 
+/**
+ * The hash sources of one CSP directive, unquoted.
+ * @param {string} directive
+ * @returns {string[]}
+ */
 export function hashesIn(directive) {
   return (directive.match(/'sha(?:256|384|512)-[^']+'/g) ?? []).map((value) => value.slice(1, -1));
 }
 
+/**
+ * One `Content-Security-Policy` value split into directive name to value.
+ * @param {string} csp
+ * @returns {Map<string, string>}
+ */
 export function parseCsp(csp) {
   /** @type {Map<string, string>} */
   const directives = new Map();

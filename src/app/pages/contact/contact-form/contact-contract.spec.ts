@@ -145,7 +145,10 @@ describe('the submitted payload', () => {
     expect(sent.budget).toBe('');
   });
 
-  it('leaves the honeypot empty, which the API requires of a real visitor', () => {
+  it('leaves the honeypot empty, as a real visitor does', () => {
+    // The API accepts any string here and does not reject a filled one - it answers an
+    // ordinary success and discards the submission - so sending it blank is what distinguishes
+    // this client from the senders the trap is for.
     expect(submitter.calls[0].website).toBe('');
   });
 });

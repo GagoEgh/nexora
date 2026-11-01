@@ -95,6 +95,16 @@ Netlify reads it from the publish root, which is where `angular.json` copies all
 Another host needs the same headers expressed its own way - they are not in the bundle, so
 nothing in the application fails if they are missing.
 
+> **The live site is not on a host that reads either file.** `https://nexoratechnology.org`
+> is served by nginx, and currently answers every path with a single placeholder document
+> rather than this build. Checked against the live response: `X-Content-Type-Options`,
+> `X-Frame-Options`, `Referrer-Policy` and HSTS are present, but **no**
+> `Content-Security-Policy`, `Permissions-Policy` or `Cross-Origin-Opener-Policy` — so the
+> hash-based CSP that `verify:headers` guards is not in force in production, and an unknown
+> URL does not reach the localized 404. Both need re-expressing in the nginx server block, or
+> the site needs a host that reads `_headers` and `_redirects`. Verify with
+> `curl -I https://nexoratechnology.org` after any hosting change.
+
 The CSP allows inline scripts **by hash**, not `'unsafe-inline'`. Three of the inline scripts
 in a prerendered document are executable - Angular's event-dispatch contract, the jsaction
 bootstrap and the critical-CSS media restore - and the bootstrap's body lists the event types
@@ -132,6 +142,14 @@ Intlayer generates dictionaries into `.intlayer/` and TypeScript declarations in
 `intlayer-types/` during serve, test and build. Both folders are ignored by Git and never edited
 by hand. The declarations sit outside `.intlayer/` deliberately: Angular's dev server does not
 watch dot-directories, so types generated there stay stale until `ng serve` restarts.
+
+`typecheck` generates them as well, through the same lock, via a `pretypecheck` hook. It is
+not a build, but `tsconfig.app.json` and `tsconfig.spec.json` both include `intlayer-types/`,
+and without those declarations `DeclaredLocales` widens from the three configured locales to
+Intlayer's full list of 298. Every `Record<AppLocale, …>` then fails with TS2740 pointing at
+`locale-labels.ts` and `document-meta.ts` - application code that is perfectly correct - which
+sends you hunting in the wrong place. A clean checkout type-checks before it has ever built,
+both in CI and locally, so the generation cannot be left to the build step.
 
 Because every one of those tasks regenerates the same files, `start`, `build`, `watch`, `test`
 and `e2e` run through `scripts/intlayer-lock.mjs`, which takes an exclusive lock while Intlayer
