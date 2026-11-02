@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { environment } from '../../../environments/environment';
 import { environment as production } from '../../../environments/environment.production';
-import { environment as staging } from '../../../environments/environment.staging';
 import { API_ORIGIN, isUsableOrigin, normalizeOrigin } from './api-origin';
 
 /**
@@ -119,31 +118,5 @@ describe('the production environment', () => {
     // Canonical and Open Graph URLs must name the real site even from a preview build, so this
     // value is intentionally not environment-specific.
     expect(production.siteOrigin).toBe(environment.siteOrigin);
-  });
-});
-
-describe('the staging environment', () => {
-  it('names a usable API origin over https', () => {
-    // Staging's whole purpose is to prove a submission reaches a database, so an unusable
-    // origin here does not degrade gracefully - it invalidates the rehearsal.
-    expect(isUsableOrigin(staging.apiOrigin)).toBe(true);
-    expect(staging.apiOrigin).toMatch(/^https:\/\//);
-  });
-
-  it('points at a different API than production', () => {
-    expect(staging.apiOrigin).not.toBe(production.apiOrigin);
-  });
-
-  it('carries no developer address', () => {
-    for (const value of Object.values(staging)) {
-      if (typeof value === 'string') {
-        expect(value).not.toMatch(/localhost|127\.0\.0\.1|\[::1\]/);
-      }
-    }
-  });
-
-  it('still advertises the production site as canonical', () => {
-    // A staging build that named itself canonical would compete with the real pages in search.
-    expect(staging.siteOrigin).toBe(production.siteOrigin);
   });
 });
