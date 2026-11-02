@@ -38,21 +38,21 @@ Treat a failure there as a blocking upgrade issue, not a flake.
 
 ## Commands
 
-| Command                    | What it does                                                             |
-| -------------------------- | ------------------------------------------------------------------------ |
-| `npm ci`                   | Installs dependencies and the pre-commit formatting hook                 |
-| `npm start`                | Serves the application on `http://localhost:4200/` with live reload      |
-| `npm run build`            | Production build into `dist/nexora`                                      |
-| `npm run watch`            | Development build that rebuilds on change                                |
-| `npm test`                 | Unit tests with Vitest                                                   |
-| `npm run test:scripts`     | Tests for the build and verification scripts in `scripts/`               |
-| `npm run typecheck`        | Type-checks the app, the unit specs and the Playwright specs             |
-| `npm run lint`             | ESLint for TypeScript and templates                                      |
-| `npm run e2e`              | Playwright tests against a dev server on port 4300 (Chromium only)       |
-| `npm run verify:prerender` | Checks the built pages still work without JavaScript (needs a build)     |
-| `npm run verify:headers`   | Checks `public/_headers` matches the build's inline scripts (needs one)  |
-| `npm run format`           | Formats the project with Prettier                                        |
-| `npm run format:check`     | Verifies formatting; also run by the pre-commit hook and the CI workflow |
+| Command                    | What it does                                                              |
+| -------------------------- | ------------------------------------------------------------------------- |
+| `npm ci`                   | Installs dependencies and the pre-commit formatting hook                  |
+| `npm start`                | Serves the application on `http://localhost:4200/` with live reload       |
+| `npm run build`            | Production build into `dist/nexora`                                       |
+| `npm run watch`            | Development build that rebuilds on change                                 |
+| `npm test`                 | Unit tests with Vitest                                                    |
+| `npm run test:scripts`     | Tests for the build and verification scripts in `scripts/`                |
+| `npm run typecheck`        | Type-checks the app, the unit specs and the Playwright specs              |
+| `npm run lint`             | ESLint for TypeScript and templates                                       |
+| `npm run e2e`              | Playwright tests against a dev server on port 4300 (Chromium only)        |
+| `npm run verify:prerender` | Checks the built pages still work without JavaScript (needs a build)      |
+| `npm run verify:headers`   | Checks `_headers` matches the build and the nginx copy matches `_headers` |
+| `npm run format`           | Formats the project with Prettier                                         |
+| `npm run format:check`     | Verifies formatting; also run by the pre-commit hook and the CI workflow  |
 
 ## Project layout
 
@@ -66,6 +66,8 @@ Treat a failure there as a blocking upgrade issue, not a flake.
 - `src/environments`: build-time configuration; the production build swaps `environment.ts` for
   `environment.production.ts` through `fileReplacements`
 - `e2e`: Playwright specs that check the sections against the design mockups
+- `deploy/nginx`: the server block for the static host, plus the header snippet generated
+  from `public/_headers` - see Hosting
 
 ## Configuration
 
@@ -87,7 +89,8 @@ The build is fully static (`outputMode: "static"`, 27 prerendered routes - the n
 unknown URL with the prerendered 404 document. `public/_redirects` does that for Netlify,
 mapping each locale prefix to its own `not-found` page with a real `404` status. A different
 host needs the equivalent rewrite rules; without them an unknown URL falls through to the
-host's own error page instead of the localized one.
+host's own error page instead of the localized one. `deploy/nginx/nexora-site.conf` carries
+those rules for nginx.
 
 `public/_headers` carries the response headers: an enforced CSP plus HSTS, `nosniff`,
 `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy` and `Cross-Origin-Opener-Policy`.
@@ -95,15 +98,26 @@ Netlify reads it from the publish root, which is where `angular.json` copies all
 Another host needs the same headers expressed its own way - they are not in the bundle, so
 nothing in the application fails if they are missing.
 
-> **The live site is not on a host that reads either file.** `https://nexoratechnology.org`
+> **The live site is not yet on a host that reads either file.** `https://nexoratechnology.org`
 > is served by nginx, and currently answers every path with a single placeholder document
 > rather than this build. Checked against the live response: `X-Content-Type-Options`,
-> `X-Frame-Options`, `Referrer-Policy` and HSTS are present, but **no**
-> `Content-Security-Policy`, `Permissions-Policy` or `Cross-Origin-Opener-Policy` — so the
-> hash-based CSP that `verify:headers` guards is not in force in production, and an unknown
-> URL does not reach the localized 404. Both need re-expressing in the nginx server block, or
-> the site needs a host that reads `_headers` and `_redirects`. Verify with
-> `curl -I https://nexoratechnology.org` after any hosting change.
+> `X-Frame-Options`, `Referrer-Policy` and HSTS are present, but **no** `Content-Security-Policy`,
+> `Permissions-Policy` or `Cross-Origin-Opener-Policy` — so the hash-based CSP that
+> `verify:headers` guards is not in force in production, and an unknown URL answers `200`
+> instead of reaching the localized 404.
+>
+> `deploy/nginx/` exists to close that gap. `nexora-site.conf` is a server block that
+> re-expresses `_redirects` as locale-ordered `error_page` rules and includes
+> `nexora-headers.conf`, which is **generated from `public/_headers`** by
+> `npm run verify:headers -- --write`. `_headers` stays the single source of truth — its CSP
+> `script-src` list is regenerated from the build, so a hand-written second copy would go stale
+> silently and block hydration. `npm run verify:headers` fails when the two disagree, in CI as
+> well, so the nginx copy cannot drift from the policy the build was checked against.
+>
+> Deploying it: copy the two files into place as the header comment in `nexora-site.conf`
+> describes, publish `dist/nexora/browser` to its `root`, then confirm with
+> `curl -I https://nexoratechnology.org` that all seven headers come back and that a nonsense
+> URL answers `404`.
 
 The CSP allows inline scripts **by hash**, not `'unsafe-inline'`. Three of the inline scripts
 in a prerendered document are executable - Angular's event-dispatch contract, the jsaction

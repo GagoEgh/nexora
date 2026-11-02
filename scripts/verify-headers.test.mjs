@@ -6,6 +6,7 @@ import {
   hashesIn,
   inlineScriptHashes,
   isExecutableScript,
+  nginxHeaderSnippet,
   parseCsp,
   parseHeaders,
 } from './verify-headers.mjs';
@@ -14,6 +15,15 @@ import {
  * The checker's logic, exercised without a build. The artifact check itself is
  * `npm run verify:headers`, which needs `dist/` and so cannot run here.
  */
+/**
+ * The `add_header` directives of a generated snippet, without its comment preamble.
+ * @param {string} snippet
+ * @returns {string[]}
+ */
+function addHeaderLines(snippet) {
+  return snippet.split('\n').filter((line) => line.startsWith('add_header '));
+}
+
 describe('verify-headers', () => {
   it('counts only the script types a browser executes', () => {
     assert.equal(isExecutableScript(''), true);
@@ -158,5 +168,45 @@ describe('verify-headers', () => {
       csp.replace("connect-src 'self'", "connect-src 'self' https://api.test"),
     );
     assert.deepEqual(checkHeaders(headers, new Set(['sha256-AAA=']), 'https://api.test'), []);
+  });
+
+  it('expresses every header as an nginx add_header, in file order', () => {
+    const snippet = nginxHeaderSnippet(
+      new Map([
+        ['Content-Security-Policy', "default-src 'self'; script-src 'self' 'sha256-AAA='"],
+        ['X-Frame-Options', 'DENY'],
+      ]),
+    );
+    assert.deepEqual(addHeaderLines(snippet), [
+      `add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'sha256-AAA='" always;`,
+      `add_header X-Frame-Options "DENY" always;`,
+    ]);
+  });
+
+  it('marks every header always, so the localized 404 carries them too', () => {
+    // The not-found pages are served through `error_page`, which makes them nginx-generated
+    // responses - and nginx omits an `add_header` on those unless it says `always`.
+    const snippet = nginxHeaderSnippet(
+      new Map([
+        ['X-Frame-Options', 'DENY'],
+        ['Referrer-Policy', 'no-referrer'],
+      ]),
+    );
+    const directives = addHeaderLines(snippet);
+    assert.equal(directives.length, 2);
+    for (const line of directives) {
+      assert.ok(line.endsWith(' always;'), line);
+    }
+  });
+
+  it('warns the reader off editing the generated file', () => {
+    const snippet = nginxHeaderSnippet(new Map([['X-Frame-Options', 'DENY']]));
+    assert.match(snippet, /Do not edit by hand/);
+    assert.match(snippet, /public\/_headers/);
+  });
+
+  it('escapes a double quote rather than breaking the directive it sits in', () => {
+    const snippet = nginxHeaderSnippet(new Map([['X-Test', 'a"b']]));
+    assert.ok(snippet.includes('add_header X-Test "a\\"b" always;'));
   });
 });
