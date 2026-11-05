@@ -8,6 +8,10 @@ import { expect, test } from '@playwright/test';
  * only - invisible to every existing check, because the narrow-viewport assertions all ran on
  * the default locale. Asserting the locales together is the whole point of this spec.
  *
+ * 320px is the narrowest viewport the site claims to support, and it is where the `hy` grid runs
+ * out of room first: the 390px and 840px cases passed while 320px overflowed by 20px. A breakpoint
+ * that is never asserted is a breakpoint that is never checked, so all three widths run here.
+ *
  * On failure the offending elements are named, so the report points at the cause rather than
  * just stating that a number is too large.
  */
@@ -18,6 +22,7 @@ const LOCALES = [
 ] as const;
 
 const VIEWPORTS = [
+  { label: 'small phone', width: 320, height: 568 },
   { label: 'phone', width: 390, height: 844 },
   { label: 'tablet', width: 840, height: 900 },
 ] as const;
