@@ -98,9 +98,6 @@
   list-style: none;
 
   @include layout.up(large) {
-    display: flex;
-    flex-wrap: wrap;
-    gap: spacing.space(24);
     margin-block-start: spacing.space(8);
   }
 }
@@ -123,17 +120,10 @@
   color: var(--mat-sys-primary);
 }
 
-/* The illustration runs its own entrance sequence; see hero-illustration.scss. */
 .hero__art {
   min-width: 0;
 }
 
-/*
- * Load reveal. The hero is above the fold, so it arrives with the page rather than on scroll:
- * the eyebrow leads, the heading and lead follow, the actions and trust row close, and the
- * illustration settles alongside them. Delays are declared here rather than bound in the
- * template, so the stagger costs no change detection.
- */
 .hero[data-reveal='out'] {
   .hero__eyebrow,
   .hero__title,

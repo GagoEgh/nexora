@@ -76,9 +76,25 @@ test.describe('hero at the desktop design width', () => {
       'rgb(203, 213, 225)',
     );
 
+    /*
+     * The trust row is a grid, one item per row, at every width - it used to become a wrapping
+     * flex row above `large`. It is asserted here because that was a Core Web Vitals defect,
+     * not a preference: the three items plus gaps needed 618px set in Inter against a 603px
+     * column at this width, so they fitted on one line only while the fallback font was
+     * showing and reflowed 44px the moment Inter arrived. Measured cold on the live site, CLS
+     * on `/` was 0.0892 against 0.0098 on `/hy/`, which is the same layout with text too long
+     * to fit either way.
+     *
+     * The three stacked rows below are the invariant: their height must not depend on which
+     * font is active. A `display` of `flex` here means the wrap is back and the shift with it.
+     */
     const trust = page.locator('app-hero .hero__trust-item');
     await expect(trust).toHaveCount(3);
-    expect(await style(page, 'app-hero .hero__trust', 'display')).toBe('flex');
+    expect(await style(page, 'app-hero .hero__trust', 'display')).toBe('grid');
+    const rows = await Promise.all(
+      [0, 1, 2].map(async (index) => (await trust.nth(index).boundingBox())?.y ?? 0),
+    );
+    expect(new Set(rows).size).toBe(3);
     expect(await style(page, 'app-hero .hero__trust-icon', 'color')).toBe('rgb(15, 85, 232)');
     expect((await box(page, 'app-hero .hero__trust-icon')).w).toBe(16);
   });

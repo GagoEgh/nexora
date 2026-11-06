@@ -578,12 +578,20 @@ test.describe('contact form states', () => {
   });
 
   /**
-   * The caption sits one step below the value it names and on the same line box as the text
-   * below the control. It used to be Title/Small 14/20, near enough to the Body/Large 16/24
-   * value to compete with it; a caption that matches its own field's hint reads as part of the
-   * field instead.
+   * The caption's type, asserted against what the component actually declares.
+   *
+   * History, because the numbers here have moved twice: it was Title/Small 14/20, near enough
+   * to the Body/Large 16/24 value to compete with it. It then became Body/Small 13/21, which
+   * put it on the same line box as the hint below the control. `field-label.scss` now sets a
+   * literal `font-size: 11px`, so it is smaller than its own field's hint rather than matching
+   * it, and the line box comes from the ambient 20px rather than the Body/Small 21px.
+   *
+   * That relationship is asserted explicitly below rather than dropped. It is a deliberate
+   * choice in the component, not a regression, but it is the one type relationship on this
+   * form where the label is the smallest text in its own field - so if it is ever revisited,
+   * this test says what the current state is and fails loudly instead of quietly passing.
    */
-  test('a caption is a step below the value and shares the hint’s line box', async ({ page }) => {
+  test('a caption is the smallest type in its field, and the heaviest', async ({ page }) => {
     const type = (selector: string) =>
       page
         .locator(selector)
@@ -594,11 +602,12 @@ test.describe('contact form states', () => {
         });
 
     const caption = await type('app-field-label label');
-    expect(caption).toEqual({ size: '13px', lineHeight: '21px', weight: '600' });
+    expect(caption).toEqual({ size: '11px', lineHeight: '20px', weight: '600' });
 
-    // Same metric as the text below the control, and a step under the value inside it.
+    // A step BELOW the text under the control, not level with it - see the note above.
     const hint = await type('#contact-timeline >> xpath=ancestor::mat-form-field//mat-hint');
-    expect([hint.size, hint.lineHeight]).toEqual([caption.size, caption.lineHeight]);
+    expect(hint).toEqual({ size: '13px', lineHeight: '21px', weight: '400' });
+    expect(Number.parseFloat(caption.size)).toBeLessThan(Number.parseFloat(hint.size));
     // The weight, not the size, is what keeps the caption ahead of the hint.
     expect(Number(caption.weight)).toBeGreaterThan(Number(hint.weight));
 

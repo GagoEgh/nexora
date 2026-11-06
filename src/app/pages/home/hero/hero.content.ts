@@ -31,8 +31,8 @@ const heroContent = {
     }),
     secondaryCta: t({
       en: 'Explore Our Services',
-      hy: 'Ծանոթացեք մեր ծառայություններին',
-      ru: 'Ознакомиться с нашими услугами',
+      hy: 'Մեր ծառայությունները',
+      ru: 'наши услуги',
     }),
     trust: [
       t({

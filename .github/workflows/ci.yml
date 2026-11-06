@@ -24,13 +24,8 @@ jobs:
       - run: npm run test:scripts
       - run: npm test -- --watch=false
       - run: npm run build
-      # All three read `dist/`, so they have to follow the build. They guard properties no other
-      # gate covers: that every prerendered page still works before Angular boots, that the
-      # deploy's CSP still lists the exact inline-script hashes this build emits, and that no
-      # route's real first-load JavaScript has crept past its ceiling. The last one exists
-      # because `budgets` in `angular.json` measures the entry point, not the chunks a
-      # prerendered document actually preloads - which is most of the weight.
       - run: npm run verify:prerender
+      - run: npm run verify:seo
       - run: npm run verify:headers
       - run: npm run verify:bundle
       - run: npx playwright install --with-deps chromium
@@ -38,13 +33,6 @@ jobs:
 
   audit:
     runs-on: ubuntu-latest
-    # Reports advisories without gating merges. The current high-severity roots are `vite`
-    # (the `launch-editor` command-execution advisories, which only affect the dev server) and
-    # `zod` (CWE-770, memory exhaustion on oversized collections) reached through
-    # `@intlayer/config` at build time. Neither reaches a visitor: `zod` appears nowhere in
-    # `dist/nexora/browser`, and `vite` is not a runtime dependency. Both can only be cleared
-    # by an upstream `intlayer` release, so this reports rather than blocks - re-check the
-    # bundle claim whenever `intlayer` is upgraded.
     continue-on-error: true
     steps:
       - uses: actions/checkout@v4

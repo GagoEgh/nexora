@@ -134,6 +134,17 @@ export function provideDocumentMeta(): EnvironmentProviders {
       meta.updateTag({ property: 'og:image:width', content: OG_IMAGE.width });
       meta.updateTag({ property: 'og:image:height', content: OG_IMAGE.height });
       meta.updateTag({ property: 'og:image:alt', content: ORGANIZATION.name });
+      meta.updateTag({ name: 'twitter:title', content: entry.title.value });
+      meta.updateTag({ name: 'twitter:description', content: entry.description.value });
+      meta.updateTag({ name: 'twitter:image', content: origin + OG_IMAGE.path });
+      meta.updateTag({ name: 'twitter:image:alt', content: ORGANIZATION.name });
+
+      if (current.page === 'not-found') {
+        meta.updateTag({ name: 'robots', content: 'noindex, follow' });
+      } else {
+        meta.removeTag('name="robots"');
+      }
+
       link('canonical').href = canonical;
       for (const [alternate, path] of Object.entries(alternates)) {
         link('alternate', alternate).href = origin + path;
@@ -141,6 +152,9 @@ export function provideDocumentMeta(): EnvironmentProviders {
       link('alternate', 'x-default').href = origin + alternates[defaultLocale];
 
       const organizationId = `${origin}/#organization`;
+      const websiteId = `${origin}/#website`;
+      const breadcrumbId = `${canonical}#breadcrumb`;
+      const trail = breadcrumbItems(current.page);
       const graph: Record<string, unknown>[] = [
         {
           '@type': 'Organization',
@@ -148,23 +162,42 @@ export function provideDocumentMeta(): EnvironmentProviders {
           name: ORGANIZATION.name,
           url: `${origin}/`,
           logo: origin + ORGANIZATION.logoPath,
+          image: origin + ORGANIZATION.logoPath,
           email: ORGANIZATION.email,
+          description: content().pages.home.description.value,
+          contactPoint: {
+            '@type': 'ContactPoint',
+            contactType: 'sales',
+            email: ORGANIZATION.email,
+            availableLanguage: ORGANIZATION.languages,
+          },
         },
         {
           '@type': 'WebSite',
-          '@id': `${origin}/#website`,
+          '@id': websiteId,
           name: ORGANIZATION.name,
           url: `${origin}/`,
           publisher: { '@id': organizationId },
           inLanguage: locale(),
         },
+        {
+          '@type': 'WebPage',
+          '@id': `${canonical}#webpage`,
+          url: canonical,
+          name: entry.title.value,
+          description: entry.description.value,
+          inLanguage: locale(),
+          isPartOf: { '@id': websiteId },
+          about: { '@id': organizationId },
+          primaryImageOfPage: origin + OG_IMAGE.path,
+          ...(trail.length > 0 ? { breadcrumb: { '@id': breadcrumbId } } : {}),
+        },
       ];
 
-      const trail = breadcrumbItems(current.page);
       if (trail.length > 0) {
         graph.push({
           '@type': 'BreadcrumbList',
-          '@id': `${canonical}#breadcrumb`,
+          '@id': breadcrumbId,
           itemListElement: [
             {
               '@type': 'ListItem',

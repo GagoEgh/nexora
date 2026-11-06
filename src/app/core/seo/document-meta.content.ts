@@ -35,9 +35,9 @@ const documentMetaContent = {
           ru: 'AI-агенты и автоматизация бизнеса | Nexora',
         }),
         description: t({
-          en: 'AI agents, assistants and workflow automation built into the systems your business already runs on.',
+          en: 'AI agents, assistants and workflow automation built into the systems your business already runs on, with guardrails, logging and human review.',
           hy: 'AI գործակալներ, օգնականներ և աշխատանքային գործընթացների ավտոմատացում՝ ինտեգրված այն համակարգերին, որոնք ձեր բիզնեսն արդեն օգտագործում է։',
-          ru: 'AI-агенты, ассистенты и автоматизация рабочих процессов, интегрированные в системы, которые уже использует ваш бизнес.',
+          ru: 'AI-агенты, ассистенты и автоматизация рабочих процессов, интегрированные в системы, которые уже использует ваш бизнес, с логированием и контролем.',
         }),
       },
       solutions: {
@@ -83,8 +83,8 @@ const documentMetaContent = {
       contact: {
         title: t({ en: 'Contact | Nexora', hy: 'Կապ | Nexora', ru: 'Контакты | Nexora' }),
         description: t({
-          en: 'Start a project or become a partner: get in touch with the Nexora engineering team to discuss the problem you need to solve.',
-          hy: 'Սկսեք նոր նախագիծ կամ դարձեք մեր գործընկերը։ Կապվեք Nexora-ի ինժեներական թիմի հետ՝ քննարկելու ձեր լուծման կարիքը և նպատակները։',
+          en: 'Start a project or become a partner: get in touch with the Nexora engineering team to discuss the problem you need to solve and how we would approach it.',
+          hy: 'Սկսեք նոր նախագիծ կամ դարձեք մեր գործընկերը։ Կապվեք Nexora-ի ինժեներական թիմի հետ՝ քննարկելու ձեր խնդիրը, նպատակները և լուծման հնարավոր մոտեցումները։',
           ru: 'Начните проект или станьте партнёром: свяжитесь с инженерной командой Nexora, чтобы обсудить вашу задачу и возможные пути её решения.',
         }),
       },

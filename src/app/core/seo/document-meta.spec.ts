@@ -10,10 +10,17 @@ describe('provideDocumentMeta', () => {
   const metaContent = (selector: string) =>
     document.head.querySelector<HTMLMetaElement>(`meta[${selector}]`)?.content;
   const settle = () => TestBed.inject(ApplicationRef).whenStable();
-  /** The configured production origin, not the test host: canonical URLs are absolute. */
   const origin = () => TestBed.inject(SITE_ORIGIN);
   const setLocale = (locale: string) =>
     TestBed.runInInjectionContext(() => useLocale()).setLocale(locale);
+  const robots = () => document.head.querySelector('meta[name="robots"]');
+  const graph = (): Record<string, unknown>[] => {
+    const blocks = document.head.querySelectorAll('script[type="application/ld+json"]');
+    expect(blocks).toHaveLength(1);
+    return JSON.parse(blocks[0].textContent ?? '')['@graph'];
+  };
+  const node = (type: string) =>
+    graph().find((entry) => entry['@type'] === type) as Record<string, unknown> | undefined;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -67,6 +74,87 @@ describe('provideDocumentMeta', () => {
     await settle();
     expect(document.title).toBe('Контакты | Nexora');
     expect(metaContent('name="description"')).toContain('Nexora');
+  });
+
+  it('writes the Twitter card tags rather than leaning on the Open Graph fallback', async () => {
+    await TestBed.inject(Router).navigateByUrl('/about');
+    await settle();
+
+    expect(metaContent('name="twitter:title"')).toBe('About | Nexora');
+    expect(metaContent('name="twitter:description"')).toBe(metaContent('name="description"'));
+    expect(metaContent('name="twitter:image"')).toBe(metaContent('property="og:image"'));
+    expect(metaContent('name="twitter:image:alt"')).toBe('Nexora');
+  });
+
+  it('asks for noindex only on the 404, and clears it on the way out', async () => {
+    const router = TestBed.inject(Router);
+
+    await router.navigateByUrl('/about');
+    await settle();
+    expect(robots()).toBeNull();
+
+    await router.navigateByUrl('/no-such-page');
+    await settle();
+    expect(robots()?.getAttribute('content')).toBe('noindex, follow');
+
+    await router.navigateByUrl('/not-found');
+    await settle();
+    expect(robots()?.getAttribute('content')).toBe('noindex, follow');
+    await router.navigateByUrl('/contact');
+    await settle();
+    expect(robots()).toBeNull();
+  });
+
+  it('publishes one JSON-LD graph whose nodes reference each other by @id', async () => {
+    await TestBed.inject(Router).navigateByUrl('/about');
+    await settle();
+
+    expect(graph().map((entry) => entry['@type'])).toEqual([
+      'Organization',
+      'WebSite',
+      'WebPage',
+      'BreadcrumbList',
+    ]);
+
+    const organization = node('Organization');
+    expect(organization?.['@id']).toBe(`${origin()}/#organization`);
+    expect(organization?.['logo']).toBe(`${origin()}/brand/logo.png`);
+    expect(organization?.['email']).toBe('info@nexoratechnology.org');
+    expect(organization?.['contactPoint']).toEqual({
+      '@type': 'ContactPoint',
+      contactType: 'sales',
+      email: 'info@nexoratechnology.org',
+      availableLanguage: ['en', 'hy', 'ru'],
+    });
+
+    expect(node('WebSite')?.['publisher']).toEqual({ '@id': `${origin()}/#organization` });
+
+    const page = node('WebPage');
+    expect(page?.['@id']).toBe(`${origin()}/about#webpage`);
+    expect(page?.['url']).toBe(`${origin()}/about`);
+    expect(page?.['name']).toBe('About | Nexora');
+    expect(page?.['isPartOf']).toEqual({ '@id': `${origin()}/#website` });
+    expect(page?.['about']).toEqual({ '@id': `${origin()}/#organization` });
+    expect(page?.['breadcrumb']).toEqual({ '@id': `${origin()}/about#breadcrumb` });
+    expect(node('BreadcrumbList')?.['@id']).toBe(`${origin()}/about#breadcrumb`);
+  });
+
+  it('drops the breadcrumb reference on the home page, which has no trail', async () => {
+    await TestBed.inject(Router).navigateByUrl('/');
+    await settle();
+
+    expect(graph().map((entry) => entry['@type'])).toEqual(['Organization', 'WebSite', 'WebPage']);
+    expect(node('WebPage')?.['breadcrumb']).toBeUndefined();
+    expect(node('WebPage')?.['url']).toBe(`${origin()}/`);
+  });
+
+  it('declares the active locale on the site and page nodes', async () => {
+    await TestBed.inject(Router).navigateByUrl('/ru/about');
+    await settle();
+
+    expect(node('WebSite')?.['inLanguage']).toBe('ru');
+    expect(node('WebPage')?.['inLanguage']).toBe('ru');
+    expect(node('WebPage')?.['url']).toBe(`${origin()}/ru/about`);
   });
 
   it('describes every route and rejects unknown page names', () => {

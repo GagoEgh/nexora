@@ -55,7 +55,10 @@ Treat a failure there as a blocking upgrade issue, not a flake.
 | `npm run lint`             | ESLint for TypeScript and templates                                             |
 | `npm run e2e`              | Playwright tests against a dev server on port 4300 (Chromium only)              |
 | `npm run verify:prerender` | Checks the built pages still work without JavaScript (needs a build)            |
+| `npm run verify:seo`       | Checks every built page's title, canonical, hreflang, robots and JSON-LD        |
 | `npm run verify:headers`   | Checks `_headers` matches the build and the nginx copy matches `_headers`       |
+| `npm run verify:live-seo`  | Checks a RUNNING origin serves those URLs directly - run it after a deploy      |
+| `npm run build:logo`       | Regenerates `public/brand/logo.png` from `mark.svg` (run by hand, not by CI)    |
 | `npm run verify:bundle`    | Checks no route's real first-load JavaScript exceeds its budget (needs a build) |
 | `npm run format`           | Formats the project with Prettier                                               |
 | `npm run format:check`     | Verifies formatting; also run by the pre-commit hook and the CI workflow        |
@@ -104,26 +107,62 @@ Netlify reads it from the publish root, which is where `angular.json` copies all
 Another host needs the same headers expressed its own way - they are not in the bundle, so
 nothing in the application fails if they are missing.
 
-> **The live site is not yet on a host that reads either file.** `https://nexoratechnology.org`
-> is served by nginx, and currently answers every path with a single placeholder document
-> rather than this build. Checked against the live response: `X-Content-Type-Options`,
-> `X-Frame-Options`, `Referrer-Policy` and HSTS are present, but **no** `Content-Security-Policy`,
-> `Permissions-Policy` or `Cross-Origin-Opener-Policy` — so the hash-based CSP that
-> `verify:headers` guards is not in force in production, and an unknown URL answers `200`
-> instead of reaching the localized 404.
+> **The committed nginx configuration is not the one production is running.** Measured against
+> `https://nexoratechnology.org` on 2026-11-06 with `npm run verify:live-seo`, 28 checks fail:
 >
-> `deploy/nginx/` exists to close that gap. `nexora-site.conf` is a server block that
-> re-expresses `_redirects` as locale-ordered `error_page` rules and includes
+> | Observed                                                                           | Expected                            | Covered by                            |
+> | ---------------------------------------------------------------------------------- | ----------------------------------- | ------------------------------------- |
+> | 23 of 24 sitemap URLs answer `301` to a trailing-slash variant                     | `200`, served directly              | `verify:live-seo`                     |
+> | An unknown URL answers `200` with the English 404 body                             | `404`, in the URL's own locale      | `nexora-site.conf` `error_page` rules |
+> | `https://www.nexoratechnology.org/` answers `200`                                  | `301` to the apex                   | the `www` server block                |
+> | Hashed assets send `Cache-Control` **twice**, `max-age=2592000`                    | once, `max-age=31536000, immutable` | the asset `location`                  |
+> | No `Content-Security-Policy`, `Permissions-Policy` or `Cross-Origin-Opener-Policy` | all seven headers                   | `nexora-headers.conf`                 |
+>
+> Every one of those is already fixed in `deploy/nginx/`. None of them can be fixed from this
+> repository: the fix is installing those files on the host, which needs server access this
+> project does not have. Until that happens, treat the serving-layer findings as open.
+>
+> `nexora-site.conf` re-expresses `_redirects` as locale-ordered `error_page` rules and includes
 > `nexora-headers.conf`, which is **generated from `public/_headers`** by
-> `npm run verify:headers -- --write`. `_headers` stays the single source of truth — its CSP
+> `npm run verify:headers -- --write`. `_headers` stays the single source of truth - its CSP
 > `script-src` list is regenerated from the build, so a hand-written second copy would go stale
 > silently and block hydration. `npm run verify:headers` fails when the two disagree, in CI as
 > well, so the nginx copy cannot drift from the policy the build was checked against.
 >
-> Deploying it: copy the two files into place as the header comment in `nexora-site.conf`
-> describes, publish `dist/nexora/browser` to its `root`, then confirm with
-> `curl -I https://nexoratechnology.org` that all seven headers come back and that a nonsense
-> URL answers `404`.
+> **Deploying it.** This is the whole sequence, and the order matters:
+>
+> ```sh
+> npm ci && npm run build            # 27 prerendered routes into dist/nexora/browser
+> npm run verify:prerender           # they work without JavaScript
+> npm run verify:seo                 # their metadata is correct and agrees with sitemap.xml
+> npm run verify:headers             # the nginx snippet matches this build's CSP hashes
+> npm run verify:bundle              # no route is over its first-load budget
+>
+> # on the host
+> cp deploy/nginx/nexora-headers.conf /etc/nginx/snippets/
+> cp deploy/nginx/nexora-brotli.conf  /etc/nginx/snippets/   # optional; needs ngx_brotli
+> cp deploy/nginx/nexora-site.conf    /etc/nginx/sites-available/nexora
+> ln -s /etc/nginx/sites-available/nexora /etc/nginx/sites-enabled/nexora
+> nginx -t && systemctl reload nginx
+> rsync -a --delete dist/nexora/browser/ /srv/nexora/
+>
+> # back here, against the deployed origin
+> npm run verify:live-seo -- https://nexoratechnology.org
+> ```
+>
+> `verify:live-seo` is the gate that matters: it is the only check that can see the difference
+> between the configuration in this repository and the one actually serving requests. It is
+> deliberately not part of `npm run build` or the CI job, because it needs a running server.
+>
+> Two prerequisites that will fail quietly if missed: the TLS certificate must cover
+> `www.nexoratechnology.org` as a SAN, or the new `www` redirect block cannot complete a
+> handshake at all; and `nginx -t` has not been run against these files anywhere, because
+> nginx is not installed in the environment they were written in. Run it before the reload.
+>
+> **The trailing-slash convention is the one thing not to get wrong.** Canonical URLs carry no
+> trailing slash. That is why every `try_files` in `nexora-site.conf` puts `$uri/index.html`
+> ahead of `$uri/` - reverse the two and nginx's `index` module answers `/services` with a
+> `301` to `/services/`, which is exactly the defect above.
 
 The CSP allows inline scripts **by hash**, not `'unsafe-inline'`. Three of the inline scripts
 in a prerendered document are executable - Angular's event-dispatch contract, the jsaction
