@@ -16,12 +16,29 @@ interface ContactApiResponse {
   readonly success: boolean;
   readonly message?: string;
 }
+
 interface ContactApiErrorBody {
-  readonly success?: false;
-  readonly statusCode?: number;
   readonly message?: string | readonly string[];
-  readonly error?: string;
   readonly requestId?: string;
+}
+
+function errorBodyOf(raw: unknown): ContactApiErrorBody {
+  if (typeof raw !== 'object' || raw === null) {
+    return {};
+  }
+
+  const body = raw as Record<string, unknown>;
+  const message = body['message'];
+  const requestId = body['requestId'];
+
+  return {
+    message: Array.isArray(message)
+      ? message.filter((line): line is string => typeof line === 'string')
+      : typeof message === 'string'
+        ? message
+        : undefined,
+    requestId: typeof requestId === 'string' ? requestId : undefined,
+  };
 }
 
 const isFieldName = (value: string): value is ContactField =>
@@ -78,10 +95,19 @@ export class HttpContactSubmitter extends ContactSubmitter {
       const response = await firstValueFrom(
         this.http.post<ContactApiResponse>(`${this.origin}${CONTACT_PATH}`, inquiry),
       );
-      return { status: response?.success ? 'sent' : 'failed' };
+      if (response?.success) {
+        return { status: 'sent' };
+      }
+
+      this.errorHandler.handleError(
+        new Error(
+          `Contact API answered HTTP 200 without success: ${JSON.stringify(response ?? null)}`,
+        ),
+      );
+      return { status: 'failed' };
     } catch (error) {
       if (error instanceof HttpErrorResponse) {
-        const body = (error.error ?? {}) as ContactApiErrorBody;
+        const body = errorBodyOf(error.error);
         const rejectedFields = rejectedFieldsOf(body.message);
 
         this.errorHandler.handleError(

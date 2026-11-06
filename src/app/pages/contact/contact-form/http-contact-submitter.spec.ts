@@ -77,6 +77,21 @@ describe('HttpContactSubmitter', () => {
     await expect(pending).resolves.toEqual({ status: 'failed' });
   });
 
+  // CT-05. This used to be the one way to fail without leaving a trace: a 200 carrying
+  // `success: false` returned 'failed' and told nobody, while every other failure logged.
+  it('logs an HTTP 200 that does not report success', async () => {
+    const submitter = create();
+    const pending = submitter.submit(inquiry);
+
+    http.expectOne(`${ORIGIN}${PATH}`).flush({ success: false, message: 'queue offline' });
+    await expect(pending).resolves.toEqual({ status: 'failed' });
+
+    expect(errors.errors).toHaveLength(1);
+    expect(String(errors.errors[0])).toContain('HTTP 200 without success');
+    // The body reaches the log, so the reason is recoverable from it.
+    expect(String(errors.errors[0])).toContain('queue offline');
+  });
+
   it('never reports success when the provider is unavailable', async () => {
     const submitter = create();
     const pending = submitter.submit(inquiry);

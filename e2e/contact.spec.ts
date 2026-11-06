@@ -711,6 +711,47 @@ test.describe('contact form states', () => {
     await expect(page.locator('#contact-name')).toHaveValue('x'.repeat(120));
   });
 
+  // CT-11. Material toggles a chip on every activation, so clicking the chosen one deselected it
+  // and wrote `undefined` through the value accessor - and Signal Forms answers that by removing
+  // the key, which takes `form.<field>` with it. The next render then threw
+  // `TypeError: ctx.form.interest is not a function`, in the browser, from an ordinary click.
+  test('the chip groups keep their choice when the chosen chip is clicked again', async ({
+    page,
+  }) => {
+    const errors: string[] = [];
+    page.on('pageerror', (error) => errors.push(String(error)));
+    page.on('console', (message) => {
+      if (message.type() === 'error') {
+        errors.push(message.text());
+      }
+    });
+
+    for (const group of ['#contact-interest', '#contact-method']) {
+      const chosen = page.locator(`${group} [role="option"][aria-selected="true"]`);
+      await expect(chosen).toHaveCount(1);
+      const label = (await chosen.textContent())?.trim();
+
+      await chosen.click();
+
+      // Still exactly one chosen, still the same one, and still announced as chosen.
+      const after = page.locator(`${group} [role="option"][aria-selected="true"]`);
+      await expect(after).toHaveCount(1);
+      expect((await after.textContent())?.trim()).toBe(label);
+    }
+
+    // Choosing a different chip still works afterwards, so nothing was left inert.
+    const other = page.locator('#contact-interest [role="option"][aria-selected="false"]').first();
+    const otherLabel = (await other.textContent())?.trim();
+    await other.click();
+    await expect(
+      page.locator('#contact-interest [role="option"][aria-selected="true"]'),
+    ).toHaveText(otherLabel ?? '');
+
+    // And the form still renders: the regression broke change detection, not just the value.
+    await expect(page.locator('#contact-form-title')).toBeVisible();
+    expect(errors).toEqual([]);
+  });
+
   test('a server-rejected field is named, focused, and clears when corrected', async ({ page }) => {
     await page.route('**/api/contact', (route) => route.fulfill(validationRejection(['email'])));
 

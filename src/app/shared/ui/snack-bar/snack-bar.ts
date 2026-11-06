@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import {
@@ -38,7 +38,7 @@ export class SnackBar {
   private readonly content = useDictionary(snackBarContent);
 
   protected readonly svgIcon = appIcon(this.data.icon);
-  protected readonly action = this.data.action ?? this.content().dismiss.value;
+  protected readonly action = computed(() => this.data.action ?? this.content().dismiss.value);
 
   protected dismiss(): void {
     this.snackBarRef.dismissWithAction();

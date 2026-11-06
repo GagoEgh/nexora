@@ -72,11 +72,11 @@ describe('verify-bundle-budget', () => {
   });
 
   it('keeps the budget within sight of the measurement it was set from', () => {
-    // The worst route measured 220.7 kB when the ceiling was chosen, and 221.3 kB after the
+    // The worst route measured 220.7 kB when the ceiling was chosen, and 221.7 kB after the
     // contact form gained server-side field errors. A budget that drifts far above the real
     // figure stops being a regression gate, so this fails if someone quietly doubles it instead
     // of investigating. Update both numbers together, deliberately.
-    const measuredWorst = 221.3 * 1024;
+    const measuredWorst = 221.7 * 1024;
     assert.ok(MAX_ROUTE_GZIP_BYTES > measuredWorst, 'budget must leave headroom');
     assert.ok(MAX_ROUTE_GZIP_BYTES < measuredWorst * 1.25, 'budget has drifted from reality');
   });

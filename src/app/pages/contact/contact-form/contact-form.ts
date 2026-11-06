@@ -42,11 +42,13 @@ import {
 import { FieldLabel } from '../../../shared/ui/field-label/field-label';
 import { ChipSelect, type ChipOption } from './chip-select/chip-select';
 import contactFormContent from './contact-form.content';
+import { emailTld, notBlank } from './contact-rules';
 import {
   CONTACT_FIELDS,
   ContactSubmitter,
   type ContactField,
   type ContactInquiry,
+  type ContactSubmitResult,
   type ContactSubmitStatus,
 } from './contact-submitter';
 
@@ -58,6 +60,15 @@ const DESCRIPTION_WARN_AT = Math.floor(DESCRIPTION_MAX * 0.9);
 export const NAME_MAX = 120;
 export const COMPANY_MAX = 160;
 export const EMAIL_MAX = 254;
+
+function chipOptions(
+  options: readonly {
+    readonly value: { readonly value: string };
+    readonly label: { readonly value: string };
+  }[],
+): readonly ChipOption[] {
+  return options.map((option) => ({ value: option.value.value, label: option.label.value }));
+}
 
 const DEFAULTS: ContactInquiry = {
   interest: 'new-project',
@@ -74,10 +85,6 @@ const DEFAULTS: ContactInquiry = {
 
 const STATUS_CLASSES = {
   'ng-invalid': (binding: FormFieldBinding) => binding.state().invalid(),
-  'ng-valid': (binding: FormFieldBinding) => !binding.state().invalid(),
-  'ng-touched': (binding: FormFieldBinding) => binding.state().touched(),
-  'ng-untouched': (binding: FormFieldBinding) => !binding.state().touched(),
-  'ng-dirty': (binding: FormFieldBinding) => binding.state().dirty(),
 };
 
 @Component({
@@ -126,18 +133,22 @@ export class ContactForm {
     required(inquiry.interest, { message: isRequired });
 
     required(inquiry.name, { message: isRequired });
+    notBlank(inquiry.name, { message: isRequired });
     maxLength(inquiry.name, NAME_MAX, { message: tooLong(NAME_MAX) });
 
     required(inquiry.email, { message: isRequired });
     email(inquiry.email, { message: notAnEmail });
+    emailTld(inquiry.email, { message: notAnEmail });
     maxLength(inquiry.email, EMAIL_MAX, { message: tooLong(EMAIL_MAX) });
 
     required(inquiry.company, { message: isRequired });
+    notBlank(inquiry.company, { message: isRequired });
     maxLength(inquiry.company, COMPANY_MAX, { message: tooLong(COMPANY_MAX) });
 
     required(inquiry.service, { message: isRequired });
 
     required(inquiry.description, { message: isRequired });
+    notBlank(inquiry.description, { message: isRequired });
     maxLength(inquiry.description, DESCRIPTION_MAX, { message: tooLong(DESCRIPTION_MAX) });
     const whileSending = () => this.form().submitting();
     readonly(inquiry.name, { when: whileSending });
@@ -159,17 +170,11 @@ export class ContactForm {
   });
 
   protected readonly interestOptions = computed<readonly ChipOption[]>(() =>
-    this.content().interestOptions.map((option) => ({
-      value: option.value.value,
-      label: option.label.value,
-    })),
+    chipOptions(this.content().interestOptions),
   );
 
   protected readonly methodOptions = computed<readonly ChipOption[]>(() =>
-    this.content().methodOptions.map((option) => ({
-      value: option.value.value,
-      label: option.label.value,
-    })),
+    chipOptions(this.content().methodOptions),
   );
 
   protected showError(state: FieldState<string>): boolean {
@@ -187,20 +192,22 @@ export class ContactForm {
 
     await submitForm(this.form, {
       action: async () => {
+        let result: ContactSubmitResult;
         try {
-          const result = await this.submitter.submit(this.model());
-          if (result.status === 'sent') {
-            this.form().reset({ ...DEFAULTS });
-            this.heading().nativeElement.focus();
-          }
-          this.notify(result.status);
-          rejected = result.rejectedFields;
-          return this.toFieldErrors(rejected);
+          result = await this.submitter.submit(this.model());
         } catch (error) {
           this.errorHandler.handleError(error);
           this.notify('failed');
           return undefined;
         }
+
+        if (result.status === 'sent') {
+          this.form().reset({ ...DEFAULTS });
+          this.heading().nativeElement.focus();
+        }
+        this.notify(result.status);
+        rejected = result.rejectedFields;
+        return this.toFieldErrors(rejected);
       },
       onInvalid: () => this.focusFirstInvalid(),
     });

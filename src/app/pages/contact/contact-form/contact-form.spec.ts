@@ -5,7 +5,9 @@ import { provideRouter } from '@angular/router';
 import { provideIntlayer } from 'angular-intlayer';
 import { provideAppIcons } from '../../../core/icons/provide-app-icons';
 import { COMPANY_MAX, ContactForm, DESCRIPTION_MAX, EMAIL_MAX, NAME_MAX } from './contact-form';
+import { BLANK_KIND, EMAIL_TLD_KIND } from './contact-rules';
 import {
+  CONTACT_FIELDS,
   ContactSubmitter,
   type ContactField,
   type ContactInquiry,
@@ -356,6 +358,76 @@ describe('ContactForm', () => {
     }
     // Still correctable: a generic failure must not leave the form looking invalid.
     expect(inner.form().invalid()).toBe(false);
+  });
+
+  // CT-01 / CT-02. The API validates the same ten fields with its own rules, and two of them are
+  // stricter than Angular's built-ins. These assert the client now refuses locally what the
+  // server would refuse remotely, so the visitor is not sent on a round trip to learn it.
+  describe('validation parity with the API', () => {
+    it('refuses a value that is only whitespace, as `@trim() @MinLength(1)` does', async () => {
+      // `required()` tests `value === ''` without trimming, so without `notBlank` this passes.
+      for (const key of ['name', 'company', 'description'] as const) {
+        inner.form[key]().value.set('   ');
+      }
+      await fixture.whenStable();
+
+      for (const key of ['name', 'company', 'description'] as const) {
+        expect(inner.form[key]().getError(BLANK_KIND), key).toBeTruthy();
+        expect(inner.form[key]().invalid(), key).toBe(true);
+      }
+    });
+
+    it('tells a blank field and an empty one apart but says the same thing', async () => {
+      // One error at a time: `required` owns empty, `notBlank` owns whitespace. Both carry the
+      // required copy, so the visitor reads the same sentence either way.
+      expect(inner.form.name().getError(BLANK_KIND)).toBeFalsy();
+      const whenEmpty = inner.fieldError(inner.form.name());
+
+      inner.form.name().value.set('  ');
+      await fixture.whenStable();
+
+      expect(inner.form.name().getError('required')).toBeFalsy();
+      expect(inner.form.name().errors()).toHaveLength(1);
+      expect(inner.fieldError(inner.form.name())).toBe(whenEmpty);
+    });
+
+    it('refuses an address with no top-level domain, as `@IsEmail()` does', async () => {
+      // Angular's `email()` accepts these on purpose, so intranet hosts validate.
+      for (const address of ['john@example', 'a@b']) {
+        inner.form.email().value.set(address);
+        await fixture.whenStable();
+        expect(inner.form.email().getError(EMAIL_TLD_KIND), address).toBeTruthy();
+        expect(inner.form.email().invalid(), address).toBe(true);
+      }
+    });
+
+    it('still accepts an ordinary address, and says one thing about a malformed one', async () => {
+      inner.form.email().value.set('ada@example.co.uk');
+      await fixture.whenStable();
+      expect(inner.form.email().valid()).toBe(true);
+
+      // No `@` at all is `email()`'s business, not the TLD rule's.
+      inner.form.email().value.set('not-an-email');
+      await fixture.whenStable();
+      expect(inner.form.email().getError(EMAIL_TLD_KIND)).toBeFalsy();
+      expect(inner.form.email().getError('email')).toBeTruthy();
+    });
+  });
+
+  // CT-03. `ContactField` is the set of fields a server rejection can be pinned to, and pinning
+  // one means focusing `#contact-<field>`. Those two facts are only connected by a naming
+  // convention, so this is what connects them: widening the union without giving the new field a
+  // focusable element of that id fails here instead of silently failing to move focus.
+  it('gives every field a server error can name a focusable element of that id', () => {
+    const root = fixture.nativeElement as HTMLElement;
+
+    for (const name of CONTACT_FIELDS) {
+      const element = root.querySelector<HTMLElement>(`#contact-${name}`);
+      expect(element, name).not.toBeNull();
+
+      element!.focus();
+      expect(root.ownerDocument.activeElement, name).toBe(element);
+    }
   });
 
   it('defaults to a submitter that refuses to pretend it sent anything', async () => {

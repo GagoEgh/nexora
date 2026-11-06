@@ -8,8 +8,7 @@ import { routes } from './app.routes';
 import { localeFromLocation } from './core/i18n/locale-routing';
 import { provideAppIcons } from './core/icons/provide-app-icons';
 import { provideDocumentMeta } from './core/seo/document-meta';
-import { ContactSubmitter } from './pages/contact/contact-form/contact-submitter';
-import { HttpContactSubmitter } from './pages/contact/contact-form/http-contact-submitter';
+import { provideContactForm } from './pages/contact/contact.providers';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,6 +21,6 @@ export const appConfig: ApplicationConfig = {
     provideAppIcons(),
     provideDocumentMeta(),
 
-    { provide: ContactSubmitter, useClass: HttpContactSubmitter },
+    provideContactForm(),
   ],
 };

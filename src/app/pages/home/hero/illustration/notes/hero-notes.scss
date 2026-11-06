@@ -12,7 +12,7 @@
   display: none;
   position: absolute;
   box-sizing: border-box;
-  padding: spacing.space(16);
+  padding: spacing.space(12);
   box-shadow: var(--mat-sys-level2);
 
   @include layout.up(large) {
@@ -36,7 +36,7 @@
   display: flex;
   align-items: center;
   gap: spacing.space(8);
-  margin: 0 0 spacing.space(12);
+  margin: 0 0 spacing.space(8);
   font: var(--mat-sys-body-medium);
   font-weight: typography.$weight-semibold;
   color: var(--mat-sys-on-surface);
@@ -50,7 +50,7 @@
 
 .notes__steps {
   display: grid;
-  gap: spacing.space(12);
+  gap: spacing.space(8);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -60,7 +60,8 @@
   display: flex;
   align-items: center;
   gap: spacing.space(8);
-  font: var(--mat-sys-body-medium);
+  // font: var(--mat-sys-body-medium);
+  font-size: 10px;
   color: var(--mat-sys-on-surface-variant);
   transition: opacity motion.duration(base) motion.easing(out);
 

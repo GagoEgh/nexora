@@ -6,6 +6,7 @@ import { provideIntlayer } from 'angular-intlayer';
 import { provideAppIcons } from '../../../core/icons/provide-app-icons';
 import { COMPANY_MAX, ContactForm, DESCRIPTION_MAX, EMAIL_MAX, NAME_MAX } from './contact-form';
 import contactFormContent from './contact-form.content';
+import { isMissingEmailTld, isOnlyWhitespace } from './contact-rules';
 import {
   BUDGET_VALUES,
   ContactSubmitter,
@@ -117,6 +118,64 @@ describe('the contact API contract', () => {
     expect(COMPANY_MAX).toBe(CONTRACT.limits.company);
     expect(DESCRIPTION_MAX).toBe(CONTRACT.limits.description);
     expect(EMAIL_MAX).toBe(CONTRACT.limits.email);
+  });
+});
+
+/**
+ * CT-10. `CONTRACT` above pins the parts of the agreement that are *data* - the accepted values
+ * and the numeric limits. These pin the parts that are *behaviour*, which is where the two
+ * stacks had actually drifted: `required()` does not trim and `@trim() @MinLength(1)` does, and
+ * `email()` allows a domain with no TLD while `@IsEmail()` defaults to `require_tld: true`.
+ *
+ * The backend lives in another repository and cannot be imported, so its verdicts are written
+ * out here the same way its accepted values are. Each table entry is a claim about the API that
+ * can be checked by hand against `create-contact.dto.ts`.
+ */
+describe('validation parity with the API', () => {
+  /** What the API does with `@trim() @MinLength(1)` on name, company and description. */
+  const serverAcceptsPresence = (value: string) => value.trim().length >= 1;
+
+  /** What the form does: `required()` owns empty, `notBlank` owns whitespace-only. */
+  const clientAcceptsPresence = (value: string) => value !== '' && !isOnlyWhitespace(value);
+
+  const PRESENCE_CASES = ['', ' ', '   ', '\t', '\n', ' \t\n ', 'x', ' x ', 'Ada', '  Ada  '];
+
+  it('agrees with the API on every presence case, trimming included', () => {
+    for (const value of PRESENCE_CASES) {
+      expect(clientAcceptsPresence(value), JSON.stringify(value)).toBe(
+        serverAcceptsPresence(value),
+      );
+    }
+  });
+
+  it('includes the case that used to differ', () => {
+    // Without `notBlank` this was the gap: accepted here, 400 there.
+    expect(serverAcceptsPresence('   ')).toBe(false);
+    expect(clientAcceptsPresence('   ')).toBe(false);
+    expect(isOnlyWhitespace('   ')).toBe(true);
+  });
+
+  // Verdicts measured against the backend's own installed `validator` package, which is what
+  // `@IsEmail()` calls: `isEmail('john@example') === false`, `isEmail('ada@example.com') === true`.
+  const EMAIL_CASES = [
+    { address: 'ada@example.com', serverAccepts: true },
+    { address: 'ada@example.co.uk', serverAccepts: true },
+    { address: 'ada@sub.example.com', serverAccepts: true },
+    { address: 'john@example', serverAccepts: false },
+    { address: 'a@b', serverAccepts: false },
+    { address: 'ada@localhost', serverAccepts: false },
+  ] as const;
+
+  it('agrees with the API on whether a domain needs a top-level domain', () => {
+    for (const { address, serverAccepts } of EMAIL_CASES) {
+      expect(!isMissingEmailTld(address), address).toBe(serverAccepts);
+    }
+  });
+
+  it('leaves the shape of an address to `email()` and only judges the domain', () => {
+    // No `@` means there is no domain to judge, so this rule stays quiet and `email()` complains.
+    expect(isMissingEmailTld('not-an-email')).toBe(false);
+    expect(isMissingEmailTld('')).toBe(false);
   });
 });
 
