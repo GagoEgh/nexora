@@ -291,6 +291,16 @@ const contactFormContent = {
       hy: 'Մուտքագրեք էլեկտրոնային փոստի վավեր հասցե։',
       ru: 'Введите корректный адрес электронной почты.',
     }),
+    errorMaxLength: t({
+      en: 'Keep this to {max} characters or fewer.',
+      hy: 'Խնդրում ենք չգերազանցել {max} նշանը։',
+      ru: 'Не более {max} символов.',
+    }),
+    errorServer: t({
+      en: 'Please check this field and try again.',
+      hy: 'Խնդրում ենք ստուգել այս դաշտը և կրկին փորձել։',
+      ru: 'Пожалуйста, проверьте это поле и попробуйте снова.',
+    }),
 
     sentMessage: t({
       en: 'Thanks — your inquiry is on its way.',

@@ -226,9 +226,15 @@ test.describe('selecting a model from the finder', () => {
     await expect(current).toHaveAttribute('id', 'model-white-label');
     await expect(current.locator('.model__title')).toHaveText('White-Label Development');
 
-    // The scroll is explicit because `anchorScrolling` is off; the card should be near the top.
-    const top = await current.evaluate((el) => Math.round(el.getBoundingClientRect().top));
-    expect(top).toBeLessThan(300);
+    // The scroll is explicit because `anchorScrolling` is off, and it runs from
+    // `afterNextRender` (`engagement-models.ts:56`), so it has not necessarily happened by the
+    // time `goto` resolves - reading the position once made this test fail under parallel load,
+    // at the ~1900px the card sits at unscrolled. Poll for the settled position instead.
+    await expect
+      .poll(() => current.evaluate((el) => Math.round(el.getBoundingClientRect().top)), {
+        timeout: 4000,
+      })
+      .toBeLessThan(300);
   });
 
   test('an unknown model in the URL selects nothing rather than guessing', async ({ page }) => {

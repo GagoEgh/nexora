@@ -15,9 +15,14 @@ single-page Angular application with localized content in English, Armenian and 
 
 ## Upgrading Angular
 
-The contact form is built on **`@angular/forms/signals`, an experimental API** - `form()`,
-`submitForm()`, `required()` and `readonly()` carry no stability guarantee, and they sit in the
-site's primary conversion path.
+The contact form is built on **`@angular/forms/signals`**. Every function it uses - `form()`,
+`submit()`, `required()`, `email()`, `maxLength()`, `readonly()`, `FormField` and
+`provideSignalFormsConfig()` - is marked `@publicApi 22.0` in the installed package, so it carries
+the same stability guarantee as the rest of the framework. It is **not** experimental, and an
+earlier version of this section said otherwise.
+
+What is still worth knowing is that the API is new in 22 and the form sits in the site's primary
+conversion path, so it has had fewer releases of real-world use than Reactive Forms.
 
 The `@angular/*` packages are already locked in step by their own peer dependencies
 (`@angular/forms` requires `@angular/core` at an exact version), so they can only be upgraded
@@ -38,21 +43,22 @@ Treat a failure there as a blocking upgrade issue, not a flake.
 
 ## Commands
 
-| Command                    | What it does                                                              |
-| -------------------------- | ------------------------------------------------------------------------- |
-| `npm ci`                   | Installs dependencies and the pre-commit formatting hook                  |
-| `npm start`                | Serves the application on `http://localhost:4200/` with live reload       |
-| `npm run build`            | Production build into `dist/nexora`                                       |
-| `npm run watch`            | Development build that rebuilds on change                                 |
-| `npm test`                 | Unit tests with Vitest                                                    |
-| `npm run test:scripts`     | Tests for the build and verification scripts in `scripts/`                |
-| `npm run typecheck`        | Type-checks the app, the unit specs and the Playwright specs              |
-| `npm run lint`             | ESLint for TypeScript and templates                                       |
-| `npm run e2e`              | Playwright tests against a dev server on port 4300 (Chromium only)        |
-| `npm run verify:prerender` | Checks the built pages still work without JavaScript (needs a build)      |
-| `npm run verify:headers`   | Checks `_headers` matches the build and the nginx copy matches `_headers` |
-| `npm run format`           | Formats the project with Prettier                                         |
-| `npm run format:check`     | Verifies formatting; also run by the pre-commit hook and the CI workflow  |
+| Command                    | What it does                                                                    |
+| -------------------------- | ------------------------------------------------------------------------------- |
+| `npm ci`                   | Installs dependencies and the pre-commit formatting hook                        |
+| `npm start`                | Serves the application on `http://localhost:4200/` with live reload             |
+| `npm run build`            | Production build into `dist/nexora`                                             |
+| `npm run watch`            | Development build that rebuilds on change                                       |
+| `npm test`                 | Unit tests with Vitest                                                          |
+| `npm run test:scripts`     | Tests for the build and verification scripts in `scripts/`                      |
+| `npm run typecheck`        | Type-checks the app, the unit specs and the Playwright specs                    |
+| `npm run lint`             | ESLint for TypeScript and templates                                             |
+| `npm run e2e`              | Playwright tests against a dev server on port 4300 (Chromium only)              |
+| `npm run verify:prerender` | Checks the built pages still work without JavaScript (needs a build)            |
+| `npm run verify:headers`   | Checks `_headers` matches the build and the nginx copy matches `_headers`       |
+| `npm run verify:bundle`    | Checks no route's real first-load JavaScript exceeds its budget (needs a build) |
+| `npm run format`           | Formats the project with Prettier                                               |
+| `npm run format:check`     | Verifies formatting; also run by the pre-commit hook and the CI workflow        |
 
 ## Project layout
 

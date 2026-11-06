@@ -7,7 +7,12 @@ import { provideAppIcons } from '../../../core/icons/provide-app-icons';
 import { COMPANY_MAX, ContactForm, DESCRIPTION_MAX, EMAIL_MAX, NAME_MAX } from './contact-form';
 import contactFormContent from './contact-form.content';
 import {
+  BUDGET_VALUES,
   ContactSubmitter,
+  INTEREST_VALUES,
+  METHOD_VALUES,
+  SERVICE_VALUES,
+  TIMELINE_VALUES,
   type ContactInquiry,
   type ContactSubmitResult,
 } from './contact-submitter';
@@ -87,6 +92,23 @@ describe('the contact API contract', () => {
 
   it('offers exactly the contact-method values the API accepts', () => {
     expect(values(copy.methodOptions)).toEqual(CONTRACT.method);
+  });
+
+  // The option values now exist as unions on `ContactInquiry`, so a typo is a compile error. That
+  // only helps if the unions match the API; these assertions are what keep the three copies -
+  // the content dictionary, these types, and the backend DTO - in step. A union that drifted
+  // *wider* than the backend would otherwise compile cleanly and fail in production.
+  it('derives the interest and method unions from exactly the API values', () => {
+    expect([...INTEREST_VALUES]).toEqual(CONTRACT.interest);
+    expect([...METHOD_VALUES]).toEqual(CONTRACT.method);
+  });
+
+  it('allows the empty pre-selection value only where the model needs it', () => {
+    // `''` is the form model's value before the visitor chooses. The API accepts it for the two
+    // optional selects; for `service` it does not, and `required(inquiry.service)` is the guard.
+    expect([...SERVICE_VALUES]).toEqual(['', ...CONTRACT.service]);
+    expect([...TIMELINE_VALUES]).toEqual(['', ...CONTRACT.timeline]);
+    expect([...BUDGET_VALUES]).toEqual(['', ...CONTRACT.budget]);
   });
 
   it('enforces the same maximum lengths the API does', () => {

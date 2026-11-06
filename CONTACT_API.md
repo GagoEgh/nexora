@@ -38,16 +38,39 @@ else and treats it as unset, so a malformed value cannot cause a POST to the sta
 
 `HttpContactSubmitter` reduces every outcome to three states, each with its own EN/HY/RU copy:
 
-| Outcome                                         | Status           | What the visitor sees                                          |
-| ----------------------------------------------- | ---------------- | -------------------------------------------------------------- |
-| `2xx` with `success: true`                      | `sent`           | Success notice; the form resets and focus moves to the heading |
-| `2xx` with `success: false`, or any `4xx`/`5xx` | `failed`         | Failure notice; **their input is preserved** so they can retry |
-| Transport failure (offline, DNS, CORS)          | `failed`         | The same failure notice                                        |
-| `apiOrigin` unset or malformed                  | `not-configured` | A notice pointing at the published email address               |
+| Outcome                                               | Status           | What the visitor sees                                                           |
+| ----------------------------------------------------- | ---------------- | ------------------------------------------------------------------------------- |
+| `2xx` with `success: true`                            | `sent`           | Success notice; the form resets and focus moves to the heading                  |
+| A validation rejection naming fields this form shows  | `failed`         | Failure notice **plus an error on each named field**, the first of them focused |
+| `2xx` with `success: false`, or any other `4xx`/`5xx` | `failed`         | Failure notice; **their input is preserved** so they can retry                  |
+| Transport failure (offline, DNS, CORS)                | `failed`         | The same failure notice                                                         |
+| `apiOrigin` unset or malformed                        | `not-configured` | A notice pointing at the published email address                                |
 
 A rejected response and an unreachable host are deliberately one visitor-facing state — the next
 step is identical either way — but they are separated in the log, where a transport failure
 reports `status === 0`.
+
+### Field-level rejections
+
+When the API rejects named fields, `HttpContactSubmitter` reports which ones and `ContactForm`
+routes them through Signal Forms, so each rejected field shows an error that clears the moment the
+visitor edits it. Two deliberate limits:
+
+- **The message is this app's copy, not the API's.** The API's validation wording comes from
+  class-validator and is English whatever the visitor's locale, so it goes to the log — with the
+  response's request id, which is what ties a report to the API's own log line — while the field
+  shows the localized `errorServer` string. What the visitor needs from the UI is _which_ field.
+- **Only fields this form can show an error against are routed** (`ContactField` in
+  `contact-submitter.ts`). The chip groups and the optional selects have no error slot, and their
+  accepted values are already pinned by `contact-contract.spec.ts`; the honeypot is hidden and out
+  of the tab order. A rejection naming one of those means the two repositories have drifted — a
+  developer's problem, logged and shown as a plain failure, rather than an error pinned to a
+  control the visitor cannot see or reach.
+
+How the rejected field names are recovered from a response is a detail of the API's error format,
+so it lives with the code that parses it (`rejectedFieldsOf`, covered by
+`http-contact-submitter.spec.ts`) and is **not** restated here — same reason the request schema
+is not.
 
 Two client behaviours worth knowing. A send already in flight is **coalesced**
 (`HttpContactSubmitter.pending`), so one visitor cannot double-submit, and nothing retries

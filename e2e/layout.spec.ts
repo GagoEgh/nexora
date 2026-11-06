@@ -246,11 +246,16 @@ test.describe('header at the mobile design width', () => {
     );
     // Pages with an immersive intro run it behind the bar, so the hairline is dropped there
     // and kept on the ordinary pages.
-    expect(await style(page, 'app-header', 'border-bottom-width')).toBe('0px');
+    //
+    // Polled, not read once: the rule is `app-header:has(+ .app__main > [data-layout='immersive'])`
+    // (`app.scss:40`), so it only matches once the lazily loaded routed component is in the DOM.
+    // `goto` does not guarantee that, and reading the width once made this test fail under
+    // parallel load, catching the 1px default before the page had rendered.
+    await expect.poll(() => style(page, 'app-header', 'border-bottom-width')).toBe('0px');
     // `not-found` is the only page left without an immersive intro, so it is the one that
     // still shows the hairline. Privacy Policy used to serve here before it was removed.
     await page.goto('/not-found');
-    expect(await style(page, 'app-header', 'border-bottom-width')).toBe('1px');
+    await expect.poll(() => style(page, 'app-header', 'border-bottom-width')).toBe('1px');
     expect(await style(page, 'app-header', 'border-bottom-color')).toBe('rgb(226, 232, 240)');
   });
 

@@ -24,11 +24,15 @@ jobs:
       - run: npm run test:scripts
       - run: npm test -- --watch=false
       - run: npm run build
-      # Both read `dist/`, so they have to follow the build. They guard properties no other
-      # gate covers: that every prerendered page still works before Angular boots, and that
-      # the deploy's CSP still lists the exact inline-script hashes this build emits.
+      # All three read `dist/`, so they have to follow the build. They guard properties no other
+      # gate covers: that every prerendered page still works before Angular boots, that the
+      # deploy's CSP still lists the exact inline-script hashes this build emits, and that no
+      # route's real first-load JavaScript has crept past its ceiling. The last one exists
+      # because `budgets` in `angular.json` measures the entry point, not the chunks a
+      # prerendered document actually preloads - which is most of the weight.
       - run: npm run verify:prerender
       - run: npm run verify:headers
+      - run: npm run verify:bundle
       - run: npx playwright install --with-deps chromium
       - run: npm run e2e
 

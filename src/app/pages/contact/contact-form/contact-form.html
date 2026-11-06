@@ -18,7 +18,7 @@
     <app-field-label
       labelId="contact-interest-label"
       (activate)="interestChips.focus()"
-      [invalid]="form.interest().touched() && form.interest().invalid()"
+      [invalid]="showError(form.interest())"
     >
       {{ content().interestLabel }}
       <span class="form__required" aria-hidden="true">{{ content().requiredMark }}</span>
@@ -35,10 +35,7 @@
   <div class="form__group">
     <div class="form__row">
       <div class="form__field">
-        <app-field-label
-          for="contact-name"
-          [invalid]="form.name().touched() && form.name().invalid()"
-        >
+        <app-field-label for="contact-name" [invalid]="showError(form.name())">
           {{ content().nameLabel }}
           <span class="form__required" aria-hidden="true">{{ content().requiredMark }}</span>
         </app-field-label>
@@ -51,17 +48,14 @@
             [formField]="form.name"
             [placeholder]="content().namePlaceholder.value"
           />
-          @if (form.name().touched() && form.name().invalid()) {
-            <mat-error>{{ content().errorRequired }}</mat-error>
+          @if (showError(form.name())) {
+            <mat-error>{{ fieldError(form.name()) }}</mat-error>
           }
         </mat-form-field>
       </div>
 
       <div class="form__field">
-        <app-field-label
-          for="contact-email"
-          [invalid]="form.email().touched() && form.email().invalid()"
-        >
+        <app-field-label for="contact-email" [invalid]="showError(form.email())">
           {{ content().emailLabel }}
           <span class="form__required" aria-hidden="true">{{ content().requiredMark }}</span>
         </app-field-label>
@@ -74,14 +68,8 @@
             [formField]="form.email"
             [placeholder]="content().emailPlaceholder.value"
           />
-          @if (form.email().touched() && form.email().invalid()) {
-            <mat-error>
-              @if (form.email().getError('required')) {
-                {{ content().errorRequired }}
-              } @else {
-                {{ content().errorEmail }}
-              }
-            </mat-error>
+          @if (showError(form.email())) {
+            <mat-error>{{ fieldError(form.email()) }}</mat-error>
           }
         </mat-form-field>
       </div>
@@ -89,10 +77,7 @@
 
     <div class="form__row">
       <div class="form__field">
-        <app-field-label
-          for="contact-company"
-          [invalid]="form.company().touched() && form.company().invalid()"
-        >
+        <app-field-label for="contact-company" [invalid]="showError(form.company())">
           {{ content().companyLabel }}
           <span class="form__required" aria-hidden="true">{{ content().requiredMark }}</span>
         </app-field-label>
@@ -105,8 +90,8 @@
             [formField]="form.company"
             [placeholder]="content().companyPlaceholder.value"
           />
-          @if (form.company().touched() && form.company().invalid()) {
-            <mat-error>{{ content().errorRequired }}</mat-error>
+          @if (showError(form.company())) {
+            <mat-error>{{ fieldError(form.company()) }}</mat-error>
           }
         </mat-form-field>
       </div>
@@ -115,7 +100,7 @@
         <app-field-label
           labelId="contact-service-label"
           (activate)="serviceSelect.focus()"
-          [invalid]="form.service().touched() && form.service().invalid()"
+          [invalid]="showError(form.service())"
         >
           {{ content().serviceLabel }}
           <span class="form__required" aria-hidden="true">{{ content().requiredMark }}</span>
@@ -132,8 +117,8 @@
               <mat-option [value]="option.value.value">{{ option.label }}</mat-option>
             }
           </mat-select>
-          @if (form.service().touched() && form.service().invalid()) {
-            <mat-error>{{ content().errorRequired }}</mat-error>
+          @if (showError(form.service())) {
+            <mat-error>{{ fieldError(form.service()) }}</mat-error>
           }
         </mat-form-field>
       </div>
@@ -142,10 +127,7 @@
 
   <div class="form__group">
     <div class="form__field">
-      <app-field-label
-        for="contact-description"
-        [invalid]="form.description().touched() && form.description().invalid()"
-      >
+      <app-field-label for="contact-description" [invalid]="showError(form.description())">
         {{ content().descriptionLabel }}
         <span class="form__required" aria-hidden="true">{{ content().requiredMark }}</span>
       </app-field-label>
@@ -158,8 +140,8 @@
           [placeholder]="content().descriptionPlaceholder.value"
         ></textarea>
 
-        @if (form.description().touched() && form.description().invalid()) {
-          <mat-error>{{ content().errorRequired }}</mat-error>
+        @if (showError(form.description())) {
+          <mat-error>{{ fieldError(form.description()) }}</mat-error>
         } @else {
           <mat-hint>{{ content().descriptionHint }}</mat-hint>
         }

@@ -22,8 +22,14 @@ const ready = async (page: Page) => {
   await page.locator('button.header__lang').waitFor({ state: 'attached' });
 };
 
+// `wcag22aa` contributes exactly one rule in axe-core 4.14 - `target-size`, WCAG 2.2 SC 2.5.8,
+// the 24x24 CSS px minimum for pointer targets. `wcag22a` contributes none at this version
+// (`axe.getRules(['wcag22a'])` is empty), so listing it would only suggest coverage that does not
+// exist. Check again on an axe-core upgrade.
 const analyse = (page: Page) =>
-  new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
+  new AxeBuilder({ page })
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
+    .analyze();
 
 const summarise = (violations: Awaited<ReturnType<typeof analyse>>['violations']) =>
   violations
@@ -43,7 +49,7 @@ test.describe('accessibility', () => {
   for (const locale of LOCALES) {
     for (const page of PAGES) {
       const url = urlFor(locale, page);
-      test(`${url} has no WCAG 2.1 AA violations`, async ({ page: browserPage }) => {
+      test(`${url} has no WCAG 2.2 AA violations`, async ({ page: browserPage }) => {
         await browserPage.goto(url);
         await ready(browserPage);
 

@@ -12,11 +12,13 @@ import {
   form,
   FormField,
   maxLength,
+  type FieldState,
   type FormFieldBinding,
   provideSignalFormsConfig,
   readonly,
   required,
   submit as submitForm,
+  type ValidationError,
 } from '@angular/forms/signals';
 import { MatButton } from '@angular/material/button';
 import {
@@ -41,12 +43,15 @@ import { FieldLabel } from '../../../shared/ui/field-label/field-label';
 import { ChipSelect, type ChipOption } from './chip-select/chip-select';
 import contactFormContent from './contact-form.content';
 import {
+  CONTACT_FIELDS,
   ContactSubmitter,
+  type ContactField,
   type ContactInquiry,
   type ContactSubmitStatus,
 } from './contact-submitter';
 
 const SENT_DURATION_MS = 6000;
+const SERVER_ERROR_KIND = 'server';
 
 export const DESCRIPTION_MAX = 2000;
 const DESCRIPTION_WARN_AT = Math.floor(DESCRIPTION_MAX * 0.9);
@@ -111,30 +116,34 @@ export class ContactForm {
   private readonly heading = viewChild.required<ElementRef<HTMLElement>>('heading');
 
   private readonly model = signal<ContactInquiry>({ ...DEFAULTS });
-  private readonly sending = signal(false);
 
   protected readonly form = form(this.model, (inquiry) => {
-    required(inquiry.interest);
+    const isRequired = () => this.content().errorRequired.value;
+    const notAnEmail = () => this.content().errorEmail.value;
+    const tooLong = (max: number) => () =>
+      this.content().errorMaxLength.value.replace('{max}', String(max));
 
-    required(inquiry.name);
-    maxLength(inquiry.name, NAME_MAX);
+    required(inquiry.interest, { message: isRequired });
 
-    required(inquiry.email);
-    email(inquiry.email);
-    maxLength(inquiry.email, EMAIL_MAX);
+    required(inquiry.name, { message: isRequired });
+    maxLength(inquiry.name, NAME_MAX, { message: tooLong(NAME_MAX) });
 
-    required(inquiry.company);
-    maxLength(inquiry.company, COMPANY_MAX);
+    required(inquiry.email, { message: isRequired });
+    email(inquiry.email, { message: notAnEmail });
+    maxLength(inquiry.email, EMAIL_MAX, { message: tooLong(EMAIL_MAX) });
 
-    required(inquiry.service);
+    required(inquiry.company, { message: isRequired });
+    maxLength(inquiry.company, COMPANY_MAX, { message: tooLong(COMPANY_MAX) });
 
-    required(inquiry.description);
-    maxLength(inquiry.description, DESCRIPTION_MAX);
+    required(inquiry.service, { message: isRequired });
 
-    readonly(inquiry.name, () => this.sending());
-    readonly(inquiry.email, () => this.sending());
-    readonly(inquiry.company, () => this.sending());
-    readonly(inquiry.description, () => this.sending());
+    required(inquiry.description, { message: isRequired });
+    maxLength(inquiry.description, DESCRIPTION_MAX, { message: tooLong(DESCRIPTION_MAX) });
+    const whileSending = () => this.form().submitting();
+    readonly(inquiry.name, { when: whileSending });
+    readonly(inquiry.email, { when: whileSending });
+    readonly(inquiry.company, { when: whileSending });
+    readonly(inquiry.description, { when: whileSending });
   });
 
   protected readonly submitting = computed(() => this.form().submitting());
@@ -163,39 +172,68 @@ export class ContactForm {
     })),
   );
 
+  protected showError(state: FieldState<string>): boolean {
+    return state.touched() && state.invalid();
+  }
+
+  protected fieldError(state: FieldState<string>): string | undefined {
+    return state.errors()[0]?.message;
+  }
+
   protected async submit(event?: Event): Promise<void> {
     event?.preventDefault();
 
+    let rejected: readonly ContactField[] | undefined;
+
     await submitForm(this.form, {
       action: async () => {
-        this.sending.set(true);
         try {
-          const { status } = await this.submitter.submit(this.model());
-          if (status === 'sent') {
+          const result = await this.submitter.submit(this.model());
+          if (result.status === 'sent') {
             this.form().reset({ ...DEFAULTS });
             this.heading().nativeElement.focus();
           }
-          this.notify(status);
+          this.notify(result.status);
+          rejected = result.rejectedFields;
+          return this.toFieldErrors(rejected);
         } catch (error) {
           this.errorHandler.handleError(error);
           this.notify('failed');
-        } finally {
-          this.sending.set(false);
+          return undefined;
         }
-        return undefined;
       },
+      onInvalid: () => this.focusFirstInvalid(),
     });
 
-    if (this.form().invalid()) {
-      this.focusFirstInvalid();
+    if (rejected?.length) {
+      this.focusField(rejected[0]);
     }
   }
 
+  private toFieldErrors(
+    rejected: readonly ContactField[] | undefined,
+  ): ValidationError.WithOptionalFieldTree[] | undefined {
+    if (!rejected?.length) {
+      return undefined;
+    }
+
+    const message = this.content().errorServer.value;
+    return rejected.map((field) => ({
+      kind: SERVER_ERROR_KIND,
+      message,
+      fieldTree: this.form[field],
+    }));
+  }
+
+  private focusField(field: ContactField): void {
+    this.card().nativeElement.querySelector<HTMLElement>(`#contact-${field}`)?.focus();
+  }
+
   private focusFirstInvalid(): void {
-    const invalid = this.card().nativeElement.querySelector<HTMLElement>(
-      'input.ng-invalid, textarea.ng-invalid, .mat-mdc-select.ng-invalid',
-    );
-    invalid?.focus();
+    const first = CONTACT_FIELDS.find((field) => this.form[field]().invalid());
+    if (first) {
+      this.focusField(first);
+    }
   }
 
   private notify(status: ContactSubmitStatus): void {

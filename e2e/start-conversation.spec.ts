@@ -268,12 +268,69 @@ test.describe('start a conversation at narrower widths', () => {
 const ART = 'app-start-conversation .start-conversation__art';
 const PARTS = ['__ring', '__disc', '__mark'] as const;
 
+const RING = 'app-start-conversation .start-conversation__ring';
+
 const revealState = (page: Page) => page.locator(ART).getAttribute('data-reveal');
 
 const animationName = (page: Page) =>
-  page
-    .locator('app-start-conversation .start-conversation__ring')
-    .evaluate((el) => getComputedStyle(el, '::after').animationName);
+  page.locator(RING).evaluate((el) => getComputedStyle(el, '::after').animationName);
+
+/** The scoped prefix Angular adds is stripped off by `includes`, so match on the bare name. */
+const PING = 'conversation-ping';
+
+/**
+ * Samples the ping on its own timeline rather than on the test's.
+ *
+ * The ping is a one-shot behind a delay, and its keyframes set `opacity: 0` at both ends, so it
+ * is only visible inside a window no wider than the animation itself. A sample taken at a fixed
+ * offset from the moment a poll *noticed* `data-reveal='in'` is not a sample at a known point of
+ * the animation: the two drift apart under load, which is what used to make this test flaky.
+ * So take hold of the animation's clock and seek it instead — every frame below is then exact,
+ * and the sample points are derived from the timing the stylesheet actually declared.
+ */
+const pingFrames = (page: Page, name: string) =>
+  page.locator(RING).evaluate((el, keyframes) => {
+    const ping = el
+      .getAnimations({ subtree: true })
+      .find(
+        (animation) =>
+          animation instanceof CSSAnimation && animation.animationName.includes(keyframes),
+      );
+    if (!(ping instanceof CSSAnimation)) {
+      throw new Error(`the ring has no ${keyframes} animation`);
+    }
+
+    const timing = ping.effect?.getComputedTiming();
+    const delay = Number(timing?.delay ?? 0);
+    const duration = Number(timing?.duration ?? 0);
+
+    // Read the live state before seeking, because seeking is what pausing it costs us.
+    const live = {
+      playState: ping.playState,
+      pseudoElement: ping.effect instanceof KeyframeEffect ? ping.effect.pseudoElement : null,
+      iterations: timing?.iterations ?? null,
+      delay,
+      duration,
+    };
+
+    ping.pause();
+    const frameAt = (time: number) => {
+      ping.currentTime = time;
+      // Asking for the computed style flushes the seek, so this is the frame at `time`.
+      const after = getComputedStyle(el, '::after');
+      return { scale: new DOMMatrixReadOnly(after.transform).a, opacity: Number(after.opacity) };
+    };
+
+    return {
+      ...live,
+      // In increasing order, so no frame can depend on the direction of a seek.
+      withinDelay: frameAt(delay / 2),
+      atPeak: frameAt(delay + duration * 0.25),
+      midFlight: frameAt(delay + duration / 2),
+      atEnd: frameAt(delay + duration),
+      afterEnd: frameAt(delay + duration * 2),
+    };
+  }, name);
 
 test.describe('the artwork assembles when it is scrolled into view', () => {
   test.use({ reducedMotion: 'no-preference', viewport: { width: 1440, height: 900 } });
@@ -325,24 +382,33 @@ test.describe('the artwork assembles when it is scrolled into view', () => {
 
     // Angular scopes the keyframes name to the component, so the computed value carries its
     // `_ngcontent-*` prefix.
-    expect(await animationName(page)).toContain('conversation-ping');
+    expect(await animationName(page)).toContain(PING);
 
-    const ping = page.locator('app-start-conversation .start-conversation__ring');
-    expect(await ping.evaluate((el) => getComputedStyle(el, '::after').animationIterationCount)) //
-      .toBe('1');
+    const ping = await pingFrames(page, PING);
 
-    // Caught in flight: expanded past the ring it started inside, and visible.
-    await page.waitForTimeout(900);
-    const flight = await ping.evaluate((el) => {
-      const after = getComputedStyle(el, '::after');
-      return { scale: new DOMMatrixReadOnly(after.transform).a, opacity: Number(after.opacity) };
-    });
-    expect(flight.scale).toBeGreaterThan(0.7);
-    expect(flight.opacity).toBeGreaterThan(0);
+    // It is really playing, on the ring's own `::after`, and exactly once.
+    expect([ping.playState, ping.pseudoElement, ping.iterations]).toEqual([
+      'running',
+      '::after',
+      1,
+    ]);
+    // The timing `conversation-art.scss` declares: one 1200ms ping, held back 520ms so it
+    // follows the ring opening out rather than racing it.
+    expect([ping.delay, ping.duration]).toEqual([520, 1200]);
 
-    // And gone afterwards, so it leaves no second ring behind.
-    await page.waitForTimeout(1400);
-    expect(await ping.evaluate((el) => getComputedStyle(el, '::after').opacity)).toBe('0');
+    // Nothing shows while it waits: `fill: both` holds the first frame, which is transparent.
+    expect(ping.withinDelay).toEqual({ scale: 0.7, opacity: 0 });
+
+    // Caught in flight: expanded past the ring it started inside, and visible. A quarter in is
+    // the keyframe that sets the peak.
+    expect(ping.atPeak.opacity).toBeCloseTo(0.55, 2);
+    expect(ping.atPeak.scale).toBeGreaterThan(0.7);
+    expect(ping.midFlight.opacity).toBeGreaterThan(0);
+    expect(ping.midFlight.scale).toBeGreaterThan(ping.atPeak.scale);
+
+    // And gone by the end, holding its last frame, so it leaves no second ring behind.
+    expect(ping.atEnd).toEqual({ scale: 1.02, opacity: 0 });
+    expect(ping.afterEnd).toEqual({ scale: 1.02, opacity: 0 });
   });
 });
 

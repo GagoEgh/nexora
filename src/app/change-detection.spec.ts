@@ -199,6 +199,11 @@ describe('change detection', () => {
   it('Angular compiles an omitted strategy to OnPush, and only Eager opts out', () => {
     expect(ChangeDetectionStrategy.OnPush).toBe(0);
     expect(ChangeDetectionStrategy.Eager).toBe(1);
+    // `Default` is deprecated in favour of `Eager`, and naming it here is the point: this file
+    // exists to pin the enum's numeric semantics, and `Default === Eager === 1` is the half that
+    // makes "an omitted strategy is OnPush" safe to rely on. The deprecation rule is suppressed
+    // for this one reference rather than for the file, so an accidental use elsewhere still fails.
+    // eslint-disable-next-line @typescript-eslint/no-deprecated
     expect(ChangeDetectionStrategy.Default).toBe(ChangeDetectionStrategy.Eager);
   });
 

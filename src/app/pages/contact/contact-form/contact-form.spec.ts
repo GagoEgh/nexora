@@ -7,6 +7,7 @@ import { provideAppIcons } from '../../../core/icons/provide-app-icons';
 import { COMPANY_MAX, ContactForm, DESCRIPTION_MAX, EMAIL_MAX, NAME_MAX } from './contact-form';
 import {
   ContactSubmitter,
+  type ContactField,
   type ContactInquiry,
   type ContactSubmitResult,
   type ContactSubmitStatus,
@@ -27,13 +28,16 @@ class FakeSubmitter extends ContactSubmitter {
   readonly calls: ContactInquiry[] = [];
   status: ContactSubmitStatus = 'sent';
   throws = false;
+  rejectedFields: readonly ContactField[] | undefined;
 
   override async submit(inquiry: ContactInquiry): Promise<ContactSubmitResult> {
     this.calls.push(inquiry);
     if (this.throws) {
       throw new Error('transport down');
     }
-    return { status: this.status };
+    return this.rejectedFields
+      ? { status: this.status, rejectedFields: this.rejectedFields }
+      : { status: this.status };
   }
 }
 
@@ -44,6 +48,8 @@ interface FieldView<T> {
   invalid(): boolean;
   valid(): boolean;
   getError(kind: string): unknown;
+  errors(): readonly { readonly kind: string; readonly message?: string }[];
+  readonly(): boolean;
 }
 
 type FieldAccessor<T> = () => FieldView<T>;
@@ -64,7 +70,12 @@ interface FormInternals {
   submit(): Promise<void>;
   descriptionLength(): number;
   submitting(): boolean;
+  fieldError(state: FieldView<string>): string | undefined;
 }
+
+/** The message the API attached to a field, read off the field state rather than the component. */
+const serverError = (state: FieldView<string>) =>
+  state.errors().find((error) => error.kind === 'server')?.message;
 
 describe('ContactForm', () => {
   let fixture: ComponentFixture<ContactForm>;
@@ -145,6 +156,52 @@ describe('ContactForm', () => {
     expect(inner.form.email().getError('maxLength')).toBeTruthy();
   });
 
+  // CF-04. The messages live on the schema rules now, so `errors()` carries the copy and the
+  // template shows the first one. These pin the order a visitor is told about things in - which
+  // is declaration order - because nothing else would catch a reshuffle of the schema.
+  //
+  // Asserted by relationship rather than by literal copy, so they hold in every locale.
+  describe('validator messages', () => {
+    it('reports an empty field as required rather than as a bad address', () => {
+      // `email` starts empty, so `required` and `email` could both complain. `company` has no
+      // address rule, so its message is the required one - and `email` must match it.
+      expect(inner.fieldError(inner.form.email())).toBe(inner.fieldError(inner.form.company()));
+      expect(inner.fieldError(inner.form.email())).toBeTruthy();
+    });
+
+    it('reports a malformed address as a bad address', async () => {
+      inner.form.email().value.set('not-an-email');
+      await fixture.whenStable();
+
+      expect(inner.fieldError(inner.form.email())).toBeTruthy();
+      // No longer the required message, which `company` is still showing.
+      expect(inner.fieldError(inner.form.email())).not.toBe(inner.fieldError(inner.form.company()));
+    });
+
+    // The old template showed "this field is required" here, because the message was hardcoded
+    // beside the field rather than coming from the rule that failed. Not reachable from the UI -
+    // `FormField` turns the rule into a native `maxlength`, so the browser caps typing first
+    // (pinned in `e2e/contact.spec.ts`) - but it is the message for any value that arrives
+    // another way, and the limit has to be the field's own.
+    it('reports an over-long value as over-long, naming the limit for that field', async () => {
+      inner.form.name().value.set('x'.repeat(NAME_MAX + 1));
+      inner.form.company().value.set('y'.repeat(COMPANY_MAX + 1));
+      await fixture.whenStable();
+
+      expect(inner.fieldError(inner.form.name())).toContain(String(NAME_MAX));
+      expect(inner.fieldError(inner.form.company())).toContain(String(COMPANY_MAX));
+      // The placeholder is substituted, not left in the copy.
+      expect(inner.fieldError(inner.form.name())).not.toContain('{max}');
+    });
+
+    it('leaves no message on a field with nothing wrong with it', async () => {
+      inner.form.name().value.set('Ada Lovelace');
+      await fixture.whenStable();
+
+      expect(inner.fieldError(inner.form.name())).toBeUndefined();
+    });
+  });
+
   it('tracks the description length for the counter', async () => {
     expect(inner.descriptionLength()).toBe(0);
 
@@ -202,6 +259,103 @@ describe('ContactForm', () => {
 
     expect(inner.form.name().value()).toBe(VALID.name);
     expect(inner.submitting()).toBe(false);
+  });
+
+  describe('when the API rejects specific fields', () => {
+    beforeEach(async () => {
+      submitter.status = 'failed';
+      submitter.rejectedFields = ['email'];
+      await fillValid();
+      await inner.submit();
+    });
+
+    it('pins the rejection to that field, with the localized message', () => {
+      // The message is the dictionary copy, not the API's own English wording - asserted by kind
+      // here, because the resolved string depends on the active locale.
+      const errors = inner.form.email().errors();
+      expect(errors.map((error) => error.kind)).toContain('server');
+      expect(serverError(inner.form.email())).toBeTruthy();
+      expect(inner.form.email().invalid()).toBe(true);
+    });
+
+    // CF-06. `email` is `readonly` while `submitting()` is true, and a readonly field skips
+    // validation entirely - `shouldSkipValidation` is `hidden || disabled || readonly ||
+    // isOrphaned`. The framework applies submission errors *before* it clears `submitting` in its
+    // `finally`, so for one moment the error is stored on a field whose `errors()` reads empty.
+    // This asserts the suppression is transient: the lock lifts, and the error is there.
+    it('still shows the error on a field that was locked during the send', () => {
+      expect(inner.form.email().readonly()).toBe(false);
+      expect(
+        inner.form
+          .email()
+          .errors()
+          .map((error) => error.kind),
+      ).toContain('server');
+    });
+
+    it('leaves the other fields alone', () => {
+      expect(serverError(inner.form.name())).toBeUndefined();
+      expect(inner.form.name().valid()).toBe(true);
+    });
+
+    it('keeps what the visitor typed, so the rejection is correctable', () => {
+      expect(inner.form.email().value()).toBe(VALID.email);
+      expect(inner.form.description().value()).toBe(VALID.description);
+    });
+
+    it('clears the rejection as soon as the visitor edits the field', async () => {
+      inner.form.email().value.set('ada@nexora.example');
+      await fixture.whenStable();
+
+      expect(serverError(inner.form.email())).toBeUndefined();
+      expect(inner.form.email().valid()).toBe(true);
+    });
+
+    it('does not clear it when a different field is edited', async () => {
+      inner.form.name().value.set('Grace Hopper');
+      await fixture.whenStable();
+
+      expect(serverError(inner.form.email())).toBeTruthy();
+    });
+
+    it('lets a corrected form be submitted again', async () => {
+      submitter.status = 'sent';
+      submitter.rejectedFields = undefined;
+      inner.form.email().value.set('ada@nexora.example');
+      await fixture.whenStable();
+
+      await inner.submit();
+
+      expect(submitter.calls).toHaveLength(2);
+      expect(submitter.calls[1].email).toBe('ada@nexora.example');
+      // Reset on success, which only happens if the stale server error really was gone.
+      expect(inner.form.email().value()).toBe('');
+    });
+  });
+
+  it('reports a rejection on several fields at once', async () => {
+    submitter.status = 'failed';
+    submitter.rejectedFields = ['name', 'description'];
+    await fillValid();
+
+    await inner.submit();
+
+    expect(serverError(inner.form.name())).toBeDefined();
+    expect(serverError(inner.form.description())).toBeDefined();
+    expect(serverError(inner.form.company())).toBeUndefined();
+  });
+
+  it('shows no field error when the API rejects the send without naming a field', async () => {
+    submitter.status = 'failed';
+    await fillValid();
+
+    await inner.submit();
+
+    for (const key of ['name', 'email', 'company', 'service', 'description']) {
+      expect(serverError(field(key) as FieldView<string>), key).toBeUndefined();
+    }
+    // Still correctable: a generic failure must not leave the form looking invalid.
+    expect(inner.form().invalid()).toBe(false);
   });
 
   it('defaults to a submitter that refuses to pretend it sent anything', async () => {

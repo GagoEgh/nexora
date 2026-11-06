@@ -357,6 +357,14 @@ test.describe('contact under a locale prefix', () => {
     const routed = hrefs.filter((href) => !href?.startsWith('mailto:'));
     expect(routed.length).toBeGreaterThan(0);
     expect(routed.every((href) => href === '/ru' || href?.startsWith('/ru/'))).toBe(true);
+
+    // Validator messages live on the schema rules, so they come from a function that reads the
+    // dictionary rather than from copy pinned into the template. This is what proves that
+    // function resolves in the active locale.
+    await page.locator('button[type="submit"]').click();
+    await expect(
+      page.locator('#contact-name').locator('xpath=ancestor::mat-form-field').locator('mat-error'),
+    ).toHaveText('Это поле обязательно для заполнения.');
   });
 });
 
@@ -631,6 +639,126 @@ test.describe('contact form states', () => {
     await expect(page.locator('#contact-form-title')).not.toBeFocused();
     await page.waitForTimeout(7000);
     await expect(page.locator('.mat-mdc-snack-bar-container')).toBeVisible();
+  });
+
+  // The API's own `AllExceptionsFilter` writes this body, and its DTO declares no custom
+  // messages, so class-validator's defaults apply - each one starting with the property name.
+  const validationRejection = (fields: readonly string[]) => ({
+    status: 400,
+    contentType: 'application/json',
+    body: JSON.stringify({
+      success: false,
+      statusCode: 400,
+      message: fields.map((field) => `${field} must be longer than or equal to 1 characters`),
+      error: 'Bad Request',
+      requestId: 'req-e2e',
+    }),
+  });
+
+  test('an invalid submission focuses the first field at fault', async ({ page }) => {
+    // Everything but the name, so the topmost field at fault is the one below it.
+    await page.locator('#contact-email').fill('ada@example.com');
+    await page.locator('#contact-company').fill('Nexora');
+    await page.locator('#contact-service').click();
+    await page.locator('mat-option').first().click();
+    await page.locator('#contact-description').fill('Modernizing a legacy ordering platform.');
+
+    await page.locator('button[type="submit"]').click();
+
+    // Driven by `onInvalid`, which runs after `submit()` has marked every field touched - so the
+    // error is on screen by the time focus arrives.
+    await expect(page.locator('#contact-name')).toBeFocused();
+    const nameError = page
+      .locator('#contact-name')
+      .locator('xpath=ancestor::mat-form-field')
+      .locator('mat-error');
+    await expect(nameError).toBeVisible();
+    // Nothing was sent, and nothing was cleared.
+    await expect(page.locator('#contact-company')).toHaveValue('Nexora');
+  });
+
+  test('the form opts out of native browser validation', async ({ page }) => {
+    // Load-bearing, and the kind of attribute that gets tidied away. `FormField` writes the
+    // schema's rules onto the controls as *native* constraint attributes (`required`,
+    // `maxlength`), so without `novalidate` the browser would run its own validation, show its
+    // own bubbles, and refuse to dispatch the `submit` event at all - the component's handler
+    // would never run, and neither would Signal Forms.
+    //
+    // `FormRoot` is the directive that normally supplies this; this form sets it directly, which
+    // is the same thing the official Signal Forms example does with its own `(submit)` handler.
+    // See CONTACT_FORM_SUBMISSION_ARCHITECTURE_AUDIT.md.
+    const noValidate = await page
+      .locator('app-contact-form form.form')
+      .evaluate((el) => (el as HTMLFormElement).noValidate);
+    expect(noValidate).toBe(true);
+
+    // The native constraints that make it necessary really are on the controls.
+    expect(await page.locator('#contact-name').getAttribute('required')).toBe('');
+    expect(await page.locator('#contact-name').getAttribute('maxlength')).toBe('120');
+  });
+
+  test('each schema limit reaches the control as a native cap', async ({ page }) => {
+    // `FormField` turns a `maxLength()` rule into a native `maxlength`, so the browser refuses
+    // the 121st character rather than accepting it and then complaining. That makes the limits
+    // the API enforces unreachable from the UI - the `maxLength` message is a fallback for a
+    // value that arrived some other way, not something a visitor is expected to see.
+    const caps = await page
+      .locator('#contact-name, #contact-email, #contact-company, #contact-description')
+      .evaluateAll((els) => els.map((el) => el.getAttribute('maxlength')));
+    expect(caps).toEqual(['120', '254', '160', '2000']);
+
+    await page.locator('#contact-name').fill('x'.repeat(121));
+    await expect(page.locator('#contact-name')).toHaveValue('x'.repeat(120));
+  });
+
+  test('a server-rejected field is named, focused, and clears when corrected', async ({ page }) => {
+    await page.route('**/api/contact', (route) => route.fulfill(validationRejection(['email'])));
+
+    await fillValidForm(page);
+    await page.locator('button[type="submit"]').click();
+
+    // The field the API rejected carries the error, and no other field does.
+    const emailError = page
+      .locator('#contact-email')
+      .locator('xpath=ancestor::mat-form-field')
+      .locator('mat-error');
+    await expect(emailError).toBeVisible();
+    await expect(emailError).not.toHaveText('');
+    await expect(page.locator('app-contact-form mat-error')).toHaveCount(1);
+
+    // Focused by name, not by hunting for `.ng-invalid`: the class binding may not have been
+    // applied yet in the task `submit()` resolves in.
+    await expect(page.locator('#contact-email')).toBeFocused();
+
+    // Input is preserved, so the rejection is correctable in place.
+    await expect(page.locator('#contact-name')).toHaveValue('Ada Lovelace');
+    await expect(page.locator('#contact-email')).toHaveValue('ada@example.com');
+
+    // Editing the field clears it - `submissionErrors` is a linkedSignal sourced on the value.
+    await page.locator('#contact-email').fill('ada@nexora.example');
+    await expect(emailError).toHaveCount(0);
+  });
+
+  test('a rejection the API does not pin to a field stays a plain failure', async ({ page }) => {
+    await page.route('**/api/contact', (route) =>
+      route.fulfill({
+        status: 503,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          success: false,
+          statusCode: 503,
+          message: 'The message could not be stored right now. Please try again shortly.',
+        }),
+      }),
+    );
+
+    await fillValidForm(page);
+    await page.locator('button[type="submit"]').click();
+
+    await expect(page.locator('.mat-mdc-snack-bar-container')).toBeVisible();
+    // No field is blamed for an outage, so nothing in the form turns red.
+    await expect(page.locator('app-contact-form mat-error')).toHaveCount(0);
+    await expect(page.locator('#contact-email')).toHaveValue('ada@example.com');
   });
 });
 

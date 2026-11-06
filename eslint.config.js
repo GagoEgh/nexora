@@ -14,7 +14,24 @@ module.exports = defineConfig([
       angular.configs.tsRecommended,
     ],
     processor: angular.processInlineTemplates,
+    languageOptions: {
+      parserOptions: {
+        // Type information, for `no-deprecated` below. The three projects are the ones that
+        // between them cover every file in `lintFilePatterns`; the root `tsconfig.json` is
+        // solution-style (`files: []`) and does not reference `e2e`, so listing them
+        // explicitly is what guarantees no linted file falls outside the program.
+        project: ['./tsconfig.app.json', './tsconfig.spec.json', './e2e/tsconfig.json'],
+        tsconfigRootDir: __dirname,
+      },
+    },
     rules: {
+      // A deprecated API is invisible to `tsc`: four calls to a deprecated Signal Forms overload
+      // sat in the contact form through every gate until an audit read the framework's `.d.ts`.
+      // This is the gate that would have caught them. It needs the type information configured
+      // above, which is also why `prelint` generates `intlayer-types/` the way `pretypecheck`
+      // does - without those declarations the program degrades and the rule goes quiet instead
+      // of failing loudly.
+      '@typescript-eslint/no-deprecated': 'error',
       '@angular-eslint/directive-selector': [
         'error',
         {
