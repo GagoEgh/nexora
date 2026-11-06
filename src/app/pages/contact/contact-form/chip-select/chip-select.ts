@@ -1,3 +1,4 @@
+import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import { Component, DestroyRef, ElementRef, inject, input, viewChild } from '@angular/core';
 import { type Field, FormField } from '@angular/forms/signals';
 import { MatChipListbox, MatChipOption } from '@angular/material/chips';
@@ -7,9 +8,17 @@ export interface ChipOption {
   readonly label: string;
 }
 
-const isActivation = (event: Event): boolean =>
-  event.type === 'click' ||
-  (event instanceof KeyboardEvent && (event.key === 'Enter' || event.key === ' '));
+const isActivation = (event: Event): boolean => {
+  if (event.type === 'click') {
+    return true;
+  }
+  if (!(event instanceof KeyboardEvent)) {
+    return false;
+  }
+
+  const code = event.keyCode;
+  return event.key === 'Enter' || event.key === ' ' || code === ENTER || code === SPACE;
+};
 
 @Component({
   selector: 'app-chip-select',

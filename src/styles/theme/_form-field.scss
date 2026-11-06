@@ -18,6 +18,12 @@
     )
   );
 
+  @include mat.select-overrides(
+    (
+      placeholder-text-color: var(--nx-sys-on-surface-muted),
+    )
+  );
+
   @at-root {
     .mat-mdc-form-field-hint {
       color: var(--mat-sys-on-surface-variant);
@@ -32,7 +38,9 @@
     }
 
     .mat-mdc-form-field .mat-mdc-notch-piece {
-      transition: border-color motion.duration(fast) motion.easing(out);
+      transition:
+        border-color motion.duration(fast) motion.easing(out),
+        border-width motion.duration(fast) motion.easing(out);
     }
 
     .mat-mdc-form-field .mat-mdc-form-field-subscript-wrapper {

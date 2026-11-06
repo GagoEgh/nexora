@@ -124,6 +124,19 @@ test.describe('contact at the desktop design width', () => {
 
     const divider = await box(page, '.form__divider');
     expect(divider.w).toBe(674);
+
+    // One step between controls. The gap between two rows of a group is the gap between the two
+    // halves of a row, because below 600px a row is itself a stack and the two are the same
+    // relation; 32px, the gap on `.form`, stays the step between sections.
+    const rhythm = await page
+      .locator('.form__group')
+      .first()
+      .evaluate((el) => ({
+        betweenRows: getComputedStyle(el).rowGap,
+        withinRow: getComputedStyle(el.querySelector('.form__row')!).columnGap,
+        betweenSections: getComputedStyle(el.closest('form')!).rowGap,
+      }));
+    expect(rhythm).toEqual({ betweenRows: '20px', withinRow: '20px', betweenSections: '32px' });
   });
 
   test('offers the interest and contact-method chips at 40px tall', async ({ page }) => {
@@ -562,6 +575,53 @@ test.describe('contact form states', () => {
     await expect(panel).toBeVisible();
     // Material's own value is `0 0 4px 4px`, which belongs to no step on the project's scale.
     expect(await panel.evaluate((el) => getComputedStyle(el).borderRadius)).toBe('12px');
+  });
+
+  /**
+   * The caption sits one step below the value it names and on the same line box as the text
+   * below the control. It used to be Title/Small 14/20, near enough to the Body/Large 16/24
+   * value to compete with it; a caption that matches its own field's hint reads as part of the
+   * field instead.
+   */
+  test('a caption is a step below the value and shares the hint’s line box', async ({ page }) => {
+    const type = (selector: string) =>
+      page
+        .locator(selector)
+        .first()
+        .evaluate((el) => {
+          const c = getComputedStyle(el);
+          return { size: c.fontSize, lineHeight: c.lineHeight, weight: c.fontWeight };
+        });
+
+    const caption = await type('app-field-label label');
+    expect(caption).toEqual({ size: '13px', lineHeight: '21px', weight: '600' });
+
+    // Same metric as the text below the control, and a step under the value inside it.
+    const hint = await type('#contact-timeline >> xpath=ancestor::mat-form-field//mat-hint');
+    expect([hint.size, hint.lineHeight]).toEqual([caption.size, caption.lineHeight]);
+    // The weight, not the size, is what keeps the caption ahead of the hint.
+    expect(Number(caption.weight)).toBeGreaterThan(Number(hint.weight));
+
+    const value = await type('#contact-name');
+    expect(Number.parseFloat(value.size)).toBeGreaterThan(Number.parseFloat(caption.size));
+  });
+
+  /**
+   * Material gives a select its own placeholder token, defaulting to `on-surface-variant` while
+   * the text field's placeholder is the muted role - so an empty select rendered a shade darker
+   * than the empty input beside it in the same row, and read as already filled.
+   */
+  test('an empty select and an empty input write their placeholders in one colour', async ({
+    page,
+  }) => {
+    const inputPlaceholder = await page
+      .locator('#contact-company')
+      .evaluate((el) => getComputedStyle(el, '::placeholder').color);
+    const selectPlaceholder = await page
+      .locator('#contact-service .mat-mdc-select-placeholder')
+      .evaluate((el) => getComputedStyle(el).color);
+
+    expect(selectPlaceholder).toBe(inputPlaceholder);
   });
 
   test('every required field is marked, and only those', async ({ page }) => {

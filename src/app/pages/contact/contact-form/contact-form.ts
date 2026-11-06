@@ -189,7 +189,6 @@ export class ContactForm {
     event?.preventDefault();
 
     let rejected: readonly ContactField[] | undefined;
-
     await submitForm(this.form, {
       action: async () => {
         let result: ContactSubmitResult;

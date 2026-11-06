@@ -59,6 +59,14 @@ test.describe('text field theme', () => {
     expect(
       await resolveColorToken(page, '--mat-form-field-outlined-input-text-placeholder-color'),
     ).toEqual(await resolveColorToken(page, '--nx-sys-on-surface-muted'));
+
+    // A select's placeholder is a separate token that defaults to `on-surface-variant`, one shade
+    // darker. Side by side in a row an empty select therefore looked filled next to an empty
+    // input. The relationship is asserted rather than the value: whatever the text field's
+    // placeholder becomes, the select's follows.
+    expect(await resolveColorToken(page, '--mat-select-placeholder-text-color')).toEqual(
+      await resolveColorToken(page, '--mat-form-field-outlined-input-text-placeholder-color'),
+    );
   });
 
   test('disabled binds to the project disabled tokens', async ({ page }) => {
@@ -97,10 +105,19 @@ test.describe('text field theme', () => {
     );
   });
 
-  test('label role: title-small is 14/20 (weight raised in the component)', async ({ page }) => {
-    expect(await rootTokenValue(page, '--mat-sys-title-small-size')).toBe('0.875rem');
-    expect(await rootTokenValue(page, '--mat-sys-title-small-line-height')).toBe('1.25rem');
-    expect(await rootTokenValue(page, '--mat-sys-title-small-weight')).toBe('500');
+  /**
+   * The caption above a control (`app-field-label`) was the project's only consumer of
+   * Title/Small, at 14/20 against a Body/Large 16/24 value - close enough to the value to read
+   * as a heading competing with it. It is Body/Small now, which is also the role the hint and
+   * the error below the control use, so a field's caption and its subscript share one line box.
+   * The component raises the weight; the role itself stays regular for every other consumer.
+   *
+   * The rendered caption is asserted on the contact page, the only page that has one.
+   */
+  test('label role: Body/Small is 13/21 (weight raised in the component)', async ({ page }) => {
+    expect(await rootTokenValue(page, '--mat-sys-body-small-size')).toBe('0.8125rem');
+    expect(await rootTokenValue(page, '--mat-sys-body-small-line-height')).toBe('1.3125rem');
+    expect(await rootTokenValue(page, '--mat-sys-body-small-weight')).toBe('400');
   });
 
   test('textarea fields: fill the parent, 140px box, Body/Large subscript, muted counter; single-line untouched', async ({

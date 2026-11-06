@@ -32,8 +32,13 @@ class FakeSubmitter extends ContactSubmitter {
   throws = false;
   rejectedFields: readonly ContactField[] | undefined;
 
+  /** Runs inside the send, after the inquiry has been captured, so a test can observe the
+   * in-flight state of the form - and change it. */
+  duringSend: (() => void) | undefined;
+
   override async submit(inquiry: ContactInquiry): Promise<ContactSubmitResult> {
     this.calls.push(inquiry);
+    this.duringSend?.();
     if (this.throws) {
       throw new Error('transport down');
     }
@@ -73,6 +78,7 @@ interface FormInternals {
   descriptionLength(): number;
   submitting(): boolean;
   fieldError(state: FieldView<string>): string | undefined;
+  showError(state: FieldView<string>): boolean;
 }
 
 /** The message the API attached to a field, read off the field state rather than the component. */
@@ -428,6 +434,94 @@ describe('ContactForm', () => {
       element!.focus();
       expect(root.ownerDocument.activeElement, name).toBe(element);
     }
+  });
+
+  // The schema locks only the four free-text fields while a send is in flight
+  // (`contact-form.ts`, `whileSending`). That asymmetry is deliberate rather than an omission, so
+  // it is asserted - together with the reason it is safe: the payload is captured before the
+  // await, so a field the visitor can still change in flight cannot change what was sent.
+  it('locks the text fields during a send and keeps the payload it captured', async () => {
+    await fillValid();
+
+    let lockedInFlight: Record<string, boolean> = {};
+    submitter.duringSend = () => {
+      lockedInFlight = Object.fromEntries(
+        [
+          'name',
+          'email',
+          'company',
+          'description',
+          'service',
+          'timeline',
+          'budget',
+          'interest',
+          'method',
+        ].map((name) => [name, field(name).readonly()]),
+      );
+      // Not locked, so a visitor could do this - and it must not reach the server.
+      inner.form.service().value.set('design-product');
+    };
+
+    await inner.submit();
+
+    expect(lockedInFlight).toEqual({
+      name: true,
+      email: true,
+      company: true,
+      description: true,
+      service: false,
+      timeline: false,
+      budget: false,
+      interest: false,
+      method: false,
+    });
+    expect(submitter.calls).toHaveLength(1);
+    expect(submitter.calls[0].service).toBe(VALID.service);
+  });
+
+  /**
+   * `showError` decides whether a `mat-error` exists; Material decides whether it is shown.
+   * `MatFormField` projects `mat-error` only while `_control.errorState` is true
+   * (`_form-field-chunk.mjs`, the `@case ('error')` branch), and for a signal-forms control that
+   * state is `ErrorStateMatcher.isSignalErrorState` = `invalid && touched`
+   * (`_error-options-chunk.mjs:48-54`) - the same predicate as `showError`.
+   *
+   * The two have to agree. Were `showError` stricter, Material would reserve an error wrapper
+   * with nothing in it; were it looser, the message would be computed and never projected. So
+   * the agreement is asserted rather than left to the identical wording of two files.
+   */
+  it('decides a message is due exactly when Material decides to show one', async () => {
+    const root = fixture.nativeElement as HTMLElement;
+    const wrapper = root.querySelector('#contact-name')!.closest('mat-form-field')!;
+
+    const observed = () => ({
+      showError: inner.showError(inner.form.name()),
+      materialErrorState: wrapper.classList.contains('mat-form-field-invalid'),
+      renderedMessage: wrapper.querySelector('mat-error')?.textContent?.trim() ?? null,
+    });
+
+    // Invalid from the start, but untouched - so neither side wants to say anything.
+    expect(inner.form.name().invalid()).toBe(true);
+    expect(observed()).toEqual({
+      showError: false,
+      materialErrorState: false,
+      renderedMessage: null,
+    });
+
+    root.querySelector<HTMLInputElement>('#contact-name')!.dispatchEvent(new Event('blur'));
+    await fixture.whenStable();
+    const touched = observed();
+    expect(touched.showError).toBe(true);
+    expect(touched.materialErrorState).toBe(true);
+    expect(touched.renderedMessage).toBeTruthy();
+
+    inner.form.name().value.set(VALID.name);
+    await fixture.whenStable();
+    expect(observed()).toEqual({
+      showError: false,
+      materialErrorState: false,
+      renderedMessage: null,
+    });
   });
 
   it('defaults to a submitter that refuses to pretend it sent anything', async () => {

@@ -146,6 +146,18 @@ describe('ChipSelect', () => {
       expect(host.form.interest().value()).toBe('new-project');
     });
 
+    it('refuses an activation that carries only the keyCode Material reads', async () => {
+      // Material's chip actions test `event.keyCode`, not `event.key` (`chips.mjs:144`), so an
+      // event with no `key` still toggles the chip. A guard that only looked at `key` would let
+      // this through - which is the shape of event that made two of the tests above vacuous.
+      const chosen = options().find((option) => option.ariaSelected === 'true');
+      chosen!.dispatchEvent(keyboardEvent('', SPACE));
+      await fixture.whenStable();
+
+      expect(host.model()).toEqual({ interest: 'new-project' });
+      expect(host.form.interest().value()).toBe('new-project');
+    });
+
     it('keeps the selected chip reachable and announced as selected', () => {
       // The alternative fix - marking the chosen chip `[selectable]="false"` - would have made
       // Material drop `aria-selected` entirely (`chips.mjs:885`). This asserts it did not.

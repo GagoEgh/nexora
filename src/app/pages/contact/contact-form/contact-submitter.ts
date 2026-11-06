@@ -46,7 +46,6 @@ export interface ContactInquiry {
   readonly timeline: Timeline;
   readonly budget: Budget;
   readonly method: ContactMethod;
-  /** Honeypot: rendered hidden, so a real visitor always leaves it empty. */
   readonly website: string;
 }
 
