@@ -25,6 +25,7 @@ export const DOCUMENT_META_PAGES = [
   'engagement-models',
   'partnerships',
   'contact',
+  'our-work',
   'not-found',
 ] as const;
 

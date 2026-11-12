@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { ApplicationRef, Component, computed, inject } from '@angular/core';
+import { afterNextRender, ApplicationRef, Component, computed, inject } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, Scroll } from '@angular/router';
 import { useDictionary } from 'angular-intlayer';
@@ -45,20 +45,24 @@ export class Solutions {
   );
 
   constructor() {
+    afterNextRender(() => this.scrollToRequested());
+
     this.router.events
       .pipe(
         filter((event) => event instanceof Scroll),
         takeUntilDestroyed(),
       )
-      .subscribe(() => {
-        const requested = this.route.snapshot.queryParamMap.get(CHALLENGE_PARAM);
-        if (isChallengeId(requested)) {
-          void this.app.whenStable().then(() => this.scrollTo(requested));
-        }
-      });
+      .subscribe(() => this.scrollToRequested());
   }
 
-  private scrollTo(challenge: ChallengeId): void {
-    scrollToSection(this.document, challengeSectionId(challenge));
+  private scrollToRequested(): void {
+    const requested = this.route.snapshot.queryParamMap.get(CHALLENGE_PARAM);
+    if (!isChallengeId(requested)) {
+      return;
+    }
+
+    void this.app.whenStable().then(() => {
+      scrollToSection(this.document, challengeSectionId(requested));
+    });
   }
 }

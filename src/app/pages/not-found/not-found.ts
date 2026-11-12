@@ -5,7 +5,7 @@ import { RouterLink } from '@angular/router';
 import { useDictionary, useLocale } from 'angular-intlayer';
 import { LocalizedPathPipe } from '../../core/i18n/localized-path.pipe';
 import { appIcon } from '../../core/icons/icons';
-import { SERVICES_PATH } from '../../core/routing/paths';
+import { HOME_PATH, SERVICES_PATH } from '../../core/routing/paths';
 import { IconTile } from '../../shared/ui/icon-tile/icon-tile';
 import notFoundContent from './not-found.content';
 import { Reveal } from '../../shared/motion/reveal';
@@ -20,6 +20,6 @@ export class NotFound {
   protected readonly content = useDictionary(notFoundContent);
   protected readonly locale = useLocale().locale;
   protected readonly crossIcon = appIcon('x');
-  protected readonly homePath = '/';
+  protected readonly homePath = HOME_PATH;
   protected readonly servicesPath = SERVICES_PATH;
 }

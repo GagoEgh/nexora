@@ -44,11 +44,10 @@ import headerContent from './header.content';
 })
 export class Header {
   private readonly router = inject(Router);
+  private readonly menuButton = viewChild.required('menuButton', { read: ElementRef });
 
   protected readonly content = useDictionary(headerContent);
   protected readonly i18n = useLocaleSwitcher();
-  private readonly menuButton = viewChild.required('menuButton', { read: ElementRef });
-
   protected readonly menuOpen = signal(false);
 
   private navigations = 0;

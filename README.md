@@ -54,6 +54,7 @@ Treat a failure there as a blocking upgrade issue, not a flake.
 | `npm run typecheck`        | Type-checks the app, the unit specs and the Playwright specs                    |
 | `npm run lint`             | ESLint for TypeScript and templates                                             |
 | `npm run e2e`              | Playwright tests against a dev server on port 4300 (Chromium only)              |
+| `npm run e2e:prerendered`  | Playwright tests against the built artifact in `dist/` (needs a build)          |
 | `npm run verify:prerender` | Checks the built pages still work without JavaScript (needs a build)            |
 | `npm run verify:seo`       | Checks every built page's title, canonical, hreflang, robots and JSON-LD        |
 | `npm run verify:headers`   | Checks `_headers` matches the build and the nginx copy matches `_headers`       |
@@ -85,8 +86,12 @@ deployment. Only two exist:
 
 - `apiOrigin` — where the contact API is served from. **Empty in production, because no contact
   API is deployed**: the form reports "not configured" and points the visitor at the published
-  email address rather than posting into the void. See [CONTACT_API.md](CONTACT_API.md) for the
-  request and response contract a backend has to implement, and the steps to switch the form on.
+  email address rather than posting into the void. The contract a backend has to implement is
+  asserted by `src/app/pages/contact/contact-form/contact-contract.spec.ts` — the payload's ten
+  fields and every option value — and the outcome handling is in `http-contact-submitter.ts`
+  with its spec. Switching the form on is setting this value to the API's origin; an absolute
+  `http(s)` URL with a host and no query or fragment, since `isUsableOrigin`
+  (`src/app/core/routing/api-origin.ts`) rejects anything else and treats it as unset.
 - `siteOrigin` — the canonical origin for `<link rel="canonical">`, Open Graph URLs and
   `sitemap.xml`. Deliberately identical in both files so a preview build cannot advertise itself
   as the canonical copy.
@@ -107,20 +112,32 @@ Netlify reads it from the publish root, which is where `angular.json` copies all
 Another host needs the same headers expressed its own way - they are not in the bundle, so
 nothing in the application fails if they are missing.
 
-> **The committed nginx configuration is not the one production is running.** Measured against
-> `https://nexoratechnology.org` on 2026-11-06 with `npm run verify:live-seo`, 28 checks fail:
+> **The committed nginx configuration is not the one production is running.** Run
+> `npm run verify:live-seo` for the current state — that command is the authority, not this list.
+> Most of what this section used to describe has since been fixed on the host: the earlier
+> measurement of 2026-11-06 reported 28 failing checks, and on **2026-11-12 four remain**.
 >
-> | Observed                                                                           | Expected                            | Covered by                            |
-> | ---------------------------------------------------------------------------------- | ----------------------------------- | ------------------------------------- |
-> | 23 of 24 sitemap URLs answer `301` to a trailing-slash variant                     | `200`, served directly              | `verify:live-seo`                     |
-> | An unknown URL answers `200` with the English 404 body                             | `404`, in the URL's own locale      | `nexora-site.conf` `error_page` rules |
-> | `https://www.nexoratechnology.org/` answers `200`                                  | `301` to the apex                   | the `www` server block                |
-> | Hashed assets send `Cache-Control` **twice**, `max-age=2592000`                    | once, `max-age=31536000, immutable` | the asset `location`                  |
-> | No `Content-Security-Policy`, `Permissions-Policy` or `Cross-Origin-Opener-Policy` | all seven headers                   | `nexora-headers.conf`                 |
+> | Observed on 2026-11-12                                               | Expected                              | Why                                           |
+> | -------------------------------------------------------------------- | ------------------------------------- | --------------------------------------------- |
+> | The three localized 404 bodies carry no `noindex` robots meta        | `noindex, follow`                     | the host serves a build from before `92a07ae` |
+> | Hashed assets send `Cache-Control: max-age=31536000`, no `immutable` | `public, max-age=31536000, immutable` | the asset `location` on the host differs      |
 >
-> Every one of those is already fixed in `deploy/nginx/`. None of them can be fixed from this
-> repository: the fix is installing those files on the host, which needs server access this
-> project does not have. Until that happens, treat the serving-layer findings as open.
+> Both are host-side. The first is not a configuration problem at all: the robots meta is present
+> in `dist/` (`npm run verify:seo` asserts three `noindex` documents) and the deployed bundle hash
+> does not match a current build, so production is simply behind this repository. The second is
+> one line of `nexora-site.conf` that the host has not picked up.
+>
+> One more drift is not covered by any check: the live CSP sends
+> `connect-src 'self' https://nexoratechnology.org`, while `public/_headers` and the generated
+> `deploy/nginx/nexora-headers.conf` both say `connect-src 'self'`. `verify:headers` compares the
+> two copies in the repository with each other and passes; nothing compares either with the
+> server. Harmless today — `apiOrigin` is empty, so the application makes no cross-origin
+> request — but it means the host configuration was edited outside this repository, which is the
+> drift the generated snippet exists to prevent.
+>
+> None of the four can be fixed from this repository: the fix is deploying a current build and
+> installing `deploy/nginx/` on the host, which needs server access this project does not have.
+> Until that happens, treat the serving-layer findings as open.
 >
 > `nexora-site.conf` re-expresses `_redirects` as locale-ordered `error_page` rules and includes
 > `nexora-headers.conf`, which is **generated from `public/_headers`** by
@@ -186,6 +203,25 @@ prerendered. Both are ordinary links, with the language pill pointing at the foo
 because `ng serve` answers with an empty `<app-root>` rather than prerendered markup, so there
 is nothing for a scriptless browser to use there.
 
+## Two browser test profiles
+
+`npm run e2e` runs against `ng serve`. With `outputMode: "static"` the dev server prerenders
+nothing: every route answers with a bare shell containing an empty `<app-root>`, and hydration
+is skipped (it logs `NG0505`). That is fine for the great majority of the suite, which exercises
+layout and behaviour after the application has booted.
+
+It is not fine for anything that depends on the prerendered markup being there _before_ Angular
+boots. `npm run e2e:prerendered` covers that: `playwright.prerendered.config.ts` serves
+`dist/nexora/browser` through `scripts/serve-dist.mjs`, which reproduces the host's routing
+(`try_files $uri $uri/index.html`, then the not-found document for that locale with a 404). It
+holds the specs in `e2e/prerendered/` - deep links that must scroll on the first navigation, the
+documents working with scripting off, and the status codes a bad URL answers with.
+
+The split is not cosmetic. A deep-link defect on `/solutions` reached production while
+`e2e/solutions.spec.ts` covered exactly that address and stayed green, because on `ng serve` the
+router's `Scroll` event arrives after the component subscribes and on the artifact it does not.
+Both configurations run in CI; the prerendered one after `npm run build`, which it needs.
+
 ## Troubleshooting
 
 **A production build appears to hang while `npm start` is running.** Both share
@@ -194,6 +230,16 @@ instead of failing. Stop the dev server and rebuild, or build from a separate ch
 cache path is a single global setting (`cli.cache.path`), so it cannot be varied per
 configuration - using a second checkout is the only clean separation. CI is unaffected, since
 it builds from a clean tree with no server running.
+
+**`npm test` warns that the build target is not supported.** The message is
+`The 'buildTarget' is configured to use '@angular-builders/custom-esbuild:application', which is
+not supported`. The tests run regardless. The custom builder is required: it is the only way to
+register the Intlayer esbuild plugin that aliases `@intlayer/dictionaries-entry` to the generated
+dictionaries, and the stock `@angular/build:application` takes no plugins. The combination is
+therefore an accepted risk, not an oversight - but it is unsupported, so an Angular upgrade could
+break `ng test` without breaking the build. If that happens, the way out is a standalone Vitest
+configuration with its own resolve alias for that entry point, which removes the dependency on
+the Angular test builder entirely. Do not pre-emptively do this: the current setup is simpler.
 
 ## Generated content
 

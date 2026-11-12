@@ -6,6 +6,7 @@ import { parseSiteOrigin } from './verify-seo.mjs';
 
 const CONCURRENCY = 4;
 const TIMEOUT_MS = 15_000;
+
 export function sitemapUrls(sitemap) {
   return [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
 }
@@ -20,6 +21,7 @@ export function canonicalOf(html) {
 }
 
 export function headerValues(rawHeaders, name) {
+  /** @type {string[]} */
   const values = [];
   for (let index = 0; index < rawHeaders.length; index += 2) {
     if (rawHeaders[index].toLowerCase() === name.toLowerCase()) {
@@ -51,6 +53,11 @@ export function checkPage(url, response) {
   return problems;
 }
 
+/**
+ * @param {Pick<LiveResponse, 'status' | 'body'>} response
+ * @param {string} expectedLang
+ * @returns {string[]}
+ */
 export function checkNotFound(response, expectedLang) {
   const problems = [];
   if (response.status !== 404) {
@@ -66,6 +73,11 @@ export function checkNotFound(response, expectedLang) {
   return problems;
 }
 
+/**
+ * @param {Pick<LiveResponse, 'status' | 'headers'>} response
+ * @param {string} apex
+ * @returns {string[]}
+ */
 export function checkWwwRedirect(response, apex) {
   const location = headerValues(response.headers, 'location')[0] ?? null;
   if (response.status === 301 && location?.startsWith(`${apex}/`)) {
@@ -77,6 +89,10 @@ export function checkWwwRedirect(response, apex) {
   ];
 }
 
+/**
+ * @param {readonly string[]} cacheControl every `Cache-Control` value the asset was served with
+ * @returns {string[]}
+ */
 export function checkAssetCaching(cacheControl) {
   const problems = [];
   if (cacheControl.length !== 1) {
@@ -96,6 +112,11 @@ export function checkAssetCaching(cacheControl) {
   return problems;
 }
 
+/**
+ * @param {string} url
+ * @param {{ method?: string }} [options]
+ * @returns {Promise<LiveResponse>}
+ */
 function fetchOnce(url, { method = 'GET' } = {}) {
   const target = new URL(url);
   const send = target.protocol === 'http:' ? httpRequest : httpsRequest;
@@ -122,7 +143,17 @@ function fetchOnce(url, { method = 'GET' } = {}) {
   });
 }
 
+/**
+ * Runs `run` over `items` with at most `CONCURRENCY` in flight, keeping input order.
+ *
+ * @template T
+ * @template R
+ * @param {readonly T[]} items
+ * @param {(item: T) => Promise<R>} run
+ * @returns {Promise<R[]>}
+ */
 async function pooled(items, run) {
+  /** @type {R[]} */
   const results = new Array(items.length);
   let next = 0;
   const workers = Array.from({ length: Math.min(CONCURRENCY, items.length) }, async () => {
@@ -135,6 +166,11 @@ async function pooled(items, run) {
   return results;
 }
 
+/**
+ * @param {string} origin
+ * @param {string} sitemapPath
+ * @returns {Promise<number>} process exit code
+ */
 async function main(origin, sitemapPath) {
   const declared = sitemapUrls(await readFile(sitemapPath, 'utf8'));
   if (declared.length === 0) {
@@ -147,13 +183,22 @@ async function main(origin, sitemapPath) {
     return origin + (path === '/' ? '/' : path.replace(/\/$/, ''));
   });
 
+  /** @type {string[]} */
   const failures = [];
+  /**
+   * @param {string} where
+   * @param {readonly string[]} problems
+   */
   const record = (where, problems) => {
     if (problems.length > 0) {
       failures.push(`${where}\n    ${problems.join('\n    ')}`);
     }
   };
 
+  /**
+   * @param {string} where
+   * @param {() => Promise<string[]>} run
+   */
   const attempt = async (where, run) => {
     try {
       record(where, await run());

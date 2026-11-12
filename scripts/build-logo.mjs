@@ -13,11 +13,6 @@ export function logoDocument(svg) {
   </style>${svg}`;
 }
 
-/**
- * @param {string} source
- * @param {string} target
- * @returns {Promise<number>}
- */
 async function main(source, target) {
   const svg = await readFile(source, 'utf8');
   const { chromium } = await import('@playwright/test');

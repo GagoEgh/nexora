@@ -11,6 +11,29 @@ import {
 
 const ORIGIN = 'https://example.test';
 
+/**
+ * The parts of a page each test is allowed to replace. Every one defaults to a sound value, so a
+ * test names only what it is breaking.
+ *
+ * @typedef {object} PageOverrides
+ * @property {string} [lang]
+ * @property {string} [title]
+ * @property {string} [description]
+ * @property {string} [canonical]
+ * @property {string} [ogUrl]
+ * @property {string} [twitter]
+ * @property {string} [alternates]
+ * @property {string} [robots]
+ * @property {string} [body]
+ * @property {string} [jsonLd]
+ */
+
+/**
+ * A prerendered document that satisfies the whole contract, minus whatever is overridden.
+ *
+ * @param {PageOverrides} [overrides]
+ * @returns {string}
+ */
 const page = (overrides = {}) => {
   const {
     lang = 'en',
@@ -66,6 +89,7 @@ describe('verify-seo', () => {
     assert.throws(() => parseSiteOrigin('export const environment = {};'), /siteOrigin/);
   });
 
+  /** @type {[PageOverrides, RegExp][]} */
   const mutations = [
     [{ lang: 'ru' }, /<html lang> is "ru"/],
     [{ title: '' }, /no <title>/],
@@ -134,6 +158,7 @@ describe('verify-seo', () => {
   }
 
   it('requires noindex on /not-found, in every locale', () => {
+    /** @param {string} robots */
     const notFound = (robots) =>
       checkDocument(
         page({
@@ -181,6 +206,7 @@ describe('verify-seo', () => {
   });
 
   describe('across the corpus', () => {
+    /** @param {string} base */
     const alternates = (base) => ({
       en: `${ORIGIN}${base}`,
       hy: `${ORIGIN}/hy${base === '/' ? '' : base}`,

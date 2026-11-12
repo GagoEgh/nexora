@@ -27,7 +27,7 @@
     grid-template-columns: minmax(0, 1fr) var(--nx-page-intro-aside, 420px);
     gap: var(--nx-page-intro-gap, #{spacing.space(32)});
     align-items: var(--nx-page-intro-align, end);
-    padding-block: calc(var(--nx-layout-header-height) + #{spacing.space(40)}) spacing.space(64);
+    padding-block: calc(var(--nx-layout-header-height) + #{spacing.space(12)}) spacing.space(24);
   }
 }
 
@@ -37,6 +37,7 @@
   gap: spacing.space(20);
   justify-items: start;
   min-width: 0;
+  align-self: flex-start;
 }
 
 .page-intro__breadcrumb,

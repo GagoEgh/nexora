@@ -90,7 +90,8 @@
           "builder": "@angular-builders/custom-esbuild:unit-test",
           "options": {
             "buildTarget": "nexora:build:development",
-            "tsConfig": "tsconfig.spec.json"
+            "tsConfig": "tsconfig.spec.json",
+            "runnerConfig": "vitest-base.config.ts"
           }
         },
         "lint": {

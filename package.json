@@ -15,6 +15,7 @@
     "verify:seo": "node scripts/verify-seo.mjs",
     "verify:live-seo": "node scripts/verify-live-seo.mjs",
     "e2e": "node scripts/intlayer-lock.mjs ng e2e",
+    "e2e:prerendered": "playwright test --config playwright.prerendered.config.ts",
     "pretypecheck": "node scripts/intlayer-lock.mjs intlayer build",
     "typecheck": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit && tsc -p e2e/tsconfig.json --noEmit && tsc -p tsconfig.scripts.json --noEmit",
     "prelint": "node scripts/intlayer-lock.mjs intlayer build",

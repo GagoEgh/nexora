@@ -1,3 +1,4 @@
+export const HOME_PATH = '/';
 export const CONTACT_PATH = '/contact';
 export const ENGAGEMENT_MODELS_PATH = '/engagement-models';
 export const PARTNERSHIPS_PATH = '/partnerships';

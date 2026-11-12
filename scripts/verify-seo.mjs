@@ -14,6 +14,12 @@ export function localeOf(pagePath) {
   return 'en';
 }
 
+/**
+ * Reads `siteOrigin` out of an environment file, without its trailing slash.
+ *
+ * @param {string} source
+ * @returns {string}
+ */
 export function parseSiteOrigin(source) {
   const match = /siteOrigin:\s*'([^']+)'/.exec(source);
   if (!match) {
@@ -22,12 +28,26 @@ export function parseSiteOrigin(source) {
   return match[1].replace(/\/$/, '');
 }
 
+/**
+ * The first capture group of `re` in `html`, or null when it does not match.
+ *
+ * @param {string} html
+ * @param {RegExp} re
+ * @returns {string | null}
+ */
 const first = (html, re) => {
   const match = re.exec(html);
   return match ? match[1] : null;
 };
 
+/**
+ * Maps each `rel="alternate"` hreflang to its href.
+ *
+ * @param {string} html
+ * @returns {Record<string, string>}
+ */
 export function hreflangMap(html) {
+  /** @type {Record<string, string>} */
   const found = {};
   for (const tag of html.match(/<link\b[^>]*rel="alternate"[^>]*>/g) ?? []) {
     const hreflang = first(tag, /hreflang="([^"]*)"/);
@@ -39,8 +59,16 @@ export function hreflangMap(html) {
   return found;
 }
 
+/**
+ * Parses every JSON-LD block, reporting the ones that do not parse rather than throwing.
+ *
+ * @param {string} html
+ * @returns {{ graphs: unknown[], problems: string[] }}
+ */
 export function jsonLdGraphs(html) {
+  /** @type {unknown[]} */
   const graphs = [];
+  /** @type {string[]} */
   const problems = [];
   const blocks =
     html.match(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g) ?? [];
@@ -55,6 +83,14 @@ export function jsonLdGraphs(html) {
   return { graphs, problems };
 }
 
+/**
+ * Everything checkable from one document on its own; corpus-wide checks live in `checkCorpus`.
+ *
+ * @param {string} html
+ * @param {string} pagePath
+ * @param {string} origin
+ * @returns {string[]} one message per problem, empty when the document is sound
+ */
 export function checkDocument(html, pagePath, origin) {
   const problems = [];
   const canonical = origin + pagePath;
@@ -120,7 +156,9 @@ export function checkDocument(html, pagePath, origin) {
     problems.push(`expected exactly 1 <h1>, found ${h1Count}`);
   }
 
-  const imagesWithoutAlt = (html.match(/<img\b[^>]*>/g) ?? []).filter((tag) => !/\salt=/.test(tag));
+  const imagesWithoutAlt = (html.match(/<img\b[^>]*>/g) ?? []).filter(
+    (/** @type {string} */ tag) => !/\salt=/.test(tag),
+  );
   if (imagesWithoutAlt.length > 0) {
     problems.push(`${imagesWithoutAlt.length} <img> without alt`);
   }
@@ -156,8 +194,18 @@ export function checkDocument(html, pagePath, origin) {
   return problems;
 }
 
+/**
+ * The checks that only make sense across the whole build: unique titles, hreflang targets that
+ * exist, and a sitemap that lists exactly the indexable documents.
+ *
+ * @param {readonly SeoDocument[]} docs
+ * @param {string} sitemap
+ * @param {string} origin
+ * @returns {string[]}
+ */
 export function checkCorpus(docs, sitemap, origin) {
   const problems = [];
+  /** @type {Map<string, string[]>} */
   const byTitle = new Map();
   for (const doc of docs) {
     const key = doc.title ?? '(none)';
@@ -204,10 +252,17 @@ export function checkCorpus(docs, sitemap, origin) {
   return problems;
 }
 
+/**
+ * @param {string} root
+ * @param {string} sitemapPath
+ * @param {string} environmentPath
+ * @returns {Promise<number>} process exit code
+ */
 async function main(root, sitemapPath, environmentPath) {
   const origin = parseSiteOrigin(await readFile(environmentPath, 'utf8'));
   const sitemap = await readFile(sitemapPath, 'utf8');
   const failures = [];
+  /** @type {SeoDocument[]} */
   const docs = [];
 
   for await (const file of glob('**/index.html', { cwd: root })) {

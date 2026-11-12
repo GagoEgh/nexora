@@ -30,6 +30,7 @@ jobs:
       - run: npm run verify:bundle
       - run: npx playwright install --with-deps chromium
       - run: npm run e2e
+      - run: npm run e2e:prerendered
 
   audit:
     runs-on: ubuntu-latest

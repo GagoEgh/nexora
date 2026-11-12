@@ -28,6 +28,11 @@ const headerContent = {
         chevron: false,
       },
       {
+        path: '/our_work',
+        label: t({ en: 'Our Work', hy: 'Մեր աշխատանքները', ru: 'Наши работы' }),
+        chevron: false,
+      },
+      {
         path: '/partnerships',
         label: t({ en: 'Partnerships', hy: 'Գործընկերություն', ru: 'Партнёрство' }),
         chevron: false,

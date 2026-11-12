@@ -51,6 +51,11 @@ const pages: Routes = [
     data: { meta: 'contact' } satisfies DocumentMetaRouteData,
   },
   {
+    path: 'our_work',
+    loadComponent: () => import('./pages/our-work/our-work').then((m) => m.OurWork),
+    data: { meta: 'not-found' } satisfies DocumentMetaRouteData,
+  },
+  {
     path: 'not-found',
     loadComponent: () => import('./pages/not-found/not-found').then((m) => m.NotFound),
     data: { meta: 'not-found' } satisfies DocumentMetaRouteData,

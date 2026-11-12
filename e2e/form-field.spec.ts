@@ -154,3 +154,35 @@ test.describe('text field theme', () => {
     await untouched(page, '--mat-form-field-subscript-text-line-height');
   });
 });
+
+test.describe("the invalid outline survives Material's internals", () => {
+  test('an invalid field draws a 2px notch border', async ({ page }) => {
+    await page.goto('/contact');
+
+    const field = page.locator('mat-form-field').filter({ has: page.locator('#contact-name') });
+    await page.locator('#contact-name').click();
+    await page.locator('#contact-email').click();
+    await expect(field.locator('.mat-mdc-form-field-error')).toBeVisible();
+
+    const widths = await field
+      .locator('.mat-mdc-notch-piece')
+      .evaluateAll((pieces) => pieces.map((piece) => getComputedStyle(piece).borderTopWidth));
+
+    expect(widths.length).toBeGreaterThan(0);
+    expect(new Set(widths)).toEqual(new Set(['2px']));
+  });
+
+  test('a resting field keeps the 1px outline, so the rule is doing the work', async ({ page }) => {
+    await page.goto('/contact');
+
+    const field = page.locator('mat-form-field').filter({ has: page.locator('#contact-name') });
+    await expect(field.locator('.mat-mdc-notch-piece').first()).toBeAttached();
+
+    const widths = await field
+      .locator('.mat-mdc-notch-piece')
+      .evaluateAll((pieces) => pieces.map((piece) => getComputedStyle(piece).borderTopWidth));
+
+    expect(widths.length).toBeGreaterThan(0);
+    expect(new Set(widths)).toEqual(new Set(['1px']));
+  });
+});

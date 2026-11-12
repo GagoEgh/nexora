@@ -1,0 +1,37 @@
+<section class="expertise" appReveal>
+  <div class="expertise__header">
+    <div class="expertise__heading">
+      <p class="expertise__eyebrow">{{ content().eyebrow }}</p>
+      <h2 class="expertise__title">{{ content().title }}</h2>
+    </div>
+
+    <div class="expertise__intro">
+      <p class="expertise__text">{{ content().intro }}</p>
+      <a class="expertise__all" matButton [routerLink]="servicesPath | localizedPath: locale()">
+        {{ content().viewAll }}
+        <mat-icon iconPositionEnd [svgIcon]="arrowIcon" />
+      </a>
+    </div>
+  </div>
+
+  <ul class="expertise__grid">
+    @for (service of content().services; track $index; let i = $index) {
+      <li class="expertise__card">
+        <div class="expertise__card-head">
+          <app-icon-tile [icon]="service.icon.value" tone="primary" style="align-self: baseline" />
+          <img
+            class="expertise__card-img"
+            [src]="service.image.value"
+            [alt]="service.title.value"
+          />
+        </div>
+        <h3 class="expertise__card-title">{{ service.title }}</h3>
+        <p class="expertise__card-text">{{ service.description }}</p>
+        <a class="expertise__link" [href]="service.path">
+          {{ content().explore }}
+          <mat-icon class="expertise__link-icon" [svgIcon]="arrowIcon" />
+        </a>
+      </li>
+    }
+  </ul>
+</section>
