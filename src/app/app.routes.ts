@@ -52,8 +52,22 @@ const pages: Routes = [
   },
   {
     path: OUR_WORK_SEGMENT,
-    loadComponent: () => import('./pages/our-work/our-work').then((m) => m.OurWork),
-    data: { meta: 'our_work' } satisfies DocumentMetaRouteData,
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./pages/our-work/our-work').then((m) => m.OurWork),
+        data: { meta: 'our_work' } satisfies DocumentMetaRouteData,
+      },
+      {
+        // One component for all nineteen products. It carries `meta: 'our_work'` so the
+        // canonical, hreflang and breadcrumb graph are derived from the real path, and
+        // supplies its own title and description through `DocumentMetaOverride`.
+        path: ':slug',
+        loadComponent: () =>
+          import('./pages/our-work/product-detail/product-detail').then((m) => m.ProductDetail),
+        data: { meta: 'our_work' } satisfies DocumentMetaRouteData,
+      },
+    ],
   },
   {
     path: 'not-found',

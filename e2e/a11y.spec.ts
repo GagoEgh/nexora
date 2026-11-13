@@ -10,6 +10,11 @@ const PAGES = [
   'engagement-models',
   'partnerships',
   'contact',
+  'our_work',
+  // Two of the nineteen product pages: one that links out to a live product and one that has
+  // no destination, which is the branch that renders a different set of controls.
+  'our_work/draculai',
+  'our_work/roar-organic',
   'not-found',
 ] as const;
 
@@ -92,6 +97,11 @@ test.describe('accessibility of states the sweep cannot reach on load', () => {
     await expect(description).toBeVisible();
     await expect(description).not.toBeEmpty();
   });
+
+  // A project card used to hide half of itself behind a flip, and that hidden half needed its
+  // own sweep here. The second face was removed with the "Details" button that opened it, so
+  // the card has no state the sweep above cannot already see. `our-work.touch.spec.ts` covers
+  // the one context this file cannot reach: a device where `hover: none` matches.
 
   test('the mobile navigation is accessible while open', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 812 });

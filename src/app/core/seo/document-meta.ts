@@ -13,6 +13,7 @@ import {
 import { filter, map } from 'rxjs';
 import type { AppLocale } from '../i18n/locale-labels';
 import documentMetaContent from './document-meta.content';
+import { DocumentMetaOverride } from './document-meta-override';
 import { ORGANIZATION } from './organization';
 import { SITE_ORIGIN } from './site-origin';
 
@@ -63,6 +64,7 @@ export function provideDocumentMeta(): EnvironmentProviders {
     const meta = inject(Meta);
     const document = inject(DOCUMENT);
     const origin = inject(SITE_ORIGIN);
+    const override = inject(DocumentMetaOverride);
     const content = useDictionary(documentMetaContent);
     const locale = useLocale().locale;
     const route = toSignal(
@@ -121,22 +123,32 @@ export function provideDocumentMeta(): EnvironmentProviders {
       if (!current?.page) {
         return;
       }
-      const entry = content().pages[current.page];
-      const alternates = getMultilingualUrls(getPathWithoutLocale(current.path));
+      const page = content().pages[current.page];
+      const localeless = getPathWithoutLocale(current.path);
+      const alternates = getMultilingualUrls(localeless);
       const canonical = origin + alternates[locale()];
 
-      title.setTitle(entry.title.value);
-      meta.updateTag({ name: 'description', content: entry.description.value });
-      meta.updateTag({ property: 'og:title', content: entry.title.value });
-      meta.updateTag({ property: 'og:description', content: entry.description.value });
+      // A parameterised route - one product of nineteen - supplies its own title and
+      // description through the override, because `DOCUMENT_META_PAGES` holds one entry per
+      // page and cannot carry them. Everything else below is derived from the path and so is
+      // already correct for the product URL.
+      const entry = override.value() ?? {
+        title: page.title.value,
+        description: page.description.value,
+      };
+
+      title.setTitle(entry.title);
+      meta.updateTag({ name: 'description', content: entry.description });
+      meta.updateTag({ property: 'og:title', content: entry.title });
+      meta.updateTag({ property: 'og:description', content: entry.description });
       meta.updateTag({ property: 'og:locale', content: OG_LOCALES[locale()] });
       meta.updateTag({ property: 'og:url', content: canonical });
       meta.updateTag({ property: 'og:image', content: origin + OG_IMAGE.path });
       meta.updateTag({ property: 'og:image:width', content: OG_IMAGE.width });
       meta.updateTag({ property: 'og:image:height', content: OG_IMAGE.height });
       meta.updateTag({ property: 'og:image:alt', content: ORGANIZATION.name });
-      meta.updateTag({ name: 'twitter:title', content: entry.title.value });
-      meta.updateTag({ name: 'twitter:description', content: entry.description.value });
+      meta.updateTag({ name: 'twitter:title', content: entry.title });
+      meta.updateTag({ name: 'twitter:description', content: entry.description });
       meta.updateTag({ name: 'twitter:image', content: origin + OG_IMAGE.path });
       meta.updateTag({ name: 'twitter:image:alt', content: ORGANIZATION.name });
 
@@ -156,6 +168,13 @@ export function provideDocumentMeta(): EnvironmentProviders {
       const websiteId = `${origin}/#website`;
       const breadcrumbId = `${canonical}#breadcrumb`;
       const trail = breadcrumbItems(current.page);
+
+      // A parameterised route is served one segment below its page id, so its trail gains the
+      // record itself. Without this the structured breadcrumb stops at "Our Work" while the
+      // visible one on the page shows the product - two answers to the same question.
+      if (trail.length > 0 && localeless !== pagePath(current.page)) {
+        trail.push({ name: override.value()?.breadcrumb ?? entry.title, path: localeless });
+      }
       const graph: Record<string, unknown>[] = [
         {
           '@type': 'Organization',
@@ -185,8 +204,8 @@ export function provideDocumentMeta(): EnvironmentProviders {
           '@type': 'WebPage',
           '@id': `${canonical}#webpage`,
           url: canonical,
-          name: entry.title.value,
-          description: entry.description.value,
+          name: entry.title,
+          description: entry.description,
           inLanguage: locale(),
           isPartOf: { '@id': websiteId },
           about: { '@id': organizationId },

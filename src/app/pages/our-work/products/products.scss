@@ -1,23 +1,27 @@
-@use 'tokens/motion';
 @use 'tokens/spacing';
-@use 'tokens/typography';
 @use 'tokens/layout';
 @use 'mixins/container';
 @use 'mixins/eyebrow';
 @use 'mixins/reveal';
 @use 'mixins/text';
-@use 'mixins/surface';
 
 :host {
   @include container.section();
 }
 
-.expertise {
+.projects {
   max-width: var(--nx-layout-container-max);
   margin-inline: auto;
+
+  // The portfolio grid is the one band on the site that earns extra width: at 1600px and up a
+  // three-column grid inside the 1280px text measure leaves the screenshots too small to read.
+  // Scoped here so every prose page keeps the established measure.
+  @include layout.up(extra-large) {
+    max-width: 1440px;
+  }
 }
 
-.expertise__header {
+.projects__header {
   display: grid;
   gap: spacing.space(24);
   margin-block-end: spacing.space(48);
@@ -29,7 +33,7 @@
   }
 }
 
-.expertise__heading {
+.projects__heading {
   @include text.contained();
   display: grid;
   gap: spacing.space(24);
@@ -38,11 +42,11 @@
   @include reveal.item(0ms);
 }
 
-.expertise__eyebrow {
+.projects__eyebrow {
   @include eyebrow.eyebrow();
 }
 
-.expertise__title {
+.projects__title {
   @include text.contained();
   margin: 0;
   max-width: 640px;
@@ -51,7 +55,7 @@
   color: var(--mat-sys-on-surface);
 }
 
-.expertise__intro {
+.projects__intro {
   @include text.contained();
   display: grid;
   gap: spacing.space(12);
@@ -60,7 +64,7 @@
   @include reveal.item(60ms);
 }
 
-.expertise__text {
+.projects__text {
   @include text.contained();
   margin: 0;
   max-width: 400px;
@@ -68,14 +72,19 @@
   color: var(--mat-sys-on-surface-variant);
 }
 
-.expertise__grid {
+/*
+ * One column below 840px. The previous two-column switch at 600px made each card ~256px wide -
+ * narrower than the same card at 320px in a single column - which is the width at which a
+ * screenshot stops communicating anything.
+ */
+.projects__grid {
   display: grid;
   gap: spacing.space(24);
   margin: 0;
   padding: 0;
   list-style: none;
 
-  @include layout.up(medium) {
+  @include layout.up(expanded) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -84,100 +93,28 @@
   }
 }
 
-.expertise__card {
+/*
+ * The card in the grid: it owns the entrance animation and the hover lift. It used to also
+ * establish the 3D viewing frustum the card turned inside; the card has one face now, so there
+ * is no longer anything to project.
+ */
+// The turn needs a vanishing point, and it belongs to the cell rather than to the card: set on
+// the card itself every face would share one origin and the rotation would read as a shear.
+.projects__card {
+  perspective: 1400px;
   display: grid;
-  grid-template-rows: auto auto 1fr auto;
-  justify-items: start;
-  padding: spacing.space(24);
-  @include surface.outlined();
+  min-width: 0;
   border-radius: var(--mat-sys-corner-large);
 
   @include reveal.item(120ms, $hover: true);
   @include reveal.stagger(6, 60ms, 120ms);
   @include reveal.lift();
-
-  @include layout.up(large) {
-    padding: spacing.space(32);
-  }
-
-  @media (hover: hover) {
-    &:hover {
-      border-color: var(--mat-sys-primary);
-
-      .expertise__card-index {
-        color: var(--mat-sys-primary);
-      }
-    }
-  }
 }
 
-.expertise__card-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: spacing.space(8);
-  justify-self: stretch;
-}
-
-.expertise__card-index {
-  flex-shrink: 0;
-  font: typography.$code-font;
-  color: var(--nx-sys-on-surface-muted);
-  transition: color motion.duration(fast) motion.easing(out);
-}
-
-.expertise__card-tile {
-  align-self: baseline;
-}
-
-.expertise__card-img {
-  width: 75%;
-  height: 150px;
-  object-fit: cover;
-  border-radius: var(--nx-sys-corner-panel);
-}
-
-.expertise__card-title {
-  @include text.contained();
-  margin: spacing.space(16) 0 spacing.space(8);
-  font: var(--nx-sys-title-card);
-  color: var(--mat-sys-on-surface);
-}
-
-.expertise__card-text {
-  @include text.contained();
-  margin: 0 0 spacing.space(16);
-  font: var(--nx-sys-body-copy);
-  color: var(--mat-sys-on-surface-variant);
-  align-self: start;
-}
-
-.expertise__link {
-  display: inline-flex;
-  align-items: center;
-  gap: spacing.space(8);
-  font: var(--mat-sys-label-large);
-  color: var(--mat-sys-primary);
-  text-decoration: none;
-  border-radius: var(--mat-sys-corner-extra-small);
-}
-
-.expertise__link-icon {
-  width: 16px;
-  height: 16px;
-  transition: translate motion.duration(fast) motion.easing(out);
-}
-
-@media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  .expertise__card:hover .expertise__link-icon {
-    translate: spacing.space(4) 0;
-  }
-}
-
-.expertise[data-reveal='out'] {
-  .expertise__heading,
-  .expertise__intro,
-  .expertise__card {
+.projects[data-reveal='out'] {
+  .projects__heading,
+  .projects__intro,
+  .projects__card {
     @include reveal.hidden();
   }
 }

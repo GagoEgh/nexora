@@ -1,0 +1,69 @@
+<div class="project-card__inner">
+  <div class="project-card__face project-card__face--front">
+    <div class="project-card__media">
+      <img
+        class="project-card__img"
+        [src]="cover().src"
+        alt=""
+        [width]="cover().width"
+        [height]="cover().height"
+        loading="lazy"
+        decoding="async"
+      />
+      <p class="project-card__tag">
+        <app-icon-tile
+          class="project-card__tag-icon"
+          [icon]="product().icon"
+          tone="inverse-accent"
+          size="small"
+        />
+        {{ product().archetypeLabel }}
+      </p>
+    </div>
+
+    <div class="project-card__body">
+      <h3 class="project-card__title">{{ product().name }}</h3>
+      <p class="project-card__category">{{ product().category }}</p>
+      <p class="project-card__hook">{{ product().hook }}</p>
+    </div>
+  </div>
+
+  <div class="project-card__face project-card__face--back">
+    <div class="project-card__back-body">
+      <p class="project-card__back-category">{{ product().category }}</p>
+      <p class="project-card__summary">{{ product().summary }}</p>
+
+      <ul class="project-card__highlights">
+        @for (highlight of product().highlights; track $index) {
+          <li class="project-card__highlight">{{ highlight }}</li>
+        }
+      </ul>
+
+      <p class="project-card__advantage">{{ product().advantage }}</p>
+    </div>
+
+    <div class="project-card__actions">
+      <a
+        class="project-card__link"
+        [routerLink]="product().path | localizedPath: locale()"
+        [attr.aria-label]="labels().viewProject + ': ' + product().name"
+      >
+        {{ labels().viewProject }}
+        <mat-icon class="project-card__action-icon" [svgIcon]="arrowIcon" />
+      </a>
+
+      @if (product().url; as url) {
+        <a
+          class="project-card__visit"
+          [href]="url"
+          target="_blank"
+          rel="noopener"
+          [attr.aria-label]="visitLabel()"
+        >
+          {{ labels().visitSite }}
+          <mat-icon class="project-card__action-icon" [svgIcon]="externalIcon" />
+        </a>
+      }
+    </div>
+  </div>
+</div>

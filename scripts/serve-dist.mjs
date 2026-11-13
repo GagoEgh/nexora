@@ -23,6 +23,12 @@ const CONTENT_TYPES = {
   '.woff2': 'font/woff2',
 };
 
+/**
+ * The media type to serve a file as, from its extension.
+ *
+ * @param {string} filePath
+ * @returns {string} a known type, or `application/octet-stream`
+ */
 export function contentTypeOf(filePath) {
   const dot = filePath.lastIndexOf('.');
   const extension = dot === -1 ? '' : filePath.slice(dot).toLowerCase();

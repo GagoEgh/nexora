@@ -5,6 +5,21 @@ import { PREFIXED_LOCALES, basePath, pagePathFromFile } from './verify-prerender
 export const NOINDEX_BASE_PATHS = ['/not-found'];
 export const EXPECTED_HREFLANGS = ['en', ...PREFIXED_LOCALES, 'x-default'];
 
+/**
+ * One prerendered document, reduced to the fields the corpus-wide checks need.
+ *
+ * @typedef {object} SeoDocument
+ * @property {string} pagePath - `/about`, `/hy/about`, `/` …
+ * @property {string | null} title - the `<title>` text, or null when the document has none
+ * @property {Record<string, string>} alternates - hreflang -> href, from `hreflangMap`
+ */
+
+/**
+ * The locale a page path belongs to; the default locale carries no prefix.
+ *
+ * @param {string} pagePath
+ * @returns {string}
+ */
 export function localeOf(pagePath) {
   for (const locale of PREFIXED_LOCALES) {
     if (pagePath === `/${locale}` || pagePath.startsWith(`/${locale}/`)) {
@@ -14,6 +29,12 @@ export function localeOf(pagePath) {
   return 'en';
 }
 
+/**
+ * Reads `siteOrigin` out of the production environment file, without importing it.
+ *
+ * @param {string} source
+ * @returns {string} the origin, with any trailing slash removed
+ */
 export function parseSiteOrigin(source) {
   const match = /siteOrigin:\s*'([^']+)'/.exec(source);
   if (!match) {

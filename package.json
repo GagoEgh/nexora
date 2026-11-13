@@ -13,6 +13,7 @@
     "verify:bundle": "node scripts/verify-bundle-budget.mjs",
     "verify:images": "node scripts/verify-images.mjs",
     "images:optimize": "node scripts/optimize-images.mjs",
+    "images:products": "node scripts/generate-product-images.mjs",
     "verify:headers": "node scripts/verify-headers.mjs",
     "verify:seo": "node scripts/verify-seo.mjs",
     "verify:live-seo": "node scripts/verify-live-seo.mjs",

@@ -3,6 +3,9 @@
 $durations: (
   fast: 160ms,
   base: 220ms,
+  // A card flip has to read as a deliberate turn rather than a glitch, which needs
+  // noticeably longer than a hover transition.
+  flip: 520ms,
 );
 
 $easings: (
@@ -49,6 +52,7 @@ $distances: (
   @media (prefers-reduced-motion: reduce) {
     --nx-motion-duration-fast: 0ms;
     --nx-motion-duration-base: 0ms;
+    --nx-motion-duration-flip: 0ms;
     --nx-motion-rise: 0px;
     --nx-motion-lift: 0px;
   }

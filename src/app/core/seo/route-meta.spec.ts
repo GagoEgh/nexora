@@ -76,13 +76,37 @@ describe('the route table and the document-meta page list', () => {
   /**
    * The assertion that would have caught the `our_work` regression: the id a route carries has
    * to be the path that route is served at, not merely *some* valid id.
+   *
+   * A parameterised child is the one allowed exception. `/our_work/:slug` carries `our_work`
+   * because `DOCUMENT_META_PAGES` has one entry per page and cannot hold nineteen product
+   * titles; the product supplies its own through `DocumentMetaOverride`, while the canonical
+   * and the hreflang set are built from the URL and so are already the product's own. The
+   * exception is deliberately narrow: only a direct `:param` child of the id it carries.
    */
   it('gives every route the meta id matching its own path', () => {
     const mismatched = realPages
-      .filter((page) => !isDocumentMetaPage(page.meta) || pathForId(page.meta) !== page.path)
+      .filter((page) => {
+        if (!isDocumentMetaPage(page.meta)) {
+          return true;
+        }
+        const own = pathForId(page.meta);
+        return page.path !== own && !/^:[^/]+$/.test(page.path.slice(own.length + 1));
+      })
       .map((page) => `/${page.path} carries '${String(page.meta)}'`);
 
     expect(mismatched, 'a route is describing itself as a different page').toEqual([]);
+  });
+
+  it('allows a parameterised child only directly under the page whose id it carries', () => {
+    const parameterised = realPages.filter((page) => page.path.includes('/:'));
+    expect(parameterised.map((page) => page.path)).toEqual(['our_work/:slug']);
+
+    for (const page of parameterised) {
+      // It must sit under its own id, not borrow an unrelated one.
+      expect(page.path.startsWith(`${pathForId(page.meta as DocumentMetaPage)}/`), page.path).toBe(
+        true,
+      );
+    }
   });
 
   it('has a route for every page in DOCUMENT_META_PAGES', () => {

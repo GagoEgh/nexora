@@ -120,6 +120,12 @@ export function checkWwwRedirect(response, apex) {
   ];
 }
 
+/**
+ * A hashed asset must carry exactly one long-lived, immutable `Cache-Control`.
+ *
+ * @param {readonly string[]} cacheControl - every `Cache-Control` header the response sent
+ * @returns {string[]} one message per problem, empty when the caching is sound
+ */
 export function checkAssetCaching(cacheControl) {
   const problems = [];
   if (cacheControl.length !== 1) {

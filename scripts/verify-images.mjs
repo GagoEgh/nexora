@@ -2,26 +2,54 @@ import { readdir, readFile, stat } from 'node:fs/promises';
 import { join, parse } from 'node:path';
 import { exit } from 'node:process';
 
+/**
+ * Product photographs are served straight out of `public`, so they land at `/images/<file>` with
+ * no hashing and no build step between the file and the page. `photoSrc()` in the registry builds
+ * exactly that path, which is why this check works on file names rather than on folders.
+ */
 export const IMAGES_DIR = 'public/images';
-export const MAX_IMAGE_WIDTH = 800;
 export const MAX_IMAGE_BYTES = 120 * 1024;
 
-const CONTENT_FILE = 'src/app/pages/our-work/products/product.content.ts';
+const META_FILE = 'src/app/pages/our-work/products/data/product-meta.ts';
 
-export function referencedImages(source) {
-  return [...source.matchAll(/image:\s*'(\/images\/[^']+)'/g)].map((match) => match[1]);
+/**
+ * Every photograph the product registry points at, in file order. Order is kept so the duplicate
+ * check can name the second product to claim a file rather than the first.
+ *
+ * @param {string} source - the text of product-meta.ts
+ * @returns {string[]}
+ */
+export function referencedPhotos(source) {
+  return [...source.matchAll(/file:\s*'([^']+)'/g)].map((match) => match[1]);
 }
 
+/**
+ * Holds the product photographs to the project's rules: WebP only, within the per-file budget,
+ * every file referenced by a product, every referenced file on disk, and one photograph per
+ * product. The last rule is what stops two products from sharing a picture, which would read as
+ * the same work delivered twice.
+ *
+ * @param {readonly string[]} files - file names found in `public/images`
+ * @param {readonly string[]} referenced - file names the registry points at
+ * @param {ReadonlyMap<string, number>} sizes - the same file names -> bytes
+ * @returns {string[]} one message per problem, empty when the set is healthy
+ */
 export function checkImages(files, referenced, sizes) {
   /** @type {string[]} */
   const problems = [];
-  const named = new Set(referenced.map((path) => path.replace('/images/', '')));
+  const named = new Set(referenced);
+  const onDisk = new Set(files);
 
   for (const file of files) {
     if (parse(file).ext.toLowerCase() !== '.webp') {
       problems.push(
         `${file} is not WebP - run \`npm run images:optimize\` rather than committing a source`,
       );
+      continue;
+    }
+
+    if (!named.has(file)) {
+      problems.push(`${file} is in the build but no product references it`);
       continue;
     }
 
@@ -32,16 +60,21 @@ export function checkImages(files, referenced, sizes) {
           `${(MAX_IMAGE_BYTES / 1024).toFixed(0)} kB per-file budget`,
       );
     }
-
-    if (!named.has(file)) {
-      problems.push(`${file} is in the build but no page references it`);
-    }
   }
 
-  const onDisk = new Set(files);
-  for (const path of new Set(referenced)) {
-    if (!onDisk.has(path.replace('/images/', ''))) {
-      problems.push(`${CONTENT_FILE} names ${path}, which is not in ${IMAGES_DIR}`);
+  /** @type {Set<string>} */
+  const seen = new Set();
+  for (const file of referenced) {
+    if (seen.has(file)) {
+      problems.push(
+        `${META_FILE} points more than one product at ${file}; each product carries its own photo`,
+      );
+      continue;
+    }
+    seen.add(file);
+
+    if (!onDisk.has(file)) {
+      problems.push(`${META_FILE} names ${file}, which is not in ${IMAGES_DIR}`);
     }
   }
 
@@ -49,16 +82,19 @@ export function checkImages(files, referenced, sizes) {
 }
 
 async function main() {
-  const files = (await readdir(IMAGES_DIR)).filter((name) => !name.startsWith('.'));
+  const files = (await readdir(IMAGES_DIR, { withFileTypes: true }))
+    .filter((entry) => entry.isFile() && !entry.name.startsWith('.'))
+    .map((entry) => entry.name);
+
   /** @type {Map<string, number>} */
   const sizes = new Map();
   for (const file of files) {
     sizes.set(file, (await stat(join(IMAGES_DIR, file))).size);
   }
 
-  const referenced = referencedImages(await readFile(CONTENT_FILE, 'utf8'));
+  const referenced = referencedPhotos(await readFile(META_FILE, 'utf8'));
   if (referenced.length === 0) {
-    console.error(`[verify-images] found no image paths in ${CONTENT_FILE}; the check is vacuous`);
+    console.error(`[verify-images] found no photographs in ${META_FILE}; the check is vacuous`);
     exit(1);
   }
 
@@ -73,8 +109,9 @@ async function main() {
 
   const total = [...sizes.values()].reduce((sum, size) => sum + size, 0);
   console.log(
-    `[verify-images] ${files.length} images, ${(total / 1024).toFixed(1)} kB in total, ` +
-      `all WebP, all referenced, largest ${(Math.max(...sizes.values()) / 1024).toFixed(1)} kB.`,
+    `[verify-images] ${referenced.length} photographs, ${files.length} files, ` +
+      `${(total / 1024).toFixed(1)} kB in total, all WebP, all referenced, ` +
+      `largest ${(Math.max(...sizes.values()) / 1024).toFixed(1)} kB.`,
   );
 }
 

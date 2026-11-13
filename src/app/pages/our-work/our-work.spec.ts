@@ -87,7 +87,7 @@ describe('OurWork', () => {
     expect(text('.glance__label')).toEqual(GLANCE_LABELS);
 
     expect(root.querySelector('app-products')).not.toBeNull();
-    expect(root.querySelectorAll('.expertise__card').length).toBeGreaterThan(0);
+    expect(root.querySelectorAll('.projects__card').length).toBeGreaterThan(0);
   });
 
   it('reads its copy from its own dictionary, not the About page one', async () => {

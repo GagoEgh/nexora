@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { useDictionary } from 'angular-intlayer';
+import { Reveal } from '../../../shared/motion/reveal';
 import aboutProductContent from './about-products.content';
 
 @Component({
-  imports: [],
+  imports: [Reveal],
   selector: 'app-about-products',
   styleUrl: './about-products.scss',
   templateUrl: './about-products.html',

@@ -4,7 +4,8 @@
   not a page to index. Each entry carries the same hreflang set the pages themselves emit
   from core/seo/document-meta.ts, so the sitemap and the documents agree.
 
-  Kept in step with DOCUMENT_META_PAGES by src/app/core/seo/sitemap.spec.ts.
+  Kept in step with DOCUMENT_META_PAGES and PRODUCT_IDS by src/app/core/seo/sitemap.spec.ts.
+  The nineteen product pages under /our_work follow the shared pages.
 -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
@@ -195,5 +196,404 @@
     <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work" />
     <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/our_work/draculai</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/draculai" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/draculai" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/draculai" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/draculai" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/hy/our_work/draculai</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/draculai" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/draculai" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/draculai" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/draculai" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/ru/our_work/draculai</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/draculai" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/draculai" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/draculai" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/draculai" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/our_work/jdm-west-coast</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/jdm-west-coast" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/jdm-west-coast" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/jdm-west-coast" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/jdm-west-coast" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/hy/our_work/jdm-west-coast</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/jdm-west-coast" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/jdm-west-coast" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/jdm-west-coast" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/jdm-west-coast" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/ru/our_work/jdm-west-coast</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/jdm-west-coast" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/jdm-west-coast" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/jdm-west-coast" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/jdm-west-coast" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/our_work/hydrant</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/hydrant" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/hydrant" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/hydrant" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/hydrant" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/hy/our_work/hydrant</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/hydrant" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/hydrant" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/hydrant" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/hydrant" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/ru/our_work/hydrant</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/hydrant" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/hydrant" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/hydrant" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/hydrant" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/our_work/mertel</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/mertel" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/mertel" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/mertel" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/mertel" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/hy/our_work/mertel</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/mertel" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/mertel" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/mertel" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/mertel" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/ru/our_work/mertel</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/mertel" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/mertel" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/mertel" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/mertel" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/our_work/skinome</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/skinome" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/skinome" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/skinome" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/skinome" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/hy/our_work/skinome</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/skinome" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/skinome" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/skinome" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/skinome" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/ru/our_work/skinome</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/skinome" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/skinome" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/skinome" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/skinome" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/our_work/mastercraft</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/mastercraft" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/mastercraft" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/mastercraft" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/mastercraft" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/hy/our_work/mastercraft</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/mastercraft" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/mastercraft" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/mastercraft" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/mastercraft" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/ru/our_work/mastercraft</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/mastercraft" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/mastercraft" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/mastercraft" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/mastercraft" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/our_work/robert-irwin</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/robert-irwin" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/robert-irwin" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/robert-irwin" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/robert-irwin" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/hy/our_work/robert-irwin</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/robert-irwin" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/robert-irwin" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/robert-irwin" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/robert-irwin" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/ru/our_work/robert-irwin</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/robert-irwin" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/robert-irwin" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/robert-irwin" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/robert-irwin" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/our_work/casamance</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/casamance" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/casamance" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/casamance" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/casamance" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/hy/our_work/casamance</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/casamance" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/casamance" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/casamance" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/casamance" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/ru/our_work/casamance</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/casamance" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/casamance" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/casamance" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/casamance" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/our_work/sell-me-watch</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/sell-me-watch" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/sell-me-watch" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/sell-me-watch" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/sell-me-watch" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/hy/our_work/sell-me-watch</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/sell-me-watch" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/sell-me-watch" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/sell-me-watch" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/sell-me-watch" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/ru/our_work/sell-me-watch</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/sell-me-watch" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/sell-me-watch" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/sell-me-watch" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/sell-me-watch" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/our_work/klinik-europe</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/klinik-europe" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/klinik-europe" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/klinik-europe" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/klinik-europe" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/hy/our_work/klinik-europe</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/klinik-europe" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/klinik-europe" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/klinik-europe" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/klinik-europe" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/ru/our_work/klinik-europe</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/klinik-europe" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/klinik-europe" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/klinik-europe" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/klinik-europe" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/our_work/libra-analytics</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/libra-analytics" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/libra-analytics" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/libra-analytics" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/libra-analytics" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/hy/our_work/libra-analytics</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/libra-analytics" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/libra-analytics" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/libra-analytics" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/libra-analytics" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/ru/our_work/libra-analytics</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/libra-analytics" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/libra-analytics" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/libra-analytics" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/libra-analytics" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/our_work/remake-templates</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/remake-templates" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/remake-templates" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/remake-templates" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/remake-templates" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/hy/our_work/remake-templates</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/remake-templates" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/remake-templates" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/remake-templates" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/remake-templates" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/ru/our_work/remake-templates</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/remake-templates" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/remake-templates" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/remake-templates" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/remake-templates" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/our_work/got-matcha</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/got-matcha" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/got-matcha" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/got-matcha" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/got-matcha" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/hy/our_work/got-matcha</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/got-matcha" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/got-matcha" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/got-matcha" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/got-matcha" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/ru/our_work/got-matcha</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/got-matcha" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/got-matcha" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/got-matcha" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/got-matcha" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/our_work/lav</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/lav" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/lav" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/lav" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/lav" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/hy/our_work/lav</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/lav" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/lav" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/lav" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/lav" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/ru/our_work/lav</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/lav" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/lav" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/lav" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/lav" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/our_work/roar-organic</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/roar-organic" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/roar-organic" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/roar-organic" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/roar-organic" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/hy/our_work/roar-organic</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/roar-organic" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/roar-organic" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/roar-organic" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/roar-organic" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/ru/our_work/roar-organic</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/roar-organic" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/roar-organic" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/roar-organic" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/roar-organic" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/our_work/zadeh-md</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/zadeh-md" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/zadeh-md" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/zadeh-md" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/zadeh-md" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/hy/our_work/zadeh-md</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/zadeh-md" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/zadeh-md" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/zadeh-md" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/zadeh-md" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/ru/our_work/zadeh-md</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/zadeh-md" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/zadeh-md" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/zadeh-md" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/zadeh-md" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/our_work/tai-ping</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/tai-ping" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/tai-ping" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/tai-ping" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/tai-ping" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/hy/our_work/tai-ping</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/tai-ping" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/tai-ping" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/tai-ping" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/tai-ping" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/ru/our_work/tai-ping</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/tai-ping" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/tai-ping" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/tai-ping" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/tai-ping" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/our_work/mezave</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/mezave" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/mezave" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/mezave" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/mezave" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/hy/our_work/mezave</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/mezave" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/mezave" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/mezave" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/mezave" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/ru/our_work/mezave</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/mezave" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/mezave" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/mezave" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/mezave" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/our_work/connected-car</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/connected-car" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/connected-car" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/connected-car" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/connected-car" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/hy/our_work/connected-car</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/connected-car" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/connected-car" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/connected-car" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/connected-car" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/ru/our_work/connected-car</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/connected-car" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/connected-car" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/connected-car" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/connected-car" />
   </url>
 </urlset>

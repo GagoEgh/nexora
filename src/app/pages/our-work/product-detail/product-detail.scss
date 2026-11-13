@@ -1,0 +1,270 @@
+@use 'tokens/motion';
+@use 'tokens/spacing';
+@use 'tokens/layout';
+@use 'mixins/container';
+@use 'mixins/eyebrow';
+@use 'mixins/reveal';
+@use 'mixins/section';
+@use 'mixins/surface';
+@use 'mixins/text';
+@use 'mixins/visually-hidden';
+
+:host {
+  display: block;
+}
+
+.product__intro {
+  display: grid;
+  justify-items: start;
+  gap: spacing.space(16);
+}
+
+.product__category,
+.product__hook,
+.product__tech,
+.product__section-title,
+.product__prose,
+.product__feature-text {
+  @include text.contained();
+}
+
+// Grouped for the same reason as the transitions below: included per rule, three copies of
+// these three declarations cost more than this page has left in its CSS budget.
+.product__tech-label,
+.product__feature-index,
+.product__next-label {
+  @include text.label-caps();
+}
+
+// The entrance transitions are grouped by delay rather than declared per rule. `reveal.item()`
+// emits a multi-property transition list every time it is included, and this page has enough
+// revealing elements that one include each pushed the compiled stylesheet past the project's
+// per-component CSS budget.
+.product__prose,
+.product__feature,
+.product__value-card {
+  @include reveal.item(60ms);
+}
+
+.product__section {
+  @include container.section();
+
+  > * {
+    max-width: var(--nx-layout-container-max);
+    margin-inline: auto;
+  }
+}
+
+.product__experience {
+  @include section.split($aside: 560px, $row-gap: 32);
+  align-items: center;
+}
+
+// With no gallery yet, the section is copy alone and must not hold open an empty aside column.
+.product__experience--copy-only {
+  display: block;
+}
+
+.product__gallery {
+  display: grid;
+  gap: spacing.space(24);
+  min-width: 0;
+}
+
+.product__category {
+  margin: 0;
+  font: var(--mat-sys-title-medium);
+  color: var(--nx-sys-on-surface-muted);
+}
+
+.product__hook {
+  margin: 0;
+  max-width: 48ch;
+  font: var(--nx-sys-body-lead);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.product__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: spacing.space(12);
+  margin-block-start: spacing.space(8);
+}
+
+// Technology, kept to one chip. There is no Technology & Architecture section because
+// `platform` is the only verified technical fact on record, and four products lack even that.
+.product__tech {
+  margin: 0;
+}
+
+.product__tech-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: spacing.space(8);
+  padding: spacing.space(4) spacing.space(12);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 999px;
+  background-color: var(--mat-sys-surface-container-low);
+}
+
+.product__tech-label {
+  color: var(--nx-sys-on-surface-muted);
+}
+
+.product__tech-value {
+  font: var(--mat-sys-label-large);
+  color: var(--mat-sys-on-surface);
+}
+
+.product__hero-art,
+.product__experience-art {
+  @include reveal.item(120ms);
+  display: grid;
+  gap: spacing.space(8);
+  margin: 0;
+}
+
+.product__hero-img,
+.product__experience-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border-radius: var(--nx-sys-corner-panel);
+}
+
+.product__sr {
+  @include visually-hidden.visually-hidden();
+}
+
+.product__section-title {
+  @include reveal.item(0ms);
+  margin: 0 0 spacing.space(16);
+  font: var(--nx-sys-display-section);
+  letter-spacing: var(--nx-sys-display-tracking);
+  color: var(--mat-sys-on-surface);
+}
+
+.product__prose {
+  margin: 0;
+  max-width: 68ch;
+  font: var(--nx-sys-body-copy);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.product__features {
+  display: grid;
+  gap: spacing.space(16);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @include layout.up(medium) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include layout.up(large) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.product__feature,
+.product__value-card {
+  @include surface.outlined();
+  display: grid;
+  gap: spacing.space(12);
+  border-radius: var(--mat-sys-corner-large);
+}
+
+.product__feature {
+  padding: spacing.space(24);
+  @include reveal.stagger(4, 60ms, 60ms);
+}
+
+.product__feature-index {
+  color: var(--mat-sys-primary);
+}
+
+.product__feature-text {
+  font: var(--mat-sys-title-small);
+  color: var(--mat-sys-on-surface);
+}
+
+.product__experience-copy {
+  display: grid;
+  gap: spacing.space(16);
+  align-content: start;
+}
+
+.product__value-grid {
+  display: grid;
+  gap: spacing.space(24);
+
+  @include layout.up(large) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.product__value-card {
+  padding: spacing.space(32);
+
+  .product__section-title {
+    margin: 0;
+    font: var(--nx-sys-title-card);
+    letter-spacing: normal;
+  }
+}
+
+.product__next-label {
+  margin: 0 0 spacing.space(12);
+}
+
+.product__next-link {
+  @include reveal.item(60ms, $hover: true);
+  @include reveal.lift();
+  @include surface.outlined();
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: spacing.space(12);
+  padding: spacing.space(24) spacing.space(32);
+  border-radius: var(--mat-sys-corner-large);
+  text-decoration: none;
+}
+
+.product__next-name {
+  font: var(--nx-sys-title-card);
+  color: var(--mat-sys-on-surface);
+}
+
+.product__next-category {
+  font: var(--mat-sys-label-large);
+  color: var(--nx-sys-on-surface-muted);
+}
+
+.product__next-icon {
+  width: 20px;
+  height: 20px;
+  margin-inline-start: auto;
+  color: var(--mat-sys-primary);
+  transition: translate motion.duration(fast) motion.easing(out);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .product__next-link:hover .product__next-icon {
+    translate: spacing.space(4) 0;
+  }
+}
+
+.product__section[data-reveal='out'] {
+  .product__hero-art,
+  .product__section-title,
+  .product__prose,
+  .product__feature,
+  .product__value-card,
+  .product__experience-art,
+  .product__next-link {
+    @include reveal.hidden();
+  }
+}

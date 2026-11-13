@@ -1,6 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { defaultLocale, getLocalizedUrl, locales } from 'intlayer';
 import { DOCUMENT_META_PAGES, pagePath } from './document-meta';
+import { PRODUCT_IDS } from '../../pages/our-work/products/data/product-ids';
+import { productPath } from '../../pages/our-work/products/data/product-view';
 import { SEO_CONFIG } from './site-origin';
 
 /**
@@ -16,8 +18,18 @@ const robots = readFileSync('public/robots.txt', 'utf8');
 /** A 404 is not a public route; everything else in the table is. */
 const publicPages = DOCUMENT_META_PAGES.filter((page) => page !== 'not-found');
 
-const expectedUrls = publicPages.flatMap((page) =>
-  locales.map((locale) => origin + getLocalizedUrl(pagePath(page), locale)),
+/**
+ * Every indexable path: the shared pages, then one per product. The product pages are
+ * parameterised, so they are the ones most likely to be added without the sitemap following -
+ * which is exactly what this list exists to prevent.
+ */
+const publicPaths = [
+  ...publicPages.map((page) => pagePath(page)),
+  ...PRODUCT_IDS.map((id) => productPath(id)),
+];
+
+const expectedUrls = publicPaths.flatMap((path) =>
+  locales.map((locale) => origin + getLocalizedUrl(path, locale)),
 );
 
 const locs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
@@ -25,7 +37,7 @@ const locs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[
 describe('sitemap.xml', () => {
   it('lists every public route in every locale, and nothing else', () => {
     expect([...locs].sort()).toEqual([...expectedUrls].sort());
-    expect(locs).toHaveLength(publicPages.length * locales.length);
+    expect(locs).toHaveLength(publicPaths.length * locales.length);
   });
 
   it('never lists the 404', () => {
@@ -35,16 +47,16 @@ describe('sitemap.xml', () => {
   });
 
   it('gives every entry the same hreflang alternates the page itself emits', () => {
-    for (const page of publicPages) {
+    for (const path of publicPaths) {
       const alternates = locales.map(
         (locale) =>
-          `<xhtml:link rel="alternate" hreflang="${locale}" href="${origin + getLocalizedUrl(pagePath(page), locale)}" />`,
+          `<xhtml:link rel="alternate" hreflang="${locale}" href="${origin + getLocalizedUrl(path, locale)}" />`,
       );
       for (const alternate of alternates) {
-        expect(sitemap, `missing alternate for ${page}`).toContain(alternate);
+        expect(sitemap, `missing alternate for ${path}`).toContain(alternate);
       }
-      expect(sitemap, `missing x-default for ${page}`).toContain(
-        `<xhtml:link rel="alternate" hreflang="x-default" href="${origin + getLocalizedUrl(pagePath(page), defaultLocale)}" />`,
+      expect(sitemap, `missing x-default for ${path}`).toContain(
+        `<xhtml:link rel="alternate" hreflang="x-default" href="${origin + getLocalizedUrl(path, defaultLocale)}" />`,
       );
     }
   });

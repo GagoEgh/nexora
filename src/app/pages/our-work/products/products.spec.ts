@@ -4,23 +4,24 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { provideIntlayer, useLocale } from 'angular-intlayer';
 import { provideAppIcons } from '../../../core/icons/provide-app-icons';
-import { SERVICES_PATH } from '../../../core/routing/paths';
+import { CONTACT_PATH } from '../../../core/routing/paths';
+import { PRODUCT_IDS } from './data/product-ids';
+import { PRODUCT_META } from './data/product-meta';
 import { Products } from './products';
 
 const ICON_SVG =
   '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"></svg>';
 
 /**
- * The catalogue is nineteen client products. Spelling all nineteen out here would only restate
- * the dictionary, so the count and the two ends are pinned - enough to catch an entry being
- * dropped or the order being reversed - and everything else is asserted as an invariant that
- * must hold for every card.
+ * The band renders one card per registered product and nothing else. Spelling all nineteen
+ * titles out here would only restate the dictionary - that parity is `product-content.spec.ts`
+ * - so what is pinned here is the join: every registry entry reaches the grid, in order, with
+ * its own route and its own art.
  */
-const SERVICE_COUNT = 19;
-const FIRST_TITLE = 'Connected Car & Vehicle Management Mobile App';
-const LAST_TITLE = 'Premium Skincare E-commerce & Personalized Beauty Platform';
-const FIRST_HREF = 'https://www.sellmewatch.com/';
-const LAST_HREF = 'https://www.skinome.com/';
+const PRODUCT_COUNT = PRODUCT_IDS.length;
+
+/** Seventeen of the nineteen have a live destination; two deliberately have none. */
+const LIVE_COUNT = PRODUCT_IDS.filter((id) => PRODUCT_META[id].url !== undefined).length;
 
 describe('Products', () => {
   let fixture: ComponentFixture<Products>;
@@ -57,73 +58,127 @@ describe('Products', () => {
     setLocale('en');
   });
 
-  it('renders one card per catalogue entry, in order', async () => {
+  it('renders one card per registered product', async () => {
     await render();
 
-    expect(all('.expertise__card')).toHaveLength(SERVICE_COUNT);
+    expect(all('.projects__card')).toHaveLength(PRODUCT_COUNT);
+    expect(all('app-project-card')).toHaveLength(PRODUCT_COUNT);
 
-    const titles = text('.expertise__card-title');
-    expect(titles).toHaveLength(SERVICE_COUNT);
-    expect(titles[0]).toBe(FIRST_TITLE);
-    expect(titles.at(-1)).toBe(LAST_TITLE);
+    const titles = text('.project-card__title');
+    expect(titles).toHaveLength(PRODUCT_COUNT);
     expect(titles.every((title) => title.length > 0)).toBe(true);
   });
 
   /**
-   * Every card points at a live client product, so these are plain `href`s rather than
-   * `routerLink`s. A relative value here would silently become an in-app navigation that
-   * resolves to the 404 page instead of leaving the site.
+   * The card title now opens a page on this site rather than leaving it. A card whose link
+   * fell out of registry order would send the visitor to a different product than the one they
+   * clicked, which no amount of correct copy would make visible.
    */
-  it('links every card at an absolute external URL', async () => {
+  it('links every card at its own detail route, in registry order', async () => {
     await render();
 
-    const hrefs = all('.expertise__link').map((el) => el.getAttribute('href') ?? '');
-    expect(hrefs).toHaveLength(SERVICE_COUNT);
-    expect(hrefs[0]).toBe(FIRST_HREF);
-    expect(hrefs.at(-1)).toBe(LAST_HREF);
-
-    const relative = hrefs.filter((href) => !href.startsWith('https://'));
-    expect(relative, 'these would navigate inside the app').toEqual([]);
+    const hrefs = all('.project-card__link').map((el) => el.getAttribute('href') ?? '');
+    expect(hrefs).toEqual(PRODUCT_IDS.map((id) => `/our_work/${id}`));
   });
 
   /**
-   * Nineteen client screenshots sit on this one page and all but the first are below the fold.
-   * Without `loading="lazy"` every one of them is fetched during the initial load, which on
-   * this page is several megabytes of imagery.
+   * Every card carries the photograph of its own product, restored from `public/images`. The
+   * failure this guards against is the one that is invisible on the page: nineteen cards that
+   * all render, each showing the wrong company's work.
    */
-  it('defers every screenshot and gives it alt text that matches its card', async () => {
+  it('gives every card its own product photograph, deferred', async () => {
     await render();
 
-    const images = all('.expertise__card-img');
-    const titles = text('.expertise__card-title');
-    expect(images).toHaveLength(SERVICE_COUNT);
+    const sources = all('.project-card__img').map((el) => el.getAttribute('src') ?? '');
+    expect(sources).toHaveLength(PRODUCT_COUNT);
+    expect(new Set(sources).size, 'two cards share one photograph').toBe(PRODUCT_COUNT);
 
-    for (const [index, image] of images.entries()) {
+    for (const [index, image] of all('.project-card__img').entries()) {
+      expect(image.getAttribute('src'), `image ${index}`).toMatch(/^images\/[a-z]+\.webp$/);
       expect(image.getAttribute('loading'), `image ${index}`).toBe('lazy');
-      expect(image.getAttribute('decoding'), `image ${index}`).toBe('async');
-      expect(image.getAttribute('alt'), `image ${index}`).toBe(titles[index]);
-      expect(image.getAttribute('src'), `image ${index}`).toMatch(/^\/images\/.+/);
+      // Declared at the file's real size, which differs per product.
+      expect(Number(image.getAttribute('width')), `image ${index}`).toBeGreaterThan(0);
+      expect(Number(image.getAttribute('height')), `image ${index}`).toBeGreaterThan(0);
+    }
+  });
+
+  /** The mapping itself, pinned product by product, in registry order. */
+  it('pairs every product with the photograph committed for it', async () => {
+    await render();
+
+    const sources = all('.project-card__img').map((el) => el.getAttribute('src'));
+    expect(sources).toEqual(PRODUCT_IDS.map((id) => `images/${PRODUCT_META[id].photos[0].file}`));
+  });
+
+  /**
+   * The grid's interactive surface, counted: nineteen detail links, one outbound link per live
+   * product, and the band's own call to action. Nothing is a button - the card is its own
+   * control, and there is no "Details" trigger to add a twentieth of anything.
+   */
+  it('exposes the detail link of every card and nothing it did not earn', async () => {
+    await render();
+
+    expect(all('app-project-card .project-card__link')).toHaveLength(PRODUCT_COUNT);
+    expect(all('app-project-card .project-card__visit')).toHaveLength(LIVE_COUNT);
+    expect(
+      all('a'),
+      'per card: one detail link, plus one per live product, plus the band CTA',
+    ).toHaveLength(PRODUCT_COUNT + LIVE_COUNT + 1);
+    expect(all('app-project-card button')).toHaveLength(0);
+    expect(all('app-project-card [aria-expanded]')).toHaveLength(0);
+  });
+
+  /**
+   * Every card has a second face, and every one of them starts turned away. The failure this
+   * guards against scales with the grid: nineteen back faces live in the accessibility tree at
+   * once, and it is the stylesheet's `visibility` - not `backface-visibility` - that keeps them
+   * out of the tab order. A card rendered pre-flipped would show the back of the deck.
+   */
+  it('gives every card a back face, and turns none of them to begin with', async () => {
+    await render();
+
+    expect(all('.project-card__face--front')).toHaveLength(PRODUCT_COUNT);
+    expect(all('.project-card__face--back')).toHaveLength(PRODUCT_COUNT);
+    expect(all('app-project-card.is-flipped')).toHaveLength(0);
+  });
+
+  /** Every card is reachable by keyboard, and says which product it is before you walk in. */
+  it('makes every card a tab stop with the product in its accessible name', async () => {
+    await render();
+
+    const cards = all('app-project-card');
+    expect(cards.map((card) => card.getAttribute('tabindex'))).toEqual(cards.map(() => '0'));
+    expect(cards.map((card) => card.getAttribute('role'))).toEqual(cards.map(() => 'group'));
+    for (const [index, card] of cards.entries()) {
+      expect(card.getAttribute('aria-label'), `card ${index}`).toContain(
+        card.querySelector('.project-card__title')?.textContent?.trim() ?? '',
+      );
     }
   });
 
   /**
-   * `icon` is declared `satisfies AppIconName` in the dictionary, but it reaches the template
-   * as a plain string, so the compile-time check does not survive the round trip. A typo would
-   * surface only as Material's "Unable to find icon" at runtime; the registry is stubbed here,
-   * so what this can still assert is that every card asked for one.
+   * The outbound links leave the site, which is the one thing on this page that can open a tab
+   * the visitor did not ask for. Every one of them is rel-guarded and says so in its name.
    */
-  it('gives every card an icon tile', async () => {
+  it('sends a visitor off-site only safely, and only from a live product', async () => {
     await render();
-    expect(all('app-icon-tile')).toHaveLength(SERVICE_COUNT);
+
+    const external = all('app-project-card a[href^="http"]');
+    expect(external).toHaveLength(LIVE_COUNT);
+    for (const [index, link] of external.entries()) {
+      expect(link.getAttribute('target'), `link ${index}`).toBe('_blank');
+      expect(link.getAttribute('rel'), `link ${index}`).toBe('noopener');
+      expect(link.getAttribute('aria-label'), `link ${index}`).toContain('new tab');
+    }
   });
 
-  it('points the catalogue link at the services page, with the locale prefix', async () => {
+  it('points its call to action at the contact page, with the locale prefix', async () => {
     await render();
-    expect(root.querySelector('.expertise__all')?.getAttribute('href')).toBe(SERVICES_PATH);
+    expect(root.querySelector('.projects__cta')?.getAttribute('href')).toBe(CONTACT_PATH);
 
     setLocale('hy');
     await render();
-    expect(root.querySelector('.expertise__all')?.getAttribute('href')).toBe(`/hy${SERVICES_PATH}`);
+    expect(root.querySelector('.projects__cta')?.getAttribute('href')).toBe(`/hy${CONTACT_PATH}`);
   });
 
   /**
@@ -134,7 +189,18 @@ describe('Products', () => {
   it('reads its copy from its own dictionary, not the home expertise one', async () => {
     await render();
 
-    expect(root.querySelector('.expertise__eyebrow')?.textContent?.trim()).toBe('What we do');
-    expect(all('.expertise__card')).toHaveLength(SERVICE_COUNT);
+    expect(root.querySelector('.projects__eyebrow')?.textContent?.trim()).toBe('Selected work');
+    expect(root.querySelector('.projects__title')?.textContent?.trim()).toContain('Nineteen');
+  });
+
+  it('translates the band and every card', async () => {
+    setLocale('ru');
+    await render();
+
+    expect(root.querySelector('.projects__eyebrow')?.textContent?.trim()).toBe('Избранные работы');
+    expect(all('.projects__card')).toHaveLength(PRODUCT_COUNT);
+    // The archetype label is the card's own translated string, and every card carries one.
+    expect(text('.project-card__tag').every((label) => label.length > 0)).toBe(true);
+    expect(root.querySelector('.project-card__tag')?.textContent).toContain('Мобильное приложение');
   });
 });

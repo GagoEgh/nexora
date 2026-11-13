@@ -1,0 +1,237 @@
+@use 'tokens/motion';
+@use 'tokens/spacing';
+@use 'tokens/layout';
+@use 'mixins/surface';
+@use 'mixins/text';
+
+// Two faces in one grid cell, so the card sizes to the taller of them rather than to a hard
+// coded height. That is load-bearing for `hy` and `ru`, whose copy runs longer than the English,
+// and it is what keeps a row of cards level.
+// The host is the tab stop (see `project-card.ts`), so it carries the focus ring and must never
+// be the thing that gets hidden - only the faces inside it are.
+:host {
+  @include surface.outlined();
+  display: grid;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: var(--mat-sys-corner-large);
+  cursor: pointer;
+}
+
+:host(:focus-visible) {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: 2px;
+}
+
+.project-card__inner {
+  display: grid;
+  min-width: 0;
+  transform-style: preserve-3d;
+  transition: transform motion.duration(flip) motion.easing(out);
+}
+
+:host(.is-flipped) .project-card__inner {
+  transform: rotateY(180deg);
+}
+
+// `backface-visibility` hides a face from view and leaves its links in the tab order and in the
+// accessibility tree. `visibility` is what actually removes them, and it is delayed by the
+// length of the turn so the outgoing face stays painted until the card has finished rotating.
+.project-card__face {
+  grid-area: 1 / 1;
+  display: grid;
+  align-content: start;
+  min-width: 0;
+  backface-visibility: hidden;
+  visibility: hidden;
+  transition: visibility 0s linear motion.duration(flip);
+}
+
+.project-card__face--front {
+  visibility: visible;
+}
+
+.project-card__face--back {
+  align-content: space-between;
+  gap: spacing.space(16);
+  padding: spacing.space(24);
+  transform: rotateY(180deg);
+  background-color: var(--mat-sys-surface-container-low);
+
+  @include layout.up(large) {
+    padding: spacing.space(32);
+  }
+}
+
+:host(.is-flipped) .project-card__face--front {
+  visibility: hidden;
+}
+
+:host(.is-flipped) .project-card__face--back {
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+// The card's picture is the product's own photograph (`ProductMeta.photos`), and that set is not
+// uniform: it runs from 480x334 to 800x853, portrait through square to three landscapes. The
+// ratio is fixed here rather than taken from the file so that nineteen mismatched sources still
+// produce one grid, and `object-fit: cover` below does the cropping.
+.project-card__media {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+
+.project-card__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: scale motion.duration(base) motion.easing(out);
+}
+
+.project-card__tag {
+  @include text.label-caps();
+  position: absolute;
+  inset-block-end: spacing.space(12);
+  inset-inline-start: spacing.space(12);
+  display: inline-flex;
+  align-items: center;
+  gap: spacing.space(8);
+  margin: 0;
+  padding: spacing.space(4) spacing.space(12) spacing.space(4) spacing.space(4);
+  border-radius: 999px;
+  background-color: var(--mat-sys-inverse-surface);
+  color: var(--mat-sys-inverse-on-surface);
+}
+
+.project-card__body {
+  display: grid;
+  justify-items: start;
+  gap: spacing.space(8);
+  padding: spacing.space(24);
+
+  @include layout.up(large) {
+    padding: spacing.space(32);
+  }
+}
+
+.project-card__title {
+  @include text.contained();
+  margin: 0;
+  font: var(--nx-sys-title-card);
+  color: var(--mat-sys-on-surface);
+}
+
+.project-card__category,
+.project-card__back-category {
+  @include text.contained();
+  margin: 0;
+  font: var(--mat-sys-label-large);
+  color: var(--nx-sys-on-surface-muted);
+}
+
+.project-card__hook {
+  @include text.contained();
+  margin: 0;
+  font: var(--nx-sys-body-copy);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.project-card__back-body {
+  display: grid;
+  gap: spacing.space(12);
+  min-width: 0;
+}
+
+.project-card__summary {
+  @include text.contained();
+  margin: 0;
+  font: var(--nx-sys-body-copy);
+  color: var(--mat-sys-on-surface);
+}
+
+.project-card__highlights {
+  display: grid;
+  gap: spacing.space(8);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.project-card__highlight {
+  @include text.contained();
+  position: relative;
+  padding-inline-start: spacing.space(20);
+  font: var(--mat-sys-label-large);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.project-card__highlight::before {
+  content: '';
+  position: absolute;
+  inset-block-start: 0.55em;
+  inset-inline-start: 0;
+  width: spacing.space(8);
+  height: 2px;
+  background-color: var(--mat-sys-primary);
+}
+
+.project-card__advantage {
+  @include text.contained();
+  margin: 0;
+  font: var(--mat-sys-label-large);
+  color: var(--mat-sys-primary);
+}
+
+.project-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: spacing.space(16);
+}
+
+.project-card__link,
+.project-card__visit {
+  display: inline-flex;
+  align-items: center;
+  gap: spacing.space(4);
+  border-radius: var(--mat-sys-corner-extra-small);
+  font: var(--mat-sys-label-large);
+  text-decoration: none;
+}
+
+.project-card__link {
+  color: var(--mat-sys-primary);
+}
+
+.project-card__visit {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.project-card__action-icon {
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+}
+
+// The grid item above the card owns the lift; this is the picture easing in under it.
+@media (hover: hover) {
+  :host(:hover) .project-card__img {
+    scale: 1.04;
+  }
+}
+
+// Reduced motion removes the turn, never the content: the faces still swap, they just do not
+// rotate. `--nx-motion-duration-flip` is already zeroed globally by the token layer, which also
+// zeroes the `visibility` delay, so the swap stays in step.
+@media (prefers-reduced-motion: reduce) {
+  .project-card__img {
+    transition: none;
+  }
+
+  @media (hover: hover) {
+    :host(:hover) .project-card__img {
+      scale: 1;
+    }
+  }
+}

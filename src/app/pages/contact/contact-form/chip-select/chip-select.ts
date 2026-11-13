@@ -16,6 +16,10 @@ const isActivation = (event: Event): boolean => {
     return false;
   }
 
+  // Material's chip action decides whether to toggle from `event.keyCode` and never reads
+  // `event.key` (@angular/material/fesm2022/chips.mjs), so the deprecated field is the only
+  // one that works here. Removing this read reintroduces the bug chip-select.spec.ts pins.
+  // eslint-disable-next-line @typescript-eslint/no-deprecated
   const code = event.keyCode;
   return event.key === 'Enter' || event.key === ' ' || code === ENTER || code === SPACE;
 };
