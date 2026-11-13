@@ -175,4 +175,25 @@
     <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/contact" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/contact" />
   </url>
+  <url>
+    <loc>https://nexoratechnology.org/our_work</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/hy/our_work</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/ru/our_work</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work" />
+  </url>
 </urlset>

@@ -126,9 +126,15 @@
   transition: color motion.duration(fast) motion.easing(out);
 }
 
+.expertise__card-tile {
+  align-self: baseline;
+}
+
 .expertise__card-img {
   width: 75%;
   height: 150px;
+  object-fit: cover;
+  border-radius: var(--nx-sys-corner-panel);
 }
 
 .expertise__card-title {

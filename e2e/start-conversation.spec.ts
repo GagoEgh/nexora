@@ -341,9 +341,16 @@ test.describe('the artwork assembles when it is scrolled into view', () => {
     await page.goto('/');
     // The band closes a long page, so it is still far below the fold here.
     await expect.poll(revealState.bind(null, page), { timeout: 5000 }).toBe('out');
-    expect(await style(page, 'app-start-conversation .start-conversation__mark', 'opacity')).toBe(
-      '0',
-    );
+    /*
+     * Polled, not read once. The band ships visible so that a visitor without JavaScript still
+     * gets it, and the directive hides it on its first frame - so the mark fades out rather
+     * than starting at zero, and the fade is long enough for WebKit to be caught mid-way. What
+     * the test is claiming is that the band ends up hidden until it is reached, not that it was
+     * never painted.
+     */
+    await expect
+      .poll(() => style(page, 'app-start-conversation .start-conversation__mark', 'opacity'))
+      .toBe('0');
 
     await page.locator('app-start-conversation').scrollIntoViewIfNeeded();
     await expect.poll(revealState.bind(null, page), { timeout: 5000 }).toBe('in');

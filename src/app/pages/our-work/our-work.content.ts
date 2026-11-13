@@ -1,7 +1,7 @@
 import { t, type Dictionary } from 'intlayer';
 
 const ourWorkContent = {
-  key: 'about',
+  key: 'our-work',
   content: {
     breadcrumbLabel: t({ en: 'Breadcrumb', hy: 'Նավիգացիոն շղթա', ru: 'Навигационная цепочка' }),
     breadcrumbHome: t({ en: 'Home', hy: 'Գլխավոր', ru: 'Главная' }),

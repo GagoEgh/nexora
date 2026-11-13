@@ -13,6 +13,7 @@ const ABOUT_HEADING = 'A senior engineering partner for businesses that build wi
 const ENGAGEMENT_HEADING = 'Choose how we work together.';
 const PARTNERSHIPS_HEADING = 'Senior engineering behind your client relationships.';
 const CONTACT_HEADING = 'Let’s Build Something Meaningful.';
+const OUR_WORK_HEADING = 'Our Work. Digital Solutions in Action';
 
 /** Pages whose h1 is not simply their nav label. */
 const PAGE_HEADING: Record<string, string> = {
@@ -23,6 +24,7 @@ const PAGE_HEADING: Record<string, string> = {
   '/engagement-models': ENGAGEMENT_HEADING,
   '/partnerships': PARTNERSHIPS_HEADING,
   '/contact': CONTACT_HEADING,
+  '/our_work': OUR_WORK_HEADING,
 };
 
 const NAV = [
@@ -31,6 +33,7 @@ const NAV = [
   ['/solutions', 'Solutions'],
   ['/about', 'About'],
   ['/engagement-models', 'Engagement'],
+  ['/our_work', 'Our Work'],
   ['/partnerships', 'Partnerships'],
   ['/contact', 'Contact'],
 ] as const;
@@ -84,7 +87,7 @@ test.describe('header at the desktop design width', () => {
     page,
   }) => {
     const links = page.locator('app-header nav a.header__link');
-    await expect(links).toHaveCount(6);
+    await expect(links).toHaveCount(7);
     for (const [index, [href, label]] of NAV_ANCHORS.entries()) {
       await expect(links.nth(index)).toHaveAttribute('href', href);
       await expect(links.nth(index)).toHaveText(label);
@@ -153,7 +156,7 @@ test.describe('header at the desktop design width', () => {
 });
 
 /**
- * The compact desktop band (header.scss `$nav-compact-min`: en 1000, ru 1024, hy 1244).
+ * The compact desktop band (header.scss `$nav-compact-min`: en 1020, ru 1100, hy 1345).
  *
  * Between that width and the full-size breakpoint the same header renders at a smaller scale -
  * Label/Medium labels, 4px gaps, the 28px logo - so that a 1024px laptop gets the navigation
@@ -176,12 +179,12 @@ test.describe('header in the compact desktop band', () => {
 
     await expect(page.locator('app-header button.header__menu')).toBeHidden();
     await expect(page.locator('app-header nav.header__nav')).toBeVisible();
-    await expect(page.locator('app-header nav a.header__link')).toHaveCount(6);
+    await expect(page.locator('app-header nav a.header__link')).toHaveCount(7);
     await expect(page.locator(SERVICES_TRIGGER)).toHaveCount(1);
 
     /*
      * Smaller than the role the nav normally uses, which is the whole point of this band:
-     * between 1000px and the full-nav breakpoint the header keeps every item but scales the
+     * between 1020px and the full-nav breakpoint the header keeps every item but scales the
      * type down to fit. Asserting the relationship says that; pinning a size would only
      * record whichever figure the scale happens to produce.
      */
@@ -196,9 +199,9 @@ test.describe('header in the compact desktop band', () => {
 
   test('every locale clears its own breakpoint without crowding the nav', async ({ page }) => {
     for (const [path, width] of [
-      ['/', 1000],
-      ['/ru', 1024],
-      ['/hy', 1244],
+      ['/', 1020],
+      ['/ru', 1100],
+      ['/hy', 1345],
     ] as const) {
       await page.setViewportSize({ width, height: 900 });
       await page.goto(path);
@@ -214,7 +217,7 @@ test.describe('header in the compact desktop band', () => {
   });
 
   test('the full-size design takes over at its own breakpoint', async ({ page }) => {
-    await page.setViewportSize({ width: 1242, height: 900 });
+    await page.setViewportSize({ width: 1270, height: 900 });
     await page.goto('/');
 
     await expectTypeFromRole(page, 'app-header a.header__link', '--mat-sys-label-large');
@@ -342,10 +345,10 @@ test.describe('footer at the desktop design width', () => {
 
 test.describe('routing', () => {
   /*
-   * The inline nav turns on per locale (header.scss `$nav-min`: en 1242, ru 1300, hy 1420), so
+   * The inline nav turns on per locale (header.scss `$nav-min`: en 1270, ru 1350, hy 1445), so
    * these locale-prefixed tests need a width that clears the widest of the three.
    */
-  test.use({ viewport: { width: 1448, height: 900 } });
+  test.use({ viewport: { width: 1472, height: 900 } });
 
   test('pages are lazy: the chunk is requested on navigation and the active state follows', async ({
     page,

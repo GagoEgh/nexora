@@ -92,6 +92,8 @@ deployment. Only two exist:
   with its spec. Switching the form on is setting this value to the API's origin; an absolute
   `http(s)` URL with a host and no query or fragment, since `isUsableOrigin`
   (`src/app/core/routing/api-origin.ts`) rejects anything else and treats it as unset.
+  `CONTACT_API.md` is the runbook: what the empty origin does, which topology to pick, the
+  three guards that fail the build on a half-finished switch, and the order to do it in.
 - `siteOrigin` — the canonical origin for `<link rel="canonical">`, Open Graph URLs and
   `sitemap.xml`. Deliberately identical in both files so a preview build cannot advertise itself
   as the canonical copy.
@@ -204,6 +206,11 @@ because `ng serve` answers with an empty `<app-root>` rather than prerendered ma
 is nothing for a scriptless browser to use there.
 
 ## Two browser test profiles
+
+Both profiles below run on two engines, `chromium` and `webkit` (`playwright.config.ts`), which
+roughly doubles a full run; narrow it with `--project=chromium` while iterating. WebKit found no
+styling difference, but it did find four assertions that were timing Chromium's style flush
+rather than the design, which is what a second engine is for.
 
 `npm run e2e` runs against `ng serve`. With `outputMode: "static"` the dev server prerenders
 nothing: every route answers with a bare shell containing an empty `<app-root>`, and hydration

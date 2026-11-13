@@ -7,10 +7,31 @@ import { parseSiteOrigin } from './verify-seo.mjs';
 const CONCURRENCY = 4;
 const TIMEOUT_MS = 15_000;
 
+/**
+ * One answer from the deployed site, in the shape `fetchOnce` resolves to.
+ *
+ * `headers` is Node's `rawHeaders`: a flat, order-preserving `[name, value, name, value, ...]`
+ * array rather than a map, because a live document may repeat a header - `link` and
+ * `set-cookie` both do - and collapsing those is what this script exists to notice.
+ *
+ * @typedef {object} LiveResponse
+ * @property {number} status HTTP status code, or 0 when the answer carried none
+ * @property {string[]} headers flat `rawHeaders` pairs
+ * @property {string} body response body, decoded as UTF-8
+ */
+
+/**
+ * @param {string} sitemap the `sitemap.xml` source
+ * @returns {string[]} every `<loc>` in document order
+ */
 export function sitemapUrls(sitemap) {
   return [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
 }
 
+/**
+ * @param {string} html
+ * @returns {string | null} the canonical href, or null when the document declares none
+ */
 export function canonicalOf(html) {
   for (const tag of html.match(/<link\b[^>]*>/g) ?? []) {
     if (/rel="canonical"/.test(tag)) {
@@ -20,6 +41,11 @@ export function canonicalOf(html) {
   return null;
 }
 
+/**
+ * @param {string[]} rawHeaders flat `[name, value, ...]` pairs
+ * @param {string} name header name, matched case-insensitively
+ * @returns {string[]} every value sent under that name, in order
+ */
 export function headerValues(rawHeaders, name) {
   /** @type {string[]} */
   const values = [];
@@ -31,6 +57,11 @@ export function headerValues(rawHeaders, name) {
   return values;
 }
 
+/**
+ * @param {string} url the URL that was requested
+ * @param {LiveResponse} response
+ * @returns {string[]} one line per problem; empty when the page is sound
+ */
 export function checkPage(url, response) {
   const problems = [];
 
@@ -89,10 +120,6 @@ export function checkWwwRedirect(response, apex) {
   ];
 }
 
-/**
- * @param {readonly string[]} cacheControl every `Cache-Control` value the asset was served with
- * @returns {string[]}
- */
 export function checkAssetCaching(cacheControl) {
   const problems = [];
   if (cacheControl.length !== 1) {

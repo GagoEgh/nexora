@@ -1,7 +1,7 @@
 import { t, type Dictionary } from 'intlayer';
 
 const aboutProductContent = {
-  key: 'about-glance',
+  key: 'our-work-glance',
   content: {
     title: t({
       en: 'Nexora at a glance',

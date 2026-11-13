@@ -6,3 +6,4 @@ export const SERVICES_PATH = '/services';
 export const SOLUTIONS_PATH = '/solutions';
 export const AI_AGENT_SEGMENT = 'ai_agent';
 export const AI_AGENT_PATH = `${SERVICES_PATH}/${AI_AGENT_SEGMENT}`;
+export const OUR_WORK_SEGMENT = 'our_work';

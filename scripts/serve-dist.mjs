@@ -6,6 +6,7 @@ import { argv, exit } from 'node:process';
 
 export const PREFIXED_LOCALES = ['hy', 'ru'];
 
+/** @type {Record<string, string>} */
 const CONTENT_TYPES = {
   '.html': 'text/html; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
@@ -28,6 +29,10 @@ export function contentTypeOf(filePath) {
   return CONTENT_TYPES[extension] ?? 'application/octet-stream';
 }
 
+/**
+ * @param {string} pathname
+ * @returns {string} the 404 document for that path's locale, relative to the root
+ */
 export function notFoundDocumentFor(pathname) {
   for (const locale of PREFIXED_LOCALES) {
     if (pathname === `/${locale}` || pathname.startsWith(`/${locale}/`)) {
@@ -37,6 +42,10 @@ export function notFoundDocumentFor(pathname) {
   return 'not-found/index.html';
 }
 
+/**
+ * @param {string} pathname
+ * @returns {string[]} the files to try, in order; empty when the path escapes the root
+ */
 export function candidatesFor(pathname) {
   const trimmed = pathname.replace(/^\/+/, '').replace(/\/+$/, '');
   const normalized = trimmed === '' ? '' : normalize(trimmed);
@@ -49,6 +58,11 @@ export function candidatesFor(pathname) {
   return [normalized, join(normalized, 'index.html')];
 }
 
+/**
+ * @param {string} root directory the build was written to
+ * @param {string} pathname request path
+ * @returns {Promise<{ file: string, status: number }>} the file to serve and the status to send
+ */
 export async function resolveRequest(root, pathname) {
   for (const candidate of candidatesFor(pathname)) {
     const absolute = resolve(root, candidate);
@@ -64,6 +78,11 @@ export async function resolveRequest(root, pathname) {
   return { file: resolve(root, notFoundDocumentFor(pathname)), status: 404 };
 }
 
+/**
+ * @param {string} root directory to serve
+ * @param {number} port port to listen on
+ * @returns {Promise<number>} process exit code
+ */
 async function main(root, port) {
   const absoluteRoot = resolve(root);
   try {

@@ -62,9 +62,11 @@ test.describe('the type scale', () => {
     const wide = await sizeOf(page, 'display-hero');
 
     await page.setViewportSize({ width: 390, height: 844 });
-    const narrow = await sizeOf(page, 'display-hero');
+    // Polled: WebKit can answer the first `getComputedStyle` after a resize with the value from
+    // before it, so reading once would be timing the style flush rather than the scale.
+    await expect.poll(() => sizeOf(page, 'display-hero')).toBeLessThan(wide);
 
-    expect(narrow).toBeLessThan(wide);
+    const narrow = await sizeOf(page, 'display-hero');
     expect(narrow).toBe(await sizeOf(page, 'display-section'));
   });
 });

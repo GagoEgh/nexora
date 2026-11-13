@@ -4,6 +4,12 @@ import { argv, exit } from 'node:process';
 export const LOGO_SIZE = 512;
 const MARK_SCALE = 0.72;
 
+/**
+ * The throwaway document the mark is screenshotted from.
+ *
+ * @param {string} svg the mark's source, inlined as-is
+ * @returns {string} a full HTML document sized to `LOGO_SIZE`
+ */
 export function logoDocument(svg) {
   return `<!doctype html><meta charset="utf-8"><style>
     html,body{margin:0;padding:0}
@@ -13,6 +19,11 @@ export function logoDocument(svg) {
   </style>${svg}`;
 }
 
+/**
+ * @param {string} source path to the source SVG
+ * @param {string} target path to write the PNG to
+ * @returns {Promise<number>} process exit code
+ */
 async function main(source, target) {
   const svg = await readFile(source, 'utf8');
   const { chromium } = await import('@playwright/test');

@@ -8,7 +8,6 @@ import { AboutProducts } from './about-products/about-products';
 @Component({
   imports: [PageIntro, Products, AboutProducts],
   selector: 'app-our-work',
-  styleUrl: './our-work.scss',
   templateUrl: './our-work.html',
 })
 export class OurWork {

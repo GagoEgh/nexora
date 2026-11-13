@@ -161,6 +161,17 @@ test.describe('hero illustration entrance', () => {
     await page.goto('/');
     await expect(page.locator('.art__link-line').first()).toBeAttached();
 
+    /*
+     * The `out` styles are reached through transitions, several of them delayed, so a style
+     * read taken in the same tick as the attribute write reports whatever the transition is
+     * leaving rather than what it is heading for - Chromium happens to answer with the target,
+     * WebKit with the start, and neither is the contract under test. Transitions are switched
+     * off first so the read is of the declared state.
+     */
+    await page.addStyleTag({
+      content: '*, *::before, *::after { transition: none !important; animation: none !important }',
+    });
+
     const hidden = await page.evaluate(() => {
       document.querySelector('.art')?.setAttribute('data-reveal', 'out');
       return {

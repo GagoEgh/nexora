@@ -18,11 +18,13 @@
     @for (service of content().services; track $index; let i = $index) {
       <li class="expertise__card">
         <div class="expertise__card-head">
-          <app-icon-tile [icon]="service.icon.value" tone="primary" style="align-self: baseline" />
+          <app-icon-tile class="expertise__card-tile" [icon]="service.icon.value" tone="primary" />
           <img
             class="expertise__card-img"
             [src]="service.image.value"
             [alt]="service.title.value"
+            loading="lazy"
+            decoding="async"
           />
         </div>
         <h3 class="expertise__card-title">{{ service.title }}</h3>

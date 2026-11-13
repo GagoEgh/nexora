@@ -2,7 +2,7 @@ import { t, type Dictionary } from 'intlayer';
 import type { AppIconName } from '../../../core/icons/icons';
 
 const productContent = {
-  key: 'expertise',
+  key: 'our-work-products',
   content: {
     eyebrow: t({
       en: 'What we do',
@@ -34,7 +34,7 @@ const productContent = {
       {
         icon: 'smartphone' satisfies AppIconName,
         path: 'https://www.sellmewatch.com/',
-        image: '/images/infiniti.png',
+        image: '/images/infiniti.webp',
         title: t({
           en: 'Connected Car & Vehicle Management Mobile App',
           hy: 'Խելացի մեքենաների կառավարման հավելված',
@@ -49,7 +49,7 @@ const productContent = {
       {
         icon: 'smartphone' satisfies AppIconName,
         path: 'https://play.google.com/store/apps/details?id=org.mezave&pcampaignid=web_share',
-        image: '/images/meal.jpeg',
+        image: '/images/meal.webp',
         title: t({
           en: 'Community Food Sharing Mobile App',
           hy: 'Համայնքային սննդի փոխանակման բջջային հավելված',
@@ -64,7 +64,7 @@ const productContent = {
       {
         icon: 'smartphone' satisfies AppIconName,
         path: 'https://apps.apple.com/us/app/draculai/id6744846504',
-        image: '/images/medical.png',
+        image: '/images/medical.webp',
         title: t({
           en: 'Health & Substance Tracking Mobile Application',
           hy: 'Բջջային հավելված ՝ առողջության և նյութերի հետևման համար',
@@ -80,7 +80,7 @@ const productContent = {
       {
         icon: 'code' satisfies AppIconName,
         path: 'https://dresslav.com/',
-        image: '/images/lave.jpg',
+        image: '/images/lave.webp',
         title: t({
           en: 'LAV — E-commerce Website',
           hy: 'LAV — էլեկտրոնային առևտրի Կայք',
@@ -95,7 +95,7 @@ const productContent = {
       {
         icon: 'code' satisfies AppIconName,
         path: 'https://abletonremakes.com/',
-        image: '/images/muzic.jpeg',
+        image: '/images/muzic.webp',
         title: t({
           en: 'Digital Music Production E-commerce & Subscription Platform',
           hy: 'Երաժշտական նյութերի վաճառքի հարթակ',
@@ -110,7 +110,7 @@ const productContent = {
       {
         icon: 'code' satisfies AppIconName,
         path: 'https://www.libraanalytics.com/',
-        image: '/images/power.jpeg',
+        image: '/images/power.webp',
         title: t({
           en: 'Data Analytics & Business Consulting Website',
           hy: 'Տվյալների վերլուծության և բիզնես խորհրդատվության կայք',
@@ -125,7 +125,7 @@ const productContent = {
       {
         icon: 'code' satisfies AppIconName,
         path: 'https://www.rijewelers.com/',
-        image: '/images/je.jpeg',
+        image: '/images/je.webp',
         title: t({
           en: 'Robert Irwin Jewelers — E-commerce Website',
           hy: 'Robert Irwin Jewelers-էլեկտրոնային առևտրի Կայք',
@@ -140,7 +140,7 @@ const productContent = {
       {
         icon: 'code' satisfies AppIconName,
         path: 'https://klinikeurope.co.uk/',
-        image: '/images/klinik.jpeg',
+        image: '/images/klinik.webp',
         title: t({
           en: 'Medical Tourism & Healthcare Services Platform',
           hy: 'Բժշկական զբոսաշրջության հարթակ',
@@ -155,7 +155,7 @@ const productContent = {
       {
         icon: 'code' satisfies AppIconName,
         path: 'https://www.taiping.co.nz/',
-        image: '/images/market.jpeg',
+        image: '/images/market.webp',
         title: t({
           en: 'Asian Supermarket & Wholesale Business Website',
           hy: 'Ասիական սուպերմարկետի և մեծածախ բիզնեսի կայք',
@@ -170,7 +170,7 @@ const productContent = {
       {
         icon: 'code' satisfies AppIconName,
         path: 'https://mertel.agency/sk/en/',
-        image: '/images/mertal.jpeg',
+        image: '/images/mertal.webp',
         title: t({
           en: 'Corporate Website for a Global Experiential Marketing Agency',
           hy: 'Միջազգային մարքեթինգային գործակալության կայք',
@@ -185,7 +185,7 @@ const productContent = {
       {
         icon: 'code' satisfies AppIconName,
         path: 'https://www.mastercraftjewelers.com/',
-        image: '/images/master.jpeg',
+        image: '/images/master.webp',
         title: t({
           en: 'Luxury Jewelry E-commerce Platform',
           hy: 'Luxury Jewelry էլեկտրոնային առևտրի Կայք',
@@ -200,7 +200,7 @@ const productContent = {
       {
         icon: 'code' satisfies AppIconName,
         path: 'https://www.gotmatcha.com/',
-        image: '/images/got.jpeg',
+        image: '/images/got.webp',
         title: t({
           en: 'Got Matcha E-commerce Platform',
           hy: 'Got Matcha էլեկտրոնային առևտրի Կայք',
@@ -215,7 +215,7 @@ const productContent = {
       {
         icon: 'code' satisfies AppIconName,
         path: 'https://roar-organic.myshopify.com/',
-        image: '/images/organic.jpeg',
+        image: '/images/organic.webp',
         title: t({
           en: 'Organic Beverage E-commerce Platform',
           hy: 'Organic Beverage էլեկտրոնային առևտրի Կայք',
@@ -230,7 +230,7 @@ const productContent = {
       {
         icon: 'code' satisfies AppIconName,
         path: 'https://www.sellmewatch.com/',
-        image: '/images/watch.jpeg',
+        image: '/images/watch.webp',
         title: t({
           en: 'Luxury Watch Trading & Valuation Platform',
           hy: 'Շքեղ ժամացույցների առևտրի և գնահատման հարթակ',
@@ -246,7 +246,7 @@ const productContent = {
       {
         icon: 'code' satisfies AppIconName,
         path: 'https://www.jdmwestcoast.com/',
-        image: '/images/car.jpeg',
+        image: '/images/car.webp',
         title: t({
           en: 'Automotive Parts E-commerce Platform',
           hy: 'Automotive Parts էլեկտրոնային առևտրի Կայք',
@@ -261,7 +261,7 @@ const productContent = {
       {
         icon: 'code' satisfies AppIconName,
         path: 'https://shopzadehmdskin.com/ ',
-        image: '/images/zadeh.jpeg',
+        image: '/images/zadeh.webp',
         title: t({
           en: 'Medical-Grade Skincare E-commerce Platform',
           hy: 'Medical-Grade Skincare էլեկտրոնային առևտրի Կայք',
@@ -277,7 +277,7 @@ const productContent = {
       {
         icon: 'code' satisfies AppIconName,
         path: 'https://www.drinkhydrant.com/',
-        image: '/images/juce.jpeg',
+        image: '/images/juce.webp',
         title: t({
           en: 'Functional Beverage E-commerce Platform',
           hy: 'Functional Beverage էլեկտրոնային առևտրի Կայք',
@@ -292,7 +292,7 @@ const productContent = {
       {
         icon: 'code' satisfies AppIconName,
         path: 'https://www.casamance.com/en/',
-        image: '/images/interier.jpeg',
+        image: '/images/interier.webp',
         title: t({
           en: 'Luxury Interior Design & Home Decor Platform',
           hy: 'Ինտերիերի շքեղ դիզայնի և տան ձևավորման հարթակ',
@@ -307,7 +307,7 @@ const productContent = {
       {
         icon: 'code' satisfies AppIconName,
         path: 'https://www.skinome.com/',
-        image: '/images/skay.jpeg',
+        image: '/images/skay.webp',
         title: t({
           en: 'Premium Skincare E-commerce & Personalized Beauty Platform',
           hy: 'Պրեմիում մաշկի խնամքի էլեկտրոնային առևտրի և անհատականացված գեղեցկության հարթակ',

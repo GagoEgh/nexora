@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { useDictionary } from 'angular-intlayer';
-import aboutProductContent from './aboutProducts.content';
+import aboutProductContent from './about-products.content';
 
 @Component({
   imports: [],

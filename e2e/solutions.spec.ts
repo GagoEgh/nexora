@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { heldBelowTheFold, probeReveal, revealedOnSight } from './support/reveal';
 
 /**
  * Solutions page contract.
@@ -298,11 +299,26 @@ test.describe('solutions entrance', () => {
       .toBe('in');
 
     const panels = page.locator('.challenge-details__panel');
-    const atLoad = await panels.evaluateAll((els) =>
-      els.map((el) => el.getAttribute('data-reveal')),
-    );
-    // The first is already on screen; the rest are not.
-    expect(atLoad.slice(1).every((state) => state === 'out')).toBe(true);
+    /*
+     * Which panels are still waiting is a function of how tall the copy above them renders, and
+     * the second panel's top has sat within a pixel of the reveal line at this viewport. So the
+     * page is asked where the line falls rather than told that "the first one is on screen":
+     * the claim under test is that reaching a panel is what reveals it, not that exactly seven
+     * of the eight start hidden.
+     */
+    const atLoad = await probeReveal(panels);
+    const held = heldBelowTheFold(atLoad);
+    expect(
+      held.length,
+      'nothing starts below the reveal line, so this proves nothing',
+    ).toBeGreaterThan(0);
+    expect(held.map((panel) => panel.state)).toEqual(held.map(() => 'out'));
+    // And whatever does start on screen reveals itself, without a scroll it will never get.
+    const onSight = revealedOnSight(atLoad);
+    expect(onSight.length, 'no panel starts on screen').toBeGreaterThan(0);
+    await expect
+      .poll(() => probeReveal(panels).then((probes) => revealedOnSight(probes).map((p) => p.state)))
+      .toEqual(onSight.map(() => 'in'));
 
     await panels.nth(7).scrollIntoViewIfNeeded();
     await expect

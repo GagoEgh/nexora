@@ -386,6 +386,27 @@ test.describe('contact under a locale prefix', () => {
  * `reducedMotion: 'reduce'` (playwright.config.ts), which is what keeps its geometry stable, so
  * these specs opt back in where the behaviour under test is motion.
  */
+/**
+ * A colour token as `getComputedStyle` reports it.
+ *
+ * Tokens are authored as hex and computed styles come back as `rgb()`, so the two cannot be
+ * compared directly; letting the browser resolve the token keeps the assertion pinned to the
+ * role rather than to a literal copied out of the theme.
+ *
+ * @param page the page to resolve against
+ * @param token the custom property to read, e.g. `--mat-sys-error`
+ * @returns the token's value in the `rgb(r, g, b)` form computed styles use
+ */
+const resolvedColour = (page: Page, token: string): Promise<string> =>
+  page.evaluate((name) => {
+    const probe = document.createElement('span');
+    probe.style.color = getComputedStyle(document.documentElement).getPropertyValue(name);
+    document.body.append(probe);
+    const value = getComputedStyle(probe).color;
+    probe.remove();
+    return value;
+  }, token);
+
 test.describe('contact interaction feedback', () => {
   test.use({ reducedMotion: 'no-preference', viewport: { width: 1440, height: 1400 } });
 
@@ -447,8 +468,16 @@ test.describe('contact interaction feedback', () => {
     // Touch the control and leave it empty: the caption carries the error, not just the message.
     await page.locator('#contact-name').click();
     await page.locator('#contact-email').click();
+    // Clear of the caption and of both fields, so neither hover nor focus can be what colours
+    // it - the claim is about the invalid state alone.
+    await page.mouse.move(0, 0);
     await expect(caption).toHaveClass(/field-label--invalid/);
-    await expect.poll(colour, { timeout: 2000 }).not.toBe(idle);
+    /*
+     * The error role itself, not merely "something other than the resting colour": the hover
+     * colour would also satisfy that, and the colour is reached through a transition, so the
+     * poll has to wait for it to settle rather than catch it in flight.
+     */
+    await expect.poll(colour).toBe(await resolvedColour(page, '--mat-sys-error'));
   });
 
   test('the required mark is shown but left out of the accessible name', async ({ page }) => {

@@ -58,6 +58,7 @@ describe('Header', () => {
       '/solutions',
       '/about',
       '/engagement-models',
+      '/our_work',
       '/partnerships',
       '/contact',
     ]);
@@ -66,6 +67,7 @@ describe('Header', () => {
       'Solutions',
       'About',
       'Engagement',
+      'Our Work',
       'Partnerships',
       'Contact',
     ]);
@@ -178,6 +180,7 @@ describe('Header', () => {
       '/ru/solutions',
       '/ru/about',
       '/ru/engagement-models',
+      '/ru/our_work',
       '/ru/partnerships',
       '/ru/contact',
     ]);

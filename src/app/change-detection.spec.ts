@@ -53,6 +53,9 @@ import { PartnerProcess } from './pages/partnerships/partner-process/partner-pro
 import { PartnerTerms } from './pages/partnerships/partner-terms/partner-terms';
 import { Partnerships } from './pages/partnerships/partnerships';
 import { NotFound } from './pages/not-found/not-found';
+import { OurWork } from './pages/our-work/our-work';
+import { AboutProducts } from './pages/our-work/about-products/about-products';
+import { Products } from './pages/our-work/products/products';
 import { CategoryNav } from './pages/services/category-nav/category-nav';
 import { FilterBar } from './pages/services/filter-bar/filter-bar';
 import { Services } from './pages/services/services';
@@ -139,6 +142,9 @@ const COMPONENTS: readonly [string, Type<unknown>][] = [
   ['ModelDetails', ModelDetails],
   ['ModelComparison', ModelComparison],
   ['ModelFaq', ModelFaq],
+  ['OurWork', OurWork],
+  ['AboutProducts', AboutProducts],
+  ['Products', Products],
   ['Partnerships', Partnerships],
   ['PartnerFlow', PartnerFlow],
   ['PartnerAudience', PartnerAudience],

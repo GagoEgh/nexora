@@ -14,12 +14,6 @@ export function localeOf(pagePath) {
   return 'en';
 }
 
-/**
- * Reads `siteOrigin` out of an environment file, without its trailing slash.
- *
- * @param {string} source
- * @returns {string}
- */
 export function parseSiteOrigin(source) {
   const match = /siteOrigin:\s*'([^']+)'/.exec(source);
   if (!match) {

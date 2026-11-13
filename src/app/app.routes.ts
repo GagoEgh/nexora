@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { matchLocalePrefix, syncLocaleWithUrl } from './core/i18n/locale-routing';
-import { AI_AGENT_SEGMENT } from './core/routing/paths';
+import { AI_AGENT_SEGMENT, OUR_WORK_SEGMENT } from './core/routing/paths';
 import type { DocumentMetaRouteData } from './core/seo/document-meta';
 
 const pages: Routes = [
@@ -51,9 +51,9 @@ const pages: Routes = [
     data: { meta: 'contact' } satisfies DocumentMetaRouteData,
   },
   {
-    path: 'our_work',
+    path: OUR_WORK_SEGMENT,
     loadComponent: () => import('./pages/our-work/our-work').then((m) => m.OurWork),
-    data: { meta: 'not-found' } satisfies DocumentMetaRouteData,
+    data: { meta: 'our_work' } satisfies DocumentMetaRouteData,
   },
   {
     path: 'not-found',

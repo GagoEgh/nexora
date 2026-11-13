@@ -56,16 +56,16 @@ const documentMetaContent = {
           ru: 'Nexora формирует небольшие команды из опытных специалистов, чтобы архитектурные решения, оценка компромиссов и реализация проекта с самого первого обсуждения оставались в руках профессионалов.',
         }),
       },
-      'our-work': {
+      our_work: {
         title: t({
           en: 'Our Work | Nexora',
           hy: 'Մեր աշխատանքները | Nexora',
           ru: 'Наши работы | Nexora',
         }),
         description: t({
-          en: 'Nexora keeps teams small and senior so that architecture, trade-offs and delivery stay in experienced hands from the first conversation onward.',
-          hy: 'Nexora-ն ձևավորում է փոքր թիմեր՝ փորձառու մասնագետներով, որպեսզի ճարտարապետական որոշումները, փոխզիջումների գնահատումը և աշխատանքների իրականացումը հենց առաջին քննարկումից լինեն փորձառու մասնագետների վերահսկողության ներքո։',
-          ru: 'Nexora формирует небольшие команды из опытных специалистов, чтобы архитектурные решения, оценка компромиссов и реализация проекта с самого первого обсуждения оставались в руках профессионалов.',
+          en: 'Selected websites, mobile applications and AI-powered systems Nexora has delivered across e-commerce, healthcare, finance, SaaS, automotive and business automation.',
+          hy: 'Nexora-ի իրականացրած ընտրված կայքերը, բջջային հավելվածները և AI լուծումները՝ e-commerce, առողջապահության, ֆինանսների, SaaS-ի, ավտոմոբիլային ոլորտի և բիզնեսի ավտոմատացման ուղղություններով։',
+          ru: 'Избранные веб-сайты, мобильные приложения и решения на базе AI, реализованные Nexora в сферах e-commerce, медицины, финансов, SaaS, автомобильной отрасли и автоматизации бизнеса.',
         }),
       },
       'engagement-models': {
@@ -130,6 +130,7 @@ const documentMetaContent = {
       }),
       partnerships: t({ en: 'Partnerships', hy: 'Գործընկերություն', ru: 'Партнёрство' }),
       contact: t({ en: 'Contact', hy: 'Կապ', ru: 'Контакты' }),
+      our_work: t({ en: 'Our Work', hy: 'Մեր աշխատանքները', ru: 'Наши работы' }),
     },
   },
 } as const satisfies Dictionary;

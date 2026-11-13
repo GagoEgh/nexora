@@ -4,15 +4,15 @@
 @use 'mixins/surface';
 
 $nav-compact-min: (
-  en: 1000px,
-  ru: 1024px,
-  hy: 1244px,
+  en: 1020px,
+  ru: 1100px,
+  hy: 1345px,
 );
 
 $nav-min: (
-  en: 1242px,
-  ru: 1300px,
-  hy: 1420px,
+  en: 1270px,
+  ru: 1350px,
+  hy: 1445px,
 );
 
 @mixin _from($widths) {
