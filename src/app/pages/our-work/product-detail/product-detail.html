@@ -39,12 +39,11 @@
           </p>
         }
       </div>
-
       <figure class="product__hero-art" appReveal="load">
         <img
           class="product__hero-img"
           [src]="item.photos[0].src"
-          alt=""
+          [alt]="item.photos[0].alt"
           [width]="item.photos[0].width"
           [height]="item.photos[0].height"
           fetchpriority="high"
@@ -69,35 +68,30 @@
         }
       </ul>
     </section>
-
-    <!--
-      The gallery is everything after the first photograph. Today no product has one, so this
-      section renders as copy alone; when original images and screenshots arrive they are added
-      to `ProductMeta.photos` and the figures appear here with no change to this template.
-    -->
     <section class="product__section product__section--experience" appReveal>
-      <div class="product__experience" [class.product__experience--copy-only]="!gallery().length">
+      <div class="product__experience" [class.product__experience--gallery]="gallery().length > 0">
+        <div class="product__experience-copy">
+          <h2 class="product__section-title">{{ content().sections.experience }}</h2>
+          <p class="product__prose">{{ item.summary }}</p>
+        </div>
+
         @if (gallery().length) {
-          <div class="product__gallery">
+          <ul class="product__gallery">
             @for (shot of gallery(); track shot.src) {
-              <figure class="product__experience-art">
+              <li class="product__shot">
                 <img
-                  class="product__experience-img"
+                  class="product__shot-img"
                   [src]="shot.src"
-                  alt=""
+                  [alt]="shot.alt"
                   [width]="shot.width"
                   [height]="shot.height"
                   loading="lazy"
                   decoding="async"
                 />
-              </figure>
+              </li>
             }
-          </div>
+          </ul>
         }
-        <div class="product__experience-copy">
-          <h2 class="product__section-title">{{ content().sections.experience }}</h2>
-          <p class="product__prose">{{ item.summary }}</p>
-        </div>
       </div>
     </section>
 

@@ -67,30 +67,16 @@ export class ProjectCard {
 
   protected readonly flipped = signal(false);
 
-  /**
-   * Held low while Escape puts the caret back on the card. Returning focus raises `focusin`,
-   * and without this the card would turn straight back to the face the visitor just dismissed.
-   */
   private openOnFocus = true;
 
-  /** The card's own picture. `photos` is never empty; anything after the first is gallery. */
+  private openedByFocus = false;
+
   protected readonly cover = computed(() => this.product().photos[0]);
 
-  /**
-   * The host's accessible name. Nineteen cards sit in one list, so the name has to say which
-   * product this is before a screen-reader user decides whether to walk into it.
-   */
   protected readonly cardLabel = computed(
     () => `${this.product().name} — ${this.product().category}`,
   );
 
-  /**
-   * The outward link's accessible name, with the new-tab notice folded in.
-   *
-   * It has to be part of the name rather than a visually-hidden span beside an `aria-label`:
-   * `aria-label` replaces an element's contents in name computation, so a sibling span is
-   * computed away and the warning is silently lost.
-   */
   protected readonly visitLabel = computed(
     () => `${this.labels().visitSite}: ${this.product().name} (${this.labels().newTab})`,
   );
@@ -99,46 +85,45 @@ export class ProjectCard {
     this.flipped.set(true);
   }
 
-  /** The keyboard trigger: the caret arriving anywhere in the card turns it. */
   protected focusEnter(): void {
     if (!this.openOnFocus) return;
+    this.openedByFocus = !this.flipped();
     this.show();
   }
 
-  /** Hover is the pointer trigger only. On touch a tap often raises `mouseenter` first. */
   protected pointerEnter(): void {
     if (this.coarsePointer()) return;
     this.show();
   }
 
-  /** Leaving with the caret still inside would pull the back out from under the keyboard. */
   protected pointerLeave(): void {
     if (this.coarsePointer() || this.containsFocus()) return;
+    this.openedByFocus = false;
     this.flipped.set(false);
   }
 
-  /** The touch trigger. A tap on either link is navigation, not a toggle. */
   protected onClick(event: MouseEvent): void {
+    const alreadyOpenedByThisGesture = this.openedByFocus;
+    this.openedByFocus = false;
+
     if (!this.coarsePointer()) return;
     if ((event.target as HTMLElement | null)?.closest('a')) return;
+    if (alreadyOpenedByThisGesture) return;
+
     this.flipped.update((showing) => !showing);
   }
 
   protected onFocusOut(event: FocusEvent): void {
     const next = event.relatedTarget;
     if (next instanceof Node && this.host.nativeElement.contains(next)) return;
+    this.openedByFocus = false;
     this.flipped.set(false);
   }
 
-  /**
-   * Escape returns the card and leaves the caret on it, so the visitor's place in a grid of
-   * nineteen is not lost. The caret may be on one of the back face's links, which is about to
-   * become unfocusable, so it is moved to the card itself - with `focusin` suppressed for the
-   * duration, because that move would otherwise re-open what was just dismissed.
-   */
   protected dismiss(): void {
     if (!this.flipped()) return;
     this.flipped.set(false);
+    this.openedByFocus = false;
     this.openOnFocus = false;
     try {
       (this.host.nativeElement as HTMLElement).focus();
@@ -152,10 +137,6 @@ export class ProjectCard {
     return active !== null && this.host.nativeElement.contains(active);
   }
 
-  /**
-   * Checked per call rather than cached: this runs on the server during prerender, where there
-   * is no `matchMedia`, and a visitor can switch input device without reloading.
-   */
   private coarsePointer(): boolean {
     const view = this.document.defaultView;
     return typeof view?.matchMedia === 'function' && view.matchMedia('(hover: none)').matches;

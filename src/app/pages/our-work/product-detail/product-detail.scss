@@ -4,13 +4,13 @@
 @use 'mixins/container';
 @use 'mixins/eyebrow';
 @use 'mixins/reveal';
-@use 'mixins/section';
 @use 'mixins/surface';
 @use 'mixins/text';
 @use 'mixins/visually-hidden';
 
 :host {
   display: block;
+  --nx-page-intro-aside: 520px;
 }
 
 .product__intro {
@@ -28,18 +28,12 @@
   @include text.contained();
 }
 
-// Grouped for the same reason as the transitions below: included per rule, three copies of
-// these three declarations cost more than this page has left in its CSS budget.
 .product__tech-label,
 .product__feature-index,
 .product__next-label {
   @include text.label-caps();
 }
 
-// The entrance transitions are grouped by delay rather than declared per rule. `reveal.item()`
-// emits a multi-property transition list every time it is included, and this page has enough
-// revealing elements that one include each pushed the compiled stylesheet past the project's
-// per-component CSS budget.
 .product__prose,
 .product__feature,
 .product__value-card {
@@ -55,20 +49,43 @@
   }
 }
 
-.product__experience {
-  @include section.split($aside: 560px, $row-gap: 32);
-  align-items: center;
-}
+.product__experience--gallery {
+  display: grid;
+  gap: spacing.space(32);
 
-// With no gallery yet, the section is copy alone and must not hold open an empty aside column.
-.product__experience--copy-only {
-  display: block;
+  @include layout.up(large) {
+    grid-template-columns: minmax(0, 420px) minmax(0, 1fr);
+    column-gap: spacing.space(64);
+    align-items: center;
+  }
 }
 
 .product__gallery {
   display: grid;
-  gap: spacing.space(24);
+  align-items: start;
+  gap: spacing.space(16);
   min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @include layout.up(medium) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.product__shot {
+  @include surface.outlined();
+  display: grid;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: var(--nx-sys-corner-panel);
+}
+
+.product__shot-img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .product__category {
@@ -91,8 +108,6 @@
   margin-block-start: spacing.space(8);
 }
 
-// Technology, kept to one chip. There is no Technology & Architecture section because
-// `platform` is the only verified technical fact on record, and four products lack even that.
 .product__tech {
   margin: 0;
 }
@@ -117,20 +132,23 @@
 }
 
 .product__hero-art,
-.product__experience-art {
+.product__shot {
   @include reveal.item(120ms);
+}
+
+.product__hero-art {
   display: grid;
   gap: spacing.space(8);
   margin: 0;
 }
 
-.product__hero-img,
-.product__experience-img {
+.product__hero-img {
   display: block;
   width: 100%;
   height: auto;
   aspect-ratio: 16 / 10;
   object-fit: cover;
+  object-position: center;
   border-radius: var(--nx-sys-corner-panel);
 }
 
@@ -263,7 +281,7 @@
   .product__prose,
   .product__feature,
   .product__value-card,
-  .product__experience-art,
+  .product__shot,
   .product__next-link {
     @include reveal.hidden();
   }

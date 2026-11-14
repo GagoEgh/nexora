@@ -10,6 +10,7 @@ import { provideAppIcons } from '../../../core/icons/provide-app-icons';
 import { OUR_WORK_SEGMENT } from '../../../core/routing/paths';
 import { DocumentMetaOverride } from '../../../core/seo/document-meta-override';
 import { PRODUCT_IDS } from '../products/data/product-ids';
+import { PRODUCT_META } from '../products/data/product-meta';
 import { ProductDetail } from './product-detail';
 
 const ICON_SVG =
@@ -147,24 +148,81 @@ describe('ProductDetail', () => {
   });
 
   /**
-   * The gallery is `photos` past the first, so it is empty until further photographs are added
-   * to the registry - which is the whole point of `photos` being an array. Nothing is invented
-   * to fill it: the experience section runs as copy alone, and says so in a class the layout
-   * reads, rather than holding open an empty column.
+   * The gallery is `photos` past the first, so a product with one photograph has none - which
+   * is most of them. Nothing is invented to fill it: the experience section runs as copy alone
+   * rather than holding an empty column open beside it.
    */
   it('shows no gallery while a product has only its one photograph', async () => {
     await go(`/${OUR_WORK_SEGMENT}/${FIRST}`);
 
     expect(root.querySelector('.product__gallery')).toBeNull();
-    expect(root.querySelectorAll('.product__experience-img')).toHaveLength(0);
+    expect(root.querySelectorAll('.product__shot-img')).toHaveLength(0);
     expect(
       root
         .querySelector('.product__experience')
-        ?.classList.contains('product__experience--copy-only'),
-    ).toBe(true);
+        ?.classList.contains('product__experience--gallery'),
+    ).toBe(false);
     // No caption either: a caption exists to say what a picture is, and there is no longer a
     // generated composition here to disclaim.
     expect(root.querySelectorAll('.product__caption')).toHaveLength(0);
+  });
+
+  /**
+   * The other half of that claim, on the one product that has original photographs today. The
+   * figures come from the registry, in order, and each is deferred - they are below the fold -
+   * and declared at its own size, so the page does not shift as they arrive.
+   */
+  it('renders every photograph past the first as the gallery', async () => {
+    await go(`/${OUR_WORK_SEGMENT}/lav`);
+
+    const gallery = PRODUCT_META['lav'].photos.slice(1);
+    expect(gallery.length, 'lav is the fixture for this test').toBeGreaterThan(1);
+
+    const shots = Array.from(root.querySelectorAll<HTMLImageElement>('.product__shot-img'));
+    expect(shots).toHaveLength(gallery.length);
+    expect(shots.map((shot) => shot.getAttribute('src'))).toEqual(
+      gallery.map((photo) => `images/${photo.file}`),
+    );
+
+    for (const [index, shot] of shots.entries()) {
+      expect(shot.getAttribute('loading'), `shot ${index}`).toBe('lazy');
+      expect(shot.getAttribute('decoding'), `shot ${index}`).toBe('async');
+      expect(shot.getAttribute('width'), `shot ${index}`).toBe(String(gallery[index].width));
+      expect(shot.getAttribute('height'), `shot ${index}`).toBe(String(gallery[index].height));
+    }
+
+    expect(
+      root
+        .querySelector('.product__experience')
+        ?.classList.contains('product__experience--gallery'),
+    ).toBe(true);
+  });
+
+  /**
+   * A photograph that shows something the page does not say in words carries a description of
+   * it. The heading is not repeated there, and a product with no description keeps `alt=""`,
+   * which is what marks an image decorative rather than unlabelled.
+   */
+  it('describes the photographs that have a description, and no others', async () => {
+    await go(`/${OUR_WORK_SEGMENT}/lav`);
+
+    const alts = [
+      root.querySelector('.product__hero-img')?.getAttribute('alt') ?? '',
+      ...Array.from(root.querySelectorAll('.product__shot-img')).map(
+        (shot) => shot.getAttribute('alt') ?? '',
+      ),
+    ];
+    expect(
+      alts.every((alt) => alt.length > 0),
+      'every lav photograph is described',
+    ).toBe(true);
+    expect(new Set(alts).size, 'two photographs share one description').toBe(alts.length);
+    for (const alt of alts) {
+      expect(alt.toLowerCase(), 'the description repeats the heading').not.toBe('lav');
+    }
+
+    await go(`/${OUR_WORK_SEGMENT}/${FIRST}`);
+    expect(root.querySelector('.product__hero-img')?.getAttribute('alt')).toBe('');
   });
 
   /**

@@ -160,12 +160,14 @@ export const PRODUCT_META: Readonly<Record<ProductId, ProductMeta>> = {
   },
   lav: {
     archetype: 'storefront',
-    photos: [{ file: 'lave.webp', width: 800, height: 450 }],
+    photos: [
+      { file: 'lave.webp', width: 800, height: 450 },
+      { file: 'lav-pack.webp', width: 1280, height: 1280 },
+      { file: 'lav-pour.webp', width: 1000, height: 1000 },
+    ],
     url: 'https://dresslav.com/',
     platform: 'Shopify',
   },
-  // No `url`: the only address on record is a `*.myshopify.com` default host whose entire
-  // catalogue reads "sold out". The work is still worth showing; the link is not.
   'roar-organic': {
     archetype: 'storefront',
     photos: [{ file: 'organic.webp', width: 800, height: 717 }],
@@ -188,20 +190,13 @@ export const PRODUCT_META: Readonly<Record<ProductId, ProductMeta>> = {
     url: 'https://play.google.com/store/apps/details?id=org.mezave',
     platform: 'Android · Google Play',
   },
-  // No `url`: this card previously linked to the luxury-watch platform's site, which belongs to
-  // a different product. No public listing for this one has been established.
+
   'connected-car': {
     archetype: 'app',
     photos: [{ file: 'infiniti.webp', width: 800, height: 450 }],
   },
 };
 
-/**
- * `images/medical.webp` - a photograph, served straight out of `public`.
- *
- * Relative, like every other asset reference here: `index.html` sets `<base href="/">`, so this
- * resolves to `/images/...` from `/our_work` and from `/ru/our_work/draculai` alike.
- */
 export function photoSrc(photo: ProductPhoto): string {
   return `images/${photo.file}`;
 }

@@ -23,7 +23,7 @@ const PRODUCT: ProductView = {
   advantage: 'The advantage.',
   value: 'The business value.',
   about: 'The longer about text.',
-  photos: [{ src: 'images/medical.webp', width: 800, height: 450 }],
+  photos: [{ src: 'images/medical.webp', width: 800, height: 450, alt: '' }],
   path: '/our_work/draculai',
   url: 'https://apps.apple.com/us/app/draculai/id6744015242',
   platform: 'iOS',
@@ -201,6 +201,24 @@ describe('ProjectCard', () => {
     await tap();
     expect(flipped()).toBe(true);
 
+    await tap();
+    expect(flipped()).toBe(false);
+  });
+
+  /**
+   * The regression that shipped the first time this was built: a tap focuses the card before it
+   * clicks it, so one gesture arrives as two triggers. The focus turned the card and the click
+   * turned it back, and from the outside the card simply would not open on a phone.
+   */
+  it('turns once on a tap that also focuses the card', async () => {
+    useCoarsePointer();
+    await render();
+
+    host.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+    await tap();
+    expect(flipped()).toBe(true);
+
+    // The next tap is a tap on its own, and still toggles.
     await tap();
     expect(flipped()).toBe(false);
   });

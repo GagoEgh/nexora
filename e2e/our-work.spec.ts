@@ -120,16 +120,47 @@ test.describe('the portfolio grid', () => {
   });
 
   /**
-   * The keyboard path. The card itself is the tab stop - nothing on the front face is focusable
-   * - so focus is what opens it, and the two links on the back follow it in the tab order.
+   * The keyboard path, in the part that is the same in every browser: the card itself is the tab
+   * stop - nothing on the front face is focusable - so focus is what opens it, and both links on
+   * the back can then take the caret without the card closing under them.
    */
-  test('opens on focus and walks through both links to the next card', async ({ page }) => {
+  test('opens on focus, and holds while the caret moves between its links', async ({ page }) => {
     await page.goto('/our_work');
     await cardsReady(page);
 
     const first = page.locator(CARD).first();
     await first.focus();
     await expect(first).toHaveClass(/is-flipped/);
+
+    await first.locator('.project-card__link').focus();
+    await expect(first.locator('.project-card__link')).toBeFocused();
+    await expect(first).toHaveClass(/is-flipped/);
+
+    await first.locator('.project-card__visit').focus();
+    await expect(first.locator('.project-card__visit')).toBeFocused();
+    await expect(first).toHaveClass(/is-flipped/);
+
+    // Leaving the card for the next one returns it, so the grid is not a trail of open cards.
+    await page.locator(CARD).nth(1).focus();
+    await expect(first).not.toHaveClass(/is-flipped/);
+    await expect(page.locator(CARD).nth(1)).toHaveClass(/is-flipped/);
+  });
+
+  /**
+   * The Tab order itself, which is Chromium-only **by browser policy, not by defect**: WebKit
+   * leaves links out of the Tab sequence altogether unless Full Keyboard Access is on, so there
+   * Tab goes card → card and the links are reached with Option+Tab. Verified directly: from a
+   * focused `div[tabindex="0"]` holding two links, Chromium walks `a1, a2, next` and WebKit
+   * walks `next, body, …`. The test above covers what every browser must do.
+   */
+  test('walks card → detail link → live link → next card', async ({ page, browserName }) => {
+    test.skip(browserName !== 'chromium', 'WebKit omits links from the Tab sequence by default');
+
+    await page.goto('/our_work');
+    await cardsReady(page);
+
+    const first = page.locator(CARD).first();
+    await first.focus();
 
     await page.keyboard.press('Tab');
     await expect(first.locator('.project-card__link')).toBeFocused();
@@ -139,7 +170,6 @@ test.describe('the portfolio grid', () => {
 
     await page.keyboard.press('Tab');
     await expect(page.locator(CARD).nth(1)).toBeFocused();
-    // The card left behind returns, so the grid is not a trail of opened cards.
     await expect(first).not.toHaveClass(/is-flipped/);
   });
 
@@ -325,7 +355,7 @@ test.describe('card height adapts to its content', () => {
  */
 test.describe('the portfolio at every supported width', () => {
   for (const viewport of VIEWPORTS) {
-    for (const path of ['/our_work', '/hy/our_work/draculai']) {
+    for (const path of ['/our_work', '/hy/our_work/draculai', '/our_work/lav']) {
       test(`${path} fits ${viewport.width}px (${viewport.label})`, async ({ page }) => {
         await page.setViewportSize({ width: viewport.width, height: viewport.height });
         await page.goto(path);
@@ -342,4 +372,114 @@ test.describe('the portfolio at every supported width', () => {
       });
     }
   }
+});
+
+/**
+ * The gallery, on the one product that has original photographs. The thing a stylesheet cannot
+ * promise and only a browser can show: that each picture is laid out at its own ratio, so
+ * nothing is stretched and nothing is cropped away.
+ */
+interface ShotMeasurement {
+  readonly src: string;
+  /** The ratio of the file itself, read from the decoded image. */
+  readonly natural: number;
+  /** The ratio of the box the page gave it. */
+  readonly laid: number;
+  readonly width: number;
+  readonly complete: boolean;
+  readonly alt: string;
+}
+
+test.describe('a product page with photographs', () => {
+  const SHOT = '.product__shot-img';
+
+  for (const viewport of VIEWPORTS) {
+    test(`shows both photographs whole at ${viewport.width}px (${viewport.label})`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width: viewport.width, height: viewport.height });
+      await page.goto('/our_work/lav');
+      await ready(page);
+      await page.locator(SHOT).first().scrollIntoViewIfNeeded();
+      // The gallery is lazy by design, so a measurement taken the instant the tile is scrolled
+      // into view reads a box that has no picture in it yet. Wait for the bytes, then measure.
+      await expect
+        .poll(() =>
+          page
+            .locator(SHOT)
+            .evaluateAll((elements) =>
+              (elements as HTMLImageElement[]).every(
+                (image) => image.complete && image.naturalWidth > 0,
+              ),
+            ),
+        )
+        .toBe(true);
+
+      // `evaluateAll` hands the callback `HTMLElement[]`; the selector is an `img`, so the
+      // narrowing is what lets the measurement read `naturalWidth` rather than guess a ratio.
+      const shots: ShotMeasurement[] = await page.locator(SHOT).evaluateAll((elements) =>
+        (elements as HTMLImageElement[]).map((image) => {
+          const box = image.getBoundingClientRect();
+          return {
+            src: image.getAttribute('src') ?? '',
+            natural: image.naturalWidth / image.naturalHeight,
+            laid: box.width / box.height,
+            width: Math.round(box.width),
+            complete: image.complete && image.naturalWidth > 0,
+            alt: image.getAttribute('alt') ?? '',
+          };
+        }),
+      );
+
+      expect(shots).toHaveLength(2);
+      for (const [index, shot] of shots.entries()) {
+        expect(shot.complete, `${shot.src} did not load`).toBe(true);
+        expect(shot.alt.length, `shot ${index} has no description`).toBeGreaterThan(0);
+        // Laid out at its own ratio, to within a rounded pixel: not stretched, not cropped.
+        expect(
+          Math.abs(shot.laid - shot.natural),
+          `${shot.src} is laid out at ${shot.laid.toFixed(3)} but is ${shot.natural.toFixed(3)}`,
+        ).toBeLessThan(0.02);
+        expect(shot.width, `${shot.src} collapsed at ${viewport.width}px`).toBeGreaterThan(100);
+      }
+    });
+  }
+
+  test('puts the two photographs side by side once there is room for them', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/our_work/lav');
+    await ready(page);
+
+    const tops = await page
+      .locator(SHOT)
+      .evaluateAll((images) =>
+        images.map((image) => Math.round(image.getBoundingClientRect().top)),
+      );
+    expect(new Set(tops).size, 'the two photographs should share a row').toBe(1);
+  });
+
+  test('stacks them in one column on a phone', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/our_work/lav');
+    await ready(page);
+
+    const lefts = await page
+      .locator(SHOT)
+      .evaluateAll((images) => images.map((image) => Math.round(image.getBoundingClientRect().x)));
+    expect(new Set(lefts).size, 'the photographs should share one column').toBe(1);
+  });
+
+  /** The hero is the one image that is cropped, and the one that must not be deferred. */
+  test('loads the hero eagerly and the gallery lazily', async ({ page }) => {
+    await page.goto('/our_work/lav');
+    await ready(page);
+
+    const hero = page.locator('.product__hero-img');
+    await expect(hero).toHaveAttribute('fetchpriority', 'high');
+    expect(await hero.getAttribute('loading'), 'the LCP image must not be deferred').toBeNull();
+
+    for (const shot of await page.locator(SHOT).all()) {
+      await expect(shot).toHaveAttribute('loading', 'lazy');
+    }
+  });
 });

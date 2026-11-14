@@ -20,6 +20,7 @@ export interface ProductCopy {
   readonly advantage: LocalizedText;
   readonly value: LocalizedText;
   readonly about: LocalizedText;
+  readonly photoAlts?: readonly LocalizedText[];
 }
 
 export interface ProductsCopy {
@@ -27,19 +28,13 @@ export interface ProductsCopy {
   readonly products: Readonly<Record<ProductId, ProductCopy>>;
 }
 
-/** A renderable image: where it is, and the size it really is. */
 export interface ProductImage {
   readonly src: string;
   readonly width: number;
   readonly height: number;
+  readonly alt: string;
 }
 
-/**
- * One product, with its structural facts and its translated copy already joined.
- *
- * The grid and the detail page both render from this, so a product reads the same in both
- * places by construction rather than by two templates agreeing with each other.
- */
 export interface ProductView {
   readonly id: ProductId;
   readonly archetype: ProductArchetype;
@@ -53,19 +48,8 @@ export interface ProductView {
   readonly advantage: string;
   readonly value: string;
   readonly about: string;
-  /**
-   * The product's photographs, in display order and never empty. The first is the card's
-   * picture and the detail page's hero; anything after it is gallery material the detail page
-   * renders only when it is there.
-   *
-   * `width` and `height` are each file's real dimensions, which differ per product, so every
-   * `<img>` can declare them truthfully. Adding originals later means extending
-   * `ProductMeta.photos` - no template or component changes.
-   */
   readonly photos: readonly ProductImage[];
-  /** Unlocalised route; pass through `localizedPath` before binding it. */
   readonly path: string;
-  /** Absent when the product has no destination worth sending a visitor to. */
   readonly url?: string;
   readonly platform?: string;
 }
@@ -93,10 +77,11 @@ function toView(
     advantage: copy.advantage.value,
     value: copy.value.value,
     about: copy.about.value,
-    photos: meta.photos.map((photo) => ({
+    photos: meta.photos.map((photo, index) => ({
       src: photoSrc(photo),
       width: photo.width,
       height: photo.height,
+      alt: copy.photoAlts?.[index]?.value ?? '',
     })),
     path: productPath(id),
     url: meta.url,
@@ -104,7 +89,6 @@ function toView(
   };
 }
 
-/** Every product, in `PRODUCT_IDS` order. */
 export function toProductViews(copy: ProductsCopy): readonly ProductView[] {
   return PRODUCT_IDS.map((id) =>
     toView(
@@ -121,7 +105,6 @@ export function toProductView(id: ProductId, copy: ProductsCopy): ProductView {
   return toView(id, meta, copy.products[id], copy.archetypes[meta.archetype].value);
 }
 
-/** The product after this one, wrapping at the end, for "next project" navigation. */
 export function nextProductId(id: ProductId): ProductId {
   const index = PRODUCT_IDS.indexOf(id);
   return PRODUCT_IDS[(index + 1) % PRODUCT_IDS.length];
