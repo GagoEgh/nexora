@@ -447,6 +447,38 @@ describe('ProductDetail', () => {
   });
 
   /**
+   * The first row that mixes orientations: two upright phone screens beside a landscape
+   * photograph. Equal columns would have left the landscape short and the portraits towering
+   * over it; columns proportional to each ratio give all three the same laid-out height, which
+   * is the whole reason the component publishes ratios rather than `repeat(n, 1fr)`. The unit
+   * under test is that arithmetic - `our-work.spec.ts` measures the rendered heights.
+   */
+  it('gives a row of mixed orientations one shared height', async () => {
+    await go(`/${OUR_WORK_SEGMENT}/mezave`);
+
+    const gallery = PRODUCT_META.mezave.photos.slice(1);
+    expect(gallery, 'mezave is the fixture for this test').toHaveLength(3);
+    expect(
+      new Set(gallery.map((photo) => photo.width > photo.height)).size,
+      'the row mixes upright and landscape photographs',
+    ).toBe(2);
+
+    const row = root.querySelector('.product__gallery-row') as HTMLElement;
+    const shares = [
+      ...row.style.getPropertyValue('--nx-gallery-columns').matchAll(/minmax\(0,\s*([\d.]+)fr\)/g),
+    ].map((column) => Number(column[1]));
+    expect(shares).toHaveLength(3);
+
+    const total = shares.reduce((sum, share) => sum + share, 0);
+    const heights = gallery.map(
+      (photo, index) => ((shares[index] / total) * photo.height) / photo.width,
+    );
+    for (const height of heights) {
+      expect(height).toBeCloseTo(heights[0], 4);
+    }
+  });
+
+  /**
    * A gallery that is not a pair keeps the stylesheet's own columns, so the proportional sizing
    * cannot leak into the single-photograph layout or into a row of three.
    */

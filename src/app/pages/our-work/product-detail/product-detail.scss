@@ -91,11 +91,13 @@ $shot-stacked-max-height: 440px;
 }
 
 .product__shot {
-  @include surface.outlined();
   display: grid;
   min-width: 0;
   overflow: hidden;
   border-radius: var(--nx-sys-corner-panel);
+  background-color: var(--mat-sys-surface);
+  outline: 1px solid var(--mat-sys-outline-variant);
+  outline-offset: -1px;
 }
 
 .product__shot-img {

@@ -368,6 +368,7 @@ test.describe('the portfolio at every supported width', () => {
       '/our_work/hydrant',
       '/our_work/libra-analytics',
       '/our_work/sell-me-watch',
+      '/our_work/mezave',
     ]) {
       test(`${path} fits ${viewport.width}px (${viewport.label})`, async ({ page }) => {
         await page.setViewportSize({ width: viewport.width, height: viewport.height });
@@ -595,6 +596,7 @@ test.describe('a gallery of more than two photographs', () => {
   const GALLERIES = [
     { slug: 'libra-analytics', rows: [2, 2] },
     { slug: 'sell-me-watch', rows: [3] },
+    { slug: 'mezave', rows: [3] },
   ] as const;
 
   for (const { slug, rows: expected } of GALLERIES) {

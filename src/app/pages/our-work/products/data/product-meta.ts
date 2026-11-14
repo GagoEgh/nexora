@@ -222,7 +222,12 @@ export const PRODUCT_META: Readonly<Record<ProductId, ProductMeta>> = {
   },
   mezave: {
     archetype: 'app',
-    photos: [{ file: 'meal.webp', width: 800, height: 853 }],
+    photos: [
+      { file: 'meal.webp', width: 800, height: 853 },
+      { file: 'mezave-home.webp', width: 637, height: 1104 },
+      { file: 'mezave-marketplace.webp', width: 454, height: 679 },
+      { file: 'mezave-details.webp', width: 860, height: 645 },
+    ],
     url: 'https://play.google.com/store/apps/details?id=org.mezave',
     platform: 'Android · Google Play',
   },
