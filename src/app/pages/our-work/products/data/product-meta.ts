@@ -160,7 +160,11 @@ export const PRODUCT_META: Readonly<Record<ProductId, ProductMeta>> = {
   },
   'got-matcha': {
     archetype: 'storefront',
-    photos: [{ file: 'got.webp', width: 800, height: 600 }],
+    photos: [
+      { file: 'got.webp', width: 800, height: 600 },
+      { file: 'got-field.webp', width: 1120, height: 611 },
+      { file: 'got-ritual.webp', width: 980, height: 980 },
+    ],
     url: 'https://www.gotmatcha.com/',
     platform: 'Shopify',
   },

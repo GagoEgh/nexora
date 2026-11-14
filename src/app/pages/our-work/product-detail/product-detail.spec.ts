@@ -239,6 +239,48 @@ describe('ProductDetail', () => {
   });
 
   /**
+   * The same contract on the second product to carry a mismatched pair, so the proportional
+   * sizing is read off the registry rather than fitted to one set of numbers. Got Matcha's
+   * shapes are 1.83:1 and 1:1, against Mastercraft's 1.5:1 and 1:1.
+   */
+  it('reads the gallery proportions from each product, not from a fixed pair', async () => {
+    await go(`/${OUR_WORK_SEGMENT}/got-matcha`);
+
+    const gallery = PRODUCT_META['got-matcha'].photos.slice(1);
+    expect(gallery).toHaveLength(2);
+
+    const columns = (root.querySelector('.product__gallery') as HTMLElement).style.getPropertyValue(
+      '--nx-gallery-columns',
+    );
+    expect(columns).toBe(
+      gallery.map((photo) => `minmax(0, ${(photo.width / photo.height).toFixed(4)}fr)`).join(' '),
+    );
+    expect(columns, 'these are not Mastercraft’s proportions').not.toBe(
+      PRODUCT_META['mastercraft'].photos
+        .slice(1)
+        .map((photo) => `minmax(0, ${(photo.width / photo.height).toFixed(4)}fr)`)
+        .join(' '),
+    );
+
+    // The hero keeps `got.webp`; the new pair is named around it rather than over it.
+    expect(root.querySelector('.product__hero-img')?.getAttribute('src')).toBe('images/got.webp');
+    expect(
+      Array.from(root.querySelectorAll<HTMLImageElement>('.product__shot-img')).map((shot) =>
+        shot.getAttribute('src'),
+      ),
+    ).toEqual(gallery.map((photo) => `images/${photo.file}`));
+    expect(
+      [
+        root.querySelector('.product__hero-img')?.getAttribute('alt') ?? '',
+        ...Array.from(root.querySelectorAll('.product__shot-img')).map(
+          (shot) => shot.getAttribute('alt') ?? '',
+        ),
+      ].every((alt) => alt.length > 0),
+      'all three photographs are described',
+    ).toBe(true);
+  });
+
+  /**
    * A gallery that is not a pair keeps the stylesheet's own columns, so the proportional sizing
    * cannot leak into the single-photograph layout or into a row of three.
    */

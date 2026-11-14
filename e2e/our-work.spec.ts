@@ -361,6 +361,7 @@ test.describe('the portfolio at every supported width', () => {
       '/our_work/lav',
       '/our_work/robert-irwin',
       '/our_work/mastercraft',
+      '/our_work/got-matcha',
     ]) {
       test(`${path} fits ${viewport.width}px (${viewport.label})`, async ({ page }) => {
         await page.setViewportSize({ width: viewport.width, height: viewport.height });
@@ -547,6 +548,13 @@ test.describe('a product page with a panoramic photograph', () => {
     await page.goto('/our_work/robert-irwin');
     await ready(page);
     await page.locator(SHOT).scrollIntoViewIfNeeded();
+    // The tile is sized to the picture inside it, so measuring before the deferred bytes land
+    // reads the 1px borders and nothing else. Wait for the image, as the tests above do.
+    await expect
+      .poll(() =>
+        page.locator(SHOT).evaluate((image) => (image as HTMLImageElement).naturalWidth > 0),
+      )
+      .toBe(true);
 
     const widths = await page.evaluate(() => {
       const shot = document.querySelector('.product__shot');
@@ -576,73 +584,78 @@ test.describe('a product page with a panoramic photograph', () => {
  * the row up just as well, which is why the ratios are asserted alongside the heights: neither
  * picture is trimmed to fit.
  */
+/** Every product whose gallery is a pair of photographs that are not the same shape. */
+const MISMATCHED_PAIRS = ['mastercraft', 'got-matcha'] as const;
+
 test.describe('a product page with two differently shaped photographs', () => {
   const SHOT = '.product__shot-img';
 
-  for (const viewport of VIEWPORTS) {
-    test(`levels the pair without cropping either at ${viewport.width}px (${viewport.label})`, async ({
-      page,
-    }) => {
-      await page.setViewportSize({ width: viewport.width, height: viewport.height });
-      await page.goto('/our_work/mastercraft');
-      await ready(page);
-      await page.locator(SHOT).first().scrollIntoViewIfNeeded();
-      await expect
-        .poll(() =>
-          page
-            .locator(SHOT)
-            .evaluateAll((elements) =>
-              (elements as HTMLImageElement[]).every(
-                (image) => image.complete && image.naturalWidth > 0,
+  for (const slug of MISMATCHED_PAIRS) {
+    for (const viewport of VIEWPORTS) {
+      test(`${slug} levels the pair without cropping either at ${viewport.width}px (${viewport.label})`, async ({
+        page,
+      }) => {
+        await page.setViewportSize({ width: viewport.width, height: viewport.height });
+        await page.goto(`/our_work/${slug}`);
+        await ready(page);
+        await page.locator(SHOT).first().scrollIntoViewIfNeeded();
+        await expect
+          .poll(() =>
+            page
+              .locator(SHOT)
+              .evaluateAll((elements) =>
+                (elements as HTMLImageElement[]).every(
+                  (image) => image.complete && image.naturalWidth > 0,
+                ),
               ),
-            ),
-        )
-        .toBe(true);
+          )
+          .toBe(true);
 
-      const shots = await page.locator(SHOT).evaluateAll((elements) =>
-        (elements as HTMLImageElement[]).map((image) => {
-          const box = image.getBoundingClientRect();
-          return {
-            src: image.getAttribute('src') ?? '',
-            natural: image.naturalWidth / image.naturalHeight,
-            intrinsic: image.naturalWidth,
-            laid: box.width / box.height,
-            width: Math.round(box.width),
-            height: Math.round(box.height),
-            top: Math.round(box.top),
-            alt: image.getAttribute('alt') ?? '',
-          };
-        }),
-      );
+        const shots = await page.locator(SHOT).evaluateAll((elements) =>
+          (elements as HTMLImageElement[]).map((image) => {
+            const box = image.getBoundingClientRect();
+            return {
+              src: image.getAttribute('src') ?? '',
+              natural: image.naturalWidth / image.naturalHeight,
+              intrinsic: image.naturalWidth,
+              laid: box.width / box.height,
+              width: Math.round(box.width),
+              height: Math.round(box.height),
+              top: Math.round(box.top),
+              alt: image.getAttribute('alt') ?? '',
+            };
+          }),
+        );
 
-      expect(shots).toHaveLength(2);
-      expect(
-        new Set(shots.map((shot) => shot.natural.toFixed(2))).size,
-        'this fixture is only meaningful while the two shapes differ',
-      ).toBe(2);
-
-      for (const shot of shots) {
+        expect(shots).toHaveLength(2);
         expect(
-          Math.abs(shot.laid - shot.natural),
-          `${shot.src} is laid out at ${shot.laid.toFixed(3)} but is ${shot.natural.toFixed(3)}`,
-        ).toBeLessThan(0.02);
-        expect(shot.alt.length, `${shot.src} has no description`).toBeGreaterThan(0);
-        expect(shot.width, `${shot.src} collapsed at ${viewport.width}px`).toBeGreaterThan(100);
-        expect(
-          shot.width,
-          `${shot.src} is scaled past the ${shot.intrinsic}px of detail it carries`,
-        ).toBeLessThanOrEqual(shot.intrinsic + 1);
-      }
+          new Set(shots.map((shot) => shot.natural.toFixed(2))).size,
+          'this fixture is only meaningful while the two shapes differ',
+        ).toBe(2);
 
-      // Side by side they level off; stacked in one column they simply follow each other.
-      const sideBySide = new Set(shots.map((shot) => shot.top)).size === 1;
-      if (sideBySide) {
-        const [first, second] = shots;
-        expect(
-          Math.abs(first.height - second.height),
-          `the row is ragged: ${first.height}px beside ${second.height}px`,
-        ).toBeLessThanOrEqual(1);
-      }
-    });
+        for (const shot of shots) {
+          expect(
+            Math.abs(shot.laid - shot.natural),
+            `${shot.src} is laid out at ${shot.laid.toFixed(3)} but is ${shot.natural.toFixed(3)}`,
+          ).toBeLessThan(0.02);
+          expect(shot.alt.length, `${shot.src} has no description`).toBeGreaterThan(0);
+          expect(shot.width, `${shot.src} collapsed at ${viewport.width}px`).toBeGreaterThan(100);
+          expect(
+            shot.width,
+            `${shot.src} is scaled past the ${shot.intrinsic}px of detail it carries`,
+          ).toBeLessThanOrEqual(shot.intrinsic + 1);
+        }
+
+        // Side by side they level off; stacked in one column they simply follow each other.
+        const sideBySide = new Set(shots.map((shot) => shot.top)).size === 1;
+        if (sideBySide) {
+          const [first, second] = shots;
+          expect(
+            Math.abs(first.height - second.height),
+            `the row is ragged: ${first.height}px beside ${second.height}px`,
+          ).toBeLessThanOrEqual(1);
+        }
+      });
+    }
   }
 });
