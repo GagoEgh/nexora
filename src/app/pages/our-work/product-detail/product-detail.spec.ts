@@ -281,6 +281,51 @@ describe('ProductDetail', () => {
   });
 
   /**
+   * The importer's page, where the pair is a 16:9 inspection shot beside a 3:2 catalogue shot
+   * and the hero stays the client's own warehouse floor. Nothing here is new behaviour - the
+   * point of the test is that nothing had to be: a third product with a mismatched pair is a
+   * registry entry and three descriptions.
+   */
+  it('gives the importer its pair in proportion, behind the warehouse hero', async () => {
+    await go(`/${OUR_WORK_SEGMENT}/jdm-west-coast`);
+
+    const photos = PRODUCT_META['jdm-west-coast'].photos;
+    expect(photos, 'hero plus a pair').toHaveLength(3);
+
+    expect(root.querySelector('.product__hero-img')?.getAttribute('src')).toBe('images/car.webp');
+    const shots = Array.from(root.querySelectorAll<HTMLImageElement>('.product__shot-img'));
+    expect(shots.map((shot) => shot.getAttribute('src'))).toEqual(
+      photos.slice(1).map((photo) => `images/${photo.file}`),
+    );
+    for (const [index, shot] of shots.entries()) {
+      expect(Number(shot.getAttribute('width')), `shot ${index}`).toBe(photos[index + 1].width);
+      expect(Number(shot.getAttribute('height')), `shot ${index}`).toBe(photos[index + 1].height);
+      expect(shot.getAttribute('loading'), `shot ${index}`).toBe('lazy');
+    }
+
+    expect(
+      (root.querySelector('.product__gallery') as HTMLElement).style.getPropertyValue(
+        '--nx-gallery-columns',
+      ),
+    ).toBe(
+      photos
+        .slice(1)
+        .map((photo) => `minmax(0, ${(photo.width / photo.height).toFixed(4)}fr)`)
+        .join(' '),
+    );
+
+    const alts = [
+      root.querySelector('.product__hero-img')?.getAttribute('alt') ?? '',
+      ...shots.map((shot) => shot.getAttribute('alt') ?? ''),
+    ];
+    expect(
+      alts.every((alt) => alt.length > 0),
+      'all three photographs are described',
+    ).toBe(true);
+    expect(new Set(alts).size, 'each photograph has its own description').toBe(3);
+  });
+
+  /**
    * A gallery that is not a pair keeps the stylesheet's own columns, so the proportional sizing
    * cannot leak into the single-photograph layout or into a row of three.
    */

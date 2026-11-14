@@ -363,6 +363,7 @@ test.describe('the portfolio at every supported width', () => {
       '/our_work/mastercraft',
       '/our_work/got-matcha',
       '/our_work/roar-organic',
+      '/our_work/jdm-west-coast',
     ]) {
       test(`${path} fits ${viewport.width}px (${viewport.label})`, async ({ page }) => {
         await page.setViewportSize({ width: viewport.width, height: viewport.height });
@@ -659,7 +660,7 @@ test.describe('a product page with a lone near-square photograph', () => {
  * picture is trimmed to fit.
  */
 /** Every product whose gallery is a pair of photographs that are not the same shape. */
-const MISMATCHED_PAIRS = ['mastercraft', 'got-matcha'] as const;
+const MISMATCHED_PAIRS = ['mastercraft', 'got-matcha', 'jdm-west-coast'] as const;
 
 test.describe('a product page with two differently shaped photographs', () => {
   const SHOT = '.product__shot-img';

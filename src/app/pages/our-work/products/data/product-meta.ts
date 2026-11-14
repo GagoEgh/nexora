@@ -89,7 +89,11 @@ export const PRODUCT_META: Readonly<Record<ProductId, ProductMeta>> = {
   },
   'jdm-west-coast': {
     archetype: 'configurator',
-    photos: [{ file: 'car.webp', width: 800, height: 533 }],
+    photos: [
+      { file: 'car.webp', width: 800, height: 533 },
+      { file: 'jdm-engine.webp', width: 1120, height: 625 },
+      { file: 'jdm-catalogue.webp', width: 1000, height: 667 },
+    ],
     url: 'https://www.jdmwestcoast.com/',
     platform: 'Shopify',
   },
