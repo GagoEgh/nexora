@@ -1,0 +1,20 @@
+@for (row of rows(); track $index) {
+  <ul class="gallery__row" [style.--nx-gallery-columns]="row.columns">
+    @for (tile of row.tiles; track tile.shot.src) {
+      <li class="gallery__shot">
+        <img
+          class="gallery__img"
+          [src]="tile.shot.src"
+          [srcset]="tile.shot.srcset"
+          [attr.sizes]="tile.sizes"
+          [alt]="tile.shot.alt"
+          [width]="tile.shot.width"
+          [height]="tile.shot.height"
+          [style.aspect-ratio]="tile.shot.width + ' / ' + tile.shot.height"
+          loading="lazy"
+          decoding="async"
+        />
+      </li>
+    }
+  </ul>
+}

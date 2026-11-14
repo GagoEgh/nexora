@@ -405,7 +405,7 @@ interface ShotMeasurement {
 }
 
 test.describe('a product page with photographs', () => {
-  const SHOT = '.product__shot-img';
+  const SHOT = '.gallery__img';
 
   for (const viewport of VIEWPORTS) {
     test(`shows both photographs whole at ${viewport.width}px (${viewport.label})`, async ({
@@ -508,7 +508,7 @@ test.describe('a product page with photographs', () => {
  * would be upscale, which on jewellery is exactly where it would show.
  */
 test.describe('a product page with a panoramic photograph', () => {
-  const SHOT = '.product__shot-img';
+  const SHOT = '.gallery__img';
 
   for (const viewport of VIEWPORTS) {
     test(`lays the panorama out whole at ${viewport.width}px (${viewport.label})`, async ({
@@ -564,8 +564,8 @@ test.describe('a product page with a panoramic photograph', () => {
       .toBe(true);
 
     const widths = await page.evaluate(() => {
-      const shot = document.querySelector('.product__shot');
-      const gallery = document.querySelector('.product__gallery-row');
+      const shot = document.querySelector('.gallery__shot');
+      const gallery = document.querySelector('.gallery__row');
       return {
         shot: Math.round(shot?.getBoundingClientRect().width ?? 0),
         gallery: Math.round(gallery?.getBoundingClientRect().width ?? 0),
@@ -590,7 +590,7 @@ test.describe('a product page with a panoramic photograph', () => {
  * blowing a picture up past the detail it carries.
  */
 test.describe('a gallery of more than two photographs', () => {
-  const SHOT = '.product__shot-img';
+  const SHOT = '.gallery__img';
 
   /** Each product with such a gallery, and how many photographs each of its rows should hold. */
   const GALLERIES = [
@@ -615,7 +615,7 @@ test.describe('a gallery of more than two photographs', () => {
           )
           .toBe(true);
 
-        const rows = await page.locator('.product__gallery-row').evaluateAll((elements) =>
+        const rows = await page.locator('.gallery__row').evaluateAll((elements) =>
           elements.map((row) => {
             const box = row.getBoundingClientRect();
             const shots = [...row.querySelectorAll('img')].map((image) => {
@@ -684,7 +684,7 @@ test.describe('a gallery of more than two photographs', () => {
  * stops being a stack.
  */
 test.describe('a photograph in the single-column stack', () => {
-  const SHOT = '.product__shot-img';
+  const SHOT = '.gallery__img';
 
   /** `$shot-stacked-max-height` in `product-detail.scss`, plus a pixel for the tile's borders. */
   const BOUND = 440;
@@ -710,10 +710,8 @@ test.describe('a photograph in the single-column stack', () => {
         elements.map((element) => {
           const image = element as HTMLImageElement;
           const box = image.getBoundingClientRect();
-          const tile = (image.closest('.product__shot') as HTMLElement).getBoundingClientRect();
-          const gallery = (
-            image.closest('.product__gallery-row') as HTMLElement
-          ).getBoundingClientRect();
+          const tile = (image.closest('.gallery__shot') as HTMLElement).getBoundingClientRect();
+          const gallery = (image.closest('.gallery__row') as HTMLElement).getBoundingClientRect();
           return {
             natural: image.naturalWidth / image.naturalHeight,
             intrinsic: image.naturalWidth,
@@ -780,7 +778,7 @@ test.describe('a photograph in the single-column stack', () => {
  * that the bound stays out of the way at widths where the layout is a single column.
  */
 test.describe('a product page with a lone near-square photograph', () => {
-  const SHOT = '.product__shot-img';
+  const SHOT = '.gallery__img';
 
   /** The height bound in `product-detail.ts`, which this page is the reason for. */
   const MAX_HEIGHT = 440;
@@ -858,7 +856,7 @@ test.describe('a product page with a lone near-square photograph', () => {
 const MISMATCHED_PAIRS = ['mastercraft', 'got-matcha', 'jdm-west-coast', 'zadeh-md'] as const;
 
 test.describe('a product page with two differently shaped photographs', () => {
-  const SHOT = '.product__shot-img';
+  const SHOT = '.gallery__img';
 
   for (const slug of MISMATCHED_PAIRS) {
     for (const viewport of VIEWPORTS) {

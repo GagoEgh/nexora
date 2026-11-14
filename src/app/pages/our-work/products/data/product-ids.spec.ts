@@ -1,5 +1,6 @@
 import { PRODUCT_IDS, isProductId } from './product-ids';
-import { ARCHETYPE_ICONS, PRODUCT_META, photoSrc } from './product-meta';
+import { readFileSync } from 'node:fs';
+import { ARCHETYPE_ICONS, IMAGE_LADDER, PRODUCT_META, photoSrc, photoSrcset } from './product-meta';
 import { nextProductId, productPath } from './product-view';
 
 /**
@@ -97,6 +98,39 @@ describe('the product registry', () => {
         expect(photoSrc(photo)).toBe(`images/${photo.file}`);
         // A leading slash would break the prerendered pages served from a sub-path.
         expect(photoSrc(photo).startsWith('/'), id).toBe(false);
+      }
+    }
+  });
+
+  /**
+   * The ladder exists twice: `scripts/image-ladder.mjs` generates the files and
+   * `product-meta.ts` names them in a `srcset`. A script and an application cannot import each
+   * other, so this reads the script and pins them together - a step added on one side and not
+   * the other would otherwise mean a `srcset` entry that 404s, or a file nothing ever asks for.
+   */
+  it('publishes the same widths the build script generates', () => {
+    const script = readFileSync('scripts/image-ladder.mjs', 'utf8');
+    const declared = script.match(/export const IMAGE_LADDER = \[([^\]]+)\]/);
+
+    expect(declared, 'scripts/image-ladder.mjs no longer declares IMAGE_LADDER').not.toBeNull();
+    expect(declared?.[1].split(',').map((step) => Number(step.trim()))).toEqual([...IMAGE_LADDER]);
+  });
+
+  it('offers every photograph at the widths narrower than itself, and itself last', () => {
+    for (const id of PRODUCT_IDS) {
+      for (const photo of PRODUCT_META[id].photos) {
+        const entries = photoSrcset(photo).split(', ');
+        const expected = IMAGE_LADDER.filter((step) => step < photo.width);
+
+        expect(entries, `${photo.file}`).toHaveLength(expected.length + 1);
+        for (const [index, step] of expected.entries()) {
+          const stem = photo.file.replace('.webp', '');
+          expect(entries[index]).toBe(`images/${stem}-${step}.webp ${step}w`);
+        }
+        expect(entries[entries.length - 1]).toBe(`images/${photo.file} ${photo.width}w`);
+        // The fallback `src` has to be one of the candidates, or a browser that ignores
+        // `srcset` and one that reads it fetch different files.
+        expect(entries.some((entry) => entry.startsWith(`${photoSrc(photo)} `))).toBe(true);
       }
     }
   });

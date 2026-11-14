@@ -2,16 +2,20 @@ import { Location } from '@angular/common';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { Router, provideRouter } from '@angular/router';
+import { Router, UrlSegment, type Route } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { provideIntlayer, useLocale } from 'angular-intlayer';
-import { routes } from '../../../app.routes';
+import { provideAppRouter } from '../../../app.config';
 import { provideAppIcons } from '../../../core/icons/provide-app-icons';
 import { OUR_WORK_SEGMENT } from '../../../core/routing/paths';
 import { DocumentMetaOverride } from '../../../core/seo/document-meta-override';
-import { PRODUCT_IDS } from '../products/data/product-ids';
+import { PRODUCT_IDS, matchProductSlug } from '../products/data/product-ids';
 import { PRODUCT_META } from '../products/data/product-meta';
 import { ProductDetail } from './product-detail';
+import { GALLERY_ASIDE, GALLERY_COLUMN_MAX, SHOT_MAX_HEIGHT } from './gallery-layout';
+
+/** The shape the section falls back to: copy in a fixed column, gallery in the rest. */
+const COPY_BESIDE_GALLERY = `minmax(0, ${GALLERY_ASIDE}px) minmax(0, 1fr)`;
 
 const ICON_SVG =
   '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"></svg>';
@@ -47,7 +51,7 @@ describe('ProductDetail', () => {
   beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
-        provideRouter(routes),
+        provideAppRouter(),
         provideIntlayer(),
         provideHttpClient(),
         provideHttpClientTesting(),
@@ -156,7 +160,7 @@ describe('ProductDetail', () => {
     await go(`/${OUR_WORK_SEGMENT}/${FIRST}`);
 
     expect(root.querySelector('.product__gallery')).toBeNull();
-    expect(root.querySelectorAll('.product__shot-img')).toHaveLength(0);
+    expect(root.querySelectorAll('.gallery__img')).toHaveLength(0);
     expect(
       root
         .querySelector('.product__experience')
@@ -178,7 +182,7 @@ describe('ProductDetail', () => {
     const gallery = PRODUCT_META['lav'].photos.slice(1);
     expect(gallery.length, 'lav is the fixture for this test').toBeGreaterThan(1);
 
-    const shots = Array.from(root.querySelectorAll<HTMLImageElement>('.product__shot-img'));
+    const shots = Array.from(root.querySelectorAll<HTMLImageElement>('.gallery__img'));
     expect(shots).toHaveLength(gallery.length);
     expect(shots.map((shot) => shot.getAttribute('src'))).toEqual(
       gallery.map((photo) => `images/${photo.file}`),
@@ -215,12 +219,12 @@ describe('ProductDetail', () => {
       'the fixture is only meaningful while the two shapes differ',
     ).toBe(2);
 
-    const list = root.querySelector('.product__gallery-row') as HTMLElement;
+    const list = root.querySelector('.gallery__row') as HTMLElement;
     expect(list.style.getPropertyValue('--nx-gallery-columns')).toBe(
       gallery.map((photo) => `minmax(0, ${(photo.width / photo.height).toFixed(4)}fr)`).join(' '),
     );
 
-    const shots = Array.from(root.querySelectorAll<HTMLImageElement>('.product__shot-img'));
+    const shots = Array.from(root.querySelectorAll<HTMLImageElement>('.gallery__img'));
     expect(shots.map((shot) => shot.getAttribute('src'))).toEqual(
       gallery.map((photo) => `images/${photo.file}`),
     );
@@ -249,9 +253,9 @@ describe('ProductDetail', () => {
     const gallery = PRODUCT_META['got-matcha'].photos.slice(1);
     expect(gallery).toHaveLength(2);
 
-    const columns = (
-      root.querySelector('.product__gallery-row') as HTMLElement
-    ).style.getPropertyValue('--nx-gallery-columns');
+    const columns = (root.querySelector('.gallery__row') as HTMLElement).style.getPropertyValue(
+      '--nx-gallery-columns',
+    );
     expect(columns).toBe(
       gallery.map((photo) => `minmax(0, ${(photo.width / photo.height).toFixed(4)}fr)`).join(' '),
     );
@@ -265,14 +269,14 @@ describe('ProductDetail', () => {
     // The hero keeps `got.webp`; the new pair is named around it rather than over it.
     expect(root.querySelector('.product__hero-img')?.getAttribute('src')).toBe('images/got.webp');
     expect(
-      Array.from(root.querySelectorAll<HTMLImageElement>('.product__shot-img')).map((shot) =>
+      Array.from(root.querySelectorAll<HTMLImageElement>('.gallery__img')).map((shot) =>
         shot.getAttribute('src'),
       ),
     ).toEqual(gallery.map((photo) => `images/${photo.file}`));
     expect(
       [
         root.querySelector('.product__hero-img')?.getAttribute('alt') ?? '',
-        ...Array.from(root.querySelectorAll('.product__shot-img')).map(
+        ...Array.from(root.querySelectorAll('.gallery__img')).map(
           (shot) => shot.getAttribute('alt') ?? '',
         ),
       ].every((alt) => alt.length > 0),
@@ -293,7 +297,7 @@ describe('ProductDetail', () => {
     expect(photos, 'hero plus a pair').toHaveLength(3);
 
     expect(root.querySelector('.product__hero-img')?.getAttribute('src')).toBe('images/car.webp');
-    const shots = Array.from(root.querySelectorAll<HTMLImageElement>('.product__shot-img'));
+    const shots = Array.from(root.querySelectorAll<HTMLImageElement>('.gallery__img'));
     expect(shots.map((shot) => shot.getAttribute('src'))).toEqual(
       photos.slice(1).map((photo) => `images/${photo.file}`),
     );
@@ -304,7 +308,7 @@ describe('ProductDetail', () => {
     }
 
     expect(
-      (root.querySelector('.product__gallery-row') as HTMLElement).style.getPropertyValue(
+      (root.querySelector('.gallery__row') as HTMLElement).style.getPropertyValue(
         '--nx-gallery-columns',
       ),
     ).toBe(
@@ -343,9 +347,9 @@ describe('ProductDetail', () => {
     await go(`/${OUR_WORK_SEGMENT}/hydrant`);
 
     const gallery = PRODUCT_META['hydrant'].photos.slice(1);
-    const columns = (
-      root.querySelector('.product__gallery-row') as HTMLElement
-    ).style.getPropertyValue('--nx-gallery-columns');
+    const columns = (root.querySelector('.gallery__row') as HTMLElement).style.getPropertyValue(
+      '--nx-gallery-columns',
+    );
     expect(columns).toBe(
       gallery.map((photo) => `minmax(0, ${(photo.width / photo.height).toFixed(4)}fr)`).join(' '),
     );
@@ -357,13 +361,13 @@ describe('ProductDetail', () => {
     expect(Math.abs(first - second), `columns ${columns}`).toBeLessThan(0.01);
 
     // A pair is one row, which is what it was before rows existed.
-    expect(root.querySelectorAll('.product__gallery-row')).toHaveLength(1);
+    expect(root.querySelectorAll('.gallery__row')).toHaveLength(1);
     expect(
       (root.querySelector('.product__experience') as HTMLElement).style.getPropertyValue(
         '--nx-experience-columns',
       ),
       'a pair still sits beside its copy',
-    ).toBe('');
+    ).toBe(COPY_BESIDE_GALLERY);
   });
 
   /**
@@ -378,7 +382,7 @@ describe('ProductDetail', () => {
     const gallery = PRODUCT_META['libra-analytics'].photos.slice(1);
     expect(gallery, 'libra-analytics is the fixture for this test').toHaveLength(4);
 
-    const rows = Array.from(root.querySelectorAll<HTMLElement>('.product__gallery-row'));
+    const rows = Array.from(root.querySelectorAll<HTMLElement>('.gallery__row'));
     expect(rows).toHaveLength(2);
 
     for (const [index, row] of rows.entries()) {
@@ -387,7 +391,7 @@ describe('ProductDetail', () => {
         pair.map((photo) => `minmax(0, ${(photo.width / photo.height).toFixed(4)}fr)`).join(' '),
       );
       expect(
-        Array.from(row.querySelectorAll<HTMLImageElement>('.product__shot-img')).map((shot) =>
+        Array.from(row.querySelectorAll<HTMLImageElement>('.gallery__img')).map((shot) =>
           shot.getAttribute('src'),
         ),
         `row ${index}`,
@@ -408,7 +412,7 @@ describe('ProductDetail', () => {
 
     const alts = [
       root.querySelector('.product__hero-img')?.getAttribute('alt') ?? '',
-      ...Array.from(root.querySelectorAll('.product__shot-img')).map(
+      ...Array.from(root.querySelectorAll('.gallery__img')).map(
         (shot) => shot.getAttribute('alt') ?? '',
       ),
     ];
@@ -432,9 +436,9 @@ describe('ProductDetail', () => {
     const gallery = PRODUCT_META['sell-me-watch'].photos.slice(1);
     expect(gallery, 'sell-me-watch is the fixture for this test').toHaveLength(3);
 
-    const rows = Array.from(root.querySelectorAll<HTMLElement>('.product__gallery-row'));
+    const rows = Array.from(root.querySelectorAll<HTMLElement>('.gallery__row'));
     expect(rows).toHaveLength(1);
-    expect(rows[0].querySelectorAll('.product__shot-img')).toHaveLength(3);
+    expect(rows[0].querySelectorAll('.gallery__img')).toHaveLength(3);
     expect(rows[0].style.getPropertyValue('--nx-gallery-columns')).toBe(
       gallery.map((photo) => `minmax(0, ${(photo.width / photo.height).toFixed(4)}fr)`).join(' '),
     );
@@ -463,7 +467,7 @@ describe('ProductDetail', () => {
       'the row mixes upright and landscape photographs',
     ).toBe(2);
 
-    const row = root.querySelector('.product__gallery-row') as HTMLElement;
+    const row = root.querySelector('.gallery__row') as HTMLElement;
     const shares = [
       ...row.style.getPropertyValue('--nx-gallery-columns').matchAll(/minmax\(0,\s*([\d.]+)fr\)/g),
     ].map((column) => Number(column[1]));
@@ -485,7 +489,7 @@ describe('ProductDetail', () => {
   it('leaves the gallery columns to the stylesheet unless there are exactly two', async () => {
     await go(`/${OUR_WORK_SEGMENT}/robert-irwin`);
     expect(
-      (root.querySelector('.product__gallery-row') as HTMLElement).style.getPropertyValue(
+      (root.querySelector('.gallery__row') as HTMLElement).style.getPropertyValue(
         '--nx-gallery-columns',
       ),
     ).toBe('');
@@ -504,7 +508,7 @@ describe('ProductDetail', () => {
     const gallery = PRODUCT_META['robert-irwin'].photos.slice(1);
     expect(gallery, 'robert-irwin is the fixture for this test').toHaveLength(1);
 
-    const shots = Array.from(root.querySelectorAll<HTMLImageElement>('.product__shot-img'));
+    const shots = Array.from(root.querySelectorAll<HTMLImageElement>('.gallery__img'));
     expect(shots).toHaveLength(1);
     expect(shots[0].getAttribute('src')).toBe(`images/${gallery[0].file}`);
     expect(shots[0].getAttribute('loading')).toBe('lazy');
@@ -552,56 +556,102 @@ describe('ProductDetail', () => {
   });
 
   /**
-   * The same rule, inert. A panorama's bound is wider than the column is ever laid out, so
-   * nothing is published and the stylesheet's own columns stand; a pair is not its business at
-   * all. This is what keeps the fix off the other eighteen products.
+   * The same rule, inert. A panorama's bound is wider than the column is ever laid out, and a
+   * pair is not its business at all, so both fall back to copy beside gallery. They are
+   * published rather than left to the stylesheet: the component is the only author of this
+   * property, which is what lets `product-detail.scss` carry no literal of its own.
    */
-  it('leaves the experience columns to the stylesheet for a panorama or a pair', async () => {
+  it('falls a panorama and a pair back to copy beside gallery', async () => {
     await go(`/${OUR_WORK_SEGMENT}/robert-irwin`);
     const panorama = PRODUCT_META['robert-irwin'].photos[1];
     expect(
-      (panorama.width / panorama.height) * 440,
+      (panorama.width / panorama.height) * SHOT_MAX_HEIGHT,
       'wider than the column ever is',
-    ).toBeGreaterThan(1280 - 420 - 64);
+    ).toBeGreaterThan(GALLERY_COLUMN_MAX);
     expect(
       (root.querySelector('.product__experience') as HTMLElement).style.getPropertyValue(
         '--nx-experience-columns',
       ),
-    ).toBe('');
+    ).toBe(COPY_BESIDE_GALLERY);
 
     await go(`/${OUR_WORK_SEGMENT}/mastercraft`);
     expect(
       (root.querySelector('.product__experience') as HTMLElement).style.getPropertyValue(
         '--nx-experience-columns',
       ),
-    ).toBe('');
+    ).toBe(COPY_BESIDE_GALLERY);
   });
 
   /**
-   * A photograph that shows something the page does not say in words carries a description of
-   * it. The heading is not repeated there, and a product with no description keeps `alt=""`,
-   * which is what marks an image decorative rather than unlabelled.
+   * Every photograph on the page carries a description, hero included. `photoAlts` being
+   * required makes a product with none a compile error, and `product-content.spec.ts` pins the
+   * count and the wording - what is left for here is the rendering path, where `toImages()`
+   * still falls back to `''` for an index the array does not reach.
    */
-  it('describes the photographs that have a description, and no others', async () => {
+  it('describes every photograph it renders, on every product', async () => {
+    for (const id of PRODUCT_IDS) {
+      await go(`/${OUR_WORK_SEGMENT}/${id}`);
+
+      const alts = [
+        root.querySelector('.product__hero-img')?.getAttribute('alt') ?? '',
+        ...Array.from(root.querySelectorAll('.gallery__img')).map(
+          (shot) => shot.getAttribute('alt') ?? '',
+        ),
+      ];
+
+      expect(alts, `${id} renders no photograph`).not.toHaveLength(0);
+      expect(alts.length, `${id} renders fewer images than it has photographs`).toBe(
+        PRODUCT_META[id].photos.length,
+      );
+      for (const [index, alt] of alts.entries()) {
+        expect(alt.length, `${id} photograph ${index} renders alt=""`).toBeGreaterThan(0);
+      }
+      expect(new Set(alts).size, `${id} repeats a description`).toBe(alts.length);
+    }
+  });
+
+  /**
+   * A description that repeats the heading tells a screen reader nothing the `h1` has not
+   * already said. `lav` is the fixture because it is the shortest product name in the set, so
+   * an accidental `alt="Lav"` would read as plausible.
+   */
+  it('does not let a description fall back to the product name', async () => {
     await go(`/${OUR_WORK_SEGMENT}/lav`);
 
-    const alts = [
-      root.querySelector('.product__hero-img')?.getAttribute('alt') ?? '',
-      ...Array.from(root.querySelectorAll('.product__shot-img')).map(
-        (shot) => shot.getAttribute('alt') ?? '',
-      ),
-    ];
-    expect(
-      alts.every((alt) => alt.length > 0),
-      'every lav photograph is described',
-    ).toBe(true);
-    expect(new Set(alts).size, 'two photographs share one description').toBe(alts.length);
+    const heading = root.querySelector('h1')?.textContent?.trim().toLowerCase() ?? '';
+    const alts = Array.from(root.querySelectorAll('img')).map(
+      (image) => image.getAttribute('alt')?.trim().toLowerCase() ?? '',
+    );
+    expect(heading).toBe('lav');
     for (const alt of alts) {
-      expect(alt.toLowerCase(), 'the description repeats the heading').not.toBe('lav');
+      expect(alt, 'the description repeats the heading').not.toBe(heading);
     }
+  });
 
+  /**
+   * The structured data a product page carries beyond the page itself. Deliberately without a
+   * creator: `product.content.ts` says why nothing here claims authorship, and a machine-read
+   * claim is the last place to start making one.
+   */
+  it('describes the product as a work, without claiming to have made it', async () => {
     await go(`/${OUR_WORK_SEGMENT}/${FIRST}`);
-    expect(root.querySelector('.product__hero-img')?.getAttribute('alt')).toBe('');
+
+    const work = TestBed.inject(DocumentMetaOverride).value()?.work;
+    expect(work, 'the page supplies no work').toBeDefined();
+    expect(work?.name).toBe('Draculai');
+    expect(work?.description).not.toBe('');
+    expect(work?.category).not.toBe('');
+    expect(work?.image).toMatch(/^https?:\/\/.+\/images\/medical\.webp$/);
+    expect(work?.url).toMatch(/^https:\/\//);
+
+    expect(
+      Object.keys(work ?? {}),
+      'a work that names a creator would claim authorship',
+    ).not.toContain('creator');
+
+    // `connected-car` has no destination that can be opened, so it states none.
+    await go(`/${OUR_WORK_SEGMENT}/connected-car`);
+    expect(TestBed.inject(DocumentMetaOverride).value()?.work?.url).toBeUndefined();
   });
 
   /**
@@ -650,19 +700,45 @@ describe('ProductDetail', () => {
   /**
    * Only the nineteen known slugs are prerendered, so this is reached by a hand-typed or stale
    * URL. Showing an empty page there would be indexed as a thin page on a real URL.
+   *
+   * `matchProductSlug` is what decides it: the product route does not match, the router falls
+   * through to the wildcard, and the 404 renders at the address the visitor typed. There is no
+   * redirect any more, so the router's URL and the browser's address are the same thing -
+   * where the component used to navigate to `/not-found` and then mask it with
+   * `skipLocationChange`.
    */
-  it('sends an unknown slug to the 404 without changing the address', async () => {
-    await harness.navigateByUrl(`/${OUR_WORK_SEGMENT}/not-a-product`);
+  it('leaves an unknown slug to the 404, at the address it was typed at', async () => {
+    const url = `/${OUR_WORK_SEGMENT}/not-a-product`;
+    await harness.navigateByUrl(url);
     await harness.fixture.whenStable();
 
-    // The router ends up on the 404, but `skipLocationChange` leaves the address the visitor
-    // typed, so a reload retries the real URL rather than silently becoming /not-found.
-    expect(TestBed.inject(Router).url).toBe('/not-found');
-    expect(TestBed.inject(Location).path()).toBe(`/${OUR_WORK_SEGMENT}/not-a-product`);
+    expect(TestBed.inject(Router).url).toBe(url);
+    expect(TestBed.inject(Location).path()).toBe(url);
 
     const app = harness.fixture.nativeElement as HTMLElement;
     expect(app.querySelector('app-not-found')).not.toBeNull();
     expect(app.querySelector('.product')).toBeNull();
+  });
+
+  /**
+   * The guard is a routing concern, so it is pinned on the route table rather than through the
+   * component: every known slug matches, and the shapes that are not a product do not.
+   */
+  it('matches every product slug and nothing else', () => {
+    const segments = (path: string) => path.split('/').map((p) => new UrlSegment(p, {}));
+    // `CanMatchFn` also receives the route snapshot, which this guard does not read. Narrowing
+    // to the two arguments it implements is what lets the test call it without building one.
+    const guard = matchProductSlug as (route: Route, segments: UrlSegment[]) => boolean;
+    const match = (path: string) =>
+      TestBed.runInInjectionContext(() => guard({ path: ':slug' }, segments(path)));
+
+    for (const id of PRODUCT_IDS) {
+      expect(match(id), id).toBe(true);
+    }
+    expect(match('not-a-product'), 'an unknown slug').toBe(false);
+    expect(match(''), 'an empty segment').toBe(false);
+    expect(match('draculai/extra'), 'a deeper path').toBe(false);
+    expect(match('DRACULAI'), 'the wrong case').toBe(false);
   });
 
   it('translates the page and keeps the locale prefix on its links', async () => {

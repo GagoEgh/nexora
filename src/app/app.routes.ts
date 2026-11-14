@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { matchLocalePrefix, syncLocaleWithUrl } from './core/i18n/locale-routing';
+import { matchProductSlug } from './pages/our-work/products/data/product-ids';
 import { AI_AGENT_SEGMENT, OUR_WORK_SEGMENT } from './core/routing/paths';
 import type { DocumentMetaRouteData } from './core/seo/document-meta';
 
@@ -59,10 +60,8 @@ const pages: Routes = [
         data: { meta: 'our_work' } satisfies DocumentMetaRouteData,
       },
       {
-        // One component for all nineteen products. It carries `meta: 'our_work'` so the
-        // canonical, hreflang and breadcrumb graph are derived from the real path, and
-        // supplies its own title and description through `DocumentMetaOverride`.
         path: ':slug',
+        canMatch: [matchProductSlug],
         loadComponent: () =>
           import('./pages/our-work/product-detail/product-detail').then((m) => m.ProductDetail),
         data: { meta: 'our_work' } satisfies DocumentMetaRouteData,

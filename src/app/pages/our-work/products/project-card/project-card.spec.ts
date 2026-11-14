@@ -23,7 +23,16 @@ const PRODUCT: ProductView = {
   advantage: 'The advantage.',
   value: 'The business value.',
   about: 'The longer about text.',
-  photos: [{ src: 'images/medical.webp', width: 800, height: 450, alt: '' }],
+  photos: [
+    {
+      src: 'images/medical.webp',
+      srcset:
+        'images/medical-400.webp 400w, images/medical-640.webp 640w, images/medical.webp 800w',
+      width: 800,
+      height: 450,
+      alt: '',
+    },
+  ],
   path: '/our_work/draculai',
   url: 'https://apps.apple.com/us/app/draculai/id6744015242',
   platform: 'iOS',

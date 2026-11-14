@@ -1,12 +1,6 @@
 import type { AppIconName } from '../../../../core/icons/icons';
 import type { ProductId } from './product-ids';
 
-/**
- * What kind of problem a product solves. This is the portfolio's organising idea: eleven of
- * nineteen products are storefronts, so without a second axis the grid reads as one project
- * repeated. The archetype gives each card a claim its neighbours cannot make, and gives the
- * grid a filter vocabulary.
- */
 export const PRODUCT_ARCHETYPES = [
   'app',
   'configurator',
@@ -17,8 +11,6 @@ export const PRODUCT_ARCHETYPES = [
 ] as const;
 
 export type ProductArchetype = (typeof PRODUCT_ARCHETYPES)[number];
-
-/** Each archetype's icon, from the project's own set. */
 export const ARCHETYPE_ICONS: Readonly<Record<ProductArchetype, AppIconName>> = {
   app: 'smartphone',
   configurator: 'layers',
@@ -28,22 +20,11 @@ export const ARCHETYPE_ICONS: Readonly<Record<ProductArchetype, AppIconName>> = 
   corporate: 'globe',
 };
 
-/**
- * An absolute, secure destination. Typing it this way makes a relative route - which would be
- * written into `[href]`, bypassing the router and the locale prefix - a compile error.
- */
 export type ExternalUrl = `https://${string}`;
 
-/**
- * One product photograph, with the size it actually is.
- *
- * The dimensions are carried rather than assumed because this set ranges from 480x334 to
- * 800x853 - portrait, square and three different landscapes. The card crops them all to one
- * ratio with `object-fit: cover`, but the intrinsic size still has to be declared truthfully so
- * the browser reserves the right box.
- */
+export type NonEmpty<T> = readonly [T, ...T[]];
+
 export interface ProductPhoto {
-  /** File name under `public/images`. */
   readonly file: string;
   readonly width: number;
   readonly height: number;
@@ -51,32 +32,9 @@ export interface ProductPhoto {
 
 export interface ProductMeta {
   readonly archetype: ProductArchetype;
-  /**
-   * The product's own photographs, in the order they should be shown. The first is the card's
-   * picture and the detail page's hero; any after it are gallery material.
-   *
-   * These are the project's own images, committed in `f766248` and served from `public/images`.
-   * Today every product has exactly one, which is why the detail page shows a gallery only when
-   * a second exists - adding originals later is an edit to this array and nothing else.
-   *
-   * Generated illustrations are deliberately not referenced here. The set under
-   * `src/assets/images/products` is no longer read by any component.
-   */
-  readonly photos: readonly ProductPhoto[];
-  /**
-   * The live destination, when the product has one that can be opened and checked today.
-   *
-   * Deliberately optional. Two products have no honest destination: the connected-car app has
-   * no public listing, and the organic beverage store resolves to a platform default host where
-   * every item reads "sold out". A card with no outbound link is better than one that sends a
-   * prospect somewhere that undermines the work.
-   */
+  readonly photos: NonEmpty<ProductPhoto>;
+
   readonly url?: ExternalUrl;
-  /**
-   * The delivery platform, recorded only where the published product states or plainly shows
-   * it. An absent value means "not established", never "none" - it is left out of the UI
-   * rather than guessed at.
-   */
   readonly platform?: string;
 }
 
@@ -240,4 +198,13 @@ export const PRODUCT_META: Readonly<Record<ProductId, ProductMeta>> = {
 
 export function photoSrc(photo: ProductPhoto): string {
   return `images/${photo.file}`;
+}
+
+export const IMAGE_LADDER = [400, 640, 960] as const;
+
+export function photoSrcset(photo: ProductPhoto): string {
+  const steps = IMAGE_LADDER.filter((step) => step < photo.width).map(
+    (step) => `images/${photo.file.replace(/\.webp$/, `-${step}.webp`)} ${step}w`,
+  );
+  return [...steps, `${photoSrc(photo)} ${photo.width}w`].join(', ');
 }

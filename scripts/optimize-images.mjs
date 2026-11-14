@@ -1,21 +1,15 @@
-import { readdir, stat, unlink, writeFile } from 'node:fs/promises';
+import { readFile, readdir, stat, unlink, writeFile } from 'node:fs/promises';
 import { join, parse } from 'node:path';
 import { exit } from 'node:process';
 import sharp from 'sharp';
-import { IMAGES_DIR, MAX_IMAGE_BYTES } from './verify-images.mjs';
+import { IMAGES_DIR, MAX_IMAGE_BYTES, META_FILE, photoWidths } from './verify-images.mjs';
+import { variantFile, variantWidths } from './image-ladder.mjs';
 
 const QUALITY = 82;
 const CONVERTIBLE = new Set(['.png', '.jpg', '.jpeg']);
 
 const MAX_IMAGE_WIDTH = 1280;
 
-/**
- * Re-encodes one source image as WebP within the project's width budget, then removes the
- * source so the repository never carries two copies of the same picture.
- *
- * @param {string} file - a file name inside `IMAGES_DIR`
- * @returns {Promise<{ file: string, from: number, to: number, width: number | undefined, height: number | undefined }>}
- */
 async function convert(file) {
   const source = join(IMAGES_DIR, file);
   const { name } = parse(file);
@@ -45,18 +39,57 @@ async function convert(file) {
  */
 const kb = (bytes) => `${(bytes / 1024).toFixed(1)} kB`;
 
+async function publishVariants(file, width) {
+  const source = join(IMAGES_DIR, file);
+  const made = [];
+
+  for (const step of variantWidths(width)) {
+    const name = variantFile(file, step);
+    const target = join(IMAGES_DIR, name);
+    try {
+      await stat(target);
+      continue;
+    } catch {
+      // Not published yet.
+    }
+
+    const encoded = await sharp(source)
+      .resize({ width: step, withoutEnlargement: true })
+      .webp({ quality: QUALITY })
+      .toBuffer({ resolveWithObject: true });
+    await writeFile(target, encoded.data);
+    made.push({ file: name, to: encoded.data.length, width: encoded.info.width });
+  }
+
+  return made;
+}
+
 async function main() {
-  // The photographs sit flat in `public/images`, one file per picture, served at `/images/<file>`.
   const sources = (await readdir(IMAGES_DIR, { withFileTypes: true }))
     .filter((entry) => entry.isFile() && CONVERTIBLE.has(parse(entry.name).ext.toLowerCase()))
     .map((entry) => entry.name);
+
+  const results = await Promise.all(sources.map(convert));
+  const registry = photoWidths(await readFile(META_FILE, 'utf8'));
+  const variants = (
+    await Promise.all([...registry].map(([file, width]) => publishVariants(file, width)))
+  ).flat();
+
+  if (variants.length > 0) {
+    console.log(`[optimize-images] published ${variants.length} narrower copies:`);
+    const name = Math.max(...variants.map((variant) => variant.file.length));
+    for (const variant of variants.sort((a, b) => a.file.localeCompare(b.file))) {
+      console.log(
+        `  ${variant.file.padEnd(name)}  ${kb(variant.to).padStart(9)}  (${variant.width}px)`,
+      );
+    }
+  }
 
   if (sources.length === 0) {
     console.log('[optimize-images] nothing to convert: every raster is already WebP.');
     return;
   }
 
-  const results = await Promise.all(sources.map(convert));
   results.sort((a, b) => b.from - a.from);
 
   const width = Math.max(...results.map((result) => result.file.length));

@@ -128,10 +128,6 @@ export function provideDocumentMeta(): EnvironmentProviders {
       const alternates = getMultilingualUrls(localeless);
       const canonical = origin + alternates[locale()];
 
-      // A parameterised route - one product of nineteen - supplies its own title and
-      // description through the override, because `DOCUMENT_META_PAGES` holds one entry per
-      // page and cannot carry them. Everything else below is derived from the path and so is
-      // already correct for the product URL.
       const entry = override.value() ?? {
         title: page.title.value,
         description: page.description.value,
@@ -169,9 +165,6 @@ export function provideDocumentMeta(): EnvironmentProviders {
       const breadcrumbId = `${canonical}#breadcrumb`;
       const trail = breadcrumbItems(current.page);
 
-      // A parameterised route is served one segment below its page id, so its trail gains the
-      // record itself. Without this the structured breadcrumb stops at "Our Work" while the
-      // visible one on the page shows the product - two answers to the same question.
       if (trail.length > 0 && localeless !== pagePath(current.page)) {
         trail.push({ name: override.value()?.breadcrumb ?? entry.title, path: localeless });
       }
@@ -213,6 +206,26 @@ export function provideDocumentMeta(): EnvironmentProviders {
           ...(trail.length > 0 ? { breadcrumb: { '@id': breadcrumbId } } : {}),
         },
       ];
+
+      const work = override.value()?.work;
+      if (work) {
+        const workId = `${canonical}#work`;
+        graph.push({
+          '@type': 'CreativeWork',
+          '@id': workId,
+          name: work.name,
+          description: work.description,
+          genre: work.category,
+          image: work.image,
+          inLanguage: locale(),
+          mainEntityOfPage: { '@id': `${canonical}#webpage` },
+          ...(work.url ? { url: work.url } : {}),
+        });
+        const page = graph.find((node) => node['@id'] === `${canonical}#webpage`);
+        if (page) {
+          Object.assign(page, { mainEntity: { '@id': workId } });
+        }
+      }
 
       if (trail.length > 0) {
         graph.push({

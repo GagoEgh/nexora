@@ -6,11 +6,13 @@ import {
   ARCHETYPE_ICONS,
   PRODUCT_META,
   photoSrc,
+  photoSrcset,
   type ProductArchetype,
   type ProductMeta,
+  type ProductPhoto,
+  type NonEmpty,
 } from './product-meta';
 
-/** The per-product copy held in the dictionary, as the template consumes it. */
 export interface ProductCopy {
   readonly name: LocalizedText;
   readonly category: LocalizedText;
@@ -20,7 +22,7 @@ export interface ProductCopy {
   readonly advantage: LocalizedText;
   readonly value: LocalizedText;
   readonly about: LocalizedText;
-  readonly photoAlts?: readonly LocalizedText[];
+  readonly photoAlts: readonly LocalizedText[];
 }
 
 export interface ProductsCopy {
@@ -30,6 +32,7 @@ export interface ProductsCopy {
 
 export interface ProductImage {
   readonly src: string;
+  readonly srcset: string;
   readonly width: number;
   readonly height: number;
   readonly alt: string;
@@ -48,7 +51,7 @@ export interface ProductView {
   readonly advantage: string;
   readonly value: string;
   readonly about: string;
-  readonly photos: readonly ProductImage[];
+  readonly photos: NonEmpty<ProductImage>;
   readonly path: string;
   readonly url?: string;
   readonly platform?: string;
@@ -56,6 +59,24 @@ export interface ProductView {
 
 export function productPath(id: ProductId): string {
   return `/${OUR_WORK_SEGMENT}/${id}`;
+}
+
+function toImage(photo: ProductPhoto, alt: LocalizedText | undefined): ProductImage {
+  return {
+    src: photoSrc(photo),
+    srcset: photoSrcset(photo),
+    width: photo.width,
+    height: photo.height,
+    alt: alt?.value ?? '',
+  };
+}
+
+function toImages(
+  photos: NonEmpty<ProductPhoto>,
+  alts: readonly LocalizedText[],
+): NonEmpty<ProductImage> {
+  const [hero, ...rest] = photos;
+  return [toImage(hero, alts[0]), ...rest.map((photo, index) => toImage(photo, alts[index + 1]))];
 }
 
 function toView(
@@ -77,12 +98,7 @@ function toView(
     advantage: copy.advantage.value,
     value: copy.value.value,
     about: copy.about.value,
-    photos: meta.photos.map((photo, index) => ({
-      src: photoSrc(photo),
-      width: photo.width,
-      height: photo.height,
-      alt: copy.photoAlts?.[index]?.value ?? '',
-    })),
+    photos: toImages(meta.photos, copy.photoAlts),
     path: productPath(id),
     url: meta.url,
     platform: meta.platform,

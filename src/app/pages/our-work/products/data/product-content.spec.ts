@@ -108,20 +108,24 @@ describe('the product dictionary', () => {
   });
 
   /**
-   * A photograph with no description renders as `alt=""`, which marks it decorative rather
-   * than unlabelled. That is the right reading for a lone hero, whose subject the heading
-   * beside it already names, and the wrong one for a gallery: those pictures show what the copy
-   * does not say. The quiet failure this catches is a photograph added to `product-meta.ts`
-   * with no line added beside it here - nothing breaks, the picture simply goes undescribed.
+   * A photograph with no description renders as `alt=""`, which tells assistive technology the
+   * picture is decorative. This file used to accept that for a lone hero, on the reading that
+   * the heading beside it already names the subject. It does not: the heading names the
+   * product, while the picture shows a warehouse floor, a row of serums or a supermarket
+   * aisle - and the same file is the card cover on the portfolio grid, where it is the only
+   * visual a link carries. So every photograph is described, hero included.
+   *
+   * `ProductCopy.photoAlts` is required, so a product with no descriptions at all is a compile
+   * error rather than a failure here. What this still catches is the quieter one: a photograph
+   * added to `product-meta.ts` with no line added beside it, which leaves the array shorter
+   * than the set it describes and the last picture silently unlabelled.
    */
-  it('describes every photograph of a product that has a gallery', () => {
+  it('describes every photograph of every product', () => {
     for (const id of PRODUCT_IDS) {
       const photos = PRODUCT_META[id].photos.length;
       const alts = products[id]['photoAlts'] as readonly unknown[] | undefined;
 
-      if (photos > 1) {
-        expect(alts, `${id} has ${photos} photographs and no descriptions`).toBeDefined();
-      }
+      expect(alts, `${id} has ${photos} photographs and no descriptions`).toBeDefined();
       if (alts === undefined) {
         continue;
       }

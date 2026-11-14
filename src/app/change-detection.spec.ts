@@ -58,6 +58,7 @@ import { AboutProducts } from './pages/our-work/about-products/about-products';
 import { Products } from './pages/our-work/products/products';
 import { ProjectCard } from './pages/our-work/products/project-card/project-card';
 import { ProductDetail } from './pages/our-work/product-detail/product-detail';
+import { ProductGallery } from './pages/our-work/product-detail/product-gallery/product-gallery';
 import { CategoryNav } from './pages/services/category-nav/category-nav';
 import { FilterBar } from './pages/services/filter-bar/filter-bar';
 import { Services } from './pages/services/services';
@@ -149,6 +150,7 @@ const COMPONENTS: readonly [string, Type<unknown>][] = [
   ['Products', Products],
   ['ProjectCard', ProjectCard],
   ['ProductDetail', ProductDetail],
+  ['ProductGallery', ProductGallery],
   ['Partnerships', Partnerships],
   ['PartnerFlow', PartnerFlow],
   ['PartnerAudience', PartnerAudience],

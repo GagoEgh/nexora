@@ -1,6 +1,5 @@
-import { Component, DestroyRef, computed, effect, inject } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { Component, DestroyRef, computed, effect, inject, input } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { useDictionary, useLocale } from 'angular-intlayer';
@@ -15,41 +14,13 @@ import { appIcon } from '../../../core/icons/icons';
 import { CONTACT_PATH, OUR_WORK_SEGMENT } from '../../../core/routing/paths';
 import { DocumentMetaOverride } from '../../../core/seo/document-meta-override';
 import { ORGANIZATION } from '../../../core/seo/organization';
+import { SITE_ORIGIN } from '../../../core/seo/site-origin';
 import productContent from '../products/product.content';
 import ourWorkContent from '../our-work.content';
 import { isProductId, type ProductId } from '../products/data/product-ids';
-import {
-  nextProductId,
-  toProductView,
-  type ProductImage,
-  type ProductView,
-} from '../products/data/product-view';
-
-const LONE_SHOT_MAX_HEIGHT = 440;
-const GALLERY_COLUMN_MAX = 1280 - 420 - 64;
-const GALLERY_ROW_MAX = 3;
-
-interface GalleryRow {
-  readonly shots: readonly ProductImage[];
-  readonly columns: string | null;
-}
-
-function galleryRowSizes(count: number): readonly number[] {
-  const rows = Math.ceil(count / GALLERY_ROW_MAX);
-  if (rows === 0) {
-    return [];
-  }
-  const base = Math.floor(count / rows);
-  const longer = count % rows;
-  return Array.from({ length: rows }, (_, index) => base + (index < longer ? 1 : 0));
-}
-
-function proportionalColumns(shots: readonly ProductImage[]): string | null {
-  if (shots.length < 2) {
-    return null;
-  }
-  return shots.map((shot) => `minmax(0, ${(shot.width / shot.height).toFixed(4)}fr)`).join(' ');
-}
+import { nextProductId, toProductView, type ProductView } from '../products/data/product-view';
+import { experienceColumns, HERO_SIZES } from './gallery-layout';
+import { ProductGallery } from './product-gallery/product-gallery';
 
 @Component({
   selector: 'app-product-detail',
@@ -61,14 +32,15 @@ function proportionalColumns(shots: readonly ProductImage[]): string | null {
     Reveal,
     PageIntro,
     StartConversation,
+    ProductGallery,
   ],
   templateUrl: './product-detail.html',
   styleUrl: './product-detail.scss',
 })
 export class ProductDetail {
-  private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
   private readonly override = inject(DocumentMetaOverride);
+  private readonly origin = inject(SITE_ORIGIN);
+  readonly slug = input.required<string>();
 
   protected readonly content = useDictionary(productContent);
   protected readonly pageContent = useDictionary(ourWorkContent);
@@ -78,10 +50,8 @@ export class ProductDetail {
   protected readonly ourWorkPath = `/${OUR_WORK_SEGMENT}`;
   protected readonly contactPath = CONTACT_PATH;
 
-  private readonly params = toSignal(this.route.paramMap, { initialValue: null });
-
   protected readonly productId = computed<ProductId | null>(() => {
-    const slug = this.params()?.get('slug');
+    const slug = this.slug();
     return isProductId(slug) ? slug : null;
   });
 
@@ -90,37 +60,13 @@ export class ProductDetail {
     return id === null ? null : toProductView(id, this.content());
   });
 
+  protected readonly heroSizes = HERO_SIZES;
+
   protected readonly gallery = computed(() => this.product()?.photos.slice(1) ?? []);
 
-  protected readonly galleryRows = computed<readonly GalleryRow[]>(() => {
-    const shots = this.gallery();
-    const rows: GalleryRow[] = [];
-    let taken = 0;
-    for (const size of galleryRowSizes(shots.length)) {
-      const row = shots.slice(taken, taken + size);
-      rows.push({ shots: row, columns: proportionalColumns(row) });
-      taken += size;
-    }
-    return rows;
-  });
-
-  protected readonly experienceColumns = computed<string | null>(() => {
-    const shots = this.gallery();
-
-    if (shots.length > 2) {
-      return 'minmax(0, 1fr)';
-    }
-
-    if (shots.length !== 1) {
-      return null;
-    }
-    const shot = shots[0];
-    const bounded = Math.min(
-      Math.round((shot.width / shot.height) * LONE_SHOT_MAX_HEIGHT),
-      shot.width,
-    );
-    return bounded < GALLERY_COLUMN_MAX ? `minmax(0, 1fr) minmax(0, ${bounded}px)` : null;
-  });
+  protected readonly experienceColumns = computed<string | null>(() =>
+    experienceColumns(this.gallery()),
+  );
 
   protected readonly next = computed<ProductView | null>(() => {
     const id = this.productId();
@@ -157,15 +103,16 @@ export class ProductDetail {
               title: `${product.name} — ${product.category} | ${ORGANIZATION.name}`,
               description: product.hook,
               breadcrumb: product.name,
+              work: {
+                name: product.name,
+                description: product.hook,
+                category: product.category,
+                image: `${this.origin}/${product.photos[0].src}`,
+                url: product.url,
+              },
             }
           : undefined,
       );
-    });
-
-    effect(() => {
-      if (this.params() !== null && this.productId() === null) {
-        void this.router.navigate(['/not-found'], { skipLocationChange: true });
-      }
     });
 
     inject(DestroyRef).onDestroy(() => this.override.set(undefined));

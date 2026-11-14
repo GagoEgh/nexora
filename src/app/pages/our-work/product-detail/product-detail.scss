@@ -14,8 +14,6 @@
   --nx-page-intro-aside: 520px;
 }
 
-$shot-stacked-max-height: 440px;
-
 .product__intro {
   display: grid;
   justify-items: start;
@@ -60,55 +58,9 @@ $shot-stacked-max-height: 440px;
   gap: spacing.space(32);
 
   @include layout.up(large) {
-    grid-template-columns: var(--nx-experience-columns, minmax(0, 420px) minmax(0, 1fr));
+    grid-template-columns: var(--nx-experience-columns);
     column-gap: spacing.space(64);
     align-items: center;
-  }
-}
-
-.product__gallery {
-  display: grid;
-  gap: spacing.space(16);
-  min-width: 0;
-}
-
-.product__gallery-row {
-  display: grid;
-  place-items: start center;
-  gap: spacing.space(16);
-  min-width: 0;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-
-  @include layout.up(medium) {
-    justify-items: start;
-
-    &:not(:has(> :only-child)) {
-      grid-template-columns: var(--nx-gallery-columns, repeat(2, minmax(0, 1fr)));
-    }
-  }
-}
-
-.product__shot {
-  display: grid;
-  min-width: 0;
-  overflow: hidden;
-  border-radius: var(--nx-sys-corner-panel);
-  background-color: var(--mat-sys-surface);
-  outline: 1px solid var(--mat-sys-outline-variant);
-  outline-offset: -1px;
-}
-
-.product__shot-img {
-  display: block;
-  width: auto;
-  max-width: 100%;
-  max-height: $shot-stacked-max-height;
-  height: auto;
-
-  @include layout.up(medium) {
-    max-height: none;
   }
 }
 
@@ -148,12 +100,8 @@ $shot-stacked-max-height: 440px;
   color: var(--mat-sys-on-surface);
 }
 
-.product__hero-art,
-.product__shot {
-  @include reveal.item(120ms);
-}
-
 .product__hero-art {
+  @include reveal.item(120ms);
   display: grid;
   gap: spacing.space(8);
   margin: 0;
@@ -298,7 +246,7 @@ $shot-stacked-max-height: 440px;
   .product__prose,
   .product__feature,
   .product__value-card,
-  .product__shot,
+  app-product-gallery,
   .product__next-link {
     @include reveal.hidden();
   }

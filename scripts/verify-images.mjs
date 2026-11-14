@@ -1,16 +1,12 @@
 import { readdir, readFile, stat } from 'node:fs/promises';
 import { join, parse } from 'node:path';
+import { variantFiles } from './image-ladder.mjs';
 import { exit } from 'node:process';
 
-/**
- * Product photographs are served straight out of `public`, so they land at `/images/<file>` with
- * no hashing and no build step between the file and the page. `photoSrc()` in the registry builds
- * exactly that path, which is why this check works on file names rather than on folders.
- */
 export const IMAGES_DIR = 'public/images';
 export const MAX_IMAGE_BYTES = 120 * 1024;
 
-const META_FILE = 'src/app/pages/our-work/products/data/product-meta.ts';
+export const META_FILE = 'src/app/pages/our-work/products/data/product-meta.ts';
 
 /**
  * Every photograph the product registry points at, in file order. Order is kept so the duplicate
@@ -23,22 +19,31 @@ export function referencedPhotos(source) {
   return [...source.matchAll(/file:\s*'([^']+)'/g)].map((match) => match[1]);
 }
 
-/**
- * Holds the product photographs to the project's rules: WebP only, within the per-file budget,
- * every file referenced by a product, every referenced file on disk, and one photograph per
- * product. The last rule is what stops two products from sharing a picture, which would read as
- * the same work delivered twice.
- *
- * @param {readonly string[]} files - file names found in `public/images`
- * @param {readonly string[]} referenced - file names the registry points at
- * @param {ReadonlyMap<string, number>} sizes - the same file names -> bytes
- * @returns {string[]} one message per problem, empty when the set is healthy
- */
-export function checkImages(files, referenced, sizes) {
+export function photoWidths(source) {
+  return new Map(
+    [...source.matchAll(/file:\s*'([^']+)',\s*width:\s*(\d+)/g)].map((match) => [
+      match[1],
+      Number(match[2]),
+    ]),
+  );
+}
+
+export function checkImages(files, referenced, sizes, widths = new Map()) {
   /** @type {string[]} */
   const problems = [];
-  const named = new Set(referenced);
   const onDisk = new Set(files);
+
+  // A photograph is published as itself plus the ladder steps narrower than it. Both count as
+  // referenced: the registry names the photograph, and the width it records names the rest.
+  /** @type {Map<string, string>} */
+  const expected = new Map();
+  for (const file of referenced) {
+    expected.set(file, file);
+    for (const variant of variantFiles(file, widths.get(file) ?? 0)) {
+      expected.set(variant, file);
+    }
+  }
+  const named = expected;
 
   for (const file of files) {
     if (parse(file).ext.toLowerCase() !== '.webp') {
@@ -75,6 +80,15 @@ export function checkImages(files, referenced, sizes) {
 
     if (!onDisk.has(file)) {
       problems.push(`${META_FILE} names ${file}, which is not in ${IMAGES_DIR}`);
+      continue;
+    }
+
+    for (const variant of variantFiles(file, widths.get(file) ?? 0)) {
+      if (!onDisk.has(variant)) {
+        problems.push(
+          `${file} is served responsively but ${variant} is missing - run \`npm run images:optimize\``,
+        );
+      }
     }
   }
 
@@ -92,13 +106,15 @@ async function main() {
     sizes.set(file, (await stat(join(IMAGES_DIR, file))).size);
   }
 
-  const referenced = referencedPhotos(await readFile(META_FILE, 'utf8'));
+  const registry = await readFile(META_FILE, 'utf8');
+  const referenced = referencedPhotos(registry);
+  const widths = photoWidths(registry);
   if (referenced.length === 0) {
     console.error(`[verify-images] found no photographs in ${META_FILE}; the check is vacuous`);
     exit(1);
   }
 
-  const problems = checkImages(files, referenced, sizes);
+  const problems = checkImages(files, referenced, sizes, widths);
   if (problems.length > 0) {
     console.error('[verify-images] problems:');
     for (const problem of problems) {
