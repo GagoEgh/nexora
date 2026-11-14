@@ -113,7 +113,11 @@ export const PRODUCT_META: Readonly<Record<ProductId, ProductMeta>> = {
   },
   mastercraft: {
     archetype: 'configurator',
-    photos: [{ file: 'master.webp', width: 800, height: 622 }],
+    photos: [
+      { file: 'master.webp', width: 800, height: 622 },
+      { file: 'master-bench.webp', width: 1280, height: 853 },
+      { file: 'master-grading.webp', width: 1000, height: 1000 },
+    ],
     url: 'https://www.mastercraftjewelers.com/',
     platform: 'Shopify',
   },
@@ -148,7 +152,6 @@ export const PRODUCT_META: Readonly<Record<ProductId, ProductMeta>> = {
     url: 'https://www.libraanalytics.com/',
     platform: 'Webflow',
   },
-  // The card used to point at `abletonremakes.com`, which now answers 301 and redirects here.
   'remake-templates': {
     archetype: 'storefront',
     photos: [{ file: 'muzic.webp', width: 800, height: 450 }],

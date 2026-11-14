@@ -71,7 +71,7 @@
         </div>
 
         @if (gallery().length) {
-          <ul class="product__gallery">
+          <ul class="product__gallery" [style.--nx-gallery-columns]="galleryColumns()">
             @for (shot of gallery(); track shot.src) {
               <li class="product__shot">
                 <img

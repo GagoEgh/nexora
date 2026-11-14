@@ -199,6 +199,59 @@ describe('ProductDetail', () => {
   });
 
   /**
+   * A pair of photographs that are not the same shape. Equal columns would leave the row ragged
+   * - the square runs half as tall again as a 3:2 beside it - so the component hands the grid
+   * column widths in proportion to the ratios, and the heights come out level. What that looks
+   * like is measured in a browser; what belongs here is that the proportions are actually
+   * published to the stylesheet, and that they follow the registry rather than a literal.
+   */
+  it('sizes a mismatched pair of photographs in proportion to their ratios', async () => {
+    await go(`/${OUR_WORK_SEGMENT}/mastercraft`);
+
+    const gallery = PRODUCT_META['mastercraft'].photos.slice(1);
+    expect(gallery, 'mastercraft is the fixture for this test').toHaveLength(2);
+    expect(
+      new Set(gallery.map((photo) => (photo.width / photo.height).toFixed(2))).size,
+      'the fixture is only meaningful while the two shapes differ',
+    ).toBe(2);
+
+    const list = root.querySelector('.product__gallery') as HTMLElement;
+    expect(list.style.getPropertyValue('--nx-gallery-columns')).toBe(
+      gallery.map((photo) => `minmax(0, ${(photo.width / photo.height).toFixed(4)}fr)`).join(' '),
+    );
+
+    const shots = Array.from(root.querySelectorAll<HTMLImageElement>('.product__shot-img'));
+    expect(shots.map((shot) => shot.getAttribute('src'))).toEqual(
+      gallery.map((photo) => `images/${photo.file}`),
+    );
+    // The hero is the storefront; `master-grading.webp` is deliberately not `master.webp`,
+    // which would have collided with it in `public/images`.
+    expect(root.querySelector('.product__hero-img')?.getAttribute('src')).toBe(
+      'images/master.webp',
+    );
+    expect(
+      [
+        root.querySelector('.product__hero-img')?.getAttribute('alt') ?? '',
+        ...shots.map((shot) => shot.getAttribute('alt') ?? ''),
+      ].every((alt) => alt.length > 0),
+      'all three photographs are described',
+    ).toBe(true);
+  });
+
+  /**
+   * A gallery that is not a pair keeps the stylesheet's own columns, so the proportional sizing
+   * cannot leak into the single-photograph layout or into a row of three.
+   */
+  it('leaves the gallery columns to the stylesheet unless there are exactly two', async () => {
+    await go(`/${OUR_WORK_SEGMENT}/robert-irwin`);
+    expect(
+      (root.querySelector('.product__gallery') as HTMLElement).style.getPropertyValue(
+        '--nx-gallery-columns',
+      ),
+    ).toBe('');
+  });
+
+  /**
    * The single-photograph case, which is the one the two-column gallery got wrong: a lone
    * picture was laid out in the first of two columns, at half the width it had been given, and
    * `rings.webp` is 2.54:1 - a strip beside an empty cell. The layout itself is a stylesheet

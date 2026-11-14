@@ -59,12 +59,15 @@ export class ProductDetail {
     return id === null ? null : toProductView(id, this.content());
   });
 
-  /**
-   * Everything after the first photograph. The first is the hero; the rest are the gallery, and
-   * today there is no rest - every product carries exactly one image. The section that reads
-   * this renders copy alone when it is empty, so adding originals later is a data edit.
-   */
   protected readonly gallery = computed(() => this.product()?.photos.slice(1) ?? []);
+
+  protected readonly galleryColumns = computed<string | null>(() => {
+    const shots = this.gallery();
+    if (shots.length !== 2) {
+      return null;
+    }
+    return shots.map((shot) => `minmax(0, ${(shot.width / shot.height).toFixed(4)}fr)`).join(' ');
+  });
 
   protected readonly next = computed<ProductView | null>(() => {
     const id = this.productId();
@@ -93,17 +96,11 @@ export class ProductDetail {
   });
 
   constructor() {
-    // `provideDocumentMeta` rewrites title and description on every navigation, so a component
-    // that set them directly would be overwritten. It reads this override instead, which keeps
-    // one writer for the document head.
     effect(() => {
       const product = this.product();
       this.override.set(
         product
           ? {
-              // Several products are brand names that read the same in all three locales, so a
-              // bare name would ship fifty-seven pages sharing nineteen titles between their
-              // own hreflang alternates. The category is translated and makes each one its own.
               title: `${product.name} — ${product.category} | ${ORGANIZATION.name}`,
               description: product.hook,
               breadcrumb: product.name,
@@ -112,8 +109,6 @@ export class ProductDetail {
       );
     });
 
-    // An unknown slug is a 404, not a blank page. Only the known slugs are prerendered, so this
-    // is reached by a hand-typed or stale URL.
     effect(() => {
       if (this.params() !== null && this.productId() === null) {
         void this.router.navigate(['/not-found'], { skipLocationChange: true });
