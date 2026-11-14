@@ -362,6 +362,7 @@ test.describe('the portfolio at every supported width', () => {
       '/our_work/robert-irwin',
       '/our_work/mastercraft',
       '/our_work/got-matcha',
+      '/our_work/roar-organic',
     ]) {
       test(`${path} fits ${viewport.width}px (${viewport.label})`, async ({ page }) => {
         await page.setViewportSize({ width: viewport.width, height: viewport.height });
@@ -570,6 +571,79 @@ test.describe('a product page with a panoramic photograph', () => {
       widths.gallery,
     );
   });
+});
+
+/**
+ * The other lone photograph, and the opposite shape. `roar-immune.webp` is 1.12:1, and the rule
+ * that gives a single picture the whole gallery - right for the panorama above - laid it out
+ * 794x706 beside a three-line paragraph: taller than the hero, and the loudest thing on the
+ * page. The component now bounds the column to the width a 440px-tall photograph needs.
+ *
+ * What a browser is needed for: that the bound is reached by narrowing the column rather than
+ * by squashing the picture, that the copy rather than a gap takes what the column gives up, and
+ * that the bound stays out of the way at widths where the layout is a single column.
+ */
+test.describe('a product page with a lone near-square photograph', () => {
+  const SHOT = '.product__shot-img';
+
+  /** The height bound in `product-detail.ts`, which this page is the reason for. */
+  const MAX_HEIGHT = 440;
+
+  const measure = async (page: Page) => {
+    await page.locator(SHOT).scrollIntoViewIfNeeded();
+    await expect
+      .poll(() =>
+        page.locator(SHOT).evaluate((image) => (image as HTMLImageElement).naturalWidth > 0),
+      )
+      .toBe(true);
+    return page.locator(SHOT).evaluate((element) => {
+      const image = element as HTMLImageElement;
+      const box = image.getBoundingClientRect();
+      const copy = document.querySelector('.product__experience-copy')?.getBoundingClientRect();
+      return {
+        natural: image.naturalWidth / image.naturalHeight,
+        intrinsic: image.naturalWidth,
+        laid: box.width / box.height,
+        width: Math.round(box.width),
+        height: Math.round(box.height),
+        copyWidth: Math.round(copy?.width ?? 0),
+        stacked: (copy?.bottom ?? 0) <= box.top + 1,
+      };
+    });
+  };
+
+  for (const viewport of VIEWPORTS) {
+    test(`keeps the near-square in proportion at ${viewport.width}px (${viewport.label})`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width: viewport.width, height: viewport.height });
+      await page.goto('/our_work/roar-organic');
+      await ready(page);
+      const shot = await measure(page);
+
+      expect(
+        Math.abs(shot.laid - shot.natural),
+        `laid out at ${shot.laid.toFixed(3)} but is ${shot.natural.toFixed(3)}`,
+      ).toBeLessThan(0.02);
+      expect(
+        shot.width,
+        `scaled past the ${shot.intrinsic}px of detail it carries`,
+      ).toBeLessThanOrEqual(shot.intrinsic + 1);
+      expect(shot.width, `collapsed at ${viewport.width}px`).toBeGreaterThan(100);
+
+      // The bound belongs to the two-column layout. Stacked under the copy, a full-width
+      // photograph is what every other section does and what the panorama does too.
+      if (!shot.stacked) {
+        expect(shot.height, 'towers over the paragraph beside it').toBeLessThanOrEqual(
+          MAX_HEIGHT + 2,
+        );
+        expect(
+          shot.copyWidth,
+          'the copy did not take the width the column released',
+        ).toBeGreaterThan(shot.width);
+      }
+    });
+  }
 });
 
 /**

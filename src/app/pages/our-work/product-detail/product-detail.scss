@@ -58,7 +58,7 @@
   gap: spacing.space(32);
 
   @include layout.up(large) {
-    grid-template-columns: minmax(0, 420px) minmax(0, 1fr);
+    grid-template-columns: var(--nx-experience-columns, minmax(0, 420px) minmax(0, 1fr));
     column-gap: spacing.space(64);
     align-items: center;
   }

@@ -64,7 +64,11 @@
       </ul>
     </section>
     <section class="product__section product__section--experience" appReveal>
-      <div class="product__experience" [class.product__experience--gallery]="gallery().length > 0">
+      <div
+        class="product__experience"
+        [class.product__experience--gallery]="gallery().length > 0"
+        [style.--nx-experience-columns]="experienceColumns()"
+      >
         <div class="product__experience-copy">
           <h2 class="product__section-title">{{ content().sections.experience }}</h2>
           <p class="product__prose">{{ item.summary }}</p>

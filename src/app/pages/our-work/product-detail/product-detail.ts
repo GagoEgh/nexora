@@ -20,6 +20,9 @@ import ourWorkContent from '../our-work.content';
 import { isProductId, type ProductId } from '../products/data/product-ids';
 import { nextProductId, toProductView, type ProductView } from '../products/data/product-view';
 
+const LONE_SHOT_MAX_HEIGHT = 440;
+const GALLERY_COLUMN_MAX = 1280 - 420 - 64;
+
 @Component({
   selector: 'app-product-detail',
   imports: [
@@ -67,6 +70,19 @@ export class ProductDetail {
       return null;
     }
     return shots.map((shot) => `minmax(0, ${(shot.width / shot.height).toFixed(4)}fr)`).join(' ');
+  });
+
+  protected readonly experienceColumns = computed<string | null>(() => {
+    const shots = this.gallery();
+    if (shots.length !== 1) {
+      return null;
+    }
+    const shot = shots[0];
+    const bounded = Math.min(
+      Math.round((shot.width / shot.height) * LONE_SHOT_MAX_HEIGHT),
+      shot.width,
+    );
+    return bounded < GALLERY_COLUMN_MAX ? `minmax(0, 1fr) minmax(0, ${bounded}px)` : null;
   });
 
   protected readonly next = computed<ProductView | null>(() => {

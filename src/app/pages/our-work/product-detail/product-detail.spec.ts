@@ -332,6 +332,54 @@ describe('ProductDetail', () => {
   });
 
   /**
+   * The other half of the lone-photograph case. Giving the whole column to one picture suits a
+   * panorama and overwhelms a near-square: `roar-immune.webp` is 1.12:1 and was laid out 794x706
+   * next to its paragraph. The component bounds the column to the width a 440px-tall photograph
+   * needs, and the copy takes what is released - 440 * 1120 / 996 is 495.
+   */
+  it('bounds the column of a lone photograph that would be laid out too tall', async () => {
+    await go(`/${OUR_WORK_SEGMENT}/roar-organic`);
+
+    const gallery = PRODUCT_META['roar-organic'].photos.slice(1);
+    expect(gallery, 'roar-organic is the fixture for this test').toHaveLength(1);
+    expect(
+      gallery[0].width / gallery[0].height,
+      'the fixture is the near-square case',
+    ).toBeLessThan(1.5);
+
+    const experience = root.querySelector('.product__experience') as HTMLElement;
+    expect(experience.style.getPropertyValue('--nx-experience-columns')).toBe(
+      `minmax(0, 1fr) minmax(0, ${Math.round((gallery[0].width / gallery[0].height) * 440)}px)`,
+    );
+  });
+
+  /**
+   * The same rule, inert. A panorama's bound is wider than the column is ever laid out, so
+   * nothing is published and the stylesheet's own columns stand; a pair is not its business at
+   * all. This is what keeps the fix off the other eighteen products.
+   */
+  it('leaves the experience columns to the stylesheet for a panorama or a pair', async () => {
+    await go(`/${OUR_WORK_SEGMENT}/robert-irwin`);
+    const panorama = PRODUCT_META['robert-irwin'].photos[1];
+    expect(
+      (panorama.width / panorama.height) * 440,
+      'wider than the column ever is',
+    ).toBeGreaterThan(1280 - 420 - 64);
+    expect(
+      (root.querySelector('.product__experience') as HTMLElement).style.getPropertyValue(
+        '--nx-experience-columns',
+      ),
+    ).toBe('');
+
+    await go(`/${OUR_WORK_SEGMENT}/mastercraft`);
+    expect(
+      (root.querySelector('.product__experience') as HTMLElement).style.getPropertyValue(
+        '--nx-experience-columns',
+      ),
+    ).toBe('');
+  });
+
+  /**
    * A photograph that shows something the page does not say in words carries a description of
    * it. The heading is not repeated there, and a product with no description keeps `alt=""`,
    * which is what marks an image decorative rather than unlabelled.

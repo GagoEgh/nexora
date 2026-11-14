@@ -180,7 +180,10 @@ export const PRODUCT_META: Readonly<Record<ProductId, ProductMeta>> = {
   },
   'roar-organic': {
     archetype: 'storefront',
-    photos: [{ file: 'organic.webp', width: 800, height: 717 }],
+    photos: [
+      { file: 'roar.webp', width: 1000, height: 896 },
+      { file: 'roar-immune.webp', width: 1120, height: 996 },
+    ],
     platform: 'Shopify',
   },
   'zadeh-md': {
