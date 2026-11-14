@@ -355,7 +355,12 @@ test.describe('card height adapts to its content', () => {
  */
 test.describe('the portfolio at every supported width', () => {
   for (const viewport of VIEWPORTS) {
-    for (const path of ['/our_work', '/hy/our_work/draculai', '/our_work/lav']) {
+    for (const path of [
+      '/our_work',
+      '/hy/our_work/draculai',
+      '/our_work/lav',
+      '/our_work/robert-irwin',
+    ]) {
       test(`${path} fits ${viewport.width}px (${viewport.label})`, async ({ page }) => {
         await page.setViewportSize({ width: viewport.width, height: viewport.height });
         await page.goto(path);
@@ -481,5 +486,79 @@ test.describe('a product page with photographs', () => {
     for (const shot of await page.locator(SHOT).all()) {
       await expect(shot).toHaveAttribute('loading', 'lazy');
     }
+  });
+});
+
+/**
+ * The panoramic original on the jeweller's page, which is the shape the gallery did not have a
+ * layout for. `rings.webp` is 2.54:1; left in the two-column grid that suits `lav`'s square
+ * photographs it was laid out in one of those columns, a strip beside an empty cell.
+ *
+ * Two things only a browser can confirm: that it now takes the whole gallery, and that taking
+ * it does not mean being blown up - the file carries 890px of detail, and a box wider than that
+ * would be upscale, which on jewellery is exactly where it would show.
+ */
+test.describe('a product page with a panoramic photograph', () => {
+  const SHOT = '.product__shot-img';
+
+  for (const viewport of VIEWPORTS) {
+    test(`lays the panorama out whole at ${viewport.width}px (${viewport.label})`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width: viewport.width, height: viewport.height });
+      await page.goto('/our_work/robert-irwin');
+      await ready(page);
+      await page.locator(SHOT).scrollIntoViewIfNeeded();
+      // Deferred by design, so wait for the bytes before measuring the box.
+      await expect
+        .poll(() =>
+          page.locator(SHOT).evaluate((image) => (image as HTMLImageElement).naturalWidth > 0),
+        )
+        .toBe(true);
+
+      const shot = await page.locator(SHOT).evaluate((element) => {
+        const image = element as HTMLImageElement;
+        const box = image.getBoundingClientRect();
+        return {
+          natural: image.naturalWidth / image.naturalHeight,
+          intrinsic: image.naturalWidth,
+          laid: box.width / box.height,
+          width: Math.round(box.width),
+          alt: image.getAttribute('alt') ?? '',
+        };
+      });
+
+      expect(
+        Math.abs(shot.laid - shot.natural),
+        `the panorama is laid out at ${shot.laid.toFixed(3)} but is ${shot.natural.toFixed(3)}`,
+      ).toBeLessThan(0.02);
+      expect(shot.alt.length, 'the panorama has no description').toBeGreaterThan(0);
+      expect(shot.width, `the panorama collapsed at ${viewport.width}px`).toBeGreaterThan(100);
+      expect(
+        shot.width,
+        `the panorama is scaled past the ${shot.intrinsic}px of detail it carries`,
+      ).toBeLessThanOrEqual(shot.intrinsic + 1);
+    });
+  }
+
+  test('gives the lone photograph the whole gallery rather than half of it', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('/our_work/robert-irwin');
+    await ready(page);
+    await page.locator(SHOT).scrollIntoViewIfNeeded();
+
+    const widths = await page.evaluate(() => {
+      const shot = document.querySelector('.product__shot');
+      const gallery = document.querySelector('.product__gallery');
+      return {
+        shot: Math.round(shot?.getBoundingClientRect().width ?? 0),
+        gallery: Math.round(gallery?.getBoundingClientRect().width ?? 0),
+      };
+    });
+
+    expect(widths.gallery, 'no gallery was rendered').toBeGreaterThan(0);
+    expect(widths.shot, 'the photograph is sharing the row with an empty column').toBe(
+      widths.gallery,
+    );
   });
 });

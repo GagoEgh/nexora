@@ -23,13 +23,6 @@
             </a>
           }
         </div>
-
-        <!--
-          Technology, kept deliberately small. `platform` is the only technical fact on record
-          for a product, and four of the nineteen do not have even that - those render no chip
-          rather than a guess. There is no Technology & Architecture section, because there is
-          nothing verified to fill one with.
-        -->
         @if (item.platform; as platform) {
           <p class="product__tech">
             <span class="product__tech-chip">
@@ -53,8 +46,10 @@
     </app-page-intro>
 
     <section class="product__section" appReveal>
-      <h2 class="product__section-title">{{ content().sections.about }}</h2>
-      <p class="product__prose">{{ item.about }}</p>
+      <div class="product__split">
+        <h2 class="product__section-title">{{ content().sections.about }}</h2>
+        <p class="product__prose">{{ item.about }}</p>
+      </div>
     </section>
 
     <section class="product__section product__section--features" appReveal>

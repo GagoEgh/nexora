@@ -119,7 +119,10 @@ export const PRODUCT_META: Readonly<Record<ProductId, ProductMeta>> = {
   },
   'robert-irwin': {
     archetype: 'configurator',
-    photos: [{ file: 'je.webp', width: 640, height: 524 }],
+    photos: [
+      { file: 'je.webp', width: 640, height: 524 },
+      { file: 'rings.webp', width: 890, height: 350 },
+    ],
     url: 'https://www.rijewelers.com/',
     platform: 'Shopify',
   },

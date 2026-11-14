@@ -4,6 +4,7 @@
 @use 'mixins/container';
 @use 'mixins/eyebrow';
 @use 'mixins/reveal';
+@use 'mixins/section';
 @use 'mixins/surface';
 @use 'mixins/text';
 @use 'mixins/visually-hidden';
@@ -20,7 +21,6 @@
 }
 
 .product__category,
-.product__hook,
 .product__tech,
 .product__section-title,
 .product__prose,
@@ -49,6 +49,10 @@
   }
 }
 
+.product__split {
+  @include section.split(520px);
+}
+
 .product__experience--gallery {
   display: grid;
   gap: spacing.space(32);
@@ -62,7 +66,8 @@
 
 .product__gallery {
   display: grid;
-  align-items: start;
+
+  place-items: start;
   gap: spacing.space(16);
   min-width: 0;
   margin: 0;
@@ -70,7 +75,9 @@
   list-style: none;
 
   @include layout.up(medium) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    &:not(:has(> :only-child)) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
 }
 
@@ -84,7 +91,8 @@
 
 .product__shot-img {
   display: block;
-  width: 100%;
+  width: auto;
+  max-width: 100%;
   height: auto;
 }
 
@@ -92,13 +100,6 @@
   margin: 0;
   font: var(--mat-sys-title-medium);
   color: var(--nx-sys-on-surface-muted);
-}
-
-.product__hook {
-  margin: 0;
-  max-width: 48ch;
-  font: var(--nx-sys-body-lead);
-  color: var(--mat-sys-on-surface-variant);
 }
 
 .product__actions {

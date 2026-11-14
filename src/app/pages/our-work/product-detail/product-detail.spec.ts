@@ -199,6 +199,44 @@ describe('ProductDetail', () => {
   });
 
   /**
+   * The single-photograph case, which is the one the two-column gallery got wrong: a lone
+   * picture was laid out in the first of two columns, at half the width it had been given, and
+   * `rings.webp` is 2.54:1 - a strip beside an empty cell. The layout itself is a stylesheet
+   * matter that `our-work.spec.ts` measures in a browser; what belongs here is the registry
+   * contract under it, which is that one photograph past the hero still makes a gallery.
+   */
+  it('renders a lone second photograph as the whole gallery, described', async () => {
+    await go(`/${OUR_WORK_SEGMENT}/robert-irwin`);
+
+    const gallery = PRODUCT_META['robert-irwin'].photos.slice(1);
+    expect(gallery, 'robert-irwin is the fixture for this test').toHaveLength(1);
+
+    const shots = Array.from(root.querySelectorAll<HTMLImageElement>('.product__shot-img'));
+    expect(shots).toHaveLength(1);
+    expect(shots[0].getAttribute('src')).toBe(`images/${gallery[0].file}`);
+    expect(shots[0].getAttribute('loading')).toBe('lazy');
+    expect(shots[0].getAttribute('decoding')).toBe('async');
+    expect(Number(shots[0].getAttribute('width'))).toBe(gallery[0].width);
+    expect(Number(shots[0].getAttribute('height'))).toBe(gallery[0].height);
+    expect(
+      root
+        .querySelector('.product__experience')
+        ?.classList.contains('product__experience--gallery'),
+    ).toBe(true);
+
+    // Both of this product's photographs are originals of the work, so both are described.
+    const alts = [
+      root.querySelector('.product__hero-img')?.getAttribute('alt') ?? '',
+      shots[0].getAttribute('alt') ?? '',
+    ];
+    expect(
+      alts.every((alt) => alt.length > 0),
+      'both photographs are described',
+    ).toBe(true);
+    expect(new Set(alts).size, 'the two photographs share one description').toBe(2);
+  });
+
+  /**
    * A photograph that shows something the page does not say in words carries a description of
    * it. The heading is not repeated there, and a product with no description keeps `alt=""`,
    * which is what marks an image decorative rather than unlabelled.
