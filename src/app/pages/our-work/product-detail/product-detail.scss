@@ -14,6 +14,8 @@
   --nx-page-intro-aside: 520px;
 }
 
+$shot-stacked-max-height: 440px;
+
 .product__intro {
   display: grid;
   justify-items: start;
@@ -66,8 +68,7 @@
 
 .product__gallery {
   display: grid;
-
-  place-items: start;
+  place-items: start center;
   gap: spacing.space(16);
   min-width: 0;
   margin: 0;
@@ -75,6 +76,8 @@
   list-style: none;
 
   @include layout.up(medium) {
+    justify-items: start;
+
     &:not(:has(> :only-child)) {
       grid-template-columns: var(--nx-gallery-columns, repeat(2, minmax(0, 1fr)));
     }
@@ -93,7 +96,12 @@
   display: block;
   width: auto;
   max-width: 100%;
+  max-height: $shot-stacked-max-height;
   height: auto;
+
+  @include layout.up(medium) {
+    max-height: none;
+  }
 }
 
 .product__category {

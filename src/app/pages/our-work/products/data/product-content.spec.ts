@@ -107,6 +107,41 @@ describe('the product dictionary', () => {
     }
   });
 
+  /**
+   * A photograph with no description renders as `alt=""`, which marks it decorative rather
+   * than unlabelled. That is the right reading for a lone hero, whose subject the heading
+   * beside it already names, and the wrong one for a gallery: those pictures show what the copy
+   * does not say. The quiet failure this catches is a photograph added to `product-meta.ts`
+   * with no line added beside it here - nothing breaks, the picture simply goes undescribed.
+   */
+  it('describes every photograph of a product that has a gallery', () => {
+    for (const id of PRODUCT_IDS) {
+      const photos = PRODUCT_META[id].photos.length;
+      const alts = products[id]['photoAlts'] as readonly unknown[] | undefined;
+
+      if (photos > 1) {
+        expect(alts, `${id} has ${photos} photographs and no descriptions`).toBeDefined();
+      }
+      if (alts === undefined) {
+        continue;
+      }
+
+      expect(alts.length, `${id} has ${photos} photographs`).toBe(photos);
+      for (const [index, alt] of alts.entries()) {
+        for (const locale of LOCALES) {
+          const text = tr(alt)[locale] ?? '';
+          expect(text, `${id}.photoAlts[${index}] in ${locale}`).toBeTruthy();
+          // A description that repeats the product name tells a screen reader nothing the
+          // heading has not already said.
+          expect(
+            text.trim().toLowerCase(),
+            `${id}.photoAlts[${index}] in ${locale} is just the product name`,
+          ).not.toBe((tr(products[id]['name'])[locale] ?? '').trim().toLowerCase());
+        }
+      }
+    }
+  });
+
   it('makes no authorship or ownership claim anywhere in the copy', () => {
     // Several of these products credit other studios publicly. The copy describes the work; it
     // does not say who owns it. This is the check that keeps a later edit from drifting.

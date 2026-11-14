@@ -99,7 +99,11 @@ export const PRODUCT_META: Readonly<Record<ProductId, ProductMeta>> = {
   },
   hydrant: {
     archetype: 'storefront',
-    photos: [{ file: 'juce.webp', width: 756, height: 600 }],
+    photos: [
+      { file: 'juce.webp', width: 756, height: 600 },
+      { file: 'hydrant-flavours.webp', width: 1000, height: 667 },
+      { file: 'hydrant-mix.webp', width: 1280, height: 854 },
+    ],
     url: 'https://www.drinkhydrant.com/',
     platform: 'Shopify',
   },
@@ -192,7 +196,11 @@ export const PRODUCT_META: Readonly<Record<ProductId, ProductMeta>> = {
   },
   'zadeh-md': {
     archetype: 'storefront',
-    photos: [{ file: 'zadeh.webp', width: 480, height: 334 }],
+    photos: [
+      { file: 'zadeh.webp', width: 480, height: 334 },
+      { file: 'zadeh-cleanse.webp', width: 900, height: 1350 },
+      { file: 'zadeh-c-fusion.webp', width: 1280, height: 1281 },
+    ],
     url: 'https://shopzadehmdskin.com/',
     platform: 'Shopify',
   },

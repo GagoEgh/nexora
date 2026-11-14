@@ -364,6 +364,8 @@ test.describe('the portfolio at every supported width', () => {
       '/our_work/got-matcha',
       '/our_work/roar-organic',
       '/our_work/jdm-west-coast',
+      '/our_work/zadeh-md',
+      '/our_work/hydrant',
     ]) {
       test(`${path} fits ${viewport.width}px (${viewport.label})`, async ({ page }) => {
         await page.setViewportSize({ width: viewport.width, height: viewport.height });
@@ -575,6 +577,103 @@ test.describe('a product page with a panoramic photograph', () => {
 });
 
 /**
+ * The single-column stack, which every product falls into below 600px. There a photograph has
+ * the whole content width, and the taller the shape the further it runs: `zadeh-cleanse.webp`
+ * is 2:3 and came out 348x522 at 390px - taller than the hero and than anything else on the
+ * page. The stylesheet bounds the laid-out height there.
+ *
+ * Three things only a browser settles: that the bound is reached by scaling the picture rather
+ * than by cropping the tile it sits in, that a bounded picture is centred rather than left
+ * hanging at one edge of a full-width column, and that the bound lifts again once the gallery
+ * stops being a stack.
+ */
+test.describe('a photograph in the single-column stack', () => {
+  const SHOT = '.product__shot-img';
+
+  /** `$shot-stacked-max-height` in `product-detail.scss`, plus a pixel for the tile's borders. */
+  const BOUND = 440;
+
+  const STACKED = [320, 375, 390, 430, 599];
+
+  for (const width of STACKED) {
+    test(`bounds and centres the tall photograph at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/our_work/zadeh-md');
+      await ready(page);
+      await page.locator(SHOT).first().scrollIntoViewIfNeeded();
+      await expect
+        .poll(() =>
+          page
+            .locator(SHOT)
+            .first()
+            .evaluate((image) => (image as HTMLImageElement).naturalWidth > 0),
+        )
+        .toBe(true);
+
+      const shots = await page.locator(SHOT).evaluateAll((elements) =>
+        elements.map((element) => {
+          const image = element as HTMLImageElement;
+          const box = image.getBoundingClientRect();
+          const tile = (image.closest('.product__shot') as HTMLElement).getBoundingClientRect();
+          const gallery = (
+            image.closest('.product__gallery') as HTMLElement
+          ).getBoundingClientRect();
+          return {
+            natural: image.naturalWidth / image.naturalHeight,
+            intrinsic: image.naturalWidth,
+            laid: box.width / box.height,
+            width: Math.round(box.width),
+            height: Math.round(box.height),
+            // How far the tile sits from each edge of the column it is laid out in.
+            left: Math.round(tile.left - gallery.left),
+            right: Math.round(gallery.right - tile.right),
+          };
+        }),
+      );
+
+      expect(shots.length, 'this page has two gallery photographs').toBe(2);
+      for (const shot of shots) {
+        expect(shot.height, `laid out ${shot.width}x${shot.height}`).toBeLessThanOrEqual(BOUND + 1);
+        expect(
+          Math.abs(shot.laid - shot.natural),
+          `laid out at ${shot.laid.toFixed(3)} but is ${shot.natural.toFixed(3)}`,
+        ).toBeLessThan(0.02);
+        expect(shot.width, 'scaled past the detail the file carries').toBeLessThanOrEqual(
+          shot.intrinsic + 1,
+        );
+        // Centred: equal gutters either side, whether or not the bound narrowed it.
+        expect(
+          Math.abs(shot.left - shot.right),
+          `gutters ${shot.left} and ${shot.right}`,
+        ).toBeLessThanOrEqual(1);
+      }
+    });
+  }
+
+  test('lets the photographs grow again once the stack ends', async ({ page }) => {
+    await page.setViewportSize({ width: 768, height: 900 });
+    await page.goto('/our_work/zadeh-md');
+    await ready(page);
+    await page.locator(SHOT).first().scrollIntoViewIfNeeded();
+    await expect
+      .poll(() =>
+        page
+          .locator(SHOT)
+          .first()
+          .evaluate((image) => (image as HTMLImageElement).naturalWidth > 0),
+      )
+      .toBe(true);
+
+    const tops = await page
+      .locator(SHOT)
+      .evaluateAll((elements) => elements.map((element) => element.getBoundingClientRect().top));
+    expect(Math.abs(tops[0] - tops[1]), 'the pair is side by side here, not stacked').toBeLessThan(
+      2,
+    );
+  });
+});
+
+/**
  * The other lone photograph, and the opposite shape. `roar-immune.webp` is 1.12:1, and the rule
  * that gives a single picture the whole gallery - right for the panorama above - laid it out
  * 794x706 beside a three-line paragraph: taller than the hero, and the loudest thing on the
@@ -660,7 +759,7 @@ test.describe('a product page with a lone near-square photograph', () => {
  * picture is trimmed to fit.
  */
 /** Every product whose gallery is a pair of photographs that are not the same shape. */
-const MISMATCHED_PAIRS = ['mastercraft', 'got-matcha', 'jdm-west-coast'] as const;
+const MISMATCHED_PAIRS = ['mastercraft', 'got-matcha', 'jdm-west-coast', 'zadeh-md'] as const;
 
 test.describe('a product page with two differently shaped photographs', () => {
   const SHOT = '.product__shot-img';

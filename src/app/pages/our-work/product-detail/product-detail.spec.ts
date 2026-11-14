@@ -326,6 +326,38 @@ describe('ProductDetail', () => {
   });
 
   /**
+   * The degenerate case of the same rule. Hydrant's two photographs are both 3:2, so sizing the
+   * columns in proportion to their ratios has to come out as the even split the stylesheet would
+   * have given anyway - no special branch for it, and no rounding drift between two shapes that
+   * are the same shape.
+   */
+  it('gives a pair of matching shape an even split', () => {
+    const gallery = PRODUCT_META['hydrant'].photos.slice(1);
+    expect(gallery, 'hydrant is the fixture for this test').toHaveLength(2);
+
+    const ratios = gallery.map((photo) => photo.width / photo.height);
+    expect(Math.abs(ratios[0] - ratios[1]), 'the fixture is the matched case').toBeLessThan(0.01);
+  });
+
+  it('lays a matched pair out as two even columns', async () => {
+    await go(`/${OUR_WORK_SEGMENT}/hydrant`);
+
+    const gallery = PRODUCT_META['hydrant'].photos.slice(1);
+    const columns = (root.querySelector('.product__gallery') as HTMLElement).style.getPropertyValue(
+      '--nx-gallery-columns',
+    );
+    expect(columns).toBe(
+      gallery.map((photo) => `minmax(0, ${(photo.width / photo.height).toFixed(4)}fr)`).join(' '),
+    );
+
+    const [first, second] = columns
+      .split(' ')
+      .filter((part) => part.endsWith('fr)'))
+      .map((part) => Number.parseFloat(part));
+    expect(Math.abs(first - second), `columns ${columns}`).toBeLessThan(0.01);
+  });
+
+  /**
    * A gallery that is not a pair keeps the stylesheet's own columns, so the proportional sizing
    * cannot leak into the single-photograph layout or into a row of three.
    */
