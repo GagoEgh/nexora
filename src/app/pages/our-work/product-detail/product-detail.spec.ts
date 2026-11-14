@@ -215,7 +215,7 @@ describe('ProductDetail', () => {
       'the fixture is only meaningful while the two shapes differ',
     ).toBe(2);
 
-    const list = root.querySelector('.product__gallery') as HTMLElement;
+    const list = root.querySelector('.product__gallery-row') as HTMLElement;
     expect(list.style.getPropertyValue('--nx-gallery-columns')).toBe(
       gallery.map((photo) => `minmax(0, ${(photo.width / photo.height).toFixed(4)}fr)`).join(' '),
     );
@@ -249,9 +249,9 @@ describe('ProductDetail', () => {
     const gallery = PRODUCT_META['got-matcha'].photos.slice(1);
     expect(gallery).toHaveLength(2);
 
-    const columns = (root.querySelector('.product__gallery') as HTMLElement).style.getPropertyValue(
-      '--nx-gallery-columns',
-    );
+    const columns = (
+      root.querySelector('.product__gallery-row') as HTMLElement
+    ).style.getPropertyValue('--nx-gallery-columns');
     expect(columns).toBe(
       gallery.map((photo) => `minmax(0, ${(photo.width / photo.height).toFixed(4)}fr)`).join(' '),
     );
@@ -304,7 +304,7 @@ describe('ProductDetail', () => {
     }
 
     expect(
-      (root.querySelector('.product__gallery') as HTMLElement).style.getPropertyValue(
+      (root.querySelector('.product__gallery-row') as HTMLElement).style.getPropertyValue(
         '--nx-gallery-columns',
       ),
     ).toBe(
@@ -343,9 +343,9 @@ describe('ProductDetail', () => {
     await go(`/${OUR_WORK_SEGMENT}/hydrant`);
 
     const gallery = PRODUCT_META['hydrant'].photos.slice(1);
-    const columns = (root.querySelector('.product__gallery') as HTMLElement).style.getPropertyValue(
-      '--nx-gallery-columns',
-    );
+    const columns = (
+      root.querySelector('.product__gallery-row') as HTMLElement
+    ).style.getPropertyValue('--nx-gallery-columns');
     expect(columns).toBe(
       gallery.map((photo) => `minmax(0, ${(photo.width / photo.height).toFixed(4)}fr)`).join(' '),
     );
@@ -355,6 +355,95 @@ describe('ProductDetail', () => {
       .filter((part) => part.endsWith('fr)'))
       .map((part) => Number.parseFloat(part));
     expect(Math.abs(first - second), `columns ${columns}`).toBeLessThan(0.01);
+
+    // A pair is one row, which is what it was before rows existed.
+    expect(root.querySelectorAll('.product__gallery-row')).toHaveLength(1);
+    expect(
+      (root.querySelector('.product__experience') as HTMLElement).style.getPropertyValue(
+        '--nx-experience-columns',
+      ),
+      'a pair still sits beside its copy',
+    ).toBe('');
+  });
+
+  /**
+   * Four photographs, which one grid cannot justify: a row's column widths come from that row's
+   * own ratios, and a single `grid-template-columns` applies to every row at once. So the gallery
+   * is rows, each sized by its own pair, and past a pair the section gives the gallery the whole
+   * width instead of an aside - four dashboards at 390px are not worth showing.
+   */
+  it('breaks a gallery of four into two rows, each justified on its own pair', async () => {
+    await go(`/${OUR_WORK_SEGMENT}/libra-analytics`);
+
+    const gallery = PRODUCT_META['libra-analytics'].photos.slice(1);
+    expect(gallery, 'libra-analytics is the fixture for this test').toHaveLength(4);
+
+    const rows = Array.from(root.querySelectorAll<HTMLElement>('.product__gallery-row'));
+    expect(rows).toHaveLength(2);
+
+    for (const [index, row] of rows.entries()) {
+      const pair = gallery.slice(index * 2, index * 2 + 2);
+      expect(row.style.getPropertyValue('--nx-gallery-columns'), `row ${index}`).toBe(
+        pair.map((photo) => `minmax(0, ${(photo.width / photo.height).toFixed(4)}fr)`).join(' '),
+      );
+      expect(
+        Array.from(row.querySelectorAll<HTMLImageElement>('.product__shot-img')).map((shot) =>
+          shot.getAttribute('src'),
+        ),
+        `row ${index}`,
+      ).toEqual(pair.map((photo) => `images/${photo.file}`));
+    }
+
+    expect(
+      rows[0].style.getPropertyValue('--nx-gallery-columns'),
+      'each row is sized by its own photographs',
+    ).not.toBe(rows[1].style.getPropertyValue('--nx-gallery-columns'));
+
+    expect(
+      (root.querySelector('.product__experience') as HTMLElement).style.getPropertyValue(
+        '--nx-experience-columns',
+      ),
+      'past a pair the copy sits above the gallery, not beside it',
+    ).toBe('minmax(0, 1fr)');
+
+    const alts = [
+      root.querySelector('.product__hero-img')?.getAttribute('alt') ?? '',
+      ...Array.from(root.querySelectorAll('.product__shot-img')).map(
+        (shot) => shot.getAttribute('alt') ?? '',
+      ),
+    ];
+    expect(alts, 'the hero and all four gallery photographs').toHaveLength(5);
+    expect(
+      alts.every((alt) => alt.length > 0),
+      'every photograph is described',
+    ).toBe(true);
+    expect(new Set(alts).size, 'each description is its own').toBe(5);
+  });
+
+  /**
+   * Three photographs, which is the case that decides whether rows are chunks or are balanced.
+   * Two and one would leave a single picture under a pair, and a row of one takes the whole
+   * width - a wide orphan under a tidy pair. Three go in one row instead, which across the
+   * container lays them out between 310 and 470 wide.
+   */
+  it('puts three photographs in one row rather than a pair and an orphan', async () => {
+    await go(`/${OUR_WORK_SEGMENT}/sell-me-watch`);
+
+    const gallery = PRODUCT_META['sell-me-watch'].photos.slice(1);
+    expect(gallery, 'sell-me-watch is the fixture for this test').toHaveLength(3);
+
+    const rows = Array.from(root.querySelectorAll<HTMLElement>('.product__gallery-row'));
+    expect(rows).toHaveLength(1);
+    expect(rows[0].querySelectorAll('.product__shot-img')).toHaveLength(3);
+    expect(rows[0].style.getPropertyValue('--nx-gallery-columns')).toBe(
+      gallery.map((photo) => `minmax(0, ${(photo.width / photo.height).toFixed(4)}fr)`).join(' '),
+    );
+    expect(
+      (root.querySelector('.product__experience') as HTMLElement).style.getPropertyValue(
+        '--nx-experience-columns',
+      ),
+      'three photographs take the whole width, like four',
+    ).toBe('minmax(0, 1fr)');
   });
 
   /**
@@ -364,7 +453,7 @@ describe('ProductDetail', () => {
   it('leaves the gallery columns to the stylesheet unless there are exactly two', async () => {
     await go(`/${OUR_WORK_SEGMENT}/robert-irwin`);
     expect(
-      (root.querySelector('.product__gallery') as HTMLElement).style.getPropertyValue(
+      (root.querySelector('.product__gallery-row') as HTMLElement).style.getPropertyValue(
         '--nx-gallery-columns',
       ),
     ).toBe('');

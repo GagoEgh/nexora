@@ -18,10 +18,38 @@ import { ORGANIZATION } from '../../../core/seo/organization';
 import productContent from '../products/product.content';
 import ourWorkContent from '../our-work.content';
 import { isProductId, type ProductId } from '../products/data/product-ids';
-import { nextProductId, toProductView, type ProductView } from '../products/data/product-view';
+import {
+  nextProductId,
+  toProductView,
+  type ProductImage,
+  type ProductView,
+} from '../products/data/product-view';
 
 const LONE_SHOT_MAX_HEIGHT = 440;
 const GALLERY_COLUMN_MAX = 1280 - 420 - 64;
+const GALLERY_ROW_MAX = 3;
+
+interface GalleryRow {
+  readonly shots: readonly ProductImage[];
+  readonly columns: string | null;
+}
+
+function galleryRowSizes(count: number): readonly number[] {
+  const rows = Math.ceil(count / GALLERY_ROW_MAX);
+  if (rows === 0) {
+    return [];
+  }
+  const base = Math.floor(count / rows);
+  const longer = count % rows;
+  return Array.from({ length: rows }, (_, index) => base + (index < longer ? 1 : 0));
+}
+
+function proportionalColumns(shots: readonly ProductImage[]): string | null {
+  if (shots.length < 2) {
+    return null;
+  }
+  return shots.map((shot) => `minmax(0, ${(shot.width / shot.height).toFixed(4)}fr)`).join(' ');
+}
 
 @Component({
   selector: 'app-product-detail',
@@ -64,16 +92,25 @@ export class ProductDetail {
 
   protected readonly gallery = computed(() => this.product()?.photos.slice(1) ?? []);
 
-  protected readonly galleryColumns = computed<string | null>(() => {
+  protected readonly galleryRows = computed<readonly GalleryRow[]>(() => {
     const shots = this.gallery();
-    if (shots.length !== 2) {
-      return null;
+    const rows: GalleryRow[] = [];
+    let taken = 0;
+    for (const size of galleryRowSizes(shots.length)) {
+      const row = shots.slice(taken, taken + size);
+      rows.push({ shots: row, columns: proportionalColumns(row) });
+      taken += size;
     }
-    return shots.map((shot) => `minmax(0, ${(shot.width / shot.height).toFixed(4)}fr)`).join(' ');
+    return rows;
   });
 
   protected readonly experienceColumns = computed<string | null>(() => {
     const shots = this.gallery();
+
+    if (shots.length > 2) {
+      return 'minmax(0, 1fr)';
+    }
+
     if (shots.length !== 1) {
       return null;
     }

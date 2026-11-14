@@ -145,7 +145,12 @@ export const PRODUCT_META: Readonly<Record<ProductId, ProductMeta>> = {
   },
   'sell-me-watch': {
     archetype: 'lead-generation',
-    photos: [{ file: 'watch.webp', width: 800, height: 800 }],
+    photos: [
+      { file: 'watch.webp', width: 800, height: 800 },
+      { file: 'watch-appraisal.webp', width: 1280, height: 854 },
+      { file: 'watch-two-tone.webp', width: 750, height: 500 },
+      { file: 'watch-submariner.webp', width: 960, height: 960 },
+    ],
     url: 'https://www.sellmewatch.com/',
     platform: 'Webflow',
   },
@@ -156,7 +161,13 @@ export const PRODUCT_META: Readonly<Record<ProductId, ProductMeta>> = {
   },
   'libra-analytics': {
     archetype: 'corporate',
-    photos: [{ file: 'power.webp', width: 800, height: 569 }],
+    photos: [
+      { file: 'power.webp', width: 800, height: 569 },
+      { file: 'libra-reports.webp', width: 1280, height: 720 },
+      { file: 'libra-analyst.webp', width: 1280, height: 717 },
+      { file: 'libra-briefing.webp', width: 1280, height: 720 },
+      { file: 'libra-dashboard.webp', width: 1280, height: 853 },
+    ],
     url: 'https://www.libraanalytics.com/',
     platform: 'Webflow',
   },

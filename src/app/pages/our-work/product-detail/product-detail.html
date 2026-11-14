@@ -75,21 +75,25 @@
         </div>
 
         @if (gallery().length) {
-          <ul class="product__gallery" [style.--nx-gallery-columns]="galleryColumns()">
-            @for (shot of gallery(); track shot.src) {
-              <li class="product__shot">
-                <img
-                  class="product__shot-img"
-                  [src]="shot.src"
-                  [alt]="shot.alt"
-                  [width]="shot.width"
-                  [height]="shot.height"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </li>
+          <div class="product__gallery">
+            @for (row of galleryRows(); track $index) {
+              <ul class="product__gallery-row" [style.--nx-gallery-columns]="row.columns">
+                @for (shot of row.shots; track shot.src) {
+                  <li class="product__shot">
+                    <img
+                      class="product__shot-img"
+                      [src]="shot.src"
+                      [alt]="shot.alt"
+                      [width]="shot.width"
+                      [height]="shot.height"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </li>
+                }
+              </ul>
             }
-          </ul>
+          </div>
         }
       </div>
     </section>

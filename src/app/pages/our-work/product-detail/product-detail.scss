@@ -68,6 +68,12 @@ $shot-stacked-max-height: 440px;
 
 .product__gallery {
   display: grid;
+  gap: spacing.space(16);
+  min-width: 0;
+}
+
+.product__gallery-row {
+  display: grid;
   place-items: start center;
   gap: spacing.space(16);
   min-width: 0;

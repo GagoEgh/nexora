@@ -366,6 +366,8 @@ test.describe('the portfolio at every supported width', () => {
       '/our_work/jdm-west-coast',
       '/our_work/zadeh-md',
       '/our_work/hydrant',
+      '/our_work/libra-analytics',
+      '/our_work/sell-me-watch',
     ]) {
       test(`${path} fits ${viewport.width}px (${viewport.label})`, async ({ page }) => {
         await page.setViewportSize({ width: viewport.width, height: viewport.height });
@@ -562,7 +564,7 @@ test.describe('a product page with a panoramic photograph', () => {
 
     const widths = await page.evaluate(() => {
       const shot = document.querySelector('.product__shot');
-      const gallery = document.querySelector('.product__gallery');
+      const gallery = document.querySelector('.product__gallery-row');
       return {
         shot: Math.round(shot?.getBoundingClientRect().width ?? 0),
         gallery: Math.round(gallery?.getBoundingClientRect().width ?? 0),
@@ -574,6 +576,98 @@ test.describe('a product page with a panoramic photograph', () => {
       widths.gallery,
     );
   });
+});
+
+/**
+ * Four photographs, which is more than one grid can justify: column widths come from a row's own
+ * ratios, and `grid-template-columns` applies to every row at once. The gallery is rows instead,
+ * each sized by its own pair, and the section hands the gallery the whole width rather than an
+ * aside once there are more than two.
+ *
+ * What the browser has to settle is the arithmetic: that each row lands on one baseline, that
+ * the rows together fill the width they are given, and that neither happens by cropping or by
+ * blowing a picture up past the detail it carries.
+ */
+test.describe('a gallery of more than two photographs', () => {
+  const SHOT = '.product__shot-img';
+
+  /** Each product with such a gallery, and how many photographs each of its rows should hold. */
+  const GALLERIES = [
+    { slug: 'libra-analytics', rows: [2, 2] },
+    { slug: 'sell-me-watch', rows: [3] },
+  ] as const;
+
+  for (const { slug, rows: expected } of GALLERIES) {
+    for (const width of [1440, 1280, 1024, 768]) {
+      test(`justifies every ${slug} row at ${width}px`, async ({ page }) => {
+        await page.setViewportSize({ width, height: 900 });
+        await page.goto(`/our_work/${slug}`);
+        await ready(page);
+        await page.locator(SHOT).last().scrollIntoViewIfNeeded();
+        await expect
+          .poll(() =>
+            page
+              .locator(SHOT)
+              .last()
+              .evaluate((image) => (image as HTMLImageElement).naturalWidth > 0),
+          )
+          .toBe(true);
+
+        const rows = await page.locator('.product__gallery-row').evaluateAll((elements) =>
+          elements.map((row) => {
+            const box = row.getBoundingClientRect();
+            const shots = [...row.querySelectorAll('img')].map((image) => {
+              const shot = image.getBoundingClientRect();
+              return {
+                natural: image.naturalWidth / image.naturalHeight,
+                intrinsic: image.naturalWidth,
+                laid: shot.width / shot.height,
+                width: Math.round(shot.width),
+                height: Math.round(shot.height),
+              };
+            });
+            return { width: Math.round(box.width), shots };
+          }),
+        );
+
+        expect(
+          rows.map((row) => row.shots.length),
+          'the rows the gallery falls into',
+        ).toEqual([...expected]);
+
+        for (const [index, row] of rows.entries()) {
+          const heights = row.shots.map((shot) => shot.height);
+          expect(
+            Math.max(...heights) - Math.min(...heights),
+            `row ${index} is ragged: ${heights.join(', ')}`,
+          ).toBeLessThanOrEqual(1);
+
+          // The row is filled, so the widths are doing the levelling rather than a gap. The
+          // slack allowed is the 16px gap between tiles plus a pixel of rounding each.
+          const used = row.shots.reduce((total, shot) => total + shot.width, 0);
+          const gaps = (row.shots.length - 1) * 16;
+          expect(
+            row.width - used,
+            `row ${index} leaves ${row.width - used}px unused for ${gaps}px of gaps`,
+          ).toBeLessThanOrEqual(gaps + row.shots.length);
+
+          for (const shot of row.shots) {
+            expect(
+              Math.abs(shot.laid - shot.natural),
+              `laid out at ${shot.laid.toFixed(3)} but is ${shot.natural.toFixed(3)}`,
+            ).toBeLessThan(0.02);
+            expect(shot.width, 'scaled past the detail it carries').toBeLessThanOrEqual(
+              shot.intrinsic + 1,
+            );
+          }
+        }
+
+        // Rows of the same gallery share the width they are laid out in.
+        const widths = rows.map((row) => row.width);
+        expect(Math.max(...widths) - Math.min(...widths)).toBeLessThanOrEqual(1);
+      });
+    }
+  }
 });
 
 /**
@@ -616,7 +710,7 @@ test.describe('a photograph in the single-column stack', () => {
           const box = image.getBoundingClientRect();
           const tile = (image.closest('.product__shot') as HTMLElement).getBoundingClientRect();
           const gallery = (
-            image.closest('.product__gallery') as HTMLElement
+            image.closest('.product__gallery-row') as HTMLElement
           ).getBoundingClientRect();
           return {
             natural: image.naturalWidth / image.naturalHeight,
