@@ -10,6 +10,11 @@ const CONVERTIBLE = new Set(['.png', '.jpg', '.jpeg']);
 
 const MAX_IMAGE_WIDTH = 1280;
 
+/**
+ *
+ * @param {string} file
+ * @returns {Promise<{ file: string, from: number, to: number, width: number, height: number }>}
+ */
 async function convert(file) {
   const source = join(IMAGES_DIR, file);
   const { name } = parse(file);
@@ -39,8 +44,15 @@ async function convert(file) {
  */
 const kb = (bytes) => `${(bytes / 1024).toFixed(1)} kB`;
 
+/**
+ *
+ * @param {string} file
+ * @param {number} width
+ * @returns {Promise<{ file: string, to: number, width: number }[]>}
+ */
 async function publishVariants(file, width) {
   const source = join(IMAGES_DIR, file);
+  /** @type {{ file: string, to: number, width: number }[]} */
   const made = [];
 
   for (const step of variantWidths(width)) {

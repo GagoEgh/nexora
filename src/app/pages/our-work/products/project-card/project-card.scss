@@ -4,11 +4,6 @@
 @use 'mixins/surface';
 @use 'mixins/text';
 
-// Two faces in one grid cell, so the card sizes to the taller of them rather than to a hard
-// coded height. That is load-bearing for `hy` and `ru`, whose copy runs longer than the English,
-// and it is what keeps a row of cards level.
-// The host is the tab stop (see `project-card.ts`), so it carries the focus ring and must never
-// be the thing that gets hidden - only the faces inside it are.
 :host {
   @include surface.outlined();
   display: grid;
@@ -34,9 +29,6 @@
   transform: rotateY(180deg);
 }
 
-// `backface-visibility` hides a face from view and leaves its links in the tab order and in the
-// accessibility tree. `visibility` is what actually removes them, and it is delayed by the
-// length of the turn so the outgoing face stays painted until the card has finished rotating.
 .project-card__face {
   grid-area: 1 / 1;
   display: grid;
@@ -44,7 +36,7 @@
   min-width: 0;
   backface-visibility: hidden;
   visibility: hidden;
-  transition: visibility 0s linear motion.duration(flip);
+  transition: visibility 2s linear motion.duration(flip);
 }
 
 .project-card__face--front {

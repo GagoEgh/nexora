@@ -1,20 +1,3 @@
-/**
- * Draws the two presentation images every portfolio product needs, then encodes them as WebP.
- *
- * Why this exists: the portfolio used to present screenshots captured from the clients' live
- * sites. Those are third-party assets, they vary in aspect ratio from 480x334 to 800x853, and
- * the originals were discarded by `optimize-images.mjs`, so nothing could be re-derived at the
- * resolution a full-bleed hero needs. Everything here is drawn from scratch instead.
- *
- * Each product gets its own palette, its own backdrop geometry, its own industry motif and its
- * own interface composition - there is no shared template. The second image is deliberately an
- * abstract arrangement of panels and bars rather than a believable screenshot: it suggests the
- * shape of the product's interface without pretending to be a photograph of one. No text is
- * drawn, so a single pair of images serves all three locales.
- *
- * Run with `npm run images:products`. Output is deterministic - the same input always produces
- * byte-identical files, so re-running it never churns the repository.
- */
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { exit } from 'node:process';
@@ -213,15 +196,11 @@ export const PRODUCT_ART = [
     folder: 'product-19',
     palette: { deep: '#0B1220', mid: '#16324F', accent: '#39D0FF', accent2: '#9BFFD8' },
     motif: 'vehicle',
-    ui: 'telemetry',
-    variant: 0,
+    ui: 'feed',
+    variant: 2,
     frame: 'phone',
   },
 ];
-
-// ---------------------------------------------------------------------------
-// Primitives
-// ---------------------------------------------------------------------------
 
 /**
  * @param {number} value
@@ -268,7 +247,7 @@ const ring = (cx, cy, r, stroke, width, opacity = 1, dash = '') =>
 
 /**
  * @param {string} d
- * @param {string} stroke_ - stroke colour; trailing underscore because `stroke` is this binding
+ * @param {string} stroke_
  * @param {number} width
  * @param {number} [opacity]
  * @param {string} [fill]
@@ -286,7 +265,6 @@ const stroke = (d, stroke_, width, opacity = 1, fill = 'none') =>
 const shape = (d, fill, opacity = 1) => `<path d="${d}" fill="${fill}" opacity="${n(opacity)}"/>`;
 
 /**
- * A row of short bars standing in for a line of text, never actual lettering.
  *
  * @param {number} x
  * @param {number} y
@@ -298,10 +276,6 @@ const shape = (d, fill, opacity = 1) => `<path d="${d}" fill="${fill}" opacity="
  */
 const textBars = (x, y, widths, h, fill, opacity = 0.5) =>
   widths.map((w, i) => rrect(x, y + i * (h + 9), w, h, h / 2, fill, opacity - i * 0.08)).join('');
-
-// ---------------------------------------------------------------------------
-// Backdrops - six geometries, so no two neighbouring cards share a composition
-// ---------------------------------------------------------------------------
 
 /**
  * @param {Palette} p
@@ -402,10 +376,6 @@ const defs = (p) => `<defs>
   </linearGradient>
 </defs>`;
 
-// ---------------------------------------------------------------------------
-// Industry motifs - the subject of each main visual
-// ---------------------------------------------------------------------------
-
 /**
  * @param {string} motif
  * @param {Palette} p
@@ -419,7 +389,6 @@ function drawMotif(motif, p) {
   const w = '#FFFFFF';
 
   switch (motif) {
-    // A capsule crossed by a pulse line: substance tracking with health insight.
     case 'capsule': {
       const parts = [
         `<g transform="rotate(-38 ${cx} ${cy})">`,
@@ -435,7 +404,6 @@ function drawMotif(motif, p) {
       return parts.join('');
     }
 
-    // Piston, crank arc and speed lines: JDM drivetrain parts.
     case 'piston': {
       const parts = [
         rrect(cx - 96, cy - 210, 192, 150, 24, 'url(#sheen)', 0.95),
@@ -466,7 +434,6 @@ function drawMotif(motif, p) {
       return parts.join('');
     }
 
-    // A stick pack dissolving into electrolyte particles and a hydration wave.
     case 'sachet': {
       const parts = [
         `<g transform="rotate(-14 ${cx} ${cy})">`,
@@ -493,7 +460,6 @@ function drawMotif(motif, p) {
       return parts.join('');
     }
 
-    // Stage truss, beams and location pins: live and experiential events.
     case 'stage': {
       const parts = [
         rrect(cx - 420, cy - 260, 840, 26, 13, w, 0.25),
@@ -533,7 +499,6 @@ function drawMotif(motif, p) {
       return parts.join('');
     }
 
-    // Overlapping cell colonies: a microbiome-led skincare brand.
     case 'microbiome': {
       const parts = [];
       const blobs = [
@@ -563,7 +528,6 @@ function drawMotif(motif, p) {
       return parts.join('');
     }
 
-    // A brilliant-cut stone rendered as facets: fine jewellery, built to configure.
     case 'gem': {
       const top = cy - 170;
       const mid = cy - 40;
@@ -611,7 +575,6 @@ function drawMotif(motif, p) {
       return parts.join('');
     }
 
-    // Interlaced warp and weft: furnishing fabric and wallcovering.
     case 'weave': {
       const parts = [];
       const x0 = cx - 300;
@@ -627,7 +590,6 @@ function drawMotif(motif, p) {
       return parts.join('');
     }
 
-    // A watch dial with crown and a valuation needle.
     case 'dial': {
       const parts = [
         ring(cx, cy, 230, w, 3, 0.25),
@@ -655,7 +617,6 @@ function drawMotif(motif, p) {
       return parts.join('');
     }
 
-    // A cross built from treatment cards, with a travel arc across it.
     case 'clinic': {
       const parts = [
         rrect(cx - 64, cy - 220, 128, 440, 28, 'url(#sheen)', 0.95),
@@ -672,7 +633,6 @@ function drawMotif(motif, p) {
       return parts.join('');
     }
 
-    // Columns and a trend line over a balance beam: analytics for litigation support.
     case 'analytics': {
       const parts = [];
       const heights = [120, 210, 160, 290, 230, 340];
@@ -700,7 +660,6 @@ function drawMotif(motif, p) {
       return parts.join('');
     }
 
-    // A waveform between mixer faders: templates, samples and presets.
     case 'waveform': {
       const parts = [];
       for (let i = 0; i < 38; i += 1) {
@@ -719,7 +678,6 @@ function drawMotif(motif, p) {
       return parts.join('');
     }
 
-    // A tea leaf over a bowl, with whisk strokes.
     case 'leaf': {
       const parts = [
         shape(
@@ -748,7 +706,6 @@ function drawMotif(motif, p) {
       return parts.join('');
     }
 
-    // A dressing bottle with a pour and a sprig.
     case 'bottle': {
       const parts = [
         rrect(cx - 36, cy - 280, 72, 90, 14, b, 0.85),
@@ -780,7 +737,6 @@ function drawMotif(motif, p) {
       return parts.join('');
     }
 
-    // A bottle silhouette inside a radiating burst: organic, functional drinks.
     case 'burst': {
       const parts = [];
       for (let i = 0; i < 24; i += 1) {
@@ -806,7 +762,6 @@ function drawMotif(motif, p) {
       return parts.join('');
     }
 
-    // A droplet above a hexagonal active-ingredient lattice.
     case 'droplet': {
       const parts = [
         shape(
@@ -846,7 +801,6 @@ function drawMotif(motif, p) {
       return parts.join('');
     }
 
-    // Stacked shelves and a basket: multi-store grocery retail.
     case 'market': {
       const parts = [];
       for (let s = 0; s < 3; s += 1) {
@@ -872,7 +826,6 @@ function drawMotif(motif, p) {
       return parts.join('');
     }
 
-    // Two hands passing a bowl, ringed by a community of dots.
     case 'share': {
       const parts = [
         shape(
@@ -902,7 +855,6 @@ function drawMotif(motif, p) {
       return parts.join('');
     }
 
-    // A car seen from above inside telemetry rings, with a tracked route.
     case 'vehicle': {
       const parts = [
         ring(cx, cy, 300, a, 1.6, 0.3, '10 14'),
@@ -929,10 +881,6 @@ function drawMotif(motif, p) {
       return '';
   }
 }
-
-// ---------------------------------------------------------------------------
-// Interface compositions - the subject of each experience visual
-// ---------------------------------------------------------------------------
 
 /**
  * A browser chrome, drawn plainly so it reads as a diagram rather than a screenshot.
@@ -994,7 +942,6 @@ function drawInterface(ui, p, frame) {
   const iw = fw - (frame === 'phone' ? 60 : 68);
 
   switch (ui) {
-    // Substance lookup, then a log of intakes with timestamps.
     case 'tracker': {
       parts.push(rrect(ix, iy, iw, 46, 23, w, 0.1));
       parts.push(dot(ix + 26, iy + 23, 9, a, 0.9));
@@ -1010,7 +957,6 @@ function drawInterface(ui, p, frame) {
       break;
     }
 
-    // Fitment search: four constraint fields, then matching inventory rows.
     case 'fitment': {
       for (let i = 0; i < 4; i += 1) {
         parts.push(rrect(ix + i * (iw / 4), iy, iw / 4 - 14, 54, 14, w, 0.1));
@@ -1038,7 +984,6 @@ function drawInterface(ui, p, frame) {
       break;
     }
 
-    // Build-a-bundle: four chosen slots and a subscription control.
     case 'bundle': {
       for (let i = 0; i < 4; i += 1) {
         const bx = ix + i * (iw / 4);
@@ -1061,7 +1006,6 @@ function drawInterface(ui, p, frame) {
       break;
     }
 
-    // A region switcher above case-study tiles.
     case 'regions': {
       for (let i = 0; i < 5; i += 1) {
         parts.push(rrect(ix + i * 128, iy, 112, 42, 21, i === 1 ? a : w, i === 1 ? 0.9 : 0.1));
@@ -1077,7 +1021,6 @@ function drawInterface(ui, p, frame) {
       break;
     }
 
-    // Quiz progress, then a recommended routine.
     case 'quiz': {
       parts.push(rrect(ix, iy, iw, 12, 6, w, 0.12));
       parts.push(rrect(ix, iy, iw * 0.62, 12, 6, a, 0.95));
@@ -1095,7 +1038,6 @@ function drawInterface(ui, p, frame) {
       break;
     }
 
-    // Filter rail, product grid, and a running configurator total.
     case 'configurator': {
       parts.push(rrect(ix, iy, 190, 330, 18, w, 0.07));
       for (let i = 0; i < 6; i += 1) {
@@ -1125,7 +1067,6 @@ function drawInterface(ui, p, frame) {
       break;
     }
 
-    // Trade sign-in beside a swatch collection.
     case 'trade': {
       parts.push(rrect(ix, iy, 300, 230, 20, w, 0.1));
       parts.push(rrect(ix + 22, iy + 28, 180, 16, 8, w, 0.35));
@@ -1143,7 +1084,6 @@ function drawInterface(ui, p, frame) {
       break;
     }
 
-    // A valuation request turning into a quote, then an appointment.
     case 'valuation': {
       parts.push(rrect(ix, iy, iw * 0.52, 330, 20, w, 0.08));
       for (let i = 0; i < 4; i += 1) {
@@ -1172,7 +1112,6 @@ function drawInterface(ui, p, frame) {
       break;
     }
 
-    // A multi-step booking flow with a date picker.
     case 'booking': {
       for (let i = 0; i < 4; i += 1) {
         parts.push(
@@ -1221,7 +1160,6 @@ function drawInterface(ui, p, frame) {
       break;
     }
 
-    // Service columns with a KPI strip and team avatars.
     case 'consulting': {
       for (let i = 0; i < 3; i += 1) {
         parts.push(rrect(ix + i * (iw / 3), iy, iw / 3 - 20, 180, 18, w, 0.08));
@@ -1240,7 +1178,6 @@ function drawInterface(ui, p, frame) {
       break;
     }
 
-    // A filterable grid of digital goods with a cart summary.
     case 'catalogue': {
       for (let i = 0; i < 5; i += 1) {
         parts.push(rrect(ix + i * 120, iy, 104, 38, 19, i === 0 ? a : w, i === 0 ? 0.9 : 0.1));
@@ -1257,7 +1194,6 @@ function drawInterface(ui, p, frame) {
       break;
     }
 
-    // A product page with a subscribe-or-once choice.
     case 'subscribe': {
       parts.push(rrect(ix, iy, iw * 0.42, 330, 20, b, 0.3));
       parts.push(dot(ix + iw * 0.21, iy + 150, 86, a, 0.65));
@@ -1276,7 +1212,6 @@ function drawInterface(ui, p, frame) {
       break;
     }
 
-    // Department tiles above a store list.
     case 'departments': {
       for (let i = 0; i < 4; i += 1) {
         const dx = ix + i * (iw / 4);
@@ -1295,7 +1230,6 @@ function drawInterface(ui, p, frame) {
       break;
     }
 
-    // A community feed of shared items with a map pin on each.
     case 'feed': {
       for (let i = 0; i < 4; i += 1) {
         const ry = iy + i * 134;
@@ -1308,7 +1242,6 @@ function drawInterface(ui, p, frame) {
       break;
     }
 
-    // A live telemetry dashboard: gauges, a route and remote controls.
     case 'telemetry': {
       parts.push(rrect(ix, iy, iw, 150, 20, w, 0.08));
       for (let i = 0; i < 3; i += 1) {
@@ -1350,10 +1283,6 @@ function drawInterface(ui, p, frame) {
   return parts.join('');
 }
 
-// ---------------------------------------------------------------------------
-// Composition
-// ---------------------------------------------------------------------------
-
 /**
  * @param {ProductArt} art
  * @returns {string}
@@ -1363,7 +1292,6 @@ export function mainVisualSvg(art) {
     `<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}" viewBox="0 0 ${WIDTH} ${HEIGHT}">`,
     defs(art.palette),
     backdrop(art.palette, art.variant),
-    // A light source behind the subject, so the motif lifts off every backdrop variant.
     `<ellipse cx="640" cy="400" rx="470" ry="400" fill="url(#stage)"/>`,
     drawMotif(art.motif, art.palette),
     `<rect width="${WIDTH}" height="${HEIGHT}" fill="url(#vignette)"/>`,

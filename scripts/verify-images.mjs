@@ -9,9 +9,6 @@ export const MAX_IMAGE_BYTES = 120 * 1024;
 export const META_FILE = 'src/app/pages/our-work/products/data/product-meta.ts';
 
 /**
- * Every photograph the product registry points at, in file order. Order is kept so the duplicate
- * check can name the second product to claim a file rather than the first.
- *
  * @param {string} source - the text of product-meta.ts
  * @returns {string[]}
  */
@@ -19,6 +16,11 @@ export function referencedPhotos(source) {
   return [...source.matchAll(/file:\s*'([^']+)'/g)].map((match) => match[1]);
 }
 
+/**
+ *
+ * @param {string} source - the text of product-meta.ts
+ * @returns {Map<string, number>}
+ */
 export function photoWidths(source) {
   return new Map(
     [...source.matchAll(/file:\s*'([^']+)',\s*width:\s*(\d+)/g)].map((match) => [
@@ -28,13 +30,17 @@ export function photoWidths(source) {
   );
 }
 
+/**
+ * @param {string[]} files - every file in public/images
+ * @param {string[]} referenced - the photographs the registry names
+ * @param {Map<string, number>} sizes - each file's size in bytes
+ * @param {Map<string, number>} [widths] - each photograph's intrinsic width
+ * @returns {string[]} one line per problem, empty when the set is sound
+ */
 export function checkImages(files, referenced, sizes, widths = new Map()) {
   /** @type {string[]} */
   const problems = [];
   const onDisk = new Set(files);
-
-  // A photograph is published as itself plus the ladder steps narrower than it. Both count as
-  // referenced: the registry names the photograph, and the width it records names the rest.
   /** @type {Map<string, string>} */
   const expected = new Map();
   for (const file of referenced) {

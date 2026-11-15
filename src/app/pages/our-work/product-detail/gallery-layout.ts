@@ -1,102 +1,53 @@
 import type { ProductImage } from '../products/data/product-view';
-
 export const CONTAINER_MAX = 1280;
-export const GALLERY_ASIDE = 420;
-export const GALLERY_COLUMN_GAP = 64;
-export const SHOT_MAX_HEIGHT = 440;
-export const GALLERY_ROW_MAX = 3;
-export const GALLERY_COLUMN_MAX = CONTAINER_MAX - GALLERY_ASIDE - GALLERY_COLUMN_GAP;
 
-const COPY_BESIDE_GALLERY = `minmax(0, ${GALLERY_ASIDE}px) minmax(0, 1fr)`;
-const MARGIN = { medium: 32, expanded: 40, large: 80 } as const;
-const PAGE_INTRO_ASIDE = 520;
-const ROW_GAP = 16;
+const MARGIN = { compact: 20, medium: 32, expanded: 40, large: 80 } as const;
+const BREAKPOINT = { medium: 600, expanded: 840, large: 1200 } as const;
+
+export const STAGE_HEIGHT = { compact: 320, medium: 420, large: 560 } as const;
+export const THUMB_WIDTH = 88;
+export const LIGHTBOX_GUTTER = 16;
+export const LIGHTBOX_CHROME = 152;
+export const SWIPE_THRESHOLD = 40;
 
 export interface GalleryTile {
   readonly shot: ProductImage;
   readonly sizes: string;
 }
 
-export interface GalleryRow {
-  readonly tiles: readonly GalleryTile[];
-  readonly columns: string | null;
+function narrowest(...candidates: readonly (string | null)[]): string {
+  return `min(${candidates.filter((candidate) => candidate !== null).join(', ')})`;
 }
 
-export function galleryRowSizes(count: number): readonly number[] {
-  const rows = Math.ceil(count / GALLERY_ROW_MAX);
-  if (rows === 0) {
-    return [];
-  }
-  const base = Math.floor(count / rows);
-  const longer = count % rows;
-  return Array.from({ length: rows }, (_, index) => base + (index < longer ? 1 : 0));
+function contained(shot: ProductImage, content: string, height: string): string {
+  const ratio = (shot.width / shot.height).toFixed(4);
+  return narrowest(content, `calc(${height} * ${ratio})`, `${shot.width}px`);
 }
 
-export function proportionalColumns(shots: readonly ProductImage[]): string | null {
-  if (shots.length < 2) {
-    return null;
-  }
-  return shots.map((shot) => `minmax(0, ${(shot.width / shot.height).toFixed(4)}fr)`).join(' ');
+function box(margin: number, cap = false): string {
+  const width = `100vw - ${margin * 2}px`;
+  return cap ? narrowest(width, `${CONTAINER_MAX}px`) : `calc(${width})`;
 }
 
-function rowShare(row: readonly ProductImage[], index: number): number {
-  const ratio = (image: ProductImage) => image.width / image.height;
-  const total = row.reduce((sum, image) => sum + ratio(image), 0);
-  return ratio(row[index]) / total;
-}
-
-function tileSizes(row: readonly ProductImage[], index: number, galleryShots: number): string {
-  const content = (margin: number) => `100vw - ${margin * 2}px`;
-  const gaps = (row.length - 1) * ROW_GAP;
-  const share = rowShare(row, index).toFixed(4);
-  const aside = galleryShots > 2 ? 0 : GALLERY_ASIDE + GALLERY_COLUMN_GAP;
-  const of = (width: string) => `calc((${width} - ${gaps + aside}px) * ${share})`;
-
-  if (row.length === 1) {
-    return `calc(${content(MARGIN.medium)})`;
-  }
+export function stageSizes(shot: ProductImage): string {
+  const band = (height: number) => `${height}px`;
   return [
-    `(min-width: ${1200}px) ${of(`min(${content(MARGIN.large)}, ${CONTAINER_MAX}px)`)}`,
-    `(min-width: ${840}px) ${of(content(MARGIN.expanded))}`,
-    `(min-width: ${600}px) ${of(content(MARGIN.medium))}`,
-    `calc(${content(MARGIN.medium)})`,
+    `(min-width: ${BREAKPOINT.large}px) ${contained(shot, box(MARGIN.large, true), band(STAGE_HEIGHT.large))}`,
+    `(min-width: ${BREAKPOINT.expanded}px) ${contained(shot, box(MARGIN.expanded), band(STAGE_HEIGHT.medium))}`,
+    `(min-width: ${BREAKPOINT.medium}px) ${contained(shot, box(MARGIN.medium), band(STAGE_HEIGHT.medium))}`,
+    contained(shot, box(MARGIN.compact), band(STAGE_HEIGHT.compact)),
   ].join(', ');
 }
 
-export function toGalleryRows(shots: readonly ProductImage[]): readonly GalleryRow[] {
-  const rows: GalleryRow[] = [];
-  let taken = 0;
-  for (const size of galleryRowSizes(shots.length)) {
-    const row = shots.slice(taken, taken + size);
-    rows.push({
-      tiles: row.map((shot, index) => ({ shot, sizes: tileSizes(row, index, shots.length) })),
-      columns: proportionalColumns(row),
-    });
-    taken += size;
-  }
-  return rows;
+export const THUMB_SIZES = `${THUMB_WIDTH}px`;
+
+export function lightboxSizes(shot: ProductImage): string {
+  return contained(shot, box(LIGHTBOX_GUTTER), `(100vh - ${LIGHTBOX_CHROME}px)`);
 }
 
-export function experienceColumns(shots: readonly ProductImage[]): string | null {
-  if (shots.length === 0) {
-    return null;
-  }
-  if (shots.length > 2) {
-    return 'minmax(0, 1fr)';
-  }
-  if (shots.length === 2) {
-    return COPY_BESIDE_GALLERY;
-  }
-
-  const shot = shots[0];
-  const bounded = Math.min(Math.round((shot.width / shot.height) * SHOT_MAX_HEIGHT), shot.width);
-  return bounded < GALLERY_COLUMN_MAX
-    ? `minmax(0, 1fr) minmax(0, ${bounded}px)`
-    : COPY_BESIDE_GALLERY;
+export function toTiles(shots: readonly ProductImage[]): readonly GalleryTile[] {
+  return shots.map((shot) => ({ shot, sizes: stageSizes(shot) }));
 }
 
-export const HERO_SIZES = [
-  `(min-width: 1200px) ${PAGE_INTRO_ASIDE}px`,
-  `(min-width: 840px) calc(100vw - ${MARGIN.expanded * 2}px)`,
-  `calc(100vw - ${MARGIN.medium * 2}px)`,
-].join(', ');
+export const NEXT_COVER_WIDTH = 80;
+export const NEXT_COVER_SIZES = `${NEXT_COVER_WIDTH}px`;

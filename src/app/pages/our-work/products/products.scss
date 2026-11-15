@@ -13,9 +13,6 @@
   max-width: var(--nx-layout-container-max);
   margin-inline: auto;
 
-  // The portfolio grid is the one band on the site that earns extra width: at 1600px and up a
-  // three-column grid inside the 1280px text measure leaves the screenshots too small to read.
-  // Scoped here so every prose page keeps the established measure.
   @include layout.up(extra-large) {
     max-width: 1440px;
   }
@@ -72,11 +69,6 @@
   color: var(--mat-sys-on-surface-variant);
 }
 
-/*
- * One column below 840px. The previous two-column switch at 600px made each card ~256px wide -
- * narrower than the same card at 320px in a single column - which is the width at which a
- * screenshot stops communicating anything.
- */
 .projects__grid {
   display: grid;
   gap: spacing.space(24);
@@ -93,21 +85,14 @@
   }
 }
 
-/*
- * The card in the grid: it owns the entrance animation and the hover lift. It used to also
- * establish the 3D viewing frustum the card turned inside; the card has one face now, so there
- * is no longer anything to project.
- */
-// The turn needs a vanishing point, and it belongs to the cell rather than to the card: set on
-// the card itself every face would share one origin and the rotation would read as a shear.
 .projects__card {
   perspective: 1400px;
   display: grid;
   min-width: 0;
   border-radius: var(--mat-sys-corner-large);
 
-  @include reveal.item(120ms, $hover: true);
-  @include reveal.stagger(6, 60ms, 120ms);
+  @include reveal.item(320ms, $hover: true);
+  @include reveal.stagger(6, 200ms, 320ms);
   @include reveal.lift();
 }
 

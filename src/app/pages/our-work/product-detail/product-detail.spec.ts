@@ -12,11 +12,6 @@ import { DocumentMetaOverride } from '../../../core/seo/document-meta-override';
 import { PRODUCT_IDS, matchProductSlug } from '../products/data/product-ids';
 import { PRODUCT_META } from '../products/data/product-meta';
 import { ProductDetail } from './product-detail';
-import { GALLERY_ASIDE, GALLERY_COLUMN_MAX, SHOT_MAX_HEIGHT } from './gallery-layout';
-
-/** The shape the section falls back to: copy in a fixed column, gallery in the rest. */
-const COPY_BESIDE_GALLERY = `minmax(0, ${GALLERY_ASIDE}px) minmax(0, 1fr)`;
-
 const ICON_SVG =
   '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"></svg>';
 
@@ -71,7 +66,7 @@ describe('ProductDetail', () => {
     const headings = root.querySelectorAll('h1');
     expect(headings).toHaveLength(1);
     expect(headings[0].textContent?.trim()).toBe('Draculai');
-    expect(root.querySelector('.product__category')?.textContent?.trim()).not.toBe('');
+    expect(root.querySelector('.product__meta-value')?.textContent?.trim()).not.toBe('');
   });
 
   it('finishes the breadcrumb trail with the product itself', async () => {
@@ -135,451 +130,90 @@ describe('ProductDetail', () => {
   });
 
   /**
-   * The hero is the product's own photograph, the same file the card shows, and it is the LCP
-   * image on this page. Nothing on it is generated: a source under `assets/images/products`
-   * would be the illustration this page stopped using.
+   * The page has no separate hero picture any more: the introduction carries the words and the
+   * gallery carries every photograph, the first one included. That first slide is this page's
+   * LCP image, which is why it alone is not deferred.
    */
-  it('renders the product photograph as the hero, loaded eagerly', async () => {
+  it('hands the gallery every photograph, the first one eagerly', async () => {
     await go(`/${OUR_WORK_SEGMENT}/${FIRST}`);
 
-    const hero = root.querySelector('.product__hero-img') as HTMLImageElement;
-    expect(hero.getAttribute('src')).toBe('images/medical.webp');
-    expect(hero.getAttribute('src')).not.toContain('assets/images/products');
-    expect(hero.getAttribute('fetchpriority')).toBe('high');
-    expect(hero.hasAttribute('loading'), 'the LCP image must not be deferred').toBe(false);
-    expect(Number(hero.getAttribute('width'))).toBeGreaterThan(0);
-    expect(Number(hero.getAttribute('height'))).toBeGreaterThan(0);
+    const slides = Array.from(root.querySelectorAll<HTMLImageElement>('.gallery__img'));
+    expect(slides).toHaveLength(PRODUCT_META[FIRST].photos.length);
+    expect(slides[0].getAttribute('src')).toBe('images/medical.webp');
+    // A source under `assets/images/products` would be the illustration this page stopped using.
+    expect(slides[0].getAttribute('src')).not.toContain('assets/images/products');
+    expect(slides[0].getAttribute('fetchpriority')).toBe('high');
+    expect(slides[0].hasAttribute('loading'), 'the LCP image must not be deferred').toBe(false);
+    expect(Number(slides[0].getAttribute('width'))).toBeGreaterThan(0);
+    expect(Number(slides[0].getAttribute('height'))).toBeGreaterThan(0);
+    expect(
+      root.querySelector('.product__hero-img'),
+      'the introduction no longer carries a picture of its own',
+    ).toBeNull();
   });
 
-  /**
-   * The gallery is `photos` past the first, so a product with one photograph has none - which
-   * is most of them. Nothing is invented to fill it: the experience section runs as copy alone
-   * rather than holding an empty column open beside it.
-   */
-  it('shows no gallery while a product has only its one photograph', async () => {
-    await go(`/${OUR_WORK_SEGMENT}/${FIRST}`);
-
-    expect(root.querySelector('.product__gallery')).toBeNull();
-    expect(root.querySelectorAll('.gallery__img')).toHaveLength(0);
-    expect(
-      root
-        .querySelector('.product__experience')
-        ?.classList.contains('product__experience--gallery'),
-    ).toBe(false);
-    // No caption either: a caption exists to say what a picture is, and there is no longer a
-    // generated composition here to disclaim.
-    expect(root.querySelectorAll('.product__caption')).toHaveLength(0);
-  });
-
-  /**
-   * The other half of that claim, on the one product that has original photographs today. The
-   * figures come from the registry, in order, and each is deferred - they are below the fold -
-   * and declared at its own size, so the page does not shift as they arrive.
-   */
-  it('renders every photograph past the first as the gallery', async () => {
-    await go(`/${OUR_WORK_SEGMENT}/lav`);
-
-    const gallery = PRODUCT_META['lav'].photos.slice(1);
-    expect(gallery.length, 'lav is the fixture for this test').toBeGreaterThan(1);
-
-    const shots = Array.from(root.querySelectorAll<HTMLImageElement>('.gallery__img'));
-    expect(shots).toHaveLength(gallery.length);
-    expect(shots.map((shot) => shot.getAttribute('src'))).toEqual(
-      gallery.map((photo) => `images/${photo.file}`),
-    );
-
-    for (const [index, shot] of shots.entries()) {
-      expect(shot.getAttribute('loading'), `shot ${index}`).toBe('lazy');
-      expect(shot.getAttribute('decoding'), `shot ${index}`).toBe('async');
-      expect(shot.getAttribute('width'), `shot ${index}`).toBe(String(gallery[index].width));
-      expect(shot.getAttribute('height'), `shot ${index}`).toBe(String(gallery[index].height));
-    }
-
-    expect(
-      root
-        .querySelector('.product__experience')
-        ?.classList.contains('product__experience--gallery'),
-    ).toBe(true);
-  });
-
-  /**
-   * A pair of photographs that are not the same shape. Equal columns would leave the row ragged
-   * - the square runs half as tall again as a 3:2 beside it - so the component hands the grid
-   * column widths in proportion to the ratios, and the heights come out level. What that looks
-   * like is measured in a browser; what belongs here is that the proportions are actually
-   * published to the stylesheet, and that they follow the registry rather than a literal.
-   */
-  it('sizes a mismatched pair of photographs in proportion to their ratios', async () => {
-    await go(`/${OUR_WORK_SEGMENT}/mastercraft`);
-
-    const gallery = PRODUCT_META['mastercraft'].photos.slice(1);
-    expect(gallery, 'mastercraft is the fixture for this test').toHaveLength(2);
-    expect(
-      new Set(gallery.map((photo) => (photo.width / photo.height).toFixed(2))).size,
-      'the fixture is only meaningful while the two shapes differ',
-    ).toBe(2);
-
-    const list = root.querySelector('.gallery__row') as HTMLElement;
-    expect(list.style.getPropertyValue('--nx-gallery-columns')).toBe(
-      gallery.map((photo) => `minmax(0, ${(photo.width / photo.height).toFixed(4)}fr)`).join(' '),
-    );
-
-    const shots = Array.from(root.querySelectorAll<HTMLImageElement>('.gallery__img'));
-    expect(shots.map((shot) => shot.getAttribute('src'))).toEqual(
-      gallery.map((photo) => `images/${photo.file}`),
-    );
-    // The hero is the storefront; `master-grading.webp` is deliberately not `master.webp`,
-    // which would have collided with it in `public/images`.
-    expect(root.querySelector('.product__hero-img')?.getAttribute('src')).toBe(
-      'images/master.webp',
-    );
-    expect(
-      [
-        root.querySelector('.product__hero-img')?.getAttribute('alt') ?? '',
-        ...shots.map((shot) => shot.getAttribute('alt') ?? ''),
-      ].every((alt) => alt.length > 0),
-      'all three photographs are described',
-    ).toBe(true);
-  });
-
-  /**
-   * The same contract on the second product to carry a mismatched pair, so the proportional
-   * sizing is read off the registry rather than fitted to one set of numbers. Got Matcha's
-   * shapes are 1.83:1 and 1:1, against Mastercraft's 1.5:1 and 1:1.
-   */
-  it('reads the gallery proportions from each product, not from a fixed pair', async () => {
-    await go(`/${OUR_WORK_SEGMENT}/got-matcha`);
-
-    const gallery = PRODUCT_META['got-matcha'].photos.slice(1);
-    expect(gallery).toHaveLength(2);
-
-    const columns = (root.querySelector('.gallery__row') as HTMLElement).style.getPropertyValue(
-      '--nx-gallery-columns',
-    );
-    expect(columns).toBe(
-      gallery.map((photo) => `minmax(0, ${(photo.width / photo.height).toFixed(4)}fr)`).join(' '),
-    );
-    expect(columns, 'these are not Mastercraft’s proportions').not.toBe(
-      PRODUCT_META['mastercraft'].photos
-        .slice(1)
-        .map((photo) => `minmax(0, ${(photo.width / photo.height).toFixed(4)}fr)`)
-        .join(' '),
-    );
-
-    // The hero keeps `got.webp`; the new pair is named around it rather than over it.
-    expect(root.querySelector('.product__hero-img')?.getAttribute('src')).toBe('images/got.webp');
-    expect(
-      Array.from(root.querySelectorAll<HTMLImageElement>('.gallery__img')).map((shot) =>
-        shot.getAttribute('src'),
-      ),
-    ).toEqual(gallery.map((photo) => `images/${photo.file}`));
-    expect(
-      [
-        root.querySelector('.product__hero-img')?.getAttribute('alt') ?? '',
-        ...Array.from(root.querySelectorAll('.gallery__img')).map(
-          (shot) => shot.getAttribute('alt') ?? '',
-        ),
-      ].every((alt) => alt.length > 0),
-      'all three photographs are described',
-    ).toBe(true);
-  });
-
-  /**
-   * The importer's page, where the pair is a 16:9 inspection shot beside a 3:2 catalogue shot
-   * and the hero stays the client's own warehouse floor. Nothing here is new behaviour - the
-   * point of the test is that nothing had to be: a third product with a mismatched pair is a
-   * registry entry and three descriptions.
-   */
-  it('gives the importer its pair in proportion, behind the warehouse hero', async () => {
-    await go(`/${OUR_WORK_SEGMENT}/jdm-west-coast`);
-
-    const photos = PRODUCT_META['jdm-west-coast'].photos;
-    expect(photos, 'hero plus a pair').toHaveLength(3);
-
-    expect(root.querySelector('.product__hero-img')?.getAttribute('src')).toBe('images/car.webp');
-    const shots = Array.from(root.querySelectorAll<HTMLImageElement>('.gallery__img'));
-    expect(shots.map((shot) => shot.getAttribute('src'))).toEqual(
-      photos.slice(1).map((photo) => `images/${photo.file}`),
-    );
-    for (const [index, shot] of shots.entries()) {
-      expect(Number(shot.getAttribute('width')), `shot ${index}`).toBe(photos[index + 1].width);
-      expect(Number(shot.getAttribute('height')), `shot ${index}`).toBe(photos[index + 1].height);
-      expect(shot.getAttribute('loading'), `shot ${index}`).toBe('lazy');
-    }
-
-    expect(
-      (root.querySelector('.gallery__row') as HTMLElement).style.getPropertyValue(
-        '--nx-gallery-columns',
-      ),
-    ).toBe(
-      photos
-        .slice(1)
-        .map((photo) => `minmax(0, ${(photo.width / photo.height).toFixed(4)}fr)`)
-        .join(' '),
-    );
-
-    const alts = [
-      root.querySelector('.product__hero-img')?.getAttribute('alt') ?? '',
-      ...shots.map((shot) => shot.getAttribute('alt') ?? ''),
-    ];
-    expect(
-      alts.every((alt) => alt.length > 0),
-      'all three photographs are described',
-    ).toBe(true);
-    expect(new Set(alts).size, 'each photograph has its own description').toBe(3);
-  });
-
-  /**
-   * The degenerate case of the same rule. Hydrant's two photographs are both 3:2, so sizing the
-   * columns in proportion to their ratios has to come out as the even split the stylesheet would
-   * have given anyway - no special branch for it, and no rounding drift between two shapes that
-   * are the same shape.
-   */
-  it('gives a pair of matching shape an even split', () => {
-    const gallery = PRODUCT_META['hydrant'].photos.slice(1);
-    expect(gallery, 'hydrant is the fixture for this test').toHaveLength(2);
-
-    const ratios = gallery.map((photo) => photo.width / photo.height);
-    expect(Math.abs(ratios[0] - ratios[1]), 'the fixture is the matched case').toBeLessThan(0.01);
-  });
-
-  it('lays a matched pair out as two even columns', async () => {
-    await go(`/${OUR_WORK_SEGMENT}/hydrant`);
-
-    const gallery = PRODUCT_META['hydrant'].photos.slice(1);
-    const columns = (root.querySelector('.gallery__row') as HTMLElement).style.getPropertyValue(
-      '--nx-gallery-columns',
-    );
-    expect(columns).toBe(
-      gallery.map((photo) => `minmax(0, ${(photo.width / photo.height).toFixed(4)}fr)`).join(' '),
-    );
-
-    const [first, second] = columns
-      .split(' ')
-      .filter((part) => part.endsWith('fr)'))
-      .map((part) => Number.parseFloat(part));
-    expect(Math.abs(first - second), `columns ${columns}`).toBeLessThan(0.01);
-
-    // A pair is one row, which is what it was before rows existed.
-    expect(root.querySelectorAll('.gallery__row')).toHaveLength(1);
-    expect(
-      (root.querySelector('.product__experience') as HTMLElement).style.getPropertyValue(
-        '--nx-experience-columns',
-      ),
-      'a pair still sits beside its copy',
-    ).toBe(COPY_BESIDE_GALLERY);
-  });
-
-  /**
-   * Four photographs, which one grid cannot justify: a row's column widths come from that row's
-   * own ratios, and a single `grid-template-columns` applies to every row at once. So the gallery
-   * is rows, each sized by its own pair, and past a pair the section gives the gallery the whole
-   * width instead of an aside - four dashboards at 390px are not worth showing.
-   */
-  it('breaks a gallery of four into two rows, each justified on its own pair', async () => {
+  it('shows every photograph of a product with several, deferring all but the first', async () => {
     await go(`/${OUR_WORK_SEGMENT}/libra-analytics`);
 
-    const gallery = PRODUCT_META['libra-analytics'].photos.slice(1);
-    expect(gallery, 'libra-analytics is the fixture for this test').toHaveLength(4);
+    const photos = PRODUCT_META['libra-analytics'].photos;
+    expect(photos, 'libra-analytics is the fixture for this test').toHaveLength(5);
 
-    const rows = Array.from(root.querySelectorAll<HTMLElement>('.gallery__row'));
-    expect(rows).toHaveLength(2);
-
-    for (const [index, row] of rows.entries()) {
-      const pair = gallery.slice(index * 2, index * 2 + 2);
-      expect(row.style.getPropertyValue('--nx-gallery-columns'), `row ${index}`).toBe(
-        pair.map((photo) => `minmax(0, ${(photo.width / photo.height).toFixed(4)}fr)`).join(' '),
-      );
-      expect(
-        Array.from(row.querySelectorAll<HTMLImageElement>('.gallery__img')).map((shot) =>
-          shot.getAttribute('src'),
-        ),
-        `row ${index}`,
-      ).toEqual(pair.map((photo) => `images/${photo.file}`));
+    const slides = Array.from(root.querySelectorAll<HTMLImageElement>('.gallery__img'));
+    expect(slides.map((slide) => slide.getAttribute('src'))).toEqual(
+      photos.map((photo) => `images/${photo.file}`),
+    );
+    for (const [index, slide] of slides.entries()) {
+      if (index === 0) {
+        continue;
+      }
+      expect(slide.getAttribute('loading'), `slide ${index}`).toBe('lazy');
+      expect(slide.getAttribute('fetchpriority'), `slide ${index}`).toBeNull();
     }
 
-    expect(
-      rows[0].style.getPropertyValue('--nx-gallery-columns'),
-      'each row is sized by its own photographs',
-    ).not.toBe(rows[1].style.getPropertyValue('--nx-gallery-columns'));
-
-    expect(
-      (root.querySelector('.product__experience') as HTMLElement).style.getPropertyValue(
-        '--nx-experience-columns',
-      ),
-      'past a pair the copy sits above the gallery, not beside it',
-    ).toBe('minmax(0, 1fr)');
-
-    const alts = [
-      root.querySelector('.product__hero-img')?.getAttribute('alt') ?? '',
-      ...Array.from(root.querySelectorAll('.gallery__img')).map(
-        (shot) => shot.getAttribute('alt') ?? '',
-      ),
-    ];
-    expect(alts, 'the hero and all four gallery photographs').toHaveLength(5);
-    expect(
-      alts.every((alt) => alt.length > 0),
-      'every photograph is described',
-    ).toBe(true);
-    expect(new Set(alts).size, 'each description is its own').toBe(5);
+    // One thumbnail per photograph, exactly one of them current.
+    expect(root.querySelectorAll('.gallery__thumb-button')).toHaveLength(photos.length);
+    expect(root.querySelectorAll('.gallery__thumb-button[aria-current="true"]')).toHaveLength(1);
   });
 
   /**
-   * Three photographs, which is the case that decides whether rows are chunks or are balanced.
-   * Two and one would leave a single picture under a pair, and a row of one takes the whole
-   * width - a wide orphan under a tidy pair. Three go in one row instead, which across the
-   * container lays them out between 310 and 470 wide.
+   * Eleven of the nineteen carry one photograph. A slider with one slide has nothing to
+   * navigate, so it renders no arrows, no counter and no strip rather than a disabled set of
+   * them.
    */
-  it('puts three photographs in one row rather than a pair and an orphan', async () => {
-    await go(`/${OUR_WORK_SEGMENT}/sell-me-watch`);
+  it('renders no navigation for a product with a single photograph', async () => {
+    await go(`/${OUR_WORK_SEGMENT}/${FIRST}`);
 
-    const gallery = PRODUCT_META['sell-me-watch'].photos.slice(1);
-    expect(gallery, 'sell-me-watch is the fixture for this test').toHaveLength(3);
-
-    const rows = Array.from(root.querySelectorAll<HTMLElement>('.gallery__row'));
-    expect(rows).toHaveLength(1);
-    expect(rows[0].querySelectorAll('.gallery__img')).toHaveLength(3);
-    expect(rows[0].style.getPropertyValue('--nx-gallery-columns')).toBe(
-      gallery.map((photo) => `minmax(0, ${(photo.width / photo.height).toFixed(4)}fr)`).join(' '),
-    );
-    expect(
-      (root.querySelector('.product__experience') as HTMLElement).style.getPropertyValue(
-        '--nx-experience-columns',
-      ),
-      'three photographs take the whole width, like four',
-    ).toBe('minmax(0, 1fr)');
+    expect(PRODUCT_META[FIRST].photos, `${FIRST} is the fixture for this test`).toHaveLength(1);
+    expect(root.querySelectorAll('.gallery__img')).toHaveLength(1);
+    expect(root.querySelector('.gallery__nav'), 'nothing to navigate to').toBeNull();
+    expect(root.querySelector('.gallery__thumbs'), 'nothing to pick from').toBeNull();
+    expect(root.querySelector('.gallery__counter'), 'nothing to count').toBeNull();
   });
 
   /**
-   * The first row that mixes orientations: two upright phone screens beside a landscape
-   * photograph. Equal columns would have left the landscape short and the portraits towering
-   * over it; columns proportional to each ratio give all three the same laid-out height, which
-   * is the whole reason the component publishes ratios rather than `repeat(n, 1fr)`. The unit
-   * under test is that arithmetic - `our-work.spec.ts` measures the rendered heights.
+   * The `sizes` attribute is per photograph, not per page: the stage contains each picture at
+   * its own ratio, so a 454x679 phone screenshot is laid out far narrower than an 860x645
+   * desktop one at the same band height. Capping each at its own intrinsic width is what stops
+   * the browser reaching for a ladder step that holds no more detail.
    */
-  it('gives a row of mixed orientations one shared height', async () => {
+  it('sizes every slide by its own shape, and never past the detail it carries', async () => {
     await go(`/${OUR_WORK_SEGMENT}/mezave`);
 
-    const gallery = PRODUCT_META.mezave.photos.slice(1);
-    expect(gallery, 'mezave is the fixture for this test').toHaveLength(3);
+    const photos = PRODUCT_META.mezave.photos;
     expect(
-      new Set(gallery.map((photo) => photo.width > photo.height)).size,
-      'the row mixes upright and landscape photographs',
+      new Set(photos.map((photo) => photo.width > photo.height)).size,
+      'mezave is the fixture because its photographs are not one shape',
     ).toBe(2);
 
-    const row = root.querySelector('.gallery__row') as HTMLElement;
-    const shares = [
-      ...row.style.getPropertyValue('--nx-gallery-columns').matchAll(/minmax\(0,\s*([\d.]+)fr\)/g),
-    ].map((column) => Number(column[1]));
-    expect(shares).toHaveLength(3);
-
-    const total = shares.reduce((sum, share) => sum + share, 0);
-    const heights = gallery.map(
-      (photo, index) => ((shares[index] / total) * photo.height) / photo.width,
+    const slides = Array.from(root.querySelectorAll<HTMLImageElement>('.gallery__img'));
+    const sizes = slides.map((slide) => slide.getAttribute('sizes') ?? '');
+    expect(new Set(sizes).size, 'differently shaped pictures ask for different widths').toBe(
+      photos.length,
     );
-    for (const height of heights) {
-      expect(height).toBeCloseTo(heights[0], 4);
+    for (const [index, value] of sizes.entries()) {
+      expect(value, `slide ${index}`).toContain(`${photos[index].width}px`);
+      expect(value, `slide ${index} starts at no window size class`).toMatch(/^\(min-width/);
     }
-  });
-
-  /**
-   * A gallery that is not a pair keeps the stylesheet's own columns, so the proportional sizing
-   * cannot leak into the single-photograph layout or into a row of three.
-   */
-  it('leaves the gallery columns to the stylesheet unless there are exactly two', async () => {
-    await go(`/${OUR_WORK_SEGMENT}/robert-irwin`);
-    expect(
-      (root.querySelector('.gallery__row') as HTMLElement).style.getPropertyValue(
-        '--nx-gallery-columns',
-      ),
-    ).toBe('');
-  });
-
-  /**
-   * The single-photograph case, which is the one the two-column gallery got wrong: a lone
-   * picture was laid out in the first of two columns, at half the width it had been given, and
-   * `rings.webp` is 2.54:1 - a strip beside an empty cell. The layout itself is a stylesheet
-   * matter that `our-work.spec.ts` measures in a browser; what belongs here is the registry
-   * contract under it, which is that one photograph past the hero still makes a gallery.
-   */
-  it('renders a lone second photograph as the whole gallery, described', async () => {
-    await go(`/${OUR_WORK_SEGMENT}/robert-irwin`);
-
-    const gallery = PRODUCT_META['robert-irwin'].photos.slice(1);
-    expect(gallery, 'robert-irwin is the fixture for this test').toHaveLength(1);
-
-    const shots = Array.from(root.querySelectorAll<HTMLImageElement>('.gallery__img'));
-    expect(shots).toHaveLength(1);
-    expect(shots[0].getAttribute('src')).toBe(`images/${gallery[0].file}`);
-    expect(shots[0].getAttribute('loading')).toBe('lazy');
-    expect(shots[0].getAttribute('decoding')).toBe('async');
-    expect(Number(shots[0].getAttribute('width'))).toBe(gallery[0].width);
-    expect(Number(shots[0].getAttribute('height'))).toBe(gallery[0].height);
-    expect(
-      root
-        .querySelector('.product__experience')
-        ?.classList.contains('product__experience--gallery'),
-    ).toBe(true);
-
-    // Both of this product's photographs are originals of the work, so both are described.
-    const alts = [
-      root.querySelector('.product__hero-img')?.getAttribute('alt') ?? '',
-      shots[0].getAttribute('alt') ?? '',
-    ];
-    expect(
-      alts.every((alt) => alt.length > 0),
-      'both photographs are described',
-    ).toBe(true);
-    expect(new Set(alts).size, 'the two photographs share one description').toBe(2);
-  });
-
-  /**
-   * The other half of the lone-photograph case. Giving the whole column to one picture suits a
-   * panorama and overwhelms a near-square: `roar-immune.webp` is 1.12:1 and was laid out 794x706
-   * next to its paragraph. The component bounds the column to the width a 440px-tall photograph
-   * needs, and the copy takes what is released - 440 * 1120 / 996 is 495.
-   */
-  it('bounds the column of a lone photograph that would be laid out too tall', async () => {
-    await go(`/${OUR_WORK_SEGMENT}/roar-organic`);
-
-    const gallery = PRODUCT_META['roar-organic'].photos.slice(1);
-    expect(gallery, 'roar-organic is the fixture for this test').toHaveLength(1);
-    expect(
-      gallery[0].width / gallery[0].height,
-      'the fixture is the near-square case',
-    ).toBeLessThan(1.5);
-
-    const experience = root.querySelector('.product__experience') as HTMLElement;
-    expect(experience.style.getPropertyValue('--nx-experience-columns')).toBe(
-      `minmax(0, 1fr) minmax(0, ${Math.round((gallery[0].width / gallery[0].height) * 440)}px)`,
-    );
-  });
-
-  /**
-   * The same rule, inert. A panorama's bound is wider than the column is ever laid out, and a
-   * pair is not its business at all, so both fall back to copy beside gallery. They are
-   * published rather than left to the stylesheet: the component is the only author of this
-   * property, which is what lets `product-detail.scss` carry no literal of its own.
-   */
-  it('falls a panorama and a pair back to copy beside gallery', async () => {
-    await go(`/${OUR_WORK_SEGMENT}/robert-irwin`);
-    const panorama = PRODUCT_META['robert-irwin'].photos[1];
-    expect(
-      (panorama.width / panorama.height) * SHOT_MAX_HEIGHT,
-      'wider than the column ever is',
-    ).toBeGreaterThan(GALLERY_COLUMN_MAX);
-    expect(
-      (root.querySelector('.product__experience') as HTMLElement).style.getPropertyValue(
-        '--nx-experience-columns',
-      ),
-    ).toBe(COPY_BESIDE_GALLERY);
-
-    await go(`/${OUR_WORK_SEGMENT}/mastercraft`);
-    expect(
-      (root.querySelector('.product__experience') as HTMLElement).style.getPropertyValue(
-        '--nx-experience-columns',
-      ),
-    ).toBe(COPY_BESIDE_GALLERY);
   });
 
   /**
@@ -592,12 +226,9 @@ describe('ProductDetail', () => {
     for (const id of PRODUCT_IDS) {
       await go(`/${OUR_WORK_SEGMENT}/${id}`);
 
-      const alts = [
-        root.querySelector('.product__hero-img')?.getAttribute('alt') ?? '',
-        ...Array.from(root.querySelectorAll('.gallery__img')).map(
-          (shot) => shot.getAttribute('alt') ?? '',
-        ),
-      ];
+      const alts = Array.from(root.querySelectorAll('.gallery__img')).map(
+        (shot) => shot.getAttribute('alt') ?? '',
+      );
 
       expect(alts, `${id} renders no photograph`).not.toHaveLength(0);
       expect(alts.length, `${id} renders fewer images than it has photographs`).toBe(
@@ -655,18 +286,21 @@ describe('ProductDetail', () => {
   });
 
   /**
-   * Technology is one chip, carrying the only technical fact on record. Four of the nineteen
-   * have no platform and render no chip, which is the alternative to guessing at a stack.
+   * Category and platform are the product's metadata, read as one block of facts rather than
+   * two stray lines. Four of the nineteen have no platform on record and state none, which is
+   * the alternative to guessing at a stack - so the block is one item there and two here.
    */
-  it('states the platform in a single chip, and only when one is known', async () => {
+  it('states the platform beside the category, and only when one is known', async () => {
     await go(`/${OUR_WORK_SEGMENT}/${FIRST}`);
 
-    expect(root.querySelector('.product__tech-value')?.textContent?.trim()).toBe('iOS · App Store');
-    expect(root.querySelector('.product__tech-label')?.textContent?.trim()).not.toBe('');
-    expect(root.querySelectorAll('.product__tech-chip')).toHaveLength(1);
+    expect(text('.product__meta-label').every((label) => label !== '')).toBe(true);
+    expect(text('.product__meta-value')).toEqual([
+      'Health & substance tracking',
+      'iOS · App Store',
+    ]);
 
     await go(`/${OUR_WORK_SEGMENT}/casamance`);
-    expect(root.querySelector('.product__tech-chip')).toBeNull();
+    expect(root.querySelectorAll('.product__meta-item')).toHaveLength(1);
   });
 
   it('lists the product capabilities as a numbered set', async () => {
@@ -678,12 +312,12 @@ describe('ProductDetail', () => {
 
   it('offers the next product, and wraps round at the end of the portfolio', async () => {
     await go(`/${OUR_WORK_SEGMENT}/${FIRST}`);
-    expect(root.querySelector('.product__next-link')?.getAttribute('href')).toBe(
+    expect(root.querySelector('.product-next__link')?.getAttribute('href')).toBe(
       `/${OUR_WORK_SEGMENT}/${SECOND}`,
     );
 
     await go(`/${OUR_WORK_SEGMENT}/${LAST}`);
-    expect(root.querySelector('.product__next-link')?.getAttribute('href')).toBe(
+    expect(root.querySelector('.product-next__link')?.getAttribute('href')).toBe(
       `/${OUR_WORK_SEGMENT}/${FIRST}`,
     );
   });
@@ -746,7 +380,7 @@ describe('ProductDetail', () => {
     await go(`/ru/${OUR_WORK_SEGMENT}/${FIRST}`);
 
     expect(root.querySelector('.page-intro__crumb-link')?.getAttribute('href')).toBe('/ru');
-    expect(root.querySelector('.product__next-link')?.getAttribute('href')).toBe(
+    expect(root.querySelector('.product-next__link')?.getAttribute('href')).toBe(
       `/ru/${OUR_WORK_SEGMENT}/${SECOND}`,
     );
     expect(text('.product__section-title')[0]).not.toBe('');

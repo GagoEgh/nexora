@@ -6,9 +6,21 @@
       [eyebrow]="item.archetypeLabel"
       [heading]="item.name"
       [lead]="item.hook"
+      leadPlacement="aside"
     >
       <div class="product__intro" appReveal="load" intro-actions>
-        <p class="product__category">{{ item.category }}</p>
+        <dl class="product__meta">
+          <div class="product__meta-item">
+            <dt class="product__meta-label">{{ content().sections.category }}</dt>
+            <dd class="product__meta-value">{{ item.category }}</dd>
+          </div>
+          @if (item.platform; as platform) {
+            <div class="product__meta-item">
+              <dt class="product__meta-label">{{ content().sections.platform }}</dt>
+              <dd class="product__meta-value">{{ platform }}</dd>
+            </div>
+          }
+        </dl>
 
         <div class="product__actions">
           <a matButton="filled" [routerLink]="contactPath | localizedPath: locale()">
@@ -23,29 +35,12 @@
             </a>
           }
         </div>
-        @if (item.platform; as platform) {
-          <p class="product__tech">
-            <span class="product__tech-chip">
-              <span class="product__tech-label">{{ content().sections.platform }}</span>
-              <span class="product__tech-value">{{ platform }}</span>
-            </span>
-          </p>
-        }
       </div>
-      <figure class="product__hero-art" appReveal="load">
-        <img
-          class="product__hero-img"
-          [src]="item.photos[0].src"
-          [srcset]="item.photos[0].srcset"
-          [attr.sizes]="heroSizes"
-          [alt]="item.photos[0].alt"
-          [width]="item.photos[0].width"
-          [height]="item.photos[0].height"
-          fetchpriority="high"
-          decoding="async"
-        />
-      </figure>
     </app-page-intro>
+
+    <section class="product__section product__section--gallery" appReveal="load">
+      <app-product-gallery [shots]="item.photos" />
+    </section>
 
     <section class="product__section" appReveal>
       <div class="product__split">
@@ -59,26 +54,17 @@
       <ul class="product__features">
         @for (highlight of item.highlights; track $index) {
           <li class="product__feature">
-            <span class="product__feature-index">{{ $index + 1 }}</span>
+            <span class="product__feature-index" aria-hidden="true">{{ $index + 1 }}</span>
             <span class="product__feature-text">{{ highlight }}</span>
           </li>
         }
       </ul>
     </section>
-    <section class="product__section product__section--experience" appReveal>
-      <div
-        class="product__experience"
-        [class.product__experience--gallery]="gallery().length > 0"
-        [style.--nx-experience-columns]="experienceColumns()"
-      >
-        <div class="product__experience-copy">
-          <h2 class="product__section-title">{{ content().sections.experience }}</h2>
-          <p class="product__prose">{{ item.summary }}</p>
-        </div>
 
-        @if (gallery().length) {
-          <app-product-gallery [shots]="gallery()" />
-        }
+    <section class="product__section" appReveal>
+      <div class="product__split">
+        <h2 class="product__section-title">{{ content().sections.experience }}</h2>
+        <p class="product__prose">{{ item.summary }}</p>
       </div>
     </section>
 
@@ -96,13 +82,8 @@
     </section>
 
     @if (next(); as following) {
-      <section class="product__section product__next" appReveal>
-        <p class="product__next-label">{{ content().sections.next }}</p>
-        <a class="product__next-link" [routerLink]="following.path | localizedPath: locale()">
-          <span class="product__next-name">{{ following.name }}</span>
-          <span class="product__next-category">{{ following.category }}</span>
-          <mat-icon class="product__next-icon" [svgIcon]="arrowIcon" />
-        </a>
+      <section class="product__section" appReveal>
+        <app-product-next [product]="following" [label]="content().sections.next.value" />
       </section>
     }
   </article>

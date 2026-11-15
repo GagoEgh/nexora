@@ -1,7 +1,20 @@
-@for (row of rows(); track $index) {
-  <ul class="gallery__row" [style.--nx-gallery-columns]="row.columns">
-    @for (tile of row.tiles; track tile.shot.src) {
-      <li class="gallery__shot">
+<div class="gallery__stage">
+  <button
+    #stage
+    class="gallery__viewport"
+    type="button"
+    [attr.aria-label]="labels().expand.value"
+    (pointerdown)="onPointerDown($event)"
+    (pointerup)="onPointerUp($event)"
+    (pointercancel)="onPointerCancel()"
+    (click)="openLightbox()"
+  >
+    @for (tile of tiles(); track tile.shot.src) {
+      <span
+        class="gallery__slide"
+        [class.is-active]="$index === index()"
+        [attr.aria-hidden]="$index === index() ? null : 'true'"
+      >
         <img
           class="gallery__img"
           [src]="tile.shot.src"
@@ -10,11 +23,131 @@
           [alt]="tile.shot.alt"
           [width]="tile.shot.width"
           [height]="tile.shot.height"
-          [style.aspect-ratio]="tile.shot.width + ' / ' + tile.shot.height"
-          loading="lazy"
+          [attr.loading]="$first ? null : 'lazy'"
+          [attr.fetchpriority]="$first ? 'high' : null"
           decoding="async"
         />
+      </span>
+    }
+    <span class="gallery__expand" aria-hidden="true">
+      <mat-icon class="gallery__expand-icon" [svgIcon]="expandIcon" />
+    </span>
+  </button>
+
+  @if (many()) {
+    <button
+      class="gallery__nav gallery__nav--previous"
+      type="button"
+      matIconButton
+      [attr.aria-label]="labels().previous.value"
+      (click)="step(-1)"
+    >
+      <mat-icon [svgIcon]="previousIcon" />
+    </button>
+    <button
+      class="gallery__nav gallery__nav--next"
+      type="button"
+      matIconButton
+      [attr.aria-label]="labels().next.value"
+      (click)="step(1)"
+    >
+      <mat-icon [svgIcon]="nextIcon" />
+    </button>
+    <p class="gallery__counter" aria-hidden="true">{{ counter() }}</p>
+    <p class="gallery__status" aria-live="polite">{{ position() }}</p>
+  }
+</div>
+
+@if (many()) {
+  <ul #strip class="gallery__thumbs">
+    @for (tile of tiles(); track tile.shot.src) {
+      <li class="gallery__thumb">
+        <button
+          #thumb
+          class="gallery__thumb-button"
+          type="button"
+          [class.is-active]="$index === index()"
+          [attr.aria-current]="$index === index() ? 'true' : null"
+          [attr.aria-label]="tile.shot.alt"
+          (click)="select($index)"
+        >
+          <img
+            class="gallery__thumb-img"
+            [src]="tile.shot.src"
+            [srcset]="tile.shot.srcset"
+            [attr.sizes]="thumbSizes"
+            alt=""
+            [width]="tile.shot.width"
+            [height]="tile.shot.height"
+            loading="lazy"
+            decoding="async"
+          />
+        </button>
       </li>
     }
   </ul>
 }
+
+<dialog
+  #lightbox
+  class="gallery__lightbox"
+  tabindex="-1"
+  [attr.aria-label]="labels().lightbox.value"
+  (click)="onLightboxClick($event)"
+  (keydown)="onLightboxKeydown($event)"
+  (close)="onLightboxClose()"
+>
+  <div class="gallery__bar">
+    @if (many()) {
+      <p class="gallery__bar-counter">{{ position() }}</p>
+    }
+    <button
+      class="gallery__close"
+      type="button"
+      matIconButton
+      autofocus
+      [attr.aria-label]="labels().close.value"
+      (click)="closeLightbox()"
+    >
+      <mat-icon [svgIcon]="closeIcon" />
+    </button>
+  </div>
+
+  <div class="gallery__full">
+    @if (open() && active(); as shot) {
+      <img
+        class="gallery__full-img"
+        [src]="shot.src"
+        [srcset]="shot.srcset"
+        [attr.sizes]="activeSizes()"
+        [alt]="shot.alt"
+        [width]="shot.width"
+        [height]="shot.height"
+        decoding="async"
+      />
+    }
+  </div>
+
+  @if (many()) {
+    <div class="gallery__bar gallery__bar--controls">
+      <button
+        class="gallery__full-nav"
+        type="button"
+        matIconButton
+        [attr.aria-label]="labels().previous.value"
+        (click)="step(-1)"
+      >
+        <mat-icon [svgIcon]="previousIcon" />
+      </button>
+      <button
+        class="gallery__full-nav"
+        type="button"
+        matIconButton
+        [attr.aria-label]="labels().next.value"
+        (click)="step(1)"
+      >
+        <mat-icon [svgIcon]="nextIcon" />
+      </button>
+    </div>
+  }
+</dialog>

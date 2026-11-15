@@ -157,3 +157,120 @@ test.describe('the portfolio card without a pointer', () => {
     expect(violations, `\n    ${summary}\n`).toEqual([]);
   });
 });
+
+/**
+ * The gallery's one pointer-only gesture, on a device that actually has it.
+ *
+ * The slider listens for pointer events, which a touch device raises from real touch input and
+ * nothing else does. Playwright's `touchscreen` can tap but not drag, so the gesture is
+ * dispatched through CDP: `Input.dispatchTouchEvent` is genuine input, so Chromium raises the
+ * pointer events the component binds rather than the synthetic ones a `dispatchEvent` would
+ * produce - which never reach a pointer handler at all.
+ */
+test.describe('the product gallery without a pointer', () => {
+  /** Five photographs, so a swipe has somewhere to go in both directions. */
+  const MANY = '/our_work/libra-analytics';
+
+  const productReady = async (page: Page) => {
+    await page.locator('main h1').waitFor();
+    await page.locator('.gallery__viewport').waitFor();
+  };
+
+  const swipe = async (page: Page, from: number, to: number) => {
+    const stage = await page.locator('.gallery__viewport').boundingBox();
+    if (!stage) {
+      throw new Error('the gallery stage has no box to swipe across');
+    }
+    const y = stage.y + stage.height / 2;
+    const at = (ratio: number) => stage.x + stage.width * ratio;
+
+    const cdp = await page.context().newCDPSession(page);
+    const touch = (type: 'touchStart' | 'touchMove' | 'touchEnd', x: number | null) =>
+      cdp.send('Input.dispatchTouchEvent', {
+        type,
+        touchPoints: x === null ? [] : [{ x, y }],
+      });
+
+    await touch('touchStart', at(from));
+    await touch('touchMove', at(from + (to - from) / 2));
+    await touch('touchMove', at(to));
+    await touch('touchEnd', null);
+    await cdp.detach();
+  };
+
+  test.beforeEach(async ({ page }) => {
+    await page.goto(MANY);
+    await productReady(page);
+  });
+
+  test('turns to the next photograph on a swipe to the left', async ({ page }) => {
+    await expect(page.locator('.gallery__counter')).toHaveText('1 / 5');
+
+    await swipe(page, 0.8, 0.2);
+
+    await expect(page.locator('.gallery__counter')).toHaveText('2 / 5');
+    await expect(page.locator('.gallery__thumb-button').nth(1)).toHaveAttribute(
+      'aria-current',
+      'true',
+    );
+    await expect(page.locator('dialog.gallery__lightbox'), 'a swipe is not a tap').toBeHidden();
+  });
+
+  test('turns back on a swipe to the right, wrapping round', async ({ page }) => {
+    await swipe(page, 0.2, 0.8);
+
+    await expect(
+      page.locator('.gallery__counter'),
+      'back from the first lands on the last',
+    ).toHaveText('5 / 5');
+  });
+
+  /** The same surface, the other gesture: a tap is still the way into the full-size view. */
+  test('opens the full-size view on a tap, and closes it again', async ({ page }) => {
+    const dialog = page.locator('dialog.gallery__lightbox');
+
+    await page.locator('.gallery__viewport').tap();
+    await expect(dialog).toBeVisible();
+    await expect(dialog.locator('.gallery__full-img')).toBeVisible();
+    await expect(page.locator('.gallery__counter'), 'a tap turns nothing').toHaveText('1 / 5');
+
+    await dialog.locator('.gallery__close').tap();
+    await expect(dialog).toBeHidden();
+  });
+
+  /**
+   * Every target the gallery puts under a thumb is past the 24px WCAG 2.5.8 minimum. Material's
+   * icon buttons carry their own touch target, which is larger than the button it paints, so
+   * that is the box measured where there is one.
+   */
+  test('gives every control a target a thumb can hit', async ({ page }) => {
+    const measure = (selector: string) =>
+      page.locator(selector).evaluateAll((controls) =>
+        controls.map((control) => {
+          const target = control.querySelector('.mat-mdc-button-touch-target');
+          const box = (target ?? control).getBoundingClientRect();
+          const names = (control.getAttribute('class') ?? '').split(' ');
+          return {
+            name: names.find((name) => name.startsWith('gallery__')) ?? control.tagName,
+            width: Math.round(box.width),
+            height: Math.round(box.height),
+          };
+        }),
+      );
+
+    const inline = await measure('.gallery__nav, .gallery__thumb-button, .gallery__viewport');
+    expect(inline.length, 'two arrows, five thumbnails and the stage').toBe(8);
+
+    await page.locator('.gallery__viewport').tap();
+    await expect(page.locator('dialog.gallery__lightbox')).toBeVisible();
+    const full = await measure('.gallery__close, .gallery__full-nav');
+    expect(full, 'a close button and two arrows').toHaveLength(3);
+
+    for (const box of [...inline, ...full]) {
+      expect(
+        Math.min(box.width, box.height),
+        `${box.name} is ${box.width}x${box.height}`,
+      ).toBeGreaterThanOrEqual(24);
+    }
+  });
+});

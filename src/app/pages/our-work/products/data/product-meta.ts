@@ -192,7 +192,14 @@ export const PRODUCT_META: Readonly<Record<ProductId, ProductMeta>> = {
 
   'connected-car': {
     archetype: 'app',
-    photos: [{ file: 'infiniti.webp', width: 800, height: 450 }],
+    photos: [
+      { file: 'infiniti.webp', width: 800, height: 450 },
+      { file: 'infin.webp', width: 1000, height: 667 },
+      { file: 'control.webp', width: 1000, height: 667 },
+      { file: 'serv.webp', width: 1000, height: 667 },
+    ],
+    url: 'https://apps.apple.com/us/app/myinfiniti-app/id1529917696',
+    platform: 'Android · Google Play',
   },
 };
 
@@ -200,7 +207,7 @@ export function photoSrc(photo: ProductPhoto): string {
   return `images/${photo.file}`;
 }
 
-export const IMAGE_LADDER = [400, 640, 960] as const;
+export const IMAGE_LADDER = [200, 400, 640, 960] as const;
 
 export function photoSrcset(photo: ProductPhoto): string {
   const steps = IMAGE_LADDER.filter((step) => step < photo.width).map(

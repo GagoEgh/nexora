@@ -19,8 +19,8 @@ import productContent from '../products/product.content';
 import ourWorkContent from '../our-work.content';
 import { isProductId, type ProductId } from '../products/data/product-ids';
 import { nextProductId, toProductView, type ProductView } from '../products/data/product-view';
-import { experienceColumns, HERO_SIZES } from './gallery-layout';
 import { ProductGallery } from './product-gallery/product-gallery';
+import { ProductNext } from './product-next/product-next';
 
 @Component({
   selector: 'app-product-detail',
@@ -33,6 +33,7 @@ import { ProductGallery } from './product-gallery/product-gallery';
     PageIntro,
     StartConversation,
     ProductGallery,
+    ProductNext,
   ],
   templateUrl: './product-detail.html',
   styleUrl: './product-detail.scss',
@@ -59,14 +60,6 @@ export class ProductDetail {
     const id = this.productId();
     return id === null ? null : toProductView(id, this.content());
   });
-
-  protected readonly heroSizes = HERO_SIZES;
-
-  protected readonly gallery = computed(() => this.product()?.photos.slice(1) ?? []);
-
-  protected readonly experienceColumns = computed<string | null>(() =>
-    experienceColumns(this.gallery()),
-  );
 
   protected readonly next = computed<ProductView | null>(() => {
     const id = this.productId();

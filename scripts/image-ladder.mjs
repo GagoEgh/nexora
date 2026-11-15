@@ -1,7 +1,6 @@
-export const IMAGE_LADDER = [400, 640, 960];
+export const IMAGE_LADDER = [200, 400, 640, 960];
 
 /**
- * `meal.webp` at 640 -> `meal-640.webp`.
  *
  * @param {string} file
  * @param {number} width
@@ -12,7 +11,6 @@ export function variantFile(file, width) {
 }
 
 /**
- * The ladder widths published for a photograph of this width, narrowest first.
  *
  * @param {number} width
  * @returns {number[]}
@@ -22,7 +20,6 @@ export function variantWidths(width) {
 }
 
 /**
- * Every narrower file a photograph is published as.
  *
  * @param {string} file
  * @param {number} width

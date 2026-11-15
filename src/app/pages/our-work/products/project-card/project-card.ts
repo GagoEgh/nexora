@@ -8,34 +8,12 @@ import { LocalizedPathPipe } from '../../../../core/i18n/localized-path.pipe';
 import { IconTile } from '../../../../shared/ui/icon-tile/icon-tile';
 import type { ProductView } from '../data/product-view';
 
-/** The band-level strings every card needs, resolved once and shared. */
 export interface ProjectCardLabels {
   readonly viewProject: string;
   readonly visitSite: string;
   readonly newTab: string;
 }
 
-/**
- * One product in the portfolio grid, with a second face behind it.
- *
- * The front is the picture, the kind of product it is, and the line that earns a click. The back
- * carries the summary, the four capabilities, what sets the product apart, and the two links -
- * the detail page, and the live product where one exists.
- *
- * **Three triggers, and why there are three.** A pointer flips the card by hovering it. A touch
- * device flips it by tapping, because `mouseenter` either never fires there or fires once and
- * sticks. A keyboard flips it by focusing the card, which is why the host itself is a tab stop:
- * nothing on the front face is focusable, so without that there would be no way in, and every
- * word on the back would be pointer-only - the WCAG 2.1.1 failure that cost this component its
- * first flip. There is deliberately no "Details" button; the card is its own control.
- *
- * **Why the host, and not a button.** A button cannot contain links, and the back face has two.
- * A focusable `role="group"` carrying the product's name announces the card as one thing and
- * lets the caret walk into it, which is what a disclosure needs here.
- *
- * The turned-away face is hidden with `visibility`, not with geometry or `backface-visibility`:
- * those hide a face visually and leave its links focusable and announced. See the stylesheet.
- */
 @Component({
   selector: 'app-project-card',
   imports: [RouterLink, LocalizedPathPipe, IconTile, MatIcon],

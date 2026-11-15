@@ -389,541 +389,378 @@ test.describe('the portfolio at every supported width', () => {
 });
 
 /**
- * The gallery, on the one product that has original photographs. The thing a stylesheet cannot
- * promise and only a browser can show: that each picture is laid out at its own ratio, so
- * nothing is stretched and nothing is cropped away.
- */
-interface ShotMeasurement {
-  readonly src: string;
-  /** The ratio of the file itself, read from the decoded image. */
-  readonly natural: number;
-  /** The ratio of the box the page gave it. */
-  readonly laid: number;
-  readonly width: number;
-  readonly complete: boolean;
-  readonly alt: string;
-}
-
-test.describe('a product page with photographs', () => {
-  const SHOT = '.gallery__img';
-
-  for (const viewport of VIEWPORTS) {
-    test(`shows both photographs whole at ${viewport.width}px (${viewport.label})`, async ({
-      page,
-    }) => {
-      await page.setViewportSize({ width: viewport.width, height: viewport.height });
-      await page.goto('/our_work/lav');
-      await ready(page);
-      await page.locator(SHOT).first().scrollIntoViewIfNeeded();
-      // The gallery is lazy by design, so a measurement taken the instant the tile is scrolled
-      // into view reads a box that has no picture in it yet. Wait for the bytes, then measure.
-      await expect
-        .poll(() =>
-          page
-            .locator(SHOT)
-            .evaluateAll((elements) =>
-              (elements as HTMLImageElement[]).every(
-                (image) => image.complete && image.naturalWidth > 0,
-              ),
-            ),
-        )
-        .toBe(true);
-
-      // `evaluateAll` hands the callback `HTMLElement[]`; the selector is an `img`, so the
-      // narrowing is what lets the measurement read `naturalWidth` rather than guess a ratio.
-      const shots: ShotMeasurement[] = await page.locator(SHOT).evaluateAll((elements) =>
-        (elements as HTMLImageElement[]).map((image) => {
-          const box = image.getBoundingClientRect();
-          return {
-            src: image.getAttribute('src') ?? '',
-            natural: image.naturalWidth / image.naturalHeight,
-            laid: box.width / box.height,
-            width: Math.round(box.width),
-            complete: image.complete && image.naturalWidth > 0,
-            alt: image.getAttribute('alt') ?? '',
-          };
-        }),
-      );
-
-      expect(shots).toHaveLength(2);
-      for (const [index, shot] of shots.entries()) {
-        expect(shot.complete, `${shot.src} did not load`).toBe(true);
-        expect(shot.alt.length, `shot ${index} has no description`).toBeGreaterThan(0);
-        // Laid out at its own ratio, to within a rounded pixel: not stretched, not cropped.
-        expect(
-          Math.abs(shot.laid - shot.natural),
-          `${shot.src} is laid out at ${shot.laid.toFixed(3)} but is ${shot.natural.toFixed(3)}`,
-        ).toBeLessThan(0.02);
-        expect(shot.width, `${shot.src} collapsed at ${viewport.width}px`).toBeGreaterThan(100);
-      }
-    });
-  }
-
-  test('puts the two photographs side by side once there is room for them', async ({ page }) => {
-    await page.setViewportSize({ width: 1280, height: 900 });
-    await page.goto('/our_work/lav');
-    await ready(page);
-
-    const tops = await page
-      .locator(SHOT)
-      .evaluateAll((images) =>
-        images.map((image) => Math.round(image.getBoundingClientRect().top)),
-      );
-    expect(new Set(tops).size, 'the two photographs should share a row').toBe(1);
-  });
-
-  test('stacks them in one column on a phone', async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto('/our_work/lav');
-    await ready(page);
-
-    const lefts = await page
-      .locator(SHOT)
-      .evaluateAll((images) => images.map((image) => Math.round(image.getBoundingClientRect().x)));
-    expect(new Set(lefts).size, 'the photographs should share one column').toBe(1);
-  });
-
-  /** The hero is the one image that is cropped, and the one that must not be deferred. */
-  test('loads the hero eagerly and the gallery lazily', async ({ page }) => {
-    await page.goto('/our_work/lav');
-    await ready(page);
-
-    const hero = page.locator('.product__hero-img');
-    await expect(hero).toHaveAttribute('fetchpriority', 'high');
-    expect(await hero.getAttribute('loading'), 'the LCP image must not be deferred').toBeNull();
-
-    for (const shot of await page.locator(SHOT).all()) {
-      await expect(shot).toHaveAttribute('loading', 'lazy');
-    }
-  });
-});
-
-/**
- * The panoramic original on the jeweller's page, which is the shape the gallery did not have a
- * layout for. `rings.webp` is 2.54:1; left in the two-column grid that suits `lav`'s square
- * photographs it was laid out in one of those columns, a strip beside an empty cell.
+ * The product gallery, in a real browser.
  *
- * Two things only a browser can confirm: that it now takes the whole gallery, and that taking
- * it does not mean being blown up - the file carries 890px of detail, and a box wider than that
- * would be upscale, which on jewellery is exactly where it would show.
+ * The unit spec already pins the state machine: which slide is up, what the counter reads, what
+ * the lightbox shows. What it cannot see is everything the platform owns. `<dialog>` is the
+ * clearest case - jsdom implements none of `showModal()`, so the focus trap, the return of
+ * focus, Escape and the backdrop are only ever executed here. The rest is geometry: that one
+ * picture is up at a time, that each is laid out at its own ratio inside the band rather than
+ * stretched to fill it, that the strip scrolls instead of the page, and that none of it leaks
+ * sideways at 320px.
  */
-test.describe('a product page with a panoramic photograph', () => {
-  const SHOT = '.gallery__img';
 
+const STAGE = '.gallery__viewport';
+const SLIDE = '.gallery__slide';
+const ACTIVE = '.gallery__slide.is-active .gallery__img';
+const THUMB = '.gallery__thumb-button';
+const STRIP = '.gallery__thumbs';
+const COUNTER = '.gallery__counter';
+const LIGHTBOX = 'dialog.gallery__lightbox';
+
+/** Five photographs: the longest strip in the portfolio. */
+const MANY = '/our_work/libra-analytics';
+/** Upright, square and landscape in one gallery: the shapes the band has to hold. */
+const SHAPES = '/our_work/mezave';
+/** One photograph, which is eleven of the nineteen. */
+const ONE = '/our_work/draculai';
+
+/** The route has rendered and the picture on the stage has actually arrived. */
+const galleryReady = async (page: Page, path: string) => {
+  await page.goto(path);
+  await ready(page);
+  await page.locator(STAGE).waitFor();
+  await expect
+    .poll(() =>
+      page
+        .locator(ACTIVE)
+        .evaluate(
+          (image) =>
+            (image as HTMLImageElement).complete && (image as HTMLImageElement).naturalWidth > 0,
+        ),
+    )
+    .toBe(true);
+};
+
+const opacities = (page: Page): Promise<number[]> =>
+  page
+    .locator(SLIDE)
+    .evaluateAll((slides) => slides.map((slide) => Number(getComputedStyle(slide).opacity)));
+
+const horizontalOverflow = (page: Page): Promise<number> =>
+  page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+
+test.describe('the product gallery at every supported width', () => {
   for (const viewport of VIEWPORTS) {
-    test(`lays the panorama out whole at ${viewport.width}px (${viewport.label})`, async ({
+    test(`shows one photograph whole at ${viewport.width}px (${viewport.label})`, async ({
       page,
     }) => {
       await page.setViewportSize({ width: viewport.width, height: viewport.height });
-      await page.goto('/our_work/robert-irwin');
-      await ready(page);
-      await page.locator(SHOT).scrollIntoViewIfNeeded();
-      // Deferred by design, so wait for the bytes before measuring the box.
-      await expect
-        .poll(() =>
-          page.locator(SHOT).evaluate((image) => (image as HTMLImageElement).naturalWidth > 0),
-        )
-        .toBe(true);
+      await galleryReady(page, SHAPES);
 
-      const shot = await page.locator(SHOT).evaluate((element) => {
+      const showing = (await opacities(page)).filter((opacity) => opacity > 0);
+      expect(showing, 'one picture is up at a time').toHaveLength(1);
+
+      const shot = await page.locator(ACTIVE).evaluate((element) => {
         const image = element as HTMLImageElement;
         const box = image.getBoundingClientRect();
+        const band = (image.closest('.gallery__viewport') as HTMLElement).getBoundingClientRect();
         return {
+          src: image.getAttribute('src') ?? '',
           natural: image.naturalWidth / image.naturalHeight,
-          intrinsic: image.naturalWidth,
           laid: box.width / box.height,
-          width: Math.round(box.width),
-          alt: image.getAttribute('alt') ?? '',
+          width: box.width,
+          height: box.height,
+          intrinsic: image.naturalWidth,
+          band: { width: band.width, height: band.height },
         };
       });
 
+      // Laid out at its own ratio, to within a rounded pixel: not stretched, not cropped.
       expect(
         Math.abs(shot.laid - shot.natural),
-        `the panorama is laid out at ${shot.laid.toFixed(3)} but is ${shot.natural.toFixed(3)}`,
+        `${shot.src} is laid out at ${shot.laid.toFixed(3)} but is ${shot.natural.toFixed(3)}`,
       ).toBeLessThan(0.02);
-      expect(shot.alt.length, 'the panorama has no description').toBeGreaterThan(0);
-      expect(shot.width, `the panorama collapsed at ${viewport.width}px`).toBeGreaterThan(100);
+      expect(shot.width, `${shot.src} is wider than the band`).toBeLessThanOrEqual(
+        shot.band.width + 1,
+      );
+      expect(shot.height, `${shot.src} is taller than the band`).toBeLessThanOrEqual(
+        shot.band.height + 1,
+      );
+      expect(shot.width, `${shot.src} collapsed at ${viewport.width}px`).toBeGreaterThan(100);
       expect(
         shot.width,
-        `the panorama is scaled past the ${shot.intrinsic}px of detail it carries`,
+        `${shot.src} is scaled past the ${shot.intrinsic}px of detail it carries`,
       ).toBeLessThanOrEqual(shot.intrinsic + 1);
+
+      expect(
+        await horizontalOverflow(page),
+        `the gallery scrolls the page sideways at ${viewport.width}px`,
+      ).toBeLessThanOrEqual(0);
     });
   }
+});
 
-  test('gives the lone photograph the whole gallery rather than half of it', async ({ page }) => {
-    await page.setViewportSize({ width: 1280, height: 900 });
-    await page.goto('/our_work/robert-irwin');
-    await ready(page);
-    await page.locator(SHOT).scrollIntoViewIfNeeded();
-    // The tile is sized to the picture inside it, so measuring before the deferred bytes land
-    // reads the 1px borders and nothing else. Wait for the image, as the tests above do.
-    await expect
-      .poll(() =>
-        page.locator(SHOT).evaluate((image) => (image as HTMLImageElement).naturalWidth > 0),
-      )
-      .toBe(true);
+test.describe('walking through the photographs', () => {
+  test('walks forward and back with the arrows, and wraps round at either end', async ({
+    page,
+  }) => {
+    await galleryReady(page, MANY);
+    const counter = page.locator(COUNTER);
 
-    const widths = await page.evaluate(() => {
-      const shot = document.querySelector('.gallery__shot');
-      const gallery = document.querySelector('.gallery__row');
-      return {
-        shot: Math.round(shot?.getBoundingClientRect().width ?? 0),
-        gallery: Math.round(gallery?.getBoundingClientRect().width ?? 0),
-      };
+    await expect(counter).toHaveText('1 / 5');
+    await page.locator('.gallery__nav--next').click();
+    await expect(counter).toHaveText('2 / 5');
+
+    await page.locator('.gallery__nav--previous').click();
+    await expect(counter).toHaveText('1 / 5');
+    await page.locator('.gallery__nav--previous').click();
+    await expect(counter, 'back from the first lands on the last').toHaveText('5 / 5');
+    await page.locator('.gallery__nav--next').click();
+    await expect(counter, 'forward from the last lands on the first').toHaveText('1 / 5');
+  });
+
+  test('picks a photograph from the strip, and scrolls the strip rather than the page', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await galleryReady(page, MANY);
+
+    const strip = page.locator(STRIP);
+    expect(
+      await strip.evaluate((element) => element.scrollWidth > element.clientWidth),
+      'five thumbnails should not fit a phone, or this proves nothing',
+    ).toBe(true);
+    expect(await strip.evaluate((element) => element.scrollLeft)).toBe(0);
+
+    const last = page.locator(THUMB).last();
+    await last.click();
+    await expect(page.locator(COUNTER)).toHaveText('5 / 5');
+    await expect(last).toHaveAttribute('aria-current', 'true');
+
+    // The strip caught up with the picture, and did it inside its own box.
+    expect(
+      await strip.evaluate((element) => element.scrollLeft),
+      'the current thumbnail was not brought into view',
+    ).toBeGreaterThan(0);
+    const inView = await strip.evaluate((element) => {
+      const current = element.querySelector('[aria-current="true"]') as HTMLElement;
+      const box = element.getBoundingClientRect();
+      const thumb = current.getBoundingClientRect();
+      return thumb.left >= box.left - 1 && thumb.right <= box.right + 1;
     });
+    expect(inView, 'the current thumbnail is outside the strip').toBe(true);
+    expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0);
+  });
 
-    expect(widths.gallery, 'no gallery was rendered').toBeGreaterThan(0);
-    expect(widths.shot, 'the photograph is sharing the row with an empty column').toBe(
-      widths.gallery,
-    );
+  test('moves the current thumbnail when the picture is changed from the arrows', async ({
+    page,
+  }) => {
+    await galleryReady(page, MANY);
+
+    await page.locator('.gallery__nav--next').click();
+    await expect(page.locator(THUMB).nth(1)).toHaveAttribute('aria-current', 'true');
+    expect(await page.locator(`${THUMB}[aria-current="true"]`).count()).toBe(1);
+  });
+
+  /** Eleven of the nineteen products carry one photograph; there is nothing to operate there. */
+  test('offers no controls for a product with one photograph', async ({ page }) => {
+    await galleryReady(page, ONE);
+
+    await expect(page.locator(SLIDE)).toHaveCount(1);
+    await expect(page.locator('.gallery__nav')).toHaveCount(0);
+    await expect(page.locator(STRIP)).toHaveCount(0);
+    await expect(page.locator(COUNTER)).toHaveCount(0);
+    await expect(page.locator(STAGE), 'the picture still opens full size').toBeVisible();
+  });
+
+  /** The first slide is this page's LCP image; the rest are a click away at most. */
+  test('loads the first photograph eagerly and defers the others', async ({ page }) => {
+    await galleryReady(page, MANY);
+
+    const first = page.locator('.gallery__img').first();
+    await expect(first).toHaveAttribute('fetchpriority', 'high');
+    expect(await first.getAttribute('loading'), 'the LCP image must not be deferred').toBeNull();
+
+    for (const slide of (await page.locator('.gallery__img').all()).slice(1)) {
+      await expect(slide).toHaveAttribute('loading', 'lazy');
+    }
+    for (const thumb of await page.locator('.gallery__thumb-img').all()) {
+      await expect(thumb).toHaveAttribute('loading', 'lazy');
+    }
   });
 });
 
 /**
- * Four photographs, which is more than one grid can justify: column widths come from a row's own
- * ratios, and `grid-template-columns` applies to every row at once. The gallery is rows instead,
- * each sized by its own pair, and the section hands the gallery the whole width rather than an
- * aside once there are more than two.
- *
- * What the browser has to settle is the arithmetic: that each row lands on one baseline, that
- * the rows together fill the width they are given, and that neither happens by cropping or by
- * blowing a picture up past the detail it carries.
+ * The crossfade, which no other test here sees: every project in this suite runs with
+ * `reducedMotion: 'reduce'`, where the token layer zeroes every duration. That is the right
+ * default, but it means the transition a visitor actually gets would never be executed.
  */
-test.describe('a gallery of more than two photographs', () => {
-  const SHOT = '.gallery__img';
+test.describe('the crossfade, with motion enabled', () => {
+  test.use({ viewport: { width: 1440, height: 900 }, reducedMotion: 'no-preference' });
 
-  /** Each product with such a gallery, and how many photographs each of its rows should hold. */
-  const GALLERIES = [
-    { slug: 'libra-analytics', rows: [2, 2] },
-    { slug: 'sell-me-watch', rows: [3] },
-    { slug: 'mezave', rows: [3] },
-  ] as const;
+  test('fades between the photographs over the duration the tokens declare', async ({ page }) => {
+    await galleryReady(page, MANY);
 
-  for (const { slug, rows: expected } of GALLERIES) {
-    for (const width of [1440, 1280, 1024, 768]) {
-      test(`justifies every ${slug} row at ${width}px`, async ({ page }) => {
-        await page.setViewportSize({ width, height: 900 });
-        await page.goto(`/our_work/${slug}`);
-        await ready(page);
-        await page.locator(SHOT).last().scrollIntoViewIfNeeded();
-        await expect
-          .poll(() =>
-            page
-              .locator(SHOT)
-              .last()
-              .evaluate((image) => (image as HTMLImageElement).naturalWidth > 0),
-          )
-          .toBe(true);
+    const timing = await page
+      .locator(SLIDE)
+      .first()
+      .evaluate((slide) => ({
+        property: getComputedStyle(slide).transitionProperty,
+        duration: getComputedStyle(slide).transitionDuration,
+      }));
+    expect(timing.property).toBe('opacity');
+    // The band the brief asks for, and the project's own `base` duration.
+    expect(Number.parseFloat(timing.duration)).toBeGreaterThanOrEqual(0.2);
+    expect(Number.parseFloat(timing.duration)).toBeLessThanOrEqual(0.3);
 
-        const rows = await page.locator('.gallery__row').evaluateAll((elements) =>
-          elements.map((row) => {
-            const box = row.getBoundingClientRect();
-            const shots = [...row.querySelectorAll('img')].map((image) => {
-              const shot = image.getBoundingClientRect();
-              return {
-                natural: image.naturalWidth / image.naturalHeight,
-                intrinsic: image.naturalWidth,
-                laid: shot.width / shot.height,
-                width: Math.round(shot.width),
-                height: Math.round(shot.height),
-              };
-            });
-            return { width: Math.round(box.width), shots };
-          }),
-        );
-
-        expect(
-          rows.map((row) => row.shots.length),
-          'the rows the gallery falls into',
-        ).toEqual([...expected]);
-
-        for (const [index, row] of rows.entries()) {
-          const heights = row.shots.map((shot) => shot.height);
-          expect(
-            Math.max(...heights) - Math.min(...heights),
-            `row ${index} is ragged: ${heights.join(', ')}`,
-          ).toBeLessThanOrEqual(1);
-
-          // The row is filled, so the widths are doing the levelling rather than a gap. The
-          // slack allowed is the 16px gap between tiles plus a pixel of rounding each.
-          const used = row.shots.reduce((total, shot) => total + shot.width, 0);
-          const gaps = (row.shots.length - 1) * 16;
-          expect(
-            row.width - used,
-            `row ${index} leaves ${row.width - used}px unused for ${gaps}px of gaps`,
-          ).toBeLessThanOrEqual(gaps + row.shots.length);
-
-          for (const shot of row.shots) {
-            expect(
-              Math.abs(shot.laid - shot.natural),
-              `laid out at ${shot.laid.toFixed(3)} but is ${shot.natural.toFixed(3)}`,
-            ).toBeLessThan(0.02);
-            expect(shot.width, 'scaled past the detail it carries').toBeLessThanOrEqual(
-              shot.intrinsic + 1,
+    // Both the outgoing and the incoming picture have to run a transition; a cut would run
+    // none. Read from the transitions themselves rather than by sampling opacity at a moment,
+    // which is a race against a 220ms window under a loaded test runner.
+    const faded = await page.evaluate(
+      () =>
+        new Promise<string[]>((resolve) => {
+          const running: string[] = [];
+          for (const slide of document.querySelectorAll('.gallery__slide')) {
+            slide.addEventListener('transitionrun', (event) =>
+              running.push((event as TransitionEvent).propertyName),
             );
           }
-        }
-
-        // Rows of the same gallery share the width they are laid out in.
-        const widths = rows.map((row) => row.width);
-        expect(Math.max(...widths) - Math.min(...widths)).toBeLessThanOrEqual(1);
-      });
-    }
-  }
-});
-
-/**
- * The single-column stack, which every product falls into below 600px. There a photograph has
- * the whole content width, and the taller the shape the further it runs: `zadeh-cleanse.webp`
- * is 2:3 and came out 348x522 at 390px - taller than the hero and than anything else on the
- * page. The stylesheet bounds the laid-out height there.
- *
- * Three things only a browser settles: that the bound is reached by scaling the picture rather
- * than by cropping the tile it sits in, that a bounded picture is centred rather than left
- * hanging at one edge of a full-width column, and that the bound lifts again once the gallery
- * stops being a stack.
- */
-test.describe('a photograph in the single-column stack', () => {
-  const SHOT = '.gallery__img';
-
-  /** `$shot-stacked-max-height` in `product-detail.scss`, plus a pixel for the tile's borders. */
-  const BOUND = 440;
-
-  const STACKED = [320, 375, 390, 430, 599];
-
-  for (const width of STACKED) {
-    test(`bounds and centres the tall photograph at ${width}px`, async ({ page }) => {
-      await page.setViewportSize({ width, height: 900 });
-      await page.goto('/our_work/zadeh-md');
-      await ready(page);
-      await page.locator(SHOT).first().scrollIntoViewIfNeeded();
-      await expect
-        .poll(() =>
-          page
-            .locator(SHOT)
-            .first()
-            .evaluate((image) => (image as HTMLImageElement).naturalWidth > 0),
-        )
-        .toBe(true);
-
-      const shots = await page.locator(SHOT).evaluateAll((elements) =>
-        elements.map((element) => {
-          const image = element as HTMLImageElement;
-          const box = image.getBoundingClientRect();
-          const tile = (image.closest('.gallery__shot') as HTMLElement).getBoundingClientRect();
-          const gallery = (image.closest('.gallery__row') as HTMLElement).getBoundingClientRect();
-          return {
-            natural: image.naturalWidth / image.naturalHeight,
-            intrinsic: image.naturalWidth,
-            laid: box.width / box.height,
-            width: Math.round(box.width),
-            height: Math.round(box.height),
-            // How far the tile sits from each edge of the column it is laid out in.
-            left: Math.round(tile.left - gallery.left),
-            right: Math.round(gallery.right - tile.right),
-          };
+          (document.querySelector('.gallery__nav--next') as HTMLElement).click();
+          setTimeout(() => resolve(running), 400);
         }),
-      );
-
-      expect(shots.length, 'this page has two gallery photographs').toBe(2);
-      for (const shot of shots) {
-        expect(shot.height, `laid out ${shot.width}x${shot.height}`).toBeLessThanOrEqual(BOUND + 1);
-        expect(
-          Math.abs(shot.laid - shot.natural),
-          `laid out at ${shot.laid.toFixed(3)} but is ${shot.natural.toFixed(3)}`,
-        ).toBeLessThan(0.02);
-        expect(shot.width, 'scaled past the detail the file carries').toBeLessThanOrEqual(
-          shot.intrinsic + 1,
-        );
-        // Centred: equal gutters either side, whether or not the bound narrowed it.
-        expect(
-          Math.abs(shot.left - shot.right),
-          `gutters ${shot.left} and ${shot.right}`,
-        ).toBeLessThanOrEqual(1);
-      }
-    });
-  }
-
-  test('lets the photographs grow again once the stack ends', async ({ page }) => {
-    await page.setViewportSize({ width: 768, height: 900 });
-    await page.goto('/our_work/zadeh-md');
-    await ready(page);
-    await page.locator(SHOT).first().scrollIntoViewIfNeeded();
-    await expect
-      .poll(() =>
-        page
-          .locator(SHOT)
-          .first()
-          .evaluate((image) => (image as HTMLImageElement).naturalWidth > 0),
-      )
-      .toBe(true);
-
-    const tops = await page
-      .locator(SHOT)
-      .evaluateAll((elements) => elements.map((element) => element.getBoundingClientRect().top));
-    expect(Math.abs(tops[0] - tops[1]), 'the pair is side by side here, not stacked').toBeLessThan(
-      2,
     );
+    expect(
+      faded.filter((property) => property === 'opacity').length,
+      `the picture was cut, not faded: ${faded.join(', ') || 'no transition ran'}`,
+    ).toBeGreaterThanOrEqual(2);
+
+    await expect
+      .poll(async () => (await opacities(page)).map((opacity) => Math.round(opacity)))
+      .toEqual([0, 1, 0, 0, 0]);
   });
 });
 
 /**
- * The other lone photograph, and the opposite shape. `roar-immune.webp` is 1.12:1, and the rule
- * that gives a single picture the whole gallery - right for the panorama above - laid it out
- * 794x706 beside a three-line paragraph: taller than the hero, and the loudest thing on the
- * page. The component now bounds the column to the width a 440px-tall photograph needs.
- *
- * What a browser is needed for: that the bound is reached by narrowing the column rather than
- * by squashing the picture, that the copy rather than a gap takes what the column gives up, and
- * that the bound stays out of the way at widths where the layout is a single column.
+ * The full-size view. Everything here is the platform's: the top layer, the focus trap, Escape,
+ * the backdrop, and the return of focus to whatever opened the dialog. The component writes
+ * none of it, which is exactly why it has to be executed in a browser.
  */
-test.describe('a product page with a lone near-square photograph', () => {
-  const SHOT = '.gallery__img';
+test.describe('the full-size view', () => {
+  test.use({ viewport: { width: 1280, height: 800 } });
 
-  /** The height bound in `product-detail.ts`, which this page is the reason for. */
-  const MAX_HEIGHT = 440;
+  test('opens from the picture and closes on Escape, leaving the caret where it was', async ({
+    page,
+  }) => {
+    await galleryReady(page, MANY);
+    const dialog = page.locator(LIGHTBOX);
 
-  const measure = async (page: Page) => {
-    await page.locator(SHOT).scrollIntoViewIfNeeded();
-    await expect
-      .poll(() =>
-        page.locator(SHOT).evaluate((image) => (image as HTMLImageElement).naturalWidth > 0),
-      )
-      .toBe(true);
-    return page.locator(SHOT).evaluate((element) => {
+    await expect(dialog).toBeHidden();
+    await page.locator(STAGE).click();
+    await expect(dialog).toBeVisible();
+
+    const full = dialog.locator('.gallery__full-img');
+    await expect(full).toBeVisible();
+    await expect(full).toHaveAttribute('alt', /\S/);
+    // `showModal()` moves the caret inside; the close button is the dialog's `autofocus`.
+    await expect(dialog.locator('.gallery__close')).toBeFocused();
+
+    await page.keyboard.press('Escape');
+    await expect(dialog).toBeHidden();
+    await expect(page.locator(STAGE), 'focus did not come back to the picture').toBeFocused();
+  });
+
+  test('walks the photographs with the arrow keys and keeps the page behind it in step', async ({
+    page,
+  }) => {
+    await galleryReady(page, MANY);
+    await page.locator(STAGE).click();
+
+    const shown = () => page.locator('.gallery__full-img').getAttribute('src');
+    const first = await shown();
+
+    await page.keyboard.press('ArrowRight');
+    await expect.poll(shown).not.toBe(first);
+    const second = await shown();
+
+    await page.keyboard.press('ArrowLeft');
+    await expect.poll(shown).toBe(first);
+
+    await page.locator('.gallery__bar--controls .gallery__full-nav').last().click();
+    await expect.poll(shown).toBe(second);
+
+    await page.keyboard.press('Escape');
+    await expect(page.locator(COUNTER), 'the stage followed the full-size view').toHaveText(
+      '2 / 5',
+    );
+  });
+
+  test('closes on the backdrop and stays open on the picture', async ({ page }) => {
+    await galleryReady(page, MANY);
+    const dialog = page.locator(LIGHTBOX);
+    await page.locator(STAGE).click();
+    await expect(dialog).toBeVisible();
+
+    await dialog.locator('.gallery__full-img').click();
+    await expect(dialog, 'the picture is not a way out').toBeVisible();
+
+    // The gutter: inside the dialog's box, outside everything in it.
+    await dialog.click({ position: { x: 4, y: 4 } });
+    await expect(dialog).toBeHidden();
+  });
+
+  test('holds the page still while it is open, and leaves the visitor where they were', async ({
+    page,
+  }) => {
+    await galleryReady(page, MANY);
+    await page.locator(STAGE).scrollIntoViewIfNeeded();
+    const before = await page.evaluate(() => window.scrollY);
+    expect(before, 'the page should be scrolled, or this proves nothing').toBeGreaterThan(0);
+
+    await page.locator(STAGE).click();
+    await expect(page.locator(LIGHTBOX)).toBeVisible();
+    expect(
+      await page.evaluate(() => getComputedStyle(document.documentElement).overflow),
+    ).toContain('hidden');
+
+    // A real wheel gesture, not `window.scrollBy`: `overflow: hidden` stops the visitor from
+    // scrolling but leaves the box programmatically scrollable, so a scripted scroll would
+    // succeed here and prove nothing about what a visitor can do.
+    await page.mouse.wheel(0, 400);
+    expect(
+      await page.evaluate(() => window.scrollY),
+      'the page scrolled behind the full-size view',
+    ).toBe(before);
+
+    await page.keyboard.press('Escape');
+    await expect(page.locator(LIGHTBOX)).toBeHidden();
+    // `close()` removes the `open` attribute and only then queues the `close` event, so the
+    // dialog reads as hidden a turn before the handler that gives the scrolling back has run.
+    // Focus returning to the stage happens in that same handler, after the unlock, which makes
+    // it the signal to wait on rather than polling the style.
+    await expect(page.locator(STAGE)).toBeFocused();
+    expect(
+      await page.evaluate(() => getComputedStyle(document.documentElement).overflow),
+      'the page was left unable to scroll',
+    ).not.toContain('hidden');
+    expect(await page.evaluate(() => window.scrollY), 'the visitor was moved').toBe(before);
+
+    await page.evaluate(() => window.scrollBy(0, 200));
+    expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(before);
+  });
+
+  test('fits the narrowest phone without leaking sideways', async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 568 });
+    await galleryReady(page, SHAPES);
+    await page.locator(STAGE).click();
+    await expect(page.locator(LIGHTBOX)).toBeVisible();
+
+    const shot = await page.locator('.gallery__full-img').evaluate((element) => {
       const image = element as HTMLImageElement;
       const box = image.getBoundingClientRect();
-      const copy = document.querySelector('.product__experience-copy')?.getBoundingClientRect();
       return {
         natural: image.naturalWidth / image.naturalHeight,
-        intrinsic: image.naturalWidth,
         laid: box.width / box.height,
-        width: Math.round(box.width),
-        height: Math.round(box.height),
-        copyWidth: Math.round(copy?.width ?? 0),
-        stacked: (copy?.bottom ?? 0) <= box.top + 1,
+        right: box.right,
+        bottom: box.bottom,
       };
     });
-  };
 
-  for (const viewport of VIEWPORTS) {
-    test(`keeps the near-square in proportion at ${viewport.width}px (${viewport.label})`, async ({
-      page,
-    }) => {
-      await page.setViewportSize({ width: viewport.width, height: viewport.height });
-      await page.goto('/our_work/roar-organic');
-      await ready(page);
-      const shot = await measure(page);
-
-      expect(
-        Math.abs(shot.laid - shot.natural),
-        `laid out at ${shot.laid.toFixed(3)} but is ${shot.natural.toFixed(3)}`,
-      ).toBeLessThan(0.02);
-      expect(
-        shot.width,
-        `scaled past the ${shot.intrinsic}px of detail it carries`,
-      ).toBeLessThanOrEqual(shot.intrinsic + 1);
-      expect(shot.width, `collapsed at ${viewport.width}px`).toBeGreaterThan(100);
-
-      // The bound belongs to the two-column layout. Stacked under the copy, a full-width
-      // photograph is what every other section does and what the panorama does too.
-      if (!shot.stacked) {
-        expect(shot.height, 'towers over the paragraph beside it').toBeLessThanOrEqual(
-          MAX_HEIGHT + 2,
-        );
-        expect(
-          shot.copyWidth,
-          'the copy did not take the width the column released',
-        ).toBeGreaterThan(shot.width);
-      }
-    });
-  }
-});
-
-/**
- * Two photographs of different shapes, which is what Mastercraft's gallery is: a 3:2 bench shot
- * beside a 1:1 grading shot. In equal columns the square comes out half as tall again as its
- * neighbour and the row is ragged along the bottom, so the component sizes the columns in
- * proportion to each picture's ratio instead.
- *
- * The point of that is a shared baseline, and a shared baseline is the one thing a stylesheet
- * cannot promise on its own - it falls out of the arithmetic between the column widths, the
- * gap and the intrinsic ratios, and only a browser does that arithmetic. Cropping would square
- * the row up just as well, which is why the ratios are asserted alongside the heights: neither
- * picture is trimmed to fit.
- */
-/** Every product whose gallery is a pair of photographs that are not the same shape. */
-const MISMATCHED_PAIRS = ['mastercraft', 'got-matcha', 'jdm-west-coast', 'zadeh-md'] as const;
-
-test.describe('a product page with two differently shaped photographs', () => {
-  const SHOT = '.gallery__img';
-
-  for (const slug of MISMATCHED_PAIRS) {
-    for (const viewport of VIEWPORTS) {
-      test(`${slug} levels the pair without cropping either at ${viewport.width}px (${viewport.label})`, async ({
-        page,
-      }) => {
-        await page.setViewportSize({ width: viewport.width, height: viewport.height });
-        await page.goto(`/our_work/${slug}`);
-        await ready(page);
-        await page.locator(SHOT).first().scrollIntoViewIfNeeded();
-        await expect
-          .poll(() =>
-            page
-              .locator(SHOT)
-              .evaluateAll((elements) =>
-                (elements as HTMLImageElement[]).every(
-                  (image) => image.complete && image.naturalWidth > 0,
-                ),
-              ),
-          )
-          .toBe(true);
-
-        const shots = await page.locator(SHOT).evaluateAll((elements) =>
-          (elements as HTMLImageElement[]).map((image) => {
-            const box = image.getBoundingClientRect();
-            return {
-              src: image.getAttribute('src') ?? '',
-              natural: image.naturalWidth / image.naturalHeight,
-              intrinsic: image.naturalWidth,
-              laid: box.width / box.height,
-              width: Math.round(box.width),
-              height: Math.round(box.height),
-              top: Math.round(box.top),
-              alt: image.getAttribute('alt') ?? '',
-            };
-          }),
-        );
-
-        expect(shots).toHaveLength(2);
-        expect(
-          new Set(shots.map((shot) => shot.natural.toFixed(2))).size,
-          'this fixture is only meaningful while the two shapes differ',
-        ).toBe(2);
-
-        for (const shot of shots) {
-          expect(
-            Math.abs(shot.laid - shot.natural),
-            `${shot.src} is laid out at ${shot.laid.toFixed(3)} but is ${shot.natural.toFixed(3)}`,
-          ).toBeLessThan(0.02);
-          expect(shot.alt.length, `${shot.src} has no description`).toBeGreaterThan(0);
-          expect(shot.width, `${shot.src} collapsed at ${viewport.width}px`).toBeGreaterThan(100);
-          expect(
-            shot.width,
-            `${shot.src} is scaled past the ${shot.intrinsic}px of detail it carries`,
-          ).toBeLessThanOrEqual(shot.intrinsic + 1);
-        }
-
-        // Side by side they level off; stacked in one column they simply follow each other.
-        const sideBySide = new Set(shots.map((shot) => shot.top)).size === 1;
-        if (sideBySide) {
-          const [first, second] = shots;
-          expect(
-            Math.abs(first.height - second.height),
-            `the row is ragged: ${first.height}px beside ${second.height}px`,
-          ).toBeLessThanOrEqual(1);
-        }
-      });
-    }
-  }
+    expect(Math.abs(shot.laid - shot.natural), 'the full-size picture is distorted').toBeLessThan(
+      0.02,
+    );
+    expect(shot.right).toBeLessThanOrEqual(320);
+    expect(shot.bottom).toBeLessThanOrEqual(568);
+    expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0);
+  });
 });

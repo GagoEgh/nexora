@@ -1,26 +1,5 @@
 import { t, type Dictionary } from 'intlayer';
 
-/**
- * Copy for the portfolio grid and for every product's card and detail page.
- *
- * Two rules govern what is written here, and both come from what the published products
- * actually show.
- *
- * Describe the work, not the byline. Several of these products credit other studios in their
- * footers, which is what white-label delivery looks like from the outside. So nothing here
- * claims authorship or ownership; every sentence is about what the product does.
- *
- * Nothing is invented. Each `highlights` entry names a capability that is visible in the
- * published product. Where something could not be established - a platform, a figure - it is
- * left out rather than guessed at, which is why `platform` is absent for several products in
- * `product-meta.ts`.
- *
- * The length budgets in `product-content.spec.ts` are what keep a row of cards even. `hook` is
- * the one that still governs the card: it is the last line on the front, and every card in a
- * row is as tall as the longest hook in the current locale. `summary` and `advantage` now only
- * reach the detail page - their budgets stay because the sections there are laid out in pairs,
- * not because a card depends on them.
- */
 const productContent = {
   key: 'our-work-products',
   content: {
@@ -36,16 +15,14 @@ const productContent = {
     }),
     intro: t({
       en: 'Mobile apps, storefronts, configurators and lead funnels across automotive, healthcare, beauty, food and luxury retail — each one summarised by the capability that sets it apart.',
-      hy: 'Բջջային հավելվածներ, առցանց խանութներ, կոնֆիգուրատորներ և հաճախորդների ներգրավման հարթակներ՝ ավտոմոբիլային, բժշկական, գեղեցկության, սննդի և շքեղ մանրածախ ոլորտներում. յուրաքանչյուրը ներկայացված է այն հատկությամբ, որը նրան տարբերում է մյուսներից։',
-      ru: 'Мобильные приложения, интернет-магазины, конфигураторы и воронки привлечения клиентов в автомобильной, медицинской, бьюти-, пищевой и люксовой рознице — каждый представлен той возможностью, которая его отличает.',
+      hy: 'Բջջային հավելվածներ, առցանց խանութներ, կոնֆիգուրատորներ և հաճախորդների ներգրավման ձագարներ՝ ավտոմոբիլային, բժշկական, գեղեցկության, սննդի և շքեղ մանրածախ ոլորտներում. յուրաքանչյուրը ներկայացված է այն հատկությամբ, որը նրան տարբերում է մյուսներից։',
+      ru: 'Мобильные приложения, интернет-магазины, конфигураторы и воронки привлечения потенциальных клиентов в автомобильной, медицинской, бьюти-, пищевой и люксовой рознице — каждый представлен той возможностью, которая его отличает.',
     }),
     cta: t({
       en: 'Start a project',
       hy: 'Սկսել նախագիծ',
       ru: 'Начать проект',
     }),
-    // Shared by the card's back face and the detail page. There is no "Details" label: the
-    // card is its own control, flipped by hover, tap or focus rather than by a button.
     viewProject: t({ en: 'View project', hy: 'Դիտել նախագիծը', ru: 'Смотреть проект' }),
     visitSite: t({ en: 'Visit site', hy: 'Այցելել կայք', ru: 'Перейти на сайт' }),
     newTab: t({
@@ -70,6 +47,35 @@ const productContent = {
         ru: 'Корпоративная платформа',
       }),
     },
+    gallery: {
+      label: t({
+        en: 'Product gallery',
+        hy: 'Արտադրանքի պատկերասրահ',
+        ru: 'Галерея продукта',
+      }),
+      previous: t({
+        en: 'Previous image',
+        hy: 'Նախորդ պատկերը',
+        ru: 'Предыдущее изображение',
+      }),
+      next: t({ en: 'Next image', hy: 'Հաջորդ պատկերը', ru: 'Следующее изображение' }),
+      expand: t({
+        en: 'View full size',
+        hy: 'Դիտել ամբողջ չափով',
+        ru: 'Открыть во весь экран',
+      }),
+      close: t({ en: 'Close', hy: 'Փակել', ru: 'Закрыть' }),
+      position: t({
+        en: 'Image {current} of {total}',
+        hy: '{total} պատկերից {current}-ը',
+        ru: 'Изображение {current} из {total}',
+      }),
+      lightbox: t({
+        en: 'Full-size image',
+        hy: 'Պատկերն ամբողջ չափով',
+        ru: 'Изображение во весь экран',
+      }),
+    },
 
     sections: {
       about: t({ en: 'About the product', hy: 'Արտադրանքի մասին', ru: 'О продукте' }),
@@ -82,6 +88,7 @@ const productContent = {
       advantage: t({ en: 'What sets it apart', hy: 'Ինչն է այն տարբերում', ru: 'Чем выделяется' }),
       value: t({ en: 'Business value', hy: 'Բիզնես արժեքը', ru: 'Ценность для бизнеса' }),
       platform: t({ en: 'Platform', hy: 'Հարթակ', ru: 'Платформа' }),
+      category: t({ en: 'Category', hy: 'Կատեգորիա', ru: 'Категория' }),
       next: t({ en: 'Next project', hy: 'Հաջորդ նախագիծը', ru: 'Следующий проект' }),
     },
 
@@ -90,13 +97,13 @@ const productContent = {
         name: t({ en: 'Draculai', hy: 'Draculai', ru: 'Draculai' }),
         category: t({
           en: 'Health & substance tracking',
-          hy: 'Առողջության և նյութերի հետևում',
-          ru: 'Отслеживание здоровья и веществ',
+          hy: 'Առողջության և ընդունվող նյութերի վերահսկում',
+          ru: 'Контроль состояния здоровья и учёт принимаемых веществ',
         }),
         hook: t({
           en: 'FDA-backed substance research and intake tracking, in an app that collects no data at all.',
-          hy: 'FDA-ի տվյալների վրա հիմնված նյութերի ուսումնասիրում և ընդունման հետևում՝ հավելվածում, որը ոչ մի տվյալ չի հավաքում։',
-          ru: 'Исследование веществ на данных FDA и учёт приёма — в приложении, которое не собирает никаких данных.',
+          hy: 'FDA-ի տվյալների հիման վրա նյութերի ուսումնասիրություն և դրանց ընդունման գրանցում՝ հավելվածում, որը ոչ մի տվյալ չի հավաքում։',
+          ru: 'Изучение препаратов и других веществ на основе данных FDA и ведение журнала их приёма — в приложении, которое не собирает никаких данных.',
         }),
         summary: t({
           en: 'An iOS app for researching and logging prescriptions, supplements and other substances, built over FDA drug data.',
@@ -150,7 +157,7 @@ const productContent = {
         category: t({
           en: 'Automotive parts commerce',
           hy: 'Ավտոպահեստամասերի առևտուր',
-          ru: 'Торговля автозапчастями',
+          ru: 'Интернет-магазин автозапчастей',
         }),
         hook: t({
           en: 'Fitment search that matches imported Japanese drivetrains to a specific year, make, model and displacement.',
@@ -223,11 +230,11 @@ const productContent = {
         category: t({
           en: 'Functional beverage commerce',
           hy: 'Ֆունկցիոնալ ըմպելիքների առևտուր',
-          ru: 'Торговля функциональными напитками',
+          ru: 'Интернет-магазин функциональных напитков',
         }),
         hook: t({
           en: 'Build-your-own four-pack bundles and a subscription customers can skip, pause or cancel themselves.',
-          hy: 'Անհատական չորսական փաթեթներ և բաժանորդագրություն, որը հաճախորդն ինքը կարող է բաց թողնել, դադարեցնել կամ չեղարկել։',
+          hy: 'Ցանկացած չորս ապրանքից կազմվող անհատական փաթեթներ և բաժանորդագրություն, որը հաճախորդն ինքը կարող է բաց թողնել, դադարեցնել կամ չեղարկել։',
           ru: 'Собственные наборы из четырёх позиций и подписка, которую клиент сам может пропустить, приостановить или отменить.',
         }),
         summary: t({
@@ -270,7 +277,7 @@ const productContent = {
         about: t({
           en: 'Subscription commerce fails in the same place every time: the customer wants to change an order and has to email somebody. This platform puts that control in the customer’s hands — skipping, pausing and cancelling are described plainly and handled without intervention — and pairs it with a bundle builder that lets any four products be combined into one order across the Hydrate, Energy, Sleep and Immunity lines. The discount for subscribing is 20%. Behind it sits a review corpus of more than twelve thousand verified entries averaging 4.8 out of 5, which is the scale at which merchandising decisions stop being guesswork.',
           hy: 'Բաժանորդագրային առևտուրը միշտ ձախողվում է նույն տեղում. հաճախորդն ուզում է փոխել պատվերը, բայց ստիպված է նամակ գրել։ Այս հարթակը այդ վերահսկողությունը տալիս է հաճախորդին՝ բաց թողնելը, դադարեցնելն ու չեղարկելը նկարագրված են պարզ և կատարվում են առանց միջամտության, և զուգորդում է փաթեթի կառուցիչի հետ, որը թույլ է տալիս մեկ պատվերում միավորել ցանկացած չորս ապրանք Hydrate, Energy, Sleep և Immunity գծերից։ Բաժանորդագրության զեղչը 20% է։ Հետևում կանգնած է ավելի քան տասներկու հազար հաստատված կարծիքի զանգված՝ 4.8/5 միջինով, ինչը այն մասշտաբն է, որից սկսած մերչենդայզինգի որոշումները դադարում են ենթադրություն լինելուց։',
-          ru: 'Подписочная торговля ломается всегда в одном месте: клиент хочет изменить заказ и вынужден кому-то писать. Эта платформа отдаёт управление самому клиенту — пропуск, пауза и отмена описаны прямо и выполняются без вмешательства — и дополняет это конструктором набора, позволяющим собрать в один заказ любые четыре позиции из линеек Hydrate, Energy, Sleep и Immunity. Скидка за подписку — 20%. За всем этим стоит массив из более чем двенадцати тысяч подтверждённых отзывов со средней оценкой 4,8 из 5 — масштаб, на котором мерчандайзинговые решения перестают быть догадками.',
+          ru: 'Подписочная торговля ломается всегда в одном месте: клиент хочет изменить заказ и вынужден кому-то писать. Эта платформа отдаёт управление самому клиенту — пропуск, пауза и отмена описаны прямо и выполняются без вмешательства — и дополняет это конструктором набора, позволяющим собрать в один заказ любые четыре позиции из линеек Hydrate, Energy, Sleep и Immunity. Скидка за подписку — 20%. За всем этим стоит более двенадцати тысяч подтверждённых отзывов со средней оценкой 4,8 из 5 — масштаб, на котором мерчандайзинговые решения перестают быть догадками.',
         }),
         photoAlts: [
           t({
@@ -285,8 +292,8 @@ const productContent = {
           }),
           t({
             en: 'A lemon-lime stick being poured into a tall glass of ice water on a kitchen counter, lemons and limes on a board beside it',
-            hy: 'Կիտրոն-լայմ ստիկը լցնում են սառույցով ցանկացած բարձր բաժակի մեջ՝ խոհանոցի սեղանին, կողքին տախտակի վրա՝ կիտրոններ և լայմեր',
-            ru: 'Стик со вкусом лимона и лайма высыпают в высокий стакан с водой и льдом на кухонной столешнице, рядом на доске лимоны и лаймы',
+            hy: 'Կիտրոն-լայմ համով փոշին լցնում են սառույցով լի բարձր բաժակի մեջ՝ խոհանոցի սեղանին, կողքին տախտակի վրա՝ կիտրոններ և լայմեր',
+            ru: 'Порошок со вкусом лимона и лайма высыпают в высокий стакан с водой и льдом на кухонной столешнице, рядом на доске лимоны и лаймы',
           }),
         ],
       },
@@ -321,7 +328,7 @@ const productContent = {
           }),
           t({
             en: 'Case studies with project counts',
-            hy: 'Քեյսեր՝ նախագծերի քանակով',
+            hy: 'Նախագծերի քանակով ներկայացված իրականացված աշխատանքներ',
             ru: 'Кейсы с числом проектов',
           }),
           t({
@@ -363,13 +370,13 @@ const productContent = {
         }),
         hook: t({
           en: 'A skin test that turns answers into a routine, a kit and a subscription.',
-          hy: 'Մաշկի թեստ, որը պատասխանները վերածում է խնամքի ծրագրի, հավաքածուի և բաժանորդագրության։',
+          hy: 'Մաշկի թեստ, որի պատասխանների հիման վրա ձևավորվում են խնամքի ռեժիմ, ապրանքների հավաքածու և բաժանորդագրություն։',
           ru: 'Тест кожи, превращающий ответы в уход, набор и подписку.',
         }),
         summary: t({
           en: 'Commerce for a Swedish research-led skincare brand, where a diagnostic test drives recommendations, kits and consultations.',
           hy: 'Շվեդական գիտահենք մաշկի խնամքի բրենդի առևտուր, որտեղ ախտորոշիչ թեստը որոշում է առաջարկները, հավաքածուներն ու խորհրդատվությունը։',
-          ru: 'Коммерция шведского научно-ориентированного бренда ухода, где диагностический тест определяет рекомендации, наборы и консультации.',
+          ru: 'Интернет-магазин шведского бренда косметики, основанного на научных исследованиях, где диагностический тест определяет рекомендации, наборы и консультации.',
         }),
         highlights: [
           t({ en: 'Guided skin test', hy: 'Ուղղորդվող մաշկի թեստ', ru: 'Пошаговый тест кожи' }),
@@ -422,28 +429,28 @@ const productContent = {
         category: t({
           en: 'Luxury jewellery commerce',
           hy: 'Շքեղ զարդերի առևտուր',
-          ru: 'Торговля ювелирными изделиями',
+          ru: 'Интернет-магазин ювелирных изделий',
         }),
         hook: t({
           en: 'A ring builder that carries setting, diamond and a running total through every step.',
-          hy: 'Մատանու կառուցիչ, որը յուրաքանչյուր քայլում պահում է ամրակալումը, ադամանդը և ընթացիկ գումարը։',
-          ru: 'Конструктор кольца, который ведёт оправу, бриллиант и текущую сумму через каждый шаг.',
+          hy: 'Մատանու կոնֆիգուրատոր, որը յուրաքանչյուր քայլում պահում է ամրակալումը, ադամանդը և ընթացիկ գումարը։',
+          ru: 'Конфигуратор кольца, который ведёт оправу, бриллиант и текущую сумму через каждый шаг.',
         }),
         summary: t({
           en: 'Commerce for a Michigan jeweller and Swiss watch dealer, pairing a five-axis filter with a step-by-step ring configurator.',
           hy: 'Միչիգանի ոսկերչի և շվեյցարական ժամացույցների դիլերի առևտուր՝ հինգ չափանիշով ֆիլտր և քայլ առ քայլ մատանու կոնֆիգուրատոր։',
-          ru: 'Коммерция ювелира из Мичигана и дилера швейцарских часов: фильтр по пяти осям и пошаговый конфигуратор кольца.',
+          ru: 'Интернет-магазин ювелирного салона из Мичигана и дилера швейцарских часов: фильтр по пяти осям и пошаговый конфигуратор кольца.',
         }),
         highlights: [
           t({
             en: 'Filter by style, shape, metal, designer, price',
-            hy: 'Ֆիլտր՝ ոճ, ձև, մետաղ, դիզայներ, գին',
+            hy: 'Զտում՝ ըստ ոճի, ձևի, մետաղի, դիզայների և գնի',
             ru: 'Фильтр: стиль, форма, металл, дизайнер, цена',
           }),
           t({
             en: 'Setting and diamond builder',
-            hy: 'Ամրակալման և ադամանդի ընտրություն',
-            ru: 'Подбор оправы и бриллианта',
+            hy: 'Օղակի շրջանակի և ադամանդի ընտրություն',
+            ru: 'Выбор оправы и бриллианта',
           }),
           t({
             en: 'Running configuration total',
@@ -464,12 +471,12 @@ const productContent = {
         value: t({
           en: 'High-consideration purchases get a guided path instead of a product grid.',
           hy: 'Երկար մտածված գնումները ստանում են ուղղորդված ուղի՝ ապրանքային ցանցի փոխարեն։',
-          ru: 'Покупки с долгим выбором получают ведомый путь вместо сетки товаров.',
+          ru: 'Покупки с долгим выбором получают пошаговый сценарий вместо сетки товаров.',
         }),
         about: t({
           en: 'Nobody buys an engagement ring from a product grid. The decision is made over several sessions, usually involves two people, and almost always ends in a shop. The platform is built around that: filtering works across five axes at once — style, shape, metal, designer and price — so a long catalogue narrows quickly, and a build-your-ring flow then tracks the chosen setting, the chosen diamond and the running total as the configuration develops. Swiss watches and fashion jewellery sit alongside under the same filters. The journey does not insist on ending at checkout: appointment booking is offered throughout, which matches how this category actually converts.',
-          hy: 'Ոչ ոք նշանադրության մատանի չի գնում ապրանքային ցանցից։ Որոշումը կայացվում է մի քանի այցից, սովորաբար ներգրավում է երկու մարդու և գրեթե միշտ ավարտվում խանութում։ Հարթակը կառուցված է հենց դրա շուրջ. ֆիլտրումն աշխատում է միաժամանակ հինգ առանցքով՝ ոճ, ձև, մետաղ, դիզայներ և գին, ուստի երկար կատալոգն արագ նեղանում է, իսկ մատանու կառուցման ընթացքը հետևում է ընտրված ամրակալմանը, ադամանդին և ընթացիկ գումարին։ Շվեյցարական ժամացույցները և նորաձև զարդերը նույն ֆիլտրերի տակ են։ Ուղին չի պարտադրում ավարտվել վճարմամբ. հանդիպման ամրագրումն առաջարկվում է ամբողջ ընթացքում, ինչը համապատասխանում է այս կատեգորիայի իրական վարքին։',
-          ru: 'Никто не покупает помолвочное кольцо из сетки товаров. Решение принимается за несколько заходов, обычно вовлекает двоих и почти всегда завершается в магазине. Платформа построена вокруг этого: фильтрация работает сразу по пяти осям — стиль, форма, металл, дизайнер и цена, — поэтому длинный каталог быстро сужается, а конструктор кольца ведёт выбранную оправу, выбранный бриллиант и текущую сумму по мере сборки. Швейцарские часы и модные украшения доступны под теми же фильтрами. Путь не обязан заканчиваться оплатой: запись в салон предлагается на всём протяжении, что соответствует тому, как эта категория конвертируется на самом деле.',
+          hy: 'Ոչ ոք նշանադրության մատանի չի գնում ապրանքային ցանցից։ Որոշումը կայացվում է մի քանի այցից, սովորաբար ներգրավում է երկու մարդու և գրեթե միշտ ավարտվում խանութում։ Հարթակը կառուցված է հենց դրա շուրջ. ֆիլտրումն աշխատում է միաժամանակ հինգ առանցքով՝ ոճ, ձև, մետաղ, դիզայներ և գին, ուստի երկար կատալոգն արագ նեղանում է, իսկ մատանու կառուցման ընթացքը հետևում է ընտրված օղակի շրջանակին, ադամանդին և ընթացիկ գումարին։ Շվեյցարական ժամացույցները և նորաձև զարդերը նույն ֆիլտրերի տակ են։ Ուղին չի պարտադրում ավարտվել վճարմամբ. հանդիպման ամրագրումն առաջարկվում է ամբողջ ընթացքում, ինչը համապատասխանում է այս կատեգորիայի իրական վարքին։',
+          ru: 'Никто не покупает помолвочное кольцо из сетки товаров. Решение принимается за несколько заходов, обычно вовлекает двоих и почти всегда завершается в магазине. Платформа построена вокруг этого: фильтрация работает сразу по пяти осям — стиль, форма, металл, дизайнер и цена, — поэтому длинный каталог быстро сужается, а конфигуратор кольца ведёт выбранную оправу, выбранный бриллиант и текущую сумму по мере сборки. Швейцарские часы и модные украшения доступны под теми же фильтрами. Путь не обязан заканчиваться оплатой: запись в салон предлагается на всём протяжении, что соответствует тому, как эта категория конвертируется на самом деле.',
         }),
         photoAlts: [
           t({
@@ -509,13 +516,13 @@ const productContent = {
         summary: t({
           en: 'Commerce for a five-showroom Memphis jeweller: rings, diamonds and bands, with a custom builder and per-location booking.',
           hy: 'Մեմֆիսի հինգ սրահով ոսկերչի առևտուր՝ մատանիներ, ադամանդներ և օղեր, անհատական կառուցիչով և ըստ վայրի ամրագրմամբ։',
-          ru: 'Коммерция ювелира из Мемфиса с пятью салонами: кольца, бриллианты, обручальные кольца, конструктор и запись по салонам.',
+          ru: 'Интернет-магазин ювелирного салона из Мемфиса с пятью салонами: кольца, бриллианты, обручальные кольца, конструктор и запись по салонам.',
         }),
         highlights: [
           t({
             en: 'Design Your Own ring builder',
             hy: '«Ստեղծիր քո մատանին» կառուցիչ',
-            ru: 'Конструктор «создай своё кольцо»',
+            ru: 'Конфигуратор «Создай своё кольцо»',
           }),
           t({
             en: 'Shape, style and metal filters',

@@ -1,0 +1,19 @@
+<a class="product-next__link" [routerLink]="product().path | localizedPath: locale()">
+  <img
+    class="product-next__cover"
+    [src]="product().photos[0].src"
+    [srcset]="product().photos[0].srcset"
+    [attr.sizes]="coverSizes"
+    alt=""
+    [width]="product().photos[0].width"
+    [height]="product().photos[0].height"
+    loading="lazy"
+    decoding="async"
+  />
+  <span class="product-next__copy">
+    <span class="product-next__label">{{ label() }}</span>
+    <span class="product-next__name">{{ product().name }}</span>
+    <span class="product-next__category">{{ product().category }}</span>
+  </span>
+  <mat-icon class="product-next__icon" [svgIcon]="arrowIcon" />
+</a>

@@ -103,6 +103,27 @@ test.describe('accessibility of states the sweep cannot reach on load', () => {
   // the card has no state the sweep above cannot already see. `our-work.touch.spec.ts` covers
   // the one context this file cannot reach: a device where `hover: none` matches.
 
+  /**
+   * The full-size image view, which exists only after a click: the sweeps above never see the
+   * dialog's own tree. A modal `<dialog>` is also where the accessible name and a reachable
+   * close control matter most, because the rest of the page is unreachable while it is up.
+   */
+  test('the full-size image view is accessible while it is open', async ({ page }) => {
+    await page.goto('/our_work/libra-analytics');
+    await ready(page);
+
+    await page.locator('.gallery__viewport').click();
+    await expect(page.locator('dialog.gallery__lightbox')).toBeVisible();
+
+    const { violations } = await analyse(page);
+    expect(
+      violations,
+      `
+    ${summarise(violations)}
+`,
+    ).toEqual([]);
+  });
+
   test('the mobile navigation is accessible while open', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 812 });
     await page.goto('/');
