@@ -1,6 +1,13 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { IMAGES_DIR, MAX_IMAGE_BYTES, checkImages, referencedPhotos } from './verify-images.mjs';
+import {
+  IMAGES_DIR,
+  MAX_IMAGE_BYTES,
+  checkDimensions,
+  checkImages,
+  photoBoxes,
+  referencedPhotos,
+} from './verify-images.mjs';
 
 /**
  * The checker's logic, exercised against made-up trees. The real tree is checked by
@@ -97,5 +104,83 @@ describe('verify-images', () => {
     // Nineteen products, nineteen pictures: a copied file name reads as the same work twice.
     const problems = check({ referenced: ['car.webp', 'car.webp', 'watch.webp'] });
     assert.match(problems.join('\n'), /points more than one product at car\.webp/);
+  });
+});
+
+/**
+ * The dimension rules, which exist because three photographs shipped declared as 1000x667
+ * while being 3000x1500, 1080x1080 and 910x767, and because six "resized" candidates were
+ * really full-size copies. Both classes were invisible to every other rule here - the copies
+ * sat under the per-file budget, so nothing complained.
+ */
+describe('verify-images dimensions', () => {
+  /** @param {number} width @param {number} height @returns {{ width: number, height: number }} */
+  const box = (width, height) => ({ width, height });
+
+  it('reads both declared dimensions out of the registry', () => {
+    const source =
+      "    photos: [{ file: 'control.webp', width: 1080, height: 1080 }, " +
+      "{ file: 'serv.webp', width: 910, height: 767 }],";
+    assert.deepEqual(
+      [...photoBoxes(source)],
+      [
+        ['control.webp', box(1080, 1080)],
+        ['serv.webp', box(910, 767)],
+      ],
+    );
+  });
+
+  it('passes a photograph that is exactly what it claims to be', () => {
+    const declared = new Map([['car.webp', box(1280, 640)]]);
+    const measured = new Map([['car.webp', box(1280, 640)]]);
+    assert.deepEqual(checkDimensions(declared, measured), []);
+  });
+
+  it('catches a declared box that does not match the file', () => {
+    const declared = new Map([['car.webp', box(1000, 667)]]);
+    const measured = new Map([['car.webp', box(3000, 1500)]]);
+    const problems = checkDimensions(declared, measured);
+    assert.equal(problems.length, 1);
+    assert.match(problems[0], /declares car\.webp as 1000x667 but the file is 3000x1500/);
+  });
+
+  it('catches a height that is wrong while the width is right', () => {
+    // The width alone drives the ladder, so a wrong height slips past every width-based rule
+    // and shows up only as the page shifting while the image loads.
+    const declared = new Map([['car.webp', box(1080, 667)]]);
+    const measured = new Map([['car.webp', box(1080, 1080)]]);
+    assert.equal(checkDimensions(declared, measured).length, 1);
+  });
+
+  it('catches a ladder candidate that was never actually resized', () => {
+    const declared = new Map([['car.webp', box(1280, 640)]]);
+    const measured = new Map([
+      ['car.webp', box(1280, 640)],
+      ['car-640.webp', box(1280, 640)],
+    ]);
+    const problems = checkDimensions(declared, measured);
+    assert.equal(problems.length, 1);
+    assert.match(problems[0], /car-640\.webp is named as the 640w candidate but is 1280px wide/);
+  });
+
+  it('passes a ladder candidate resized to the width its name advertises', () => {
+    const declared = new Map([['car.webp', box(1280, 640)]]);
+    const measured = new Map([
+      ['car.webp', box(1280, 640)],
+      ['car-640.webp', box(640, 320)],
+    ]);
+    assert.deepEqual(checkDimensions(declared, measured), []);
+  });
+
+  it('says nothing about a file it could not measure', () => {
+    // Absence and unreadability are `checkImages`' complaints; reporting them twice would
+    // make one broken file look like two problems.
+    const declared = new Map([['car.webp', box(1280, 640)]]);
+    assert.deepEqual(checkDimensions(declared, new Map()), []);
+  });
+
+  it('ignores a dash-number file that belongs to no declared photograph', () => {
+    const measured = new Map([['unrelated-200.webp', box(999, 999)]]);
+    assert.deepEqual(checkDimensions(new Map(), measured), []);
   });
 });

@@ -54,7 +54,10 @@ export class ProductGallery {
   protected readonly total = computed(() => this.shots().length);
   protected readonly many = computed(() => this.total() > 1);
   protected readonly active = computed(() => this.shots()[this.index()]);
-  protected readonly activeSizes = computed(() => lightboxSizes(this.active()));
+  protected readonly activeSizes = computed(() => {
+    const active = this.active();
+    return active === undefined ? null : lightboxSizes(active);
+  });
   protected readonly counter = computed(() => `${this.index() + 1} / ${this.total()}`);
 
   protected readonly position = computed(() =>
@@ -165,6 +168,9 @@ export class ProductGallery {
   }
 
   private lock(): void {
+    if (this.locked) {
+      return;
+    }
     const root = this.document.documentElement;
     this.locked = {
       overflow: root.style.overflow,

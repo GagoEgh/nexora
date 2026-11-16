@@ -12,6 +12,7 @@
     "verify:prerender": "node scripts/verify-prerender.mjs",
     "verify:bundle": "node scripts/verify-bundle-budget.mjs",
     "verify:images": "node scripts/verify-images.mjs",
+    "verify:translations": "node scripts/verify-translations.mjs",
     "images:optimize": "node scripts/optimize-images.mjs",
     "images:products": "node scripts/generate-product-images.mjs",
     "verify:headers": "node scripts/verify-headers.mjs",

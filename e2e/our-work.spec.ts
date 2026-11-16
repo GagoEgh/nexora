@@ -132,6 +132,13 @@ test.describe('the portfolio grid', () => {
     await first.focus();
     await expect(first).toHaveClass(/is-flipped/);
 
+    // The class above is the assertion - focus is what opens the card. This is the precondition
+    // for the three `focus()` calls below: the back face is revealed by a `visibility` transition,
+    // so it trails `is-flipped` by a frame, and `focus()` does not wait for visibility the way the
+    // action methods do. Focusing a still-hidden link silently does nothing and the caret stays on
+    // the card. See `walks card -> detail link -> live link -> next card` for the full mechanism.
+    await expect(first.locator('.project-card__face--back')).toBeVisible();
+
     await first.locator('.project-card__link').focus();
     await expect(first.locator('.project-card__link')).toBeFocused();
     await expect(first).toHaveClass(/is-flipped/);
@@ -161,6 +168,17 @@ test.describe('the portfolio grid', () => {
 
     const first = page.locator(CARD).first();
     await first.focus();
+
+    // Focus flips the card, but the back face is revealed by a `visibility` *transition* rather
+    // than a plain switch (`project-card.scss`: `transition: visibility 2s linear <delay>`, with
+    // the delay zeroed for the back face). A transition reports its from-value at t=0, so for the
+    // first frame after `is-flipped` lands the face is still `visibility: hidden` - and a hidden
+    // subtree holds no tab stops. Tabbing inside that frame moves the caret nowhere, leaving it on
+    // the card, which is what the assertion below then reports as `inactive`.
+    //
+    // Waiting on `is-flipped` would not help: the class is already true by this point, and it is
+    // the painted result that lags it. So wait for the face itself.
+    await expect(first.locator('.project-card__face--back')).toBeVisible();
 
     await page.keyboard.press('Tab');
     await expect(first.locator('.project-card__link')).toBeFocused();
@@ -724,15 +742,23 @@ test.describe('the full-size view', () => {
 
     await page.keyboard.press('Escape');
     await expect(page.locator(LIGHTBOX)).toBeHidden();
-    // `close()` removes the `open` attribute and only then queues the `close` event, so the
-    // dialog reads as hidden a turn before the handler that gives the scrolling back has run.
-    // Focus returning to the stage happens in that same handler, after the unlock, which makes
-    // it the signal to wait on rather than polling the style.
+    // `close()` removes the `open` attribute and only then queues the `close` event, so the dialog
+    // reads as hidden a turn before the handler that gives the scrolling back has run.
+    //
+    // Focus is *not* a usable signal for that handler having run, though it looks like one: the
+    // stage was already the active element before the lightbox opened - the test clicked it - and
+    // `<dialog>` restores focus to wherever it was on close, which happens before Angular's `close`
+    // listener. So the stage reads as focused while the unlock is still a beat away, and a single
+    // read of the style catches `hidden` roughly one run in twelve.
+    //
+    // Poll the thing actually being asserted. This still fails if the lock is genuinely left on -
+    // measured over 12 runs, it always cleared, and never took more than one frame.
     await expect(page.locator(STAGE)).toBeFocused();
-    expect(
-      await page.evaluate(() => getComputedStyle(document.documentElement).overflow),
-      'the page was left unable to scroll',
-    ).not.toContain('hidden');
+    await expect
+      .poll(() => page.evaluate(() => getComputedStyle(document.documentElement).overflow), {
+        message: 'the page was left unable to scroll',
+      })
+      .not.toContain('hidden');
     expect(await page.evaluate(() => window.scrollY), 'the visitor was moved').toBe(before);
 
     await page.evaluate(() => window.scrollBy(0, 200));

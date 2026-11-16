@@ -18,8 +18,8 @@ interface ContactApiResponse {
 }
 
 interface ContactApiErrorBody {
-  readonly message?: string | readonly string[];
-  readonly requestId?: string;
+  readonly message?: string | readonly string[] | undefined;
+  readonly requestId?: string | undefined;
 }
 
 function errorBodyOf(raw: unknown): ContactApiErrorBody {

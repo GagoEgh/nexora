@@ -89,7 +89,7 @@ const qualityCapabilityContent = {
       }),
       items: [
         t({ en: 'UI/UX design', hy: 'UI/UX դիզայն', ru: 'UI/UX-дизайн' }),
-        t({ en: 'Frontend', hy: 'Frontend մշակում', ru: 'Frontend-разработка' }),
+        t({ en: 'Frontend', hy: 'Frontend', ru: 'Frontend' }),
         t({
           en: 'Backend & APIs',
           hy: 'Backend և API-ների մշակում',
@@ -97,16 +97,16 @@ const qualityCapabilityContent = {
         }),
         t({
           en: 'Mobile',
-          hy: 'Բջջային հավելվածների մշակում',
-          ru: 'Разработка мобильных приложений',
+          hy: 'Մոբայլ',
+          ru: 'Мобильная разработка',
         }),
-        t({ en: 'AI engineering', hy: 'AI լուծումների ինժեներիա', ru: 'Разработка AI-решений' }),
+        t({ en: 'AI engineering', hy: 'AI ինժեներիա', ru: 'AI-инженерия' }),
         t({
           en: 'Cloud & DevOps',
           hy: 'Ամպային ենթակառուցվածքներ և DevOps',
           ru: 'Облачная инфраструктура и DevOps',
         }),
-        t({ en: 'QA', hy: 'Որակի ապահովում (QA)', ru: 'Обеспечение качества (QA)' }),
+        t({ en: 'QA', hy: 'QA', ru: 'QA' }),
         t({
           en: 'Solution architecture',
           hy: 'Լուծումների ճարտարապետություն',

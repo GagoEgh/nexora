@@ -123,14 +123,14 @@ export function provideDocumentMeta(): EnvironmentProviders {
       if (!current?.page) {
         return;
       }
-      const page = content().pages[current.page];
+      const pageMeta = content().pages[current.page];
       const localeless = getPathWithoutLocale(current.path);
       const alternates = getMultilingualUrls(localeless);
       const canonical = origin + alternates[locale()];
 
       const entry = override.value() ?? {
-        title: page.title.value,
-        description: page.description.value,
+        title: pageMeta.title.value,
+        description: pageMeta.description.value,
       };
 
       title.setTitle(entry.title);
@@ -221,9 +221,9 @@ export function provideDocumentMeta(): EnvironmentProviders {
           mainEntityOfPage: { '@id': `${canonical}#webpage` },
           ...(work.url ? { url: work.url } : {}),
         });
-        const page = graph.find((node) => node['@id'] === `${canonical}#webpage`);
-        if (page) {
-          Object.assign(page, { mainEntity: { '@id': workId } });
+        const webPageNode = graph.find((node) => node['@id'] === `${canonical}#webpage`);
+        if (webPageNode) {
+          Object.assign(webPageNode, { mainEntity: { '@id': workId } });
         }
       }
 

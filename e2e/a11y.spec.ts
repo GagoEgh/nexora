@@ -1,5 +1,23 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
+import { PRODUCT_IDS } from '../src/app/pages/our-work/products/data/product-ids';
+
+/**
+ * The two product pages that also get the full locale and phone-width sweep: one that links out
+ * to a live product and one with no destination, which render a different set of controls.
+ * Every product page is swept at the default locale by `PRODUCT_PAGES` below.
+ */
+const REPRESENTATIVE_PRODUCTS = ['our_work/draculai', 'our_work/roar-organic'] as const;
+
+/**
+ * Every product page, derived from the route table rather than hand-picked.
+ *
+ * This list used to name two of the nineteen, and the critical violation this suite exists to
+ * catch (three gallery buttons with no accessible name, on `connected-car`) sat on one of the
+ * seventeen that were never swept. Deriving it means a product cannot be added without being
+ * checked.
+ */
+const PRODUCT_PAGES = PRODUCT_IDS.map((id) => `our_work/${id}`);
 
 const PAGES = [
   '',
@@ -11,10 +29,7 @@ const PAGES = [
   'partnerships',
   'contact',
   'our_work',
-  // Two of the nineteen product pages: one that links out to a live product and one that has
-  // no destination, which is the branch that renders a different set of controls.
-  'our_work/draculai',
-  'our_work/roar-organic',
+  ...REPRESENTATIVE_PRODUCTS,
   'not-found',
 ] as const;
 
@@ -72,6 +87,29 @@ test.describe('accessibility at a phone width', () => {
 
       const { violations } = await analyse(browserPage);
       expect(violations, `\n    ${summarise(violations)}\n`).toEqual([]);
+    });
+  }
+});
+
+test.describe('accessibility of every product page', () => {
+  test.use({ viewport: { width: 1440, height: 900 } });
+
+  // The default locale only: a missing `photoAlts` entry shortens the array for all three
+  // locales at once, so it shows up here whichever one is swept. The two representatives above
+  // carry the per-locale and phone-width coverage.
+  for (const page of PRODUCT_PAGES) {
+    const url = urlFor('', page);
+    test(`${url} has no WCAG 2.2 AA violations`, async ({ page: browserPage }) => {
+      await browserPage.goto(url);
+      await ready(browserPage);
+
+      const { violations } = await analyse(browserPage);
+      expect(
+        violations,
+        `
+    ${summarise(violations)}
+`,
+      ).toEqual([]);
     });
   }
 });

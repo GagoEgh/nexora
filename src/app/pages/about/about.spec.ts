@@ -489,7 +489,7 @@ describe('About', () => {
     );
     expect(text('.quality__chip-label').slice(6, 9)).toEqual([
       'UI/UX-дизайн',
-      'Frontend-разработка',
+      'Frontend',
       'Backend-разработка и API',
     ]);
   });

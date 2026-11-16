@@ -2,7 +2,14 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": []
+    "types": [],
+    // Set here rather than in the base config so they cover the code that ships without
+    // reaching the specs and the e2e suite. Both flags are about values that might not be
+    // there, and a test that reads `items[1]` of a list it just rendered knows it is there;
+    // enforcing it across the suites cost 590 non-null assertions and bought nothing, while
+    // the application code needed nine real fixes.
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true
   },
   "include": ["src/**/*.ts", "./intlayer-types/**/*.ts"],
   "exclude": ["src/**/*.spec.ts"]

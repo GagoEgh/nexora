@@ -80,7 +80,11 @@ const servicesCatalogueContent = {
       {
         id: 'saas-development' satisfies ServiceId,
         category: 'software-engineering' satisfies ServiceCategoryId,
-        title: t({ en: 'SaaS Development', hy: 'SaaS մշակում', ru: 'SaaS-разработка' }),
+        title: t({
+          en: 'SaaS Development',
+          hy: 'SaaS լուծումների մշակում',
+          ru: 'Разработка SaaS-продуктов',
+        }),
         summary: t({
           en: 'Multi-tenant products with authentication, subscriptions, payments and admin panels.',
           hy: 'Բազմավարձակալ պրոդուկտներ՝ նույնականացմամբ, բաժանորդագրություններով, վճարումներով և ադմին վահանակներով։',
@@ -154,8 +158,8 @@ const servicesCatalogueContent = {
         category: 'artificial-intelligence' satisfies ServiceCategoryId,
         title: t({
           en: 'AI Agents & Business Automation',
-          hy: 'AI գործակալներ և բիզնես ավտոմատացում',
-          ru: 'AI-агенты и автоматизация бизнеса',
+          hy: 'AI գործակալներ և բիզնես գործընթացների ավտոմատացում',
+          ru: 'AI-агенты и автоматизация бизнес-процессов',
         }),
         summary: t({
           en: 'Multi-step agents and automations for leads, CRM workflows, documents and reporting.',
@@ -249,7 +253,7 @@ const servicesCatalogueContent = {
         category: 'engineering-partnerships' satisfies ServiceCategoryId,
         title: t({
           en: 'Dedicated Development Teams',
-          hy: 'Նվիրված մշակման թիմեր',
+          hy: 'Նախագծին նվիրված մշակման թիմեր',
           ru: 'Выделенные команды разработки',
         }),
         summary: t({
@@ -269,7 +273,7 @@ const servicesCatalogueContent = {
         title: t({
           en: 'White-Label Development',
           hy: 'White-label մշակում',
-          ru: 'White-label разработка',
+          ru: 'White-label-разработка',
         }),
         summary: t({
           en: 'Technical execution for agencies and partners under agreed branding and communication.',

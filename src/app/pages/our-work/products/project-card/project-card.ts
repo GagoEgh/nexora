@@ -36,7 +36,7 @@ export class ProjectCard {
   readonly product = input.required<ProductView>();
   readonly labels = input.required<ProjectCardLabels>();
 
-  private readonly host = inject(ElementRef<HTMLElement>);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly document = inject(DOCUMENT);
 
   protected readonly locale = useLocale().locale;
@@ -44,7 +44,6 @@ export class ProjectCard {
   protected readonly externalIcon = appIcon('arrow-up-right');
 
   protected readonly flipped = signal(false);
-
   private openOnFocus = true;
 
   private openedByFocus = false;

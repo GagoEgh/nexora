@@ -26,8 +26,8 @@ const whyDisciplinesContent = {
           {
             title: t({
               en: 'End-to-end delivery',
-              hy: 'Ամբողջական մատակարարում',
-              ru: 'Полный цикл поставки',
+              hy: 'Նախագծի իրականացում՝ սկզբից մինչև վերջ',
+              ru: 'Полный цикл реализации проекта',
             }),
             description: t({
               en: 'Design, architecture, development, integration, deployment and support from one accountable team, combining disciplines inside a single project when needed.',
@@ -38,8 +38,8 @@ const whyDisciplinesContent = {
           {
             title: t({
               en: 'Business-first approach',
-              hy: 'Բիզնեսից ելնող մոտեցում',
-              ru: 'Подход от бизнеса',
+              hy: 'Բիզնեսի կարիքներից բխող մոտեցում',
+              ru: 'Подход, ориентированный на бизнес',
             }),
             description: t({
               en: 'We start from the problem you need to solve and the constraints you work within, then choose the technology — not the other way round.',
@@ -363,8 +363,8 @@ const whyDisciplinesContent = {
       {
         label: t({
           en: 'Technical leadership',
-          hy: 'Տեխնիկական ղեկավարություն',
-          ru: 'Техническое лидерство',
+          hy: 'Տեխնիկական ղեկավարում',
+          ru: 'Техническое руководство',
         }),
         reasons: [
           {

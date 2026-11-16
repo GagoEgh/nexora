@@ -76,7 +76,7 @@ const engagementModelsContent = {
         description: t({
           en: 'Ongoing product evolution and technical collaboration.',
           hy: 'Արտադրանքի շարունակական զարգացում և երկարաժամկետ տեխնիկական համագործակցություն։',
-          ru: 'Постоянное развитие продукта и долгосрочное техническое сотрудничество.',
+          ru: 'Непрерывное развитие продукта и долгосрочное техническое сотрудничество.',
         }),
         bestFor: t({
           en: 'Products that keep evolving over years.',

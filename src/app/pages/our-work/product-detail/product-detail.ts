@@ -101,7 +101,7 @@ export class ProductDetail {
                 description: product.hook,
                 category: product.category,
                 image: `${this.origin}/${product.photos[0].src}`,
-                url: product.url,
+                ...(product.url !== undefined ? { url: product.url } : {}),
               },
             }
           : undefined,

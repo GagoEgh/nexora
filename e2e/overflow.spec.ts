@@ -39,10 +39,30 @@ const sitemapPaths = (): string[] => {
 
 const PATHS = [...sitemapPaths(), '/no-such-page', '/hy/no-such-page', '/ru/no-such-page'];
 
+/*
+ * One viewport per band the stylesheet actually declares, taken at the band's own minimum,
+ * which is where its grid is tightest and so where it runs out of room first.
+ *
+ * `$breakpoints` in `styles/tokens/_layout.scss` is (compact: 0, medium: 600, expanded: 840,
+ * large: 1200, extra-large: 1600). This list used to be 320/390/840, which swept `compact`
+ * twice, caught `expanded` at its boundary, and never entered `medium`, `large` or
+ * `extra-large` at all - three of the five bands had no regression check of any width.
+ *
+ * The bands are swept rather than device widths like 430 or 1024, because a band is what the
+ * layout switches on: a width that shares a band with one already listed re-tests the same
+ * grid, while a band with no width listed is a grid nothing asserts.
+ *
+ * `extra-large` matters even though there is more room, not less: the container stops growing
+ * at `$container-max` (1280px), so past that point the margins carry the remaining width, and
+ * an element that escapes the container shows up there rather than on a phone.
+ */
 const VIEWPORTS = [
   { label: 'small phone', width: 320, height: 568 },
   { label: 'phone', width: 390, height: 844 },
-  { label: 'tablet', width: 840, height: 900 },
+  { label: 'medium', width: 600, height: 900 },
+  { label: 'expanded', width: 840, height: 900 },
+  { label: 'large', width: 1200, height: 900 },
+  { label: 'extra-large', width: 1600, height: 900 },
 ] as const;
 
 for (const viewport of VIEWPORTS) {

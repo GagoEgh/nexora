@@ -35,8 +35,8 @@ const aiAgentContent = {
     conversation: {
       eyebrow: t({
         en: 'Discuss this service',
-        hy: 'Քննարկենք այս ծառայությունը',
-        ru: 'Обсудим эту услугу',
+        hy: 'Քննարկել այս ծառայությունը',
+        ru: 'Обсудить эту услугу',
       }),
       title: t({
         en: 'Have a process you’d like to automate?',

@@ -211,8 +211,9 @@ export class ContactForm {
       onInvalid: () => this.focusFirstInvalid(),
     });
 
-    if (rejected?.length) {
-      this.focusField(rejected[0]);
+    const firstRejected = rejected?.[0];
+    if (firstRejected !== undefined) {
+      this.focusField(firstRejected);
     }
   }
 

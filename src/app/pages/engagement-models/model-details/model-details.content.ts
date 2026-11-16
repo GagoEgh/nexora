@@ -104,8 +104,8 @@ const modelDetailsContent = {
         icon: 'handshake' satisfies AppIconName,
         title: t({
           en: 'Long-Term Technology Partnership',
-          hy: 'Երկարաժամկետ տեխնոլոգիական գործընկերություն',
-          ru: 'Долгосрочное технологическое партнёрство',
+          hy: 'Երկարաժամկետ գործընկերություն',
+          ru: 'Долгосрочное партнёрство',
         }),
         description: t({
           en: 'Ongoing product evolution and technical collaboration.',
@@ -152,7 +152,7 @@ const modelDetailsContent = {
         }),
         description: t({
           en: 'Continuous support, improvements and agreed technical responsibilities.',
-          hy: 'Շարունակական տեխնիկական աջակցություն, համակարգի բարելավումներ և նախապես համաձայնեցված տեխնիկական պարտավորությունների կատարում։',
+          hy: 'Շարունակական տեխնիկական աջակցություն, համակարգի բարելավումներ և համաձայնեցված պարտավորությունների կատարում։',
           ru: 'Постоянная техническая поддержка, улучшение системы и выполнение согласованных технических обязательств.',
         }),
         steps: [

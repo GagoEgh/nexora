@@ -46,8 +46,8 @@ const headerContent = {
     }),
     aiAgentLink: t({
       en: 'AI Agents & Business Automation',
-      hy: 'AI գործակալներ և բիզնես ավտոմատացում',
-      ru: 'AI-агенты и автоматизация бизнеса',
+      hy: 'AI գործակալներ և բիզնես գործընթացների ավտոմատացում',
+      ru: 'AI-агенты и автоматизация бизнес-процессов',
     }),
     language: t({ en: 'Change language', hy: 'Փոխել լեզուն', ru: 'Сменить язык' }),
     cta: t({ en: "Let's Talk", hy: 'Եկեք խոսենք', ru: 'Давайте обсудим' }),

@@ -106,7 +106,7 @@ const expertiseContent = {
         path: '/services?category=engineering-partnerships',
         title: t({
           en: 'Dedicated Engineering Teams',
-          hy: 'Ձեր նախագծին նվիրված ինժեներական թիմեր',
+          hy: 'Նախագծին նվիրված ինժեներական թիմեր',
           ru: 'Выделенные инженерные команды',
         }),
         description: t({

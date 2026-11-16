@@ -99,8 +99,8 @@ const contactFormContent = {
         value: 'design-product',
         label: t({
           en: 'Design & Product',
-          hy: 'Դիզայն և թվային արտադրանք',
-          ru: 'Дизайн и цифровые продукты',
+          hy: 'Դիզայն և պրոդուկտ',
+          ru: 'Дизайн и продукт',
         }),
       },
       {
@@ -108,7 +108,7 @@ const contactFormContent = {
         label: t({
           en: 'Software Engineering',
           hy: 'Ծրագրային ապահովման մշակում',
-          ru: 'Разработка программного обеспечения',
+          ru: 'Разработка ПО',
         }),
       },
       {
@@ -131,7 +131,7 @@ const contactFormContent = {
         value: 'engineering-partnerships',
         label: t({
           en: 'Engineering Partnerships',
-          hy: 'Ինժեներական համագործակցություն',
+          hy: 'Ինժեներական գործընկերություն',
           ru: 'Инженерное партнёрство',
         }),
       },

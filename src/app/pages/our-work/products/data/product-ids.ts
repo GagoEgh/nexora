@@ -28,4 +28,4 @@ export function isProductId(value: unknown): value is ProductId {
 }
 
 export const matchProductSlug: CanMatchFn = (_route, segments) =>
-  segments.length === 1 && isProductId(segments[0].path);
+  segments.length === 1 && isProductId(segments[0]?.path);

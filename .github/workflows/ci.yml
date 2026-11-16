@@ -28,13 +28,17 @@ jobs:
       - run: npm run verify:seo
       - run: npm run verify:headers
       - run: npm run verify:bundle
+      - run: npm run verify:images
+      - run: npm run verify:translations
       - run: npx playwright install --with-deps chromium
       - run: npm run e2e
       - run: npm run e2e:prerendered
 
+  # `--audit-level=high` is the threshold, so this job is the gate for a high or critical
+  # advisory and stays green on the moderate dev-only ones. It is deliberately not
+  # `continue-on-error`: a job that cannot fail reports nothing.
   audit:
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

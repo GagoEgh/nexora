@@ -100,8 +100,8 @@ function toView(
     about: copy.about.value,
     photos: toImages(meta.photos, copy.photoAlts),
     path: productPath(id),
-    url: meta.url,
-    platform: meta.platform,
+    ...(meta.url !== undefined ? { url: meta.url } : {}),
+    ...(meta.platform !== undefined ? { platform: meta.platform } : {}),
   };
 }
 
@@ -123,5 +123,5 @@ export function toProductView(id: ProductId, copy: ProductsCopy): ProductView {
 
 export function nextProductId(id: ProductId): ProductId {
   const index = PRODUCT_IDS.indexOf(id);
-  return PRODUCT_IDS[(index + 1) % PRODUCT_IDS.length];
+  return PRODUCT_IDS[(index + 1) % PRODUCT_IDS.length] ?? PRODUCT_IDS[0];
 }

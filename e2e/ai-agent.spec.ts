@@ -1171,7 +1171,7 @@ test.describe('ai agents page in other locales', () => {
     );
     await expect(page.locator('.related__eyebrow')).toHaveText('Сопутствующие услуги');
     await expect(page.locator('.service-card__number')).toHaveText(['08', '06', '10']);
-    await expect(page.locator('.start-conversation__eyebrow')).toHaveText('Обсудим эту услугу');
+    await expect(page.locator('.start-conversation__eyebrow')).toHaveText('Обсудить эту услугу');
     await expect(page.locator('app-start-conversation a').nth(1)).toHaveAttribute(
       'href',
       '/ru/services',

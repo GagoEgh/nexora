@@ -38,8 +38,8 @@ const notFoundContent = {
         path: '/engagement-models',
         label: t({
           en: 'Engagement models',
-          hy: 'Համագործակցության մոդելներ',
-          ru: 'Модели сотрудничества',
+          hy: 'Համագործակցության ձևաչափեր',
+          ru: 'Форматы сотрудничества',
         }),
       },
       {

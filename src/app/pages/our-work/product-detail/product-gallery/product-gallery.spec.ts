@@ -309,6 +309,24 @@ describe('ProductGallery', () => {
   });
 
   /**
+   * The lock is taken before `showModal()`, so a second open arriving before the dialog has
+   * painted reaches it. Unguarded, that second call saves the `hidden` the first call had just
+   * written as the value to restore, and the page would never scroll again - the reader would
+   * be stranded with no way back short of a reload.
+   */
+  it('gives the scrolling back after the view is opened twice over', async () => {
+    await render(SHOTS);
+    const stage = root.querySelector<HTMLElement>('.gallery__viewport');
+
+    await click(stage);
+    await click(stage);
+    expect(scrollLock()).toBe('hidden');
+
+    await click(lightbox()?.querySelector<HTMLElement>('.gallery__close'));
+    expect(scrollLock(), 'the page scrolls again after a doubled open').toBe('');
+  });
+
+  /**
    * Every native way out of the dialog ends in a `close` event, which is the one exit the
    * component listens on - so Escape and the browser's own dismissal unlock the page too.
    */

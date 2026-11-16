@@ -17,7 +17,7 @@ const footerContent = {
             path: '/services?category=software-engineering',
             label: t({
               en: 'Software Engineering',
-              hy: 'Ծրագրային ինժեներիա',
+              hy: 'Ծրագրային ապահովման մշակում',
               ru: 'Разработка ПО',
             }),
           },
@@ -37,7 +37,7 @@ const footerContent = {
             path: '/services?category=infrastructure-operations',
             label: t({
               en: 'Infrastructure & Operations',
-              hy: 'Ենթակառուցվածք և շահագործում',
+              hy: 'Ենթակառուցվածքներ և շահագործում',
               ru: 'Инфраструктура и эксплуатация',
             }),
           },
@@ -115,8 +115,8 @@ const footerContent = {
             path: '/engagement-models',
             label: t({
               en: 'Engagement Models',
-              hy: 'Համագործակցության մոդելներ',
-              ru: 'Модели сотрудничества',
+              hy: 'Համագործակցության ձևաչափեր',
+              ru: 'Форматы сотрудничества',
             }),
           },
           {

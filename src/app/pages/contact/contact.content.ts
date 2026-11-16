@@ -5,7 +5,7 @@ const contactContent = {
   content: {
     breadcrumbLabel: t({
       en: 'Breadcrumb',
-      hy: 'Նավիգացիոն ուղի',
+      hy: 'Նավիգացիոն շղթա',
       ru: 'Навигационная цепочка',
     }),
     breadcrumbHome: t({ en: 'Home', hy: 'Գլխավոր', ru: 'Главная' }),

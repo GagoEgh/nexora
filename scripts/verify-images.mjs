@@ -1,5 +1,6 @@
 import { readdir, readFile, stat } from 'node:fs/promises';
 import { join, parse } from 'node:path';
+import sharp from 'sharp';
 import { variantFiles } from './image-ladder.mjs';
 import { exit } from 'node:process';
 
@@ -30,13 +31,54 @@ export function photoWidths(source) {
   );
 }
 
-/**
- * @param {string[]} files - every file in public/images
- * @param {string[]} referenced - the photographs the registry names
- * @param {Map<string, number>} sizes - each file's size in bytes
- * @param {Map<string, number>} [widths] - each photograph's intrinsic width
- * @returns {string[]} one line per problem, empty when the set is sound
- */
+export function photoBoxes(source) {
+  return new Map(
+    [...source.matchAll(/file:\s*'([^']+)',\s*width:\s*(\d+),\s*height:\s*(\d+)/g)].map((match) => [
+      match[1],
+      { width: Number(match[2]), height: Number(match[3]) },
+    ]),
+  );
+}
+
+export function checkDimensions(declared, measured) {
+  /** @type {string[]} */
+  const problems = [];
+
+  for (const [file, box] of declared) {
+    const actual = measured.get(file);
+    if (!actual) {
+      continue; // Absence is already reported by `checkImages`; not this rule's business.
+    }
+    if (actual.width !== box.width || actual.height !== box.height) {
+      problems.push(
+        `${META_FILE} declares ${file} as ${box.width}x${box.height} but the file is ` +
+          `${actual.width}x${actual.height} - the reserved box and its srcset descriptors are ` +
+          `both wrong; correct the registry to the measured size`,
+      );
+    }
+  }
+
+  for (const [file, actual] of measured) {
+    const variant = /^(.*)-(\d+)\.webp$/.exec(file);
+    if (!variant) {
+      continue;
+    }
+    const origin = `${variant[1]}.webp`;
+    const step = Number(variant[2]);
+    if (!declared.has(origin)) {
+      continue; // Not a ladder variant of a known photograph.
+    }
+    if (actual.width !== step) {
+      problems.push(
+        `${file} is named as the ${step}w candidate but is ${actual.width}px wide - it was ` +
+          `never resized; delete it and run \`npm run images:optimize\``,
+      );
+    }
+  }
+
+  return problems;
+}
+
 export function checkImages(files, referenced, sizes, widths = new Map()) {
   /** @type {string[]} */
   const problems = [];
@@ -115,12 +157,29 @@ async function main() {
   const registry = await readFile(META_FILE, 'utf8');
   const referenced = referencedPhotos(registry);
   const widths = photoWidths(registry);
+  const declared = photoBoxes(registry);
   if (referenced.length === 0) {
     console.error(`[verify-images] found no photographs in ${META_FILE}; the check is vacuous`);
     exit(1);
   }
 
-  const problems = checkImages(files, referenced, sizes, widths);
+  /** @type {Map<string, { width: number, height: number }>} */
+  const measured = new Map();
+  for (const file of files) {
+    try {
+      const { width, height } = await sharp(join(IMAGES_DIR, file)).metadata();
+      if (typeof width === 'number' && typeof height === 'number') {
+        measured.set(file, { width, height });
+      }
+    } catch {
+      // Unreadable or not an image; `checkImages` owns that complaint.
+    }
+  }
+
+  const problems = [
+    ...checkImages(files, referenced, sizes, widths),
+    ...checkDimensions(declared, measured),
+  ];
   if (problems.length > 0) {
     console.error('[verify-images] problems:');
     for (const problem of problems) {

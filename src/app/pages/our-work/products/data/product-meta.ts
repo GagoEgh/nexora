@@ -194,12 +194,10 @@ export const PRODUCT_META: Readonly<Record<ProductId, ProductMeta>> = {
     archetype: 'app',
     photos: [
       { file: 'infiniti.webp', width: 800, height: 450 },
-      { file: 'infin.webp', width: 1000, height: 667 },
-      { file: 'control.webp', width: 1000, height: 667 },
-      { file: 'serv.webp', width: 1000, height: 667 },
+      { file: 'infin.webp', width: 1280, height: 640 },
+      { file: 'control.webp', width: 1080, height: 1080 },
+      { file: 'serv.webp', width: 910, height: 767 },
     ],
-    url: 'https://apps.apple.com/us/app/myinfiniti-app/id1529917696',
-    platform: 'Android · Google Play',
   },
 };
 

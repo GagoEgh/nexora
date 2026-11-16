@@ -452,7 +452,7 @@ describe('AiAgent', () => {
     );
     expect(text('.service-card__title')[1]).toBe('Backend-разработка и интеграция API');
     expect(root.querySelector('.start-conversation__eyebrow')?.textContent?.trim()).toBe(
-      'Обсудим эту услугу',
+      'Обсудить эту услугу',
     );
     expect(
       Array.from(root.querySelectorAll('app-start-conversation a')).map((a) =>
@@ -494,7 +494,7 @@ describe('AiAgent', () => {
       'Առնչվող ծառայություններ',
     );
     expect(root.querySelector('.start-conversation__eyebrow')?.textContent?.trim()).toBe(
-      'Քննարկենք այս ծառայությունը',
+      'Քննարկել այս ծառայությունը',
     );
     expect(
       Array.from(root.querySelectorAll('.page-intro__crumb-link')).map((a) =>

@@ -30,8 +30,8 @@ const relatedServicesContent = {
           icon: 'target' satisfies AppIconName,
           title: t({
             en: 'Project-Based',
-            hy: 'Նախագծային համագործակցություն',
-            ru: 'Проектный формат',
+            hy: 'Նախագծային մշակում',
+            ru: 'Проектная разработка',
           }),
           text: t({
             en: 'Scoped first automation',

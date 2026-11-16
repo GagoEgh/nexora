@@ -50,8 +50,7 @@ export class Header {
   protected readonly i18n = useLocaleSwitcher();
   protected readonly menuOpen = signal(false);
 
-  private navigations = 0;
-  private openedAtNavigation = 0;
+  private closeOnArrival = false;
   protected readonly exact = { exact: true } as const;
   protected readonly chevronIcon = appIcon('chevron-down');
   protected readonly aiAgentPath = AI_AGENT_PATH;
@@ -79,8 +78,8 @@ export class Header {
   constructor() {
     this.router.events.pipe(takeUntilDestroyed()).subscribe((event) => {
       if (event instanceof NavigationStart) {
-        this.navigations += 1;
-      } else if (event instanceof NavigationEnd && this.navigations > this.openedAtNavigation) {
+        this.closeOnArrival = this.menuOpen();
+      } else if (event instanceof NavigationEnd && this.closeOnArrival) {
         this.closeMenu();
       }
     });
@@ -88,18 +87,16 @@ export class Header {
 
   protected toggleMenu(): void {
     this.menuOpen.update((open) => !open);
-
-    if (this.menuOpen()) {
-      this.openedAtNavigation = this.navigations;
-    }
+    this.closeOnArrival = false;
   }
 
   protected closeMenu(): void {
     this.menuOpen.set(false);
+    this.closeOnArrival = false;
   }
 
   private pathWithoutLocale(): string {
-    return getPathWithoutLocale(this.router.url.split(/[?#]/)[0]);
+    return getPathWithoutLocale(this.router.url.replace(/[?#].*$/, ''));
   }
 
   protected onEscape(): void {

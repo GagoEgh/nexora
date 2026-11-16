@@ -35,8 +35,8 @@ const aboutContent = {
       }),
       primaryCta: t({
         en: 'Discuss Your Project',
-        hy: 'Քննարկենք ձեր նախագիծը',
-        ru: 'Обсудить проект',
+        hy: 'Քննարկել ձեր նախագիծը',
+        ru: 'Обсудить ваш проект',
       }),
       secondaryCta: t({
         en: 'Engagement models',

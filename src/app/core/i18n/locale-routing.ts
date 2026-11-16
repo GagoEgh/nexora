@@ -12,8 +12,10 @@ import {
 
 const prefixedLocales: readonly string[] = locales.filter((locale) => locale !== defaultLocale);
 
-export const matchLocalePrefix: CanMatchFn = (_route, segments) =>
-  segments.length > 0 && prefixedLocales.includes(segments[0].path);
+export const matchLocalePrefix: CanMatchFn = (_route, segments) => {
+  const [first] = segments;
+  return first !== undefined && prefixedLocales.includes(first.path);
+};
 
 export const syncLocaleWithUrl: CanActivateFn = (_route, state) => {
   const router = inject(Router);
