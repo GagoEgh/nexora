@@ -18,7 +18,6 @@ const ICON_SVG =
 const FIRST = PRODUCT_IDS[0];
 const SECOND = PRODUCT_IDS[1];
 const LAST = PRODUCT_IDS[PRODUCT_IDS.length - 1];
-
 /**
  * One parameterised route stands behind fifty-seven prerendered pages, so the things worth
  * pinning are the ones that differ per slug: which product is shown, what the document head is
@@ -175,20 +174,14 @@ describe('ProductDetail', () => {
     expect(root.querySelectorAll('.gallery__thumb-button[aria-current="true"]')).toHaveLength(1);
   });
 
-  /**
-   * Eleven of the nineteen carry one photograph. A slider with one slide has nothing to
-   * navigate, so it renders no arrows, no counter and no strip rather than a disabled set of
-   * them.
+  /*
+   * There was a test here for a product with a single photograph. Every product in the registry
+   * now carries at least two, so the state it asserted cannot be reached through any route and
+   * the test could only have been made to pass by weakening what it claimed. The branch itself
+   * is still covered, and more closely than this test managed, by `product-gallery.spec.ts`,
+   * which hands the component a one-element array directly instead of hunting the registry for
+   * a product that happens to be shaped right.
    */
-  it('renders no navigation for a product with a single photograph', async () => {
-    await go(`/${OUR_WORK_SEGMENT}/${FIRST}`);
-
-    expect(PRODUCT_META[FIRST].photos, `${FIRST} is the fixture for this test`).toHaveLength(1);
-    expect(root.querySelectorAll('.gallery__img')).toHaveLength(1);
-    expect(root.querySelector('.gallery__nav'), 'nothing to navigate to').toBeNull();
-    expect(root.querySelector('.gallery__thumbs'), 'nothing to pick from').toBeNull();
-    expect(root.querySelector('.gallery__counter'), 'nothing to count').toBeNull();
-  });
 
   /**
    * The `sizes` attribute is per photograph, not per page: the stage contains each picture at

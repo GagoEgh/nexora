@@ -41,7 +41,11 @@ export interface ProductMeta {
 export const PRODUCT_META: Readonly<Record<ProductId, ProductMeta>> = {
   draculai: {
     archetype: 'app',
-    photos: [{ file: 'medical.webp', width: 800, height: 450 }],
+    photos: [
+      { file: 'medical.webp', width: 800, height: 450 },
+      { file: 'draculai-substance.webp', width: 822, height: 618 },
+      { file: 'draculai-vitals.webp', width: 1024, height: 1024 },
+    ],
     url: 'https://apps.apple.com/us/app/draculai/id6744846504',
     platform: 'iOS · App Store',
   },
@@ -67,13 +71,22 @@ export const PRODUCT_META: Readonly<Record<ProductId, ProductMeta>> = {
   },
   mertel: {
     archetype: 'corporate',
-    photos: [{ file: 'mertal.webp', width: 800, height: 420 }],
+    photos: [
+      { file: 'mertal.webp', width: 800, height: 420 },
+      { file: 'mertel-pavilion.webp', width: 1280, height: 960 },
+      { file: 'mertel-recital.webp', width: 1280, height: 853 },
+      { file: 'mertel-soiree.webp', width: 800, height: 999 },
+    ],
     url: 'https://mertel.agency/sk/en/',
     platform: 'WordPress',
   },
   skinome: {
     archetype: 'storefront',
-    photos: [{ file: 'skay.webp', width: 800, height: 533 }],
+    photos: [
+      { file: 'skay.webp', width: 800, height: 533 },
+      { file: 'skinome-range.webp', width: 1120, height: 1120 },
+      { file: 'skinome-formulation.webp', width: 1024, height: 1024 },
+    ],
     url: 'https://www.skinome.com/',
     platform: 'Shopify',
   },
@@ -98,7 +111,13 @@ export const PRODUCT_META: Readonly<Record<ProductId, ProductMeta>> = {
   },
   casamance: {
     archetype: 'trade',
-    photos: [{ file: 'interier.webp', width: 800, height: 437 }],
+    photos: [
+      { file: 'interier.webp', width: 800, height: 437 },
+      { file: 'casamance-showroom.webp', width: 800, height: 530 },
+      { file: 'casamance-swatches.webp', width: 1120, height: 747 },
+      { file: 'casamance-moodboard.webp', width: 1000, height: 1000 },
+      { file: 'casamance-wallcovering.webp', width: 900, height: 731 },
+    ],
     url: 'https://www.casamance.com/en/',
   },
   'sell-me-watch': {
@@ -114,7 +133,10 @@ export const PRODUCT_META: Readonly<Record<ProductId, ProductMeta>> = {
   },
   'klinik-europe': {
     archetype: 'lead-generation',
-    photos: [{ file: 'klinik.webp', width: 800, height: 463 }],
+    photos: [
+      { file: 'klinik.webp', width: 800, height: 463 },
+      { file: 'klinik-europe-hotel.webp', width: 1200, height: 720 },
+    ],
     url: 'https://klinikeurope.co.uk/',
   },
   'libra-analytics': {
@@ -131,7 +153,11 @@ export const PRODUCT_META: Readonly<Record<ProductId, ProductMeta>> = {
   },
   'remake-templates': {
     archetype: 'storefront',
-    photos: [{ file: 'muzic.webp', width: 800, height: 450 }],
+    photos: [
+      { file: 'muzic.webp', width: 800, height: 450 },
+      { file: 'remake-templates-project.webp', width: 1200, height: 675 },
+      { file: 'remake-templates-subscription.webp', width: 986, height: 990 },
+    ],
     url: 'https://remaketemplates.com/',
     platform: 'Shopify',
   },
@@ -175,7 +201,11 @@ export const PRODUCT_META: Readonly<Record<ProductId, ProductMeta>> = {
   },
   'tai-ping': {
     archetype: 'trade',
-    photos: [{ file: 'market.webp', width: 800, height: 453 }],
+    photos: [
+      { file: 'market.webp', width: 800, height: 453 },
+      { file: 'tai-ping-produce.webp', width: 480, height: 360 },
+      { file: 'tai-ping-distribution.webp', width: 1000, height: 667 },
+    ],
     url: 'https://www.taiping.co.nz/',
   },
   mezave: {

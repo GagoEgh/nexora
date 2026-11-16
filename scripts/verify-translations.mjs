@@ -38,6 +38,16 @@ export const DELIBERATE_DIVERGENCES = [
   },
 ];
 
+/**
+ * Collapses a dictionary tree to one locale's rendering.
+ *
+ * The return type is annotated because the function recurses: without it the checker cannot
+ * infer a type for a value defined in terms of itself.
+ *
+ * @param {unknown} node - a dictionary node, or any value inside one
+ * @param {string} locale
+ * @returns {unknown}
+ */
 export function forLocale(node, locale) {
   if (node === null || typeof node !== 'object') {
     return node;
@@ -63,6 +73,20 @@ export function forLocale(node, locale) {
   return out;
 }
 
+/**
+ * @typedef {object} Leaf
+ * @property {string} path - dotted path to the string within its dictionary
+ * @property {string} source - the English string
+ * @property {Record<string, string>} targets - the rendering per target locale
+ */
+
+/**
+ * @param {unknown} source - the source-locale tree
+ * @param {Record<string, unknown>} targets - the same tree per target locale
+ * @param {string} path - dotted path walked so far
+ * @param {(leaf: Leaf) => void} emit - called once per string reached in every locale
+ * @returns {void}
+ */
 export function walkLeaves(source, targets, path, emit) {
   if (typeof source === 'string') {
     /** @type {Record<string, string>} */
@@ -99,6 +123,12 @@ export function walkLeaves(source, targets, path, emit) {
   }
 }
 
+/**
+ * English string -> locale -> rendering -> the dictionary paths that produce it.
+ *
+ * @param {readonly { key: string, content: unknown }[]} dictionaries
+ * @returns {Map<string, Map<string, Map<string, string[]>>>}
+ */
 export function collectRenderings(dictionaries) {
   /** @type {Map<string, Map<string, Map<string, string[]>>>} */
   const byEnglish = new Map();

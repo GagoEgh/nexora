@@ -31,6 +31,12 @@ export function photoWidths(source) {
   );
 }
 
+/**
+ * The declared box for every photograph, as `product-meta.ts` states it.
+ *
+ * @param {string} source - the text of product-meta.ts
+ * @returns {Map<string, { width: number, height: number }>}
+ */
 export function photoBoxes(source) {
   return new Map(
     [...source.matchAll(/file:\s*'([^']+)',\s*width:\s*(\d+),\s*height:\s*(\d+)/g)].map((match) => [
@@ -40,6 +46,11 @@ export function photoBoxes(source) {
   );
 }
 
+/**
+ * @param {Map<string, { width: number, height: number }>} declared - from `photoBoxes`
+ * @param {Map<string, { width: number, height: number }>} measured - read off the files
+ * @returns {string[]}
+ */
 export function checkDimensions(declared, measured) {
   /** @type {string[]} */
   const problems = [];
@@ -79,6 +90,13 @@ export function checkDimensions(declared, measured) {
   return problems;
 }
 
+/**
+ * @param {readonly string[]} files - every file present in the images directory
+ * @param {readonly string[]} referenced - every photograph `product-meta.ts` points at
+ * @param {Map<string, number>} sizes - file sizes in bytes
+ * @param {Map<string, number>} [widths] - declared width per photograph, for the ladder
+ * @returns {string[]}
+ */
 export function checkImages(files, referenced, sizes, widths = new Map()) {
   /** @type {string[]} */
   const problems = [];

@@ -195,7 +195,12 @@ describe('ProductGallery', () => {
     expect(status()).toBe('Image 2 of 3');
   });
 
-  /** Eleven of the nineteen products carry one photograph; there is nothing to operate there. */
+  /**
+   * A gallery of one has nothing to operate. No product in the registry carries a single
+   * photograph any longer, so this synthetic case is the only place the branch is exercised -
+   * which is the right place for it: the behaviour belongs to the component, not to whichever
+   * product happens to be shaped that way this week.
+   */
   it('offers no controls for a single photograph', async () => {
     await render([SHOTS[0]]);
 

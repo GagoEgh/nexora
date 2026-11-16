@@ -430,9 +430,6 @@ const LIGHTBOX = 'dialog.gallery__lightbox';
 const MANY = '/our_work/libra-analytics';
 /** Upright, square and landscape in one gallery: the shapes the band has to hold. */
 const SHAPES = '/our_work/mezave';
-/** One photograph, which is eleven of the nineteen. */
-const ONE = '/our_work/draculai';
-
 /** The route has rendered and the picture on the stage has actually arrived. */
 const galleryReady = async (page: Page, path: string) => {
   await page.goto(path);
@@ -571,16 +568,13 @@ test.describe('walking through the photographs', () => {
     expect(await page.locator(`${THUMB}[aria-current="true"]`).count()).toBe(1);
   });
 
-  /** Eleven of the nineteen products carry one photograph; there is nothing to operate there. */
-  test('offers no controls for a product with one photograph', async ({ page }) => {
-    await galleryReady(page, ONE);
-
-    await expect(page.locator(SLIDE)).toHaveCount(1);
-    await expect(page.locator('.gallery__nav')).toHaveCount(0);
-    await expect(page.locator(STRIP)).toHaveCount(0);
-    await expect(page.locator(COUNTER)).toHaveCount(0);
-    await expect(page.locator(STAGE), 'the picture still opens full size').toBeVisible();
-  });
+  /*
+   * There was a test here for a product with one photograph, which renders no arrows, no strip
+   * and no counter. No product carries a single photograph any more, so there is no page left
+   * in the build that reaches that state; the check is kept in `product-gallery.spec.ts`, where
+   * the component is given one photograph directly rather than through whichever product
+   * happened to have one.
+   */
 
   /** The first slide is this page's LCP image; the rest are a click away at most. */
   test('loads the first photograph eagerly and defers the others', async ({ page }) => {

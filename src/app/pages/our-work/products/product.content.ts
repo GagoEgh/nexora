@@ -149,6 +149,16 @@ const productContent = {
             hy: 'Հեռախոս մուգ կապույտ ֆոնին՝ առողջապահական հավելվածով. վահան ու կողպեք՝ սյունակային գծապատկերի վերևում, ապա դեղապատիճների ցանկ՝ յուրաքանչյուրը նշված, կողքին՝ լողացող մոլեկուլային մոդելներ',
             ru: 'Телефон на тёмно-синем фоне с приложением для здоровья: щит с замком над столбчатым графиком, ниже список капсул с отметками, рядом парят молекулярные модели',
           }),
+          t({
+            en: 'A substance record in the app: the heading Ethanol above its chemical formula and molecular weight, a short description, a ball-and-stick molecular model with the carbon, hydrogen and oxygen counts listed beside it, and a table giving the IUPAC name, CAS number and category',
+            hy: 'Նյութի գրառումը հավելվածում՝ «Ethanol» վերնագիրը քիմիական բանաձևի և մոլեկուլային զանգվածի վերևում, կարճ նկարագրություն, գնդիկ-ձողիկ մոլեկուլային մոդել՝ կողքին ածխածնի, ջրածնի և թթվածնի քանակները, և աղյուսակ՝ IUPAC անվանումով, CAS համարով և կատեգորիայով',
+            ru: 'Карточка вещества в приложении: заголовок «Ethanol» над химической формулой и молекулярной массой, краткое описание, шаростержневая модель молекулы с числом атомов углерода, водорода и кислорода рядом, и таблица с названием IUPAC, номером CAS и категорией',
+          }),
+          t({
+            en: 'A phone on a dark background under the title Health Monitor, with a glass panel floating across it: a heart-rate trace in green and blue, counters for vitals, steps and sleep, and three tiles below for blood pressure, oxygen level and activity',
+            hy: 'Հեռախոս մուգ ֆոնին՝ «Health Monitor» վերնագրի ներքո, վրան՝ լողացող ապակյա վահանակ. սրտի զարկերի կանաչ-կապույտ գրաֆիկ, ցուցիչներ՝ կենսանշանների, քայլերի և քնի համար, ներքևում՝ երեք սալիկ՝ արյան ճնշում, թթվածնի մակարդակ և ակտիվություն',
+            ru: 'Телефон на тёмном фоне под заголовком «Health Monitor», поверх него парит стеклянная панель: зелёно-синий график пульса, счётчики показателей, шагов и сна, а ниже три плитки — давление, уровень кислорода и активность',
+          }),
         ],
       },
 
@@ -358,6 +368,21 @@ const productContent = {
             hy: 'Կլոր ապակե-փայտե տաղավար՝ գիշերը ներսից լուսավորված, դիմացի բազմությունը՝ երկար փակույթից մշուշոտ, մի կողմում՝ ազգային դրոշներ',
             ru: 'Круглый павильон из стекла и дерева, подсвеченный изнутри ночью, толпа перед ним размыта длинной выдержкой, сбоку национальные флаги',
           }),
+          t({
+            en: 'The same pavilion by day: a mirror-clad cube in front of it reflecting the plaza and the visitors crossing it, a curved glass-and-timber drum rising behind, and a ribbed wooden pavilion with flagpoles further along',
+            hy: 'Նույն տաղավարը ցերեկը՝ դիմացը հայելապատ խորանարդ, որն արտացոլում է հրապարակն ու այն հատող այցելուներին, հետևում՝ կորագիծ ապակե-փայտե գլան, իսկ ավելի հեռու՝ կողածածկ փայտե տաղավար՝ դրոշակաձողերով',
+            ru: 'Тот же павильон днём: перед ним куб в зеркальной облицовке, отражающий площадь и идущих по ней посетителей, позади — изогнутый барабан из стекла и дерева, а дальше — рёбристый деревянный павильон с флагштоками',
+          }),
+          t({
+            en: 'A recital inside the pavilion: a pianist at a grand piano and a cellist playing to an audience seated in rows, two national flags beside the stage, and more guests watching from a mesh-railed gallery above',
+            hy: 'Համերգ տաղավարի ներսում՝ ռոյալի մոտ նվագողը և թավջութակահարը՝ շարքերով նստած հանդիսատեսի առջև, բեմի կողքին՝ երկու ազգային դրոշ, իսկ վերևում՝ ցանցապատ պատշգամբից դիտող հյուրեր',
+            ru: 'Концерт внутри павильона: за роялем и с виолончелью два музыканта играют перед сидящей рядами публикой, у сцены два национальных флага, а сверху, с галереи за сетчатым ограждением, смотрят ещё гости',
+          }),
+          t({
+            en: 'A case-study sheet for a business soirée: the agency wordmark at the top over six photographs - a stage beneath a lit event screen, a performance at a microphone, guests posing by a floral installation, a facade washed in magenta light, a table detail and a branded bottle display',
+            hy: 'Գործարար երեկույթի մասին պատմող թերթիկ՝ վերևում գործակալության բառանշանը, ներքևում՝ վեց լուսանկար. բեմ՝ լուսավորված էկրանի ներքո, ելույթ՝ խոսափողի մոտ, հյուրեր՝ ծաղկային կոմպոզիցիայի մոտ, մագենտա լույսով ողողված ճակատ, սեղանի մանրամասն և ապրանքանիշով շշի ցուցադրություն',
+            ru: 'Лист кейса о деловом приёме: сверху словесный знак агентства, ниже шесть снимков — сцена под светящимся экраном, выступление у микрофона, гости у цветочной инсталляции, фасад в пурпурной подсветке, деталь сервировки и витрина с фирменной бутылкой',
+          }),
         ],
       },
 
@@ -416,6 +441,16 @@ const productContent = {
             en: 'Three skincare serums - one dropper bottle and two pumps - standing on a slab of travertine against a pale backdrop, with dried wheat and white wildflowers around them',
             hy: 'Մաշկի խնամքի երեք շիճուկ՝ մեկը կաթոցիկով, երկուսը պոմպով, տրավերտինի սալի վրա՝ գունատ ֆոնի դիմաց, շուրջը՝ չորացած ցորեն և սպիտակ վայրի ծաղիկներ',
             ru: 'Три сыворотки для ухода за кожей — один флакон с пипеткой и два с помпой — на травертиновой плите на светлом фоне, вокруг сухие колосья и белые полевые цветы',
+          }),
+          t({
+            en: 'Three pump bottles standing in a row, each printed with a circle of colour over a drawn cross-section of skin - mint, peach and magenta - and named underneath as a mineral cleanser, a rich emulsion and a probiotic concentrate',
+            hy: 'Երեք պոմպով շիշ՝ շարքով կանգնած, յուրաքանչյուրի վրա՝ գունավոր շրջան՝ մաշկի գծանկար կտրվածքի վրա՝ անանուխի, դեղձի և մուգ վարդագույն, իսկ ներքևում՝ անվանումները՝ հանքային մաքրող միջոց, հարուստ էմուլսիա և պրոբիոտիկ խտանյութ',
+            ru: 'Три флакона с помпой стоят в ряд, на каждом — цветной круг поверх рисованного среза кожи, мятный, персиковый и пурпурный, а снизу названия: минеральный очищающий гель, насыщенная эмульсия и пробиотический концентрат',
+          }),
+          t({
+            en: 'A formulator in a white coat, safety glasses and gloves stirring a white emulsion in a beaker at a steel bench, with a precision balance, a petri dish and an open notebook of handwritten chemical structures alongside',
+            hy: 'Բաղադրատու մասնագետը՝ սպիտակ խալաթով, պաշտպանիչ ակնոցով և ձեռնոցներով, պողպատե սեղանի մոտ խառնում է սպիտակ էմուլսիան բաժակում, կողքին՝ ճշգրիտ կշեռք, Պետրիի թաս և բաց տետր՝ ձեռագիր քիմիական բանաձևերով',
+            ru: 'Специалист в белом халате, защитных очках и перчатках размешивает белую эмульсию в стакане за стальным столом, рядом — прецизионные весы, чашка Петри и раскрытая тетрадь с записанными от руки химическими формулами',
           }),
         ],
       },
@@ -621,6 +656,26 @@ const productContent = {
             hy: 'Հաուսմանյան ոճի հյուրասենյակ՝ հատակին հասնող վարագույրներ բարձր պատշգամբի պատուհանների մոտ, կոր կրեմագույն բազմոց՝ ձկնոսկր դասավորությամբ մանրահատակին, մարմարե բուխարի՝ ոսկեզօծ հայելու տակ',
             ru: 'Гостиная в османовском стиле: длинные шторы у высоких балконных окон, изогнутый кремовый диван на паркете «ёлочкой» и мраморный камин под золочёным зеркалом',
           }),
+          t({
+            en: 'The showroom: lengths of patterned fabric hung in a long row beneath a vaulted timber ceiling, globe pendants over a central counter laid with sample books, and display panels and boxed samples along the far wall',
+            hy: 'Ցուցասրահը՝ նախշազարդ գործվածքների երկար շարք՝ կամարակապ փայտե առաստաղի ներքո, գնդաձև լուսատուներ՝ նմուշների ալբոմներով կենտրոնական սեղանի վերևում, իսկ հեռու պատին՝ ցուցափեղկեր և տուփերով նմուշներ',
+            ru: 'Шоурум: отрезы узорчатых тканей висят длинным рядом под сводчатым деревянным потолком, шаровидные светильники над центральной стойкой с альбомами образцов, а у дальней стены — экспозиционные панели и образцы в коробках',
+          }),
+          t({
+            en: 'Fabric swatches laid out overlapping: cream and oatmeal wools, teal and gold velvets, a black-and-white houndstooth check and a plain black weave, with two printed cards naming the houses the samples come from',
+            hy: 'Գործվածքների նմուշներ՝ իրար վրա շարված. կաթնագույն և վարսակագույն բրդեղեն, փիրուզագույն և ոսկեգույն թավշեղեն, սև-սպիտակ վանդակավոր և հարթ սև հյուսվածք, կողքին՝ երկու տպագիր քարտ՝ նմուշների տների անուններով',
+            ru: 'Образцы тканей, разложенные внахлёст: кремовая и овсяная шерсть, бирюзовый и золотой бархат, чёрно-белая «гусиная лапка» и гладкое чёрное полотно, рядом — две печатные карточки с названиями домов, чьи это образцы',
+          }),
+          t({
+            en: 'A designer’s mood board: toile de Jouy in aqua and brown layered with gold damask, a striped wallpaper and a herringbone weave, beside a card of blue colour chips, a moulding sample and printed interior photographs',
+            hy: 'Դիզայների տրամադրության տախտակը՝ ջրագույն և շագանակագույն տուալ-դը-Ժուի՝ ոսկեգույն դամասկի, գծավոր պաստառի և ձկնոսկր հյուսվածքի հետ շերտավորված, կողքին՝ կապույտ երանգների քարտ, քիվի նմուշ և ինտերիերների տպագիր լուսանկարներ',
+            ru: 'Мудборд дизайнера: туаль-де-Жуи в бирюзовом и коричневом поверх золотого дамаска, полосатые обои и плетение «ёлочкой», рядом — карточка с оттенками синего, образец молдинга и печатные фотографии интерьеров',
+          }),
+          t({
+            en: 'A living room with a panoramic botanical mural across the whole wall, palms and flowering trees in dusty pink and brown, a curved coral velvet sofa and a tan leather chair in front of it, a brass coffee table and a slatted wood credenza',
+            hy: 'Հյուրասենյակ՝ ամբողջ պատը ծածկող համայնապատկերային բուսական որմնանկարով՝ արմավենիներ և ծաղկած ծառեր՝ փոշոտ վարդագույն ու շագանակագույն երանգներում, դիմացը՝ կորագիծ մարջանագույն թավշե բազմոց և բաց շագանակագույն կաշվե բազկաթոռ, արույրե սրճասեղան և նրբատախտակ դիմապատով կոմոդ',
+            ru: 'Гостиная: всю стену занимает панорамное растительное панно — пальмы и цветущие деревья в пыльно-розовых и коричневых тонах, перед ним изогнутый коралловый бархатный диван и кресло из светлой кожи, латунный журнальный столик и комод с реечным фасадом',
+          }),
         ],
       },
 
@@ -762,6 +817,11 @@ const productContent = {
             hy: 'Ժպտացող մարդ՝ երկու ձեռքը այտերին հենած, գունատ ֆոնի դիմաց, կողքին՝ կլինիկայի շրջանաձև նշանն ու անվանագիրը',
             ru: 'Улыбающийся человек, обе ладони на щеках, на светлом фоне, рядом круглый знак клиники и логотип с названием',
           }),
+          t({
+            en: 'A hotel pool terrace with a bar at the water’s edge, sun loungers and potted palms along wooden decking, captioned with the offer of a free four- or five-star hotel for every patient',
+            hy: 'Հյուրանոցի լողավազանի տեռաս՝ բար ջրի եզրին, արևային պառկելաթոռներ և կճուճներով արմավենիներ՝ փայտե տախտակամածի երկայնքով, մակագրությամբ՝ անվճար չորս- կամ հինգաստղանի հյուրանոց՝ յուրաքանչյուր հիվանդի համար',
+            ru: 'Терраса с гостиничным бассейном: бар у самой воды, шезлонги и пальмы в кадках вдоль деревянного настила, подпись сообщает о бесплатном отеле четыре или пять звёзд для каждого пациента',
+          }),
         ],
       },
 
@@ -891,6 +951,16 @@ const productContent = {
             en: 'A music project open in an audio workstation: a timeline of audio and MIDI clips with a track list and mixer down the right-hand side, and a CD case floating over it showing cover art',
             hy: 'Երաժշտական նախագիծ՝ բացված աուդիո խմբագրիչում. աուդիո և MIDI հատվածների ժամանակագիծ, աջ եզրին՝ տրեկների ցանկն ու միքսերը, վերևում՝ շապիկով սկավառակի տուփ',
             ru: 'Музыкальный проект, открытый в аудиоредакторе: таймлайн аудио- и MIDI-клипов, справа список дорожек и микшер, поверх — коробка диска с обложкой',
+          }),
+          t({
+            en: 'The inside of one of the projects: an arrangement of clips running the length of the timeline, and a named track list down the side - acapella, drums split low, mid and high, bass, brass, effects and risers - showing how the session is organised before it is handed over',
+            hy: 'Նախագծերից մեկի ներսը՝ հատվածների դասավորություն՝ ժամանակագծի ամբողջ երկարությամբ, իսկ եզրին՝ անվանված տրեկների ցանկ՝ ակապելա, հարվածայիններ՝ բաժանված ցածր, միջին և բարձր, բաս, փողայիններ, էֆեկտներ և բարձրացումներ, որը ցույց է տալիս, թե ինչպես է կազմակերպված նիստը հանձնելուց առաջ',
+            ru: 'Внутренняя часть одного из проектов: раскладка клипов по всей длине таймлайна и список именованных дорожек сбоку — акапелла, ударные с разделением на низ, середину и верх, бас, духовые, эффекты и подъёмы, — показывающий, как устроена сессия перед передачей',
+          }),
+          t({
+            en: 'A subscription offer card in black and yellow, three notes arrowed around it: weekly store credit, a monthly giveaway of headphones and studio gear, and a saving against the monthly worth of the projects it includes',
+            hy: 'Բաժանորդագրության առաջարկի քարտ՝ սև և դեղին, շուրջը՝ սլաքներով երեք նշում. շաբաթական խանութային կրեդիտ, ամսական խաղարկություն՝ ականջակալներ և ստուդիական սարքավորում, և խնայողություն՝ ներառված նախագծերի ամսական արժեքի համեմատ',
+            ru: 'Карточка подписки в чёрном и жёлтом, вокруг три пояснения со стрелками: еженедельный кредит в магазине, ежемесячный розыгрыш наушников и студийного оборудования и экономия относительно месячной стоимости входящих в неё проектов',
           }),
         ],
       },
@@ -1225,6 +1295,16 @@ const productContent = {
             en: 'A supermarket aisle between two produce displays, pumpkins, citrus and orchids banked up on either side, with Produce and Seafood signs on the far wall',
             hy: 'Սուպերմարկետի միջանցք՝ երկու կողմից բարձրացած դդումներ, ցիտրուսներ և խոլորձներ, հեռվում՝ «Produce» և «Seafood» ցուցանակները',
             ru: 'Проход супермаркета между прилавками: по обе стороны тыквы, цитрусы и орхидеи, на дальней стене вывески Produce и Seafood',
+          }),
+          t({
+            en: 'The fresh aisle of one of the stores: leafy greens laid out along a chilled bin beneath a painted fruit-and-vegetable mural, apples, tomatoes and citrus banked opposite, and a shopper walking between them with a basket',
+            hy: 'Խանութներից մեկի թարմ ապրանքի շարքը՝ տերևավոր կանաչեղենը սառնարանային դարակի երկայնքով՝ մրգերի ու բանջարեղենի նկարազարդ պատի տակ, դիմացը՝ խնձոր, լոլիկ և ցիտրուս, իսկ արանքով քայլում է գնորդը՝ զամբյուղը ձեռքին',
+            ru: 'Отдел свежих продуктов одного из магазинов: листовая зелень разложена вдоль холодильного прилавка под расписным панно с фруктами и овощами, напротив — яблоки, помидоры и цитрусовые, а между рядами идёт покупатель с корзиной',
+          }),
+          t({
+            en: 'The distribution floor: three lorries backed onto loading docks with their trailers open, a forklift carrying a pallet of cartons, pallets of produce and packaged goods standing across the floor, and racking stacked with boxes behind',
+            hy: 'Բաշխման պահեստը՝ երեք բեռնատար՝ բեռնման հարթակներին՝ բաց կցասայլակներով, ամբարձիչը տանում է տուփերի ներքնատախտակ, հատակին՝ մրգերի և փաթեթավորված ապրանքի ներքնատախտակներ, հետևում՝ տուփերով լցված դարակաշարեր',
+            ru: 'Распределительный склад: три грузовика у погрузочных доков с открытыми прицепами, погрузчик везёт паллету с коробками, по полу расставлены паллеты с продуктами и упакованным товаром, а позади — стеллажи, забитые коробками',
           }),
         ],
       },
