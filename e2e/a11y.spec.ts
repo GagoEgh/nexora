@@ -12,7 +12,7 @@ const REPRESENTATIVE_PRODUCTS = ['our_work/draculai', 'our_work/roar-organic'] a
 /**
  * Every product page, derived from the route table rather than hand-picked.
  *
- * This list used to name two of the twenty-four, and the critical violation this suite exists to
+ * This list used to name two of the twenty-seven, and the critical violation this suite exists to
  * catch (three gallery buttons with no accessible name, on `connected-car`) sat on one of the
  * seventeen that were never swept. Deriving it means a product cannot be added without being
  * checked.

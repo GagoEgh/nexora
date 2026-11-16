@@ -9,9 +9,9 @@ const productContent = {
       ru: 'Избранные работы',
     }),
     title: t({
-      en: 'Twenty-four products, and what makes each one different.',
-      hy: 'Քսանչորս արտադրանք՝ յուրաքանչյուրն իր առանձնահատկությամբ։',
-      ru: 'Двадцать четыре продукта — и то, чем каждый из них отличается.',
+      en: 'Twenty-seven products, and what makes each one different.',
+      hy: 'Քսանյոթ արտադրանք՝ յուրաքանչյուրն իր առանձնահատկությամբ։',
+      ru: 'Двадцать семь продуктов — и то, чем каждый из них отличается.',
     }),
     intro: t({
       en: 'Mobile apps, storefronts, configurators and lead funnels across automotive, healthcare, beauty, food and luxury retail — each one summarised by the capability that sets it apart.',
@@ -1437,9 +1437,9 @@ const productContent = {
           ru: 'Владелец получает одно место для того, что раньше означало звонок дилеру.',
         }),
         about: t({
-          en: 'A connected-vehicle application is unlike every other product in this portfolio because the other side of the interface is a car rather than a database. Latency matters, connectivity is intermittent by nature, and a failed command has consequences a failed page load does not. The application brings remote control, GPS tracking, real-time monitoring, security alerting and maintenance management into a single interface for owners of premium vehicles. Of all twenty-four products this is the one whose published presence could not be established, so what is described here is its intended scope rather than a feature set verified against a live listing.',
-          hy: 'Կապակցված մեքենայի հավելվածը տարբերվում է այս պորտֆոլիոյի մյուս բոլոր արտադրանքներից, որովհետև ինտերֆեյսի մյուս կողմում մեքենա է, ոչ թե տվյալների բազա։ Ուշացումը կարևոր է, կապը բնույթով ընդհատվող է, իսկ ձախողված հրամանն ունի հետևանքներ, որոնք չունի չբեռնված էջը։ Հավելվածը մեկ ինտերֆեյսում միավորում է հեռակառավարումը, GPS հետևումը, իրական ժամանակի մոնիտորինգը, անվտանգության ծանուցումներն ու սպասարկման կառավարումը՝ պրեմիում մեքենաների սեփականատերերի համար։ Քսանչորս արտադրանքից սա միակն է, որի հրապարակային ներկայությունը հնարավոր չեղավ հաստատել, ուստի այստեղ նկարագրվածը նրա նախատեսված շրջանակն է, ոչ թե գործող էջի դիմաց ստուգված հնարավորությունների ցանկ։',
-          ru: 'Приложение для подключённого автомобиля отличается от всех остальных продуктов портфолио тем, что по другую сторону интерфейса находится машина, а не база данных. Здесь важна задержка, связь по своей природе прерывиста, а несработавшая команда имеет последствия, которых не бывает у незагрузившейся страницы. Приложение объединяет в одном интерфейсе удалённое управление, GPS-отслеживание, мониторинг в реальном времени, оповещения безопасности и управление обслуживанием для владельцев премиальных автомобилей. Из двадцати четырёх продуктов это единственный, чьё публичное присутствие установить не удалось, поэтому описанное здесь — его предполагаемый объём, а не набор функций, проверенный по действующей странице.',
+          en: 'A connected-vehicle application is unlike every other product in this portfolio because the other side of the interface is a car rather than a database. Latency matters, connectivity is intermittent by nature, and a failed command has consequences a failed page load does not. The application brings remote control, GPS tracking, real-time monitoring, security alerting and maintenance management into a single interface for owners of premium vehicles. Of all twenty-seven products this is the one whose published presence could not be established, so what is described here is its intended scope rather than a feature set verified against a live listing.',
+          hy: 'Կապակցված մեքենայի հավելվածը տարբերվում է այս պորտֆոլիոյի մյուս բոլոր արտադրանքներից, որովհետև ինտերֆեյսի մյուս կողմում մեքենա է, ոչ թե տվյալների բազա։ Ուշացումը կարևոր է, կապը բնույթով ընդհատվող է, իսկ ձախողված հրամանն ունի հետևանքներ, որոնք չունի չբեռնված էջը։ Հավելվածը մեկ ինտերֆեյսում միավորում է հեռակառավարումը, GPS հետևումը, իրական ժամանակի մոնիտորինգը, անվտանգության ծանուցումներն ու սպասարկման կառավարումը՝ պրեմիում մեքենաների սեփականատերերի համար։ Քսանյոթ արտադրանքից սա միակն է, որի հրապարակային ներկայությունը հնարավոր չեղավ հաստատել, ուստի այստեղ նկարագրվածը նրա նախատեսված շրջանակն է, ոչ թե գործող էջի դիմաց ստուգված հնարավորությունների ցանկ։',
+          ru: 'Приложение для подключённого автомобиля отличается от всех остальных продуктов портфолио тем, что по другую сторону интерфейса находится машина, а не база данных. Здесь важна задержка, связь по своей природе прерывиста, а несработавшая команда имеет последствия, которых не бывает у незагрузившейся страницы. Приложение объединяет в одном интерфейсе удалённое управление, GPS-отслеживание, мониторинг в реальном времени, оповещения безопасности и управление обслуживанием для владельцев премиальных автомобилей. Из двадцати семи продуктов это единственный, чьё публичное присутствие установить не удалось, поэтому описанное здесь — его предполагаемый объём, а не набор функций, проверенный по действующей странице.',
         }),
         photoAlts: [
           t({
@@ -1829,6 +1829,234 @@ const productContent = {
             en: 'A black self-loading rifle photographed side-on against white, with a polymer stock and grip, a ribbed handguard and a curved detachable magazine',
             hy: 'Սև ինքնալից հրացան՝ լուսանկարված կողքից՝ սպիտակ ֆոնին, պոլիմերային կոթով ու բռնակով, կողավոր ձեռնապաշտպանով և կորագիծ հանովի փամփշտատուփով',
             ru: 'Чёрный самозарядный карабин, снятый сбоку на белом фоне: полимерные приклад и рукоять, ребристое цевьё и изогнутый отъёмный магазин',
+          }),
+        ],
+      },
+      'moyen-co': {
+        name: t({
+          en: 'Moyen & Co. Jewellers',
+          hy: 'Moyen & Co. Jewellers',
+          ru: 'Moyen & Co. Jewellers',
+        }),
+        category: t({
+          en: 'Fine jewellery retail',
+          hy: 'Ոսկերչական մանրածախ',
+          ru: 'Ювелирная розница',
+        }),
+        hook: t({
+          en: 'The best pieces are one of a kind, so the site sells the appointment as much as the ring.',
+          hy: 'Լավագույն իրերը եզակի են, ուստի կայքը վաճառում է ոչ միայն մատանին, այլև հանդիպումը։',
+          ru: 'Лучшие изделия существуют в одном экземпляре, поэтому сайт продаёт не только кольцо, но и встречу.',
+        }),
+        summary: t({
+          en: 'A Westlake Village jeweller carrying designer collections, estate pieces and bench services on one storefront.',
+          hy: 'Վեսթլեյք Վիլիջի ոսկերիչ, որը մեկ խանութում միավորում է դիզայներական հավաքածուները, ժառանգական իրերն ու արհեստանոցի ծառայությունները։',
+          ru: 'Ювелир из Уэстлейк-Виллидж, объединяющий в одной витрине дизайнерские коллекции, винтажные изделия и мастерскую.',
+        }),
+        highlights: [
+          t({
+            en: 'Thirty-minute appointments booked from the hero',
+            hy: 'Երեսունրոպեանոց հանդիպումներ՝ ամրագրվող գլխավոր բաններից',
+            ru: 'Запись на 30 минут прямо с первого экрана',
+          }),
+          t({
+            en: 'Five designer houses alongside estate pieces',
+            hy: 'Հինգ դիզայներական տուն՝ ժառանգական իրերի կողքին',
+            ru: 'Пять дизайнерских домов рядом с винтажными изделиями',
+          }),
+          t({
+            en: 'Custom design, repair and appraisal',
+            hy: 'Անհատական նախագծում, վերանորոգում և գնահատում',
+            ru: 'Индивидуальный дизайн, ремонт и оценка',
+          }),
+          t({
+            en: 'Browsing by style, shape and stone',
+            hy: 'Դիտում՝ ըստ ոճի, ձևի և քարի',
+            ru: 'Подбор по стилю, форме и камню',
+          }),
+        ],
+        advantage: t({
+          en: 'Booking is a primary action on the page rather than a number buried in the footer.',
+          hy: 'Ամրագրումն էջի առաջնային գործողությունն է, ոչ թե ստորգծում թաղված հեռախոսահամար։',
+          ru: 'Запись — основное действие на странице, а не номер, спрятанный в подвале сайта.',
+        }),
+        value: t({
+          en: 'A ring chosen at a counter still begins with a catalogue opened at midnight.',
+          hy: 'Վաճառասեղանի մոտ ընտրված մատանին այնուամենայնիվ սկսվում է կեսգիշերին բացված կատալոգից։',
+          ru: 'Кольцо, выбранное у прилавка, всё равно начинается с каталога, открытого в полночь.',
+        }),
+        about: t({
+          en: 'Fine jewellery resists the ordinary ending of an online order: an engagement ring has to be sized, a commissioned piece is drawn before it exists, an estate item is singular, and a repair has to be handed across a counter. The storefront is arranged around that, carrying three commercial modes at once - designer collections that can simply be bought, an estate collection in which each piece is one of a kind, and bench services such as custom design, repair and appraisal that can only be started online. Booking reflects it: a thirty-minute appointment is reachable from the hero itself, and the opening hours are stated plainly down to Monday being by appointment only. The catalogue still does what a catalogue does, sorted by setting style, stone and diamond shape for someone browsing late at night, but what the whole arrangement steers toward is a visit to the counter in Westlake Village.',
+          hy: 'Թանկարժեք զարդերը դիմադրում են առցանց պատվերի սովորական ավարտին. նշանադրության մատանին պետք է չափսի բերվի, պատվերով իրը գծվում է նախքան գոյություն ունենալը, ժառանգական իրը եզակի է, իսկ վերանորոգումը պետք է ձեռքից ձեռք հանձնվի վաճառասեղանի մոտ։ Խանութը կազմակերպված է հենց դրա շուրջ՝ կրելով երեք առևտրային եղանակ միաժամանակ՝ դիզայներական հավաքածուներ, որոնք կարելի է պարզապես գնել, ժառանգական հավաքածու, որտեղ յուրաքանչյուր իր եզակի է, և արհեստանոցի ծառայություններ՝ անհատական նախագծում, վերանորոգում և գնահատում, որոնք առցանց կարող են միայն սկսվել։ Ամրագրումն արտացոլում է դա. երեսունրոպեանոց հանդիպումը հասանելի է հենց գլխավոր բաններից, իսկ աշխատանքային ժամերը նշված են հստակ՝ ընդհուպ մինչև այն, որ երկուշաբթին միայն նախնական պայմանավորվածությամբ է։ Կատալոգը դեռ անում է այն, ինչ անում է կատալոգը՝ դասավորված ըստ ագուցման ոճի, քարի և ադամանդի ձևի՝ ուշ գիշերը դիտողի համար, բայց ամբողջ դասավորությունն ուղղորդում է դեպի այց Վեսթլեյք Վիլիջի վաճառասեղանին։',
+          ru: 'Ювелирные изделия сопротивляются обычному финалу онлайн-заказа: помолвочное кольцо нужно подогнать по размеру, изделие на заказ рисуют прежде, чем оно появится, винтажная вещь существует в одном экземпляре, а ремонт приходится передавать из рук в руки. Витрина выстроена вокруг этого и несёт сразу три коммерческих режима: дизайнерские коллекции, которые можно просто купить, винтажную коллекцию, где каждое изделие единственное, и услуги мастерской — индивидуальный дизайн, ремонт и оценку, — которые онлайн можно лишь начать. Запись это отражает: получасовая встреча доступна прямо с первого экрана, а часы работы указаны прямо, вплоть до того, что понедельник — только по договорённости. Каталог по-прежнему делает своё дело, разложенный по типу закрепки, камню и форме бриллианта для того, кто смотрит поздно ночью, но всё устройство ведёт к визиту за прилавок в Уэстлейк-Виллидж.',
+        }),
+        photoAlts: [
+          t({
+            en: 'A close view of a hand wearing a white gold solitaire ring whose band is set with rows of small diamonds, a piece of lace resting beside it',
+            hy: 'Ձեռքի մոտիկ պատկեր՝ սպիտակ ոսկու մատանիով, որի օղակը շարված է մանր ադամանդների շարքերով, կողքին՝ ժանյակի կտոր',
+            ru: 'Крупный план руки с кольцом из белого золота, шинка которого усыпана рядами мелких бриллиантов, рядом лежит кружево',
+          }),
+          t({
+            en: 'A technical drawing of a ring with dimension lines across a faceted stone, lying on pale wood beside the finished white gold solitaire it describes',
+            hy: 'Մատանու տեխնիկական գծագիր՝ չափագծերով երեսապատ քարի վրայով, դրված բաց երանգի փայտին՝ իր նկարագրած պատրաստի սպիտակ ոսկու մատանու կողքին',
+            ru: 'Технический чертёж кольца с размерными линиями по огранённому камню лежит на светлом дереве рядом с готовым кольцом из белого золота',
+          }),
+          t({
+            en: 'A pair of square art-deco earrings on peach silk, each with a round diamond centred in a geometric border of calibre-cut blue sapphires and pave diamonds',
+            hy: 'Քառակուսի արտ-դեկո ականջօղերի զույգ՝ դեղձագույն մետաքսի վրա, յուրաքանչյուրի կենտրոնում՝ կլոր ադամանդ՝ շրջապատված կապույտ շափյուղաների և մանր ադամանդների երկրաչափական եզրագծով',
+            ru: 'Пара квадратных серёг в стиле ар-деко на персиковом шёлке: в центре каждой круглый бриллиант в геометрической оправе из синих сапфиров и бриллиантового паве',
+          }),
+        ],
+      },
+      'eloyan-architects': {
+        name: t({
+          en: 'Eloyan Architects',
+          hy: 'Eloyan Architects',
+          ru: 'Eloyan Architects',
+        }),
+        category: t({
+          en: 'Architecture practice portfolio',
+          hy: 'Ճարտարապետական բյուրոյի պորտֆոլիո',
+          ru: 'Портфолио архитектурного бюро',
+        }),
+        hook: t({
+          en: 'Work at this scale is won on record, so the site is a body of evidence rather than a funnel.',
+          hy: 'Այս մասշտաբի աշխատանքը շահվում է փորձի գրանցմամբ, ուստի կայքը ապացույցների ամբողջություն է, ոչ թե հաճախորդների ձագար։',
+          ru: 'Работу такого масштаба получают по послужному списку, поэтому сайт — свод доказательств, а не воронка.',
+        }),
+        summary: t({
+          en: 'A practice working from Yerevan and California, presenting a portfolio that runs from light-rail bridges to single interiors.',
+          hy: 'Բյուրո, որն աշխատում է Երևանից և Կալիֆոռնիայից՝ ներկայացնելով պորտֆոլիո, որը ձգվում է թեթև ռելսուղու կամուրջներից մինչև առանձին ինտերիերներ։',
+          ru: 'Бюро, работающее из Еревана и Калифорнии, с портфолио от мостов лёгкого метро до отдельных интерьеров.',
+        }),
+        highlights: [
+          t({
+            en: 'Five categories, bridges through town planning',
+            hy: 'Հինգ կատեգորիա՝ կամուրջներից մինչև քաղաքաշինություն',
+            ru: 'Пять категорий — от мостов до градостроительства',
+          }),
+          t({
+            en: 'Offices in Yerevan and Lafayette, California',
+            hy: 'Գրասենյակներ Երևանում և Լաֆայեթում, Կալիֆոռնիա',
+            ru: 'Офисы в Ереване и Лафайетте, Калифорния',
+          }),
+          t({
+            en: 'Named team of ten with roles',
+            hy: 'Տասը հոգանոց թիմ՝ անուններով և դերերով',
+            ru: 'Команда из десяти человек с именами и ролями',
+          }),
+          t({
+            en: 'Founded 2012 on fifty years of combined practice',
+            hy: 'Հիմնադրվել է 2012-ին՝ համակցված հիսուն տարվա փորձի հիմքով',
+            ru: 'Основано в 2012 году на полувековом совокупном опыте',
+          }),
+        ],
+        advantage: t({
+          en: 'The range is the argument: a light-rail bridge and one living room sit in the same portfolio.',
+          hy: 'Ընդգրկույթն ինքնին փաստարկ է. թեթև ռելսուղու կամուրջը և մեկ հյուրասենյակ նույն պորտֆոլիոյում են։',
+          ru: 'Диапазон и есть аргумент: мост лёгкого метро и одна гостиная лежат в одном портфолио.',
+        }),
+        value: t({
+          en: 'A client commissioning infrastructure checks what has been delivered before who answers the phone.',
+          hy: 'Ենթակառուցվածք պատվիրող հաճախորդը նախ ստուգում է, թե ինչ է արդեն իրականացվել, և միայն հետո՝ թե ով է պատասխանում հեռախոսին։',
+          ru: 'Заказчик инфраструктуры сначала смотрит, что уже сдано, и лишь потом — кто возьмёт трубку.',
+        }),
+        about: t({
+          en: 'A bridge or a district is not commissioned through a web form, and this site does not pretend otherwise: it carries no enquiry form at all, publishing two office addresses and two telephone numbers in its place. What stands in for a funnel is a record, with portfolio categories running from bridge design and bridges through buildings and interiors to town planning, a span unusually wide for one practice and in itself the claim being made. The founders are introduced through more than fifty years of combined experience and a family tradition described as three generations, and the team of ten is named with roles given down to job captain, because at this scale a client is engaging people as much as drawings. Two offices, one in Yerevan and one in Lafayette, California, are what explain how a light-rail bridge in Portland can sit in the same portfolio as an infill building on a Yerevan street.',
+          hy: 'Կամուրջ կամ թաղամաս չեն պատվիրում վեբ ձևի միջոցով, և այս կայքը հակառակը ձևացնելու փորձ չի անում. այն ընդհանրապես հարցման ձև չունի՝ դրա փոխարեն հրապարակելով երկու գրասենյակի հասցե և երկու հեռախոսահամար։ Ձագարի փոխարեն կանգնած է փորձի գրանցումը՝ պորտֆոլիոյի կատեգորիաներով, որոնք ձգվում են կամուրջների նախագծումից ու կամուրջներից մինչև շենքեր, ինտերիերներ և քաղաքաշինություն՝ մեկ բյուրոյի համար անսովոր լայն ընդգրկույթ, որն ինքնին հենց այն պնդումն է, որ արվում է։ Հիմնադիրները ներկայացվում են ավելի քան հիսուն տարվա համակցված փորձով և երեք սերունդ ընդգրկող ընտանեկան ավանդույթով, իսկ տասը հոգանոց թիմը նշված է անուններով՝ դերերով ընդհուպ մինչև job captain, որովհետև այս մասշտաբում հաճախորդը ներգրավում է մարդկանց ոչ պակաս, քան գծագրերը։ Երկու գրասենյակը՝ մեկը Երևանում, մյուսը Կալիֆոռնիայի Լաֆայեթում, հենց այն են, ինչ բացատրում է, թե ինչպես Պորտլենդի թեթև ռելսուղու կամուրջը կարող է նույն պորտֆոլիոյում լինել Երևանի փողոցի ներփակ կառույցի հետ։',
+          ru: 'Мост или квартал не заказывают через веб-форму, и этот сайт не делает вид, будто иначе: формы заявки на нём нет вовсе, вместо неё опубликованы два адреса офисов и два телефона. Место воронки занимает послужной список: категории портфолио идут от проектирования мостов и самих мостов через здания и интерьеры к градостроительству — диапазон, необычно широкий для одного бюро, и он сам по себе и есть заявление. Основателей представляют более чем полувековым совокупным опытом и семейной традицией в три поколения, а команда из десяти человек названа поимённо, с ролями вплоть до job captain, потому что на таком масштабе заказчик нанимает людей не меньше, чем чертежи. Два офиса — в Ереване и в Лафайетте, Калифорния — и объясняют, как мост лёгкого метро в Портленде оказывается в одном портфолио со встроенным зданием на ереванской улице.',
+        }),
+        photoAlts: [
+          t({
+            en: 'A cable-stayed bridge over a wide river at dusk, two pairs of tapering concrete towers carrying fans of white cables, city lights reflected on the water',
+            hy: 'Ճոպանակախ կամուրջ լայն գետի վրայով՝ մթնշաղին, երկու զույգ նեղացող բետոնե հենասյուներ՝ սպիտակ ճոպանների հովհարներով, ջրին՝ քաղաքի լույսերի արտացոլանքը',
+            ru: 'Вантовый мост через широкую реку в сумерках: две пары сужающихся бетонных пилонов держат веера белых вант, на воде отражаются городские огни',
+          }),
+          t({
+            en: 'A living room behind full-height glazing that looks out over a city and a green valley, with a board-formed concrete wall, an orange sofa and rug, and a dark leather daybed',
+            hy: 'Հյուրասենյակ՝ ամբողջ բարձրությամբ ապակեպատման հետևում, որը նայում է քաղաքին և կանաչ ձորին, տախտակի հետք կրող բետոնե պատ, նարնջագույն բազմոց ու գորգ և մուգ կաշվե հանգստաթոռ',
+            ru: 'Гостиная за остеклением во всю высоту с видом на город и зелёную долину: бетонная стена со следом опалубки, оранжевый диван и ковёр, тёмная кожаная кушетка',
+          }),
+          t({
+            en: 'A street facade combining an older storey of dark and red volcanic stone with arched windows and a modern upper floor of glazing and vertical fins behind a glass balustrade',
+            hy: 'Փողոցային ճակատ, որը միավորում է մուգ և կարմիր հրաբխային քարից հին հարկը՝ կամարակապ պատուհաններով, և ապակեպատումից ու ուղղահայաց թիթեղներից ժամանակակից վերին հարկը՝ ապակե բազրիքի հետևում',
+            ru: 'Уличный фасад, соединяющий старый этаж из тёмного и красного вулканического камня с арочными окнами и современный верхний этаж из остекления и вертикальных ламелей за стеклянным ограждением',
+          }),
+        ],
+      },
+      'yulia-shustraya': {
+        name: t({
+          en: 'Yulia Shustraya',
+          hy: 'Yulia Shustraya',
+          ru: 'Юлия Шустрая',
+        }),
+        category: t({
+          en: 'Speech and communication training',
+          hy: 'Խոսքի և հաղորդակցման ուսուցում',
+          ru: 'Обучение речи и коммуникации',
+        }),
+        hook: t({
+          en: 'A speech course cannot be sampled before it is bought, so the biography does the selling.',
+          hy: 'Խոսքի դասընթացը հնարավոր չէ նախապես փորձել, ուստի վաճառքն անում է կենսագրությունը։',
+          ru: 'Курс по речи нельзя попробовать до покупки, поэтому продаёт биография.',
+        }),
+        summary: t({
+          en: 'A personal practice teaching voice, diction and conflict-proof speech, sold through a ladder that starts at zero.',
+          hy: 'Անհատական պրակտիկա՝ ձայնի, հնչարտաբերման և կոնֆլիկտին դիմակայող խոսքի ուսուցմամբ, որը վաճառվում է զրոյից սկսվող սանդուղքով։',
+          ru: 'Личная практика обучения голосу, дикции и речи, устойчивой к конфликту, с лестницей продуктов, начинающейся с нуля.',
+        }),
+        highlights: [
+          t({
+            en: 'Free archetype test and four downloadable guides',
+            hy: 'Անվճար արքետիպերի թեստ և չորս ներբեռնելի ուղեցույց',
+            ru: 'Бесплатный тест архетипов и четыре гайда для скачивания',
+          }),
+          t({
+            en: 'Masterclasses, a course, and one-to-one coaching',
+            hy: 'Վարպետության դասեր, դասընթաց և անհատական ուղեկցում',
+            ru: 'Мастер-классы, курс и персональное сопровождение',
+          }),
+          t({
+            en: 'A tier priced explicitly under ten thousand roubles',
+            hy: 'Առանձին շերտ՝ բացահայտ տասը հազար ռուբլուց ցածր գնով',
+            ru: 'Отдельный уровень с ценой явно до десяти тысяч рублей',
+          }),
+          t({
+            en: 'Fifteen years of federal television behind the method',
+            hy: 'Մեթոդի հետևում՝ դաշնային հեռուստատեսության տասնհինգ տարի',
+            ru: 'За методикой — пятнадцать лет федерального телевидения',
+          }),
+        ],
+        advantage: t({
+          en: 'The free test lets a visitor diagnose their own speech before any price is named.',
+          hy: 'Անվճար թեստը թույլ է տալիս այցելուին ախտորոշել սեփական խոսքը, նախքան որևէ գին հնչելը։',
+          ru: 'Бесплатный тест позволяет посетителю поставить диагноз своей речи до того, как названа цена.',
+        }),
+        value: t({
+          en: 'Every rung of the ladder converts in the same place: a chat with a manager.',
+          hy: 'Սանդուղքի յուրաքանչյուր աստիճան փոխարկվում է նույն տեղում՝ մենեջերի հետ զրույցում։',
+          ru: 'Каждая ступень лестницы конвертируется в одном и том же месте — в переписке с менеджером.',
+        }),
+        about: t({
+          en: 'Speech training is a category where nothing can be sampled in advance, so this site puts the biography where a demonstration would otherwise sit: fifteen years on federal television, a teaching post on the journalism faculty at Moscow State University, state awards dated between 2013 and 2019, and a media section that links out to interviews, radio appearances and industry events. The catalogue is built as a ladder rather than a shelf, running from a free archetype test, a memo on resisting verbal manipulation and two short guides, up through masterclasses and a tier labelled plainly as products under ten thousand roubles, then a full course on the design of speech, and finally personal coaching. That shape lets a visitor who is not ready to spend anything still work out which rung they belong on, which is the hard part of selling a skill people are rarely able to assess in themselves. Conversion runs through one human channel rather than a cart, with the buttons converging on a manager in Telegram, and every programme noted as requiring advance booking, which fits a service that is scheduled rather than shipped.',
+          hy: 'Խոսքի ուսուցումն այն ոլորտն է, որտեղ ոչինչ հնարավոր չէ նախապես փորձել, ուստի այս կայքը կենսագրությունը դնում է այնտեղ, որտեղ սովորաբար ցուցադրություն կլիներ՝ դաշնային հեռուստատեսության տասնհինգ տարի, դասախոսական պաշտոն Մոսկվայի պետական համալսարանի լրագրության ֆակուլտետում, 2013-ից 2019 թվականների պետական պարգևներ և մեդիա բաժին, որը հղում է հարցազրույցներին, ռադիոյի ելույթներին ու ոլորտային միջոցառումներին։ Կատալոգը կառուցված է որպես սանդուղք, ոչ թե դարակ. այն ձգվում է անվճար արքետիպերի թեստից, խոսքային մանիպուլյացիաներին դիմակայելու հուշաթերթիկից և երկու կարճ ուղեցույցից մինչև վարպետության դասեր ու շերտ, որը բացահայտ նշված է որպես տասը հազար ռուբլուց ցածր արտադրանք, ապա խոսքի ձևավորման ամբողջական դասընթաց և վերջում՝ անհատական ուղեկցում։ Այդ կառուցվածքը թույլ է տալիս այցելուին, ով պատրաստ չէ որևէ գումար ծախսել, այնուամենայնիվ հասկանալ, թե որ աստիճանին է պատկանում, ինչը հմտություն վաճառելու ամենադժվար մասն է, երբ մարդիկ հազվադեպ են կարողանում գնահատել այն իրենց մեջ։ Փոխարկումն անցնում է մեկ մարդկային ալիքով, ոչ թե զամբյուղով. կոճակները համընկնում են Telegram-ի մենեջերի վրա, և յուրաքանչյուր ծրագրի դիմաց նշված է նախնական գրանցման պահանջը, ինչը համապատասխանում է ծառայության, որը ժամանակացույցով է, ոչ թե առաքվող։',
+          ru: 'Обучение речи — категория, где ничего нельзя попробовать заранее, поэтому сайт ставит биографию туда, где обычно стояла бы демонстрация: пятнадцать лет на федеральном телевидении, преподавание на журфаке МГУ, государственные награды 2013–2019 годов и раздел со ссылками на интервью, радиоэфиры и отраслевые события. Каталог построен как лестница, а не как полка: от бесплатного теста архетипов, памятки о защите от речевых манипуляций и двух коротких гайдов — через мастер-классы и уровень, прямо обозначенный как продукты до десяти тысяч рублей, — к полному курсу по дизайну речи и, наконец, к персональному сопровождению. Такая форма позволяет посетителю, не готовому потратить ничего, всё же понять, на какой он ступени, а это и есть трудная часть продажи навыка, который люди редко способны оценить в себе. Конверсия идёт через один человеческий канал, а не через корзину: кнопки сходятся на менеджере в Telegram, и у каждой программы отмечена необходимость записи заранее, что соответствует услуге, которую планируют, а не отгружают.',
+        }),
+        photoAlts: [
+          t({
+            en: 'A woman in a tan pinstripe suit standing in a tall carved wooden doorway, with an ornate plaster arch and a palm behind her',
+            hy: 'Կին՝ բաց դարչնագույն շերտավոր կոստյումով, կանգնած բարձր փորագրված փայտե դռան մեջ, հետևում՝ գիպսե զարդարուն կամար և արմավենի',
+            ru: 'Женщина в светло-коричневом костюме в полоску стоит в высоком резном деревянном дверном проёме, позади — лепная арка и пальма',
+          }),
+          t({
+            en: 'A speaker with a handheld microphone on a low stage, in front of a projection screen showing her own portrait',
+            hy: 'Բանախոս՝ ձեռքի խոսափողով ցածր բեմի վրա, պրոյեկցիոն էկրանի դիմաց, որին ցուցադրվում է իր իսկ դիմանկարը',
+            ru: 'Выступающая с ручным микрофоном на невысокой сцене перед проекционным экраном, на котором её собственный портрет',
+          }),
+          t({
+            en: 'A portrait beside a wooden balustrade in a pale yellow hall with moulded panels and brass candle sconces',
+            hy: 'Դիմանկար՝ փայտե բազրիքի կողքին, բաց դեղին դահլիճում՝ գիպսե վահանակներով և արույրե մոմակալներով',
+            ru: 'Портрет у деревянной балюстрады в светло-жёлтом зале с лепными панелями и латунными бра',
           }),
         ],
       },

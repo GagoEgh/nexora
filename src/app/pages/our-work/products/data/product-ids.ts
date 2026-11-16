@@ -25,6 +25,9 @@ export const PRODUCT_IDS = [
   'kgtex',
   'atomic-shop',
   'trade-line-group',
+  'moyen-co',
+  'eloyan-architects',
+  'yulia-shustraya',
 ] as const;
 
 export type ProductId = (typeof PRODUCT_IDS)[number];

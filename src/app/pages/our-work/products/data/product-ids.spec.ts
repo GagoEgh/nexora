@@ -35,10 +35,13 @@ const PUBLISHED_SLUGS = [
   'kgtex',
   'atomic-shop',
   'trade-line-group',
+  'moyen-co',
+  'eloyan-architects',
+  'yulia-shustraya',
 ];
 
 describe('the product registry', () => {
-  it('publishes exactly these twenty-four slugs, in this order', () => {
+  it('publishes exactly these twenty-seven slugs, in this order', () => {
     expect([...PRODUCT_IDS]).toEqual(PUBLISHED_SLUGS);
     expect(new Set(PRODUCT_IDS).size).toBe(PRODUCT_IDS.length);
   });
@@ -84,7 +87,7 @@ describe('the product registry', () => {
 
   /**
    * The intrinsic size travels with the file so that each `<img>` can declare its own box.
-   * These twenty-four run from 480x334 to 1280x720, and a zero here would be a silent layout shift
+   * These twenty-seven run from 480x334 to 1280x720, and a zero here would be a silent layout shift
    * rather than a visible failure.
    */
   it('records the real pixel size of every photograph', () => {

@@ -279,6 +279,36 @@ export const PRODUCT_META: Readonly<Record<ProductId, ProductMeta>> = {
     url: 'https://tradelinegroup01.com/en',
     platform: 'Next.js',
   },
+  'moyen-co': {
+    archetype: 'storefront',
+    photos: [
+      { file: 'moyen.webp', width: 1280, height: 709 },
+      { file: 'moyen-custom-design.webp', width: 720, height: 800 },
+      { file: 'moyen-estate.webp', width: 720, height: 800 },
+    ],
+    url: 'https://moyenco.com/',
+    platform: 'Shopify',
+  },
+  'eloyan-architects': {
+    archetype: 'corporate',
+    photos: [
+      { file: 'eloyan.webp', width: 1280, height: 749 },
+      { file: 'eloyan-interior.webp', width: 1120, height: 844 },
+      { file: 'eloyan-isahakyan.webp', width: 881, height: 767 },
+    ],
+    url: 'https://eloyan.com/',
+    platform: 'WordPress',
+  },
+  'yulia-shustraya': {
+    archetype: 'lead-generation',
+    photos: [
+      { file: 'shustraya.webp', width: 1280, height: 853 },
+      { file: 'shustraya-stage.webp', width: 980, height: 1276 },
+      { file: 'shustraya-portrait.webp', width: 1280, height: 859 },
+    ],
+    url: 'https://shustraya.ru/',
+    platform: 'Tilda',
+  },
 };
 
 export function photoSrc(photo: ProductPhoto): string {
