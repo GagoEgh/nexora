@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "node scripts/intlayer-lock.mjs ng serve",
     "build": "node scripts/intlayer-lock.mjs ng build",
+    "deploy": "node scripts/deploy.mjs",
     "build:logo": "node scripts/build-logo.mjs",
     "watch": "node scripts/intlayer-lock.mjs ng build --watch --configuration development",
     "test": "node scripts/intlayer-lock.mjs ng test",

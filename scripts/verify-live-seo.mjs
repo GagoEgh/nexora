@@ -3,17 +3,12 @@ import { request as httpRequest } from 'node:http';
 import { request as httpsRequest } from 'node:https';
 import { argv, exit } from 'node:process';
 import { parseSiteOrigin } from './verify-seo.mjs';
+import { REQUIRED_HEADERS, parseCsp, parseHeaders } from './verify-headers.mjs';
 
 const CONCURRENCY = 4;
 const TIMEOUT_MS = 15_000;
 
 /**
- * One answer from the deployed site, in the shape `fetchOnce` resolves to.
- *
- * `headers` is Node's `rawHeaders`: a flat, order-preserving `[name, value, name, value, ...]`
- * array rather than a map, because a live document may repeat a header - `link` and
- * `set-cookie` both do - and collapsing those is what this script exists to notice.
- *
  * @typedef {object} LiveResponse
  * @property {number} status HTTP status code, or 0 when the answer carried none
  * @property {string[]} headers flat `rawHeaders` pairs
@@ -146,6 +141,78 @@ export function checkAssetCaching(cacheControl) {
 }
 
 /**
+ * The headers the deployed origin sends must be the ones this repository committed.
+ *
+ * `verify:headers` compares `public/_headers` with the generated nginx snippet - but both of
+ * those live here, so once it passes they agree by construction and neither has been compared
+ * with the server. That is the gap the live `connect-src` slipped through: it carries an origin
+ * that neither file names, and every check in the repository passed anyway. This is the only
+ * check that can see it, because it is the only one that asks the server.
+ *
+ * The CSP is compared directive by directive rather than as one string, so a drift reports the
+ * directive that moved instead of printing two long policies and leaving the reader to diff
+ * them by eye.
+ *
+ * @param {Map<string, string>} expected - the `_headers` rule, as `parseHeaders` returns it
+ * @param {string[]} rawHeaders - the live response's headers
+ * @returns {string[]} one message per drift, empty when the server matches the repository
+ */
+export function checkSecurityHeaders(expected, rawHeaders) {
+  const problems = [];
+  const expectedCsp = expected.get('Content-Security-Policy');
+
+  if (expectedCsp !== undefined) {
+    const live = headerValues(rawHeaders, 'content-security-policy');
+    if (live.length === 0) {
+      problems.push('Content-Security-Policy is missing; public/_headers declares one');
+    } else {
+      if (live.length > 1) {
+        problems.push(
+          `sent ${live.length} Content-Security-Policy headers ${JSON.stringify(live)}; ` +
+            'expected exactly 1 - a second policy intersects with the first rather than ' +
+            'replacing it',
+        );
+      }
+      const sent = parseCsp(live[0] ?? '');
+      const want = parseCsp(expectedCsp);
+      for (const [directive, value] of want) {
+        const actual = sent.get(directive);
+        if (actual === undefined) {
+          problems.push(`Content-Security-Policy has no ${directive}, expected ${value}`);
+        } else if (actual !== value) {
+          problems.push(
+            `Content-Security-Policy ${directive} is ${JSON.stringify(actual)}, ` +
+              `expected ${JSON.stringify(value)}`,
+          );
+        }
+      }
+      for (const directive of sent.keys()) {
+        if (!want.has(directive)) {
+          problems.push(
+            `Content-Security-Policy sends ${directive}, which public/_headers does not declare`,
+          );
+        }
+      }
+    }
+  }
+
+  for (const name of REQUIRED_HEADERS) {
+    const want = expected.get(name);
+    if (want === undefined) {
+      continue;
+    }
+    const actual = headerValues(rawHeaders, name.toLowerCase());
+    if (actual.length === 0) {
+      problems.push(`${name} is missing, expected ${JSON.stringify(want)}`);
+    } else if (actual[0] !== want) {
+      problems.push(`${name} is ${JSON.stringify(actual[0])}, expected ${JSON.stringify(want)}`);
+    }
+  }
+
+  return problems;
+}
+
+/**
  * @param {string} url
  * @param {{ method?: string }} [options]
  * @returns {Promise<LiveResponse>}
@@ -202,9 +269,10 @@ async function pooled(items, run) {
 /**
  * @param {string} origin
  * @param {string} sitemapPath
+ * @param {string} headersPath
  * @returns {Promise<number>} process exit code
  */
-async function main(origin, sitemapPath) {
+async function main(origin, sitemapPath, headersPath) {
   const declared = sitemapUrls(await readFile(sitemapPath, 'utf8'));
   if (declared.length === 0) {
     console.error(`[verify-live-seo] no <loc> entries in ${sitemapPath}.`);
@@ -282,6 +350,16 @@ async function main(origin, sitemapPath) {
     return problems;
   });
 
+  await attempt(`${origin}/ (security headers against public/_headers)`, async () => {
+    const expected = parseHeaders(await readFile(headersPath, 'utf8'));
+    const response = await fetchOnce(`${origin}/`, { method: 'HEAD' });
+    const problems = checkSecurityHeaders(expected, response.headers);
+    if (response.status !== 200) {
+      problems.unshift(`${origin}/ answered ${response.status}, expected 200`);
+    }
+    return problems;
+  });
+
   if (failures.length > 0) {
     console.error(`[verify-live-seo] ${origin}: ${failures.length} failures:\n`);
     for (const failure of failures) {
@@ -292,7 +370,8 @@ async function main(origin, sitemapPath) {
 
   console.log(
     `[verify-live-seo] ${origin}: ${urls.length} sitemap URLs served directly with matching ` +
-      'canonicals, 3 localized 404s, www redirected, assets immutable for a year.',
+      'canonicals, 3 localized 404s, www redirected, assets immutable for a year, security ' +
+      'headers matching public/_headers.',
   );
   return 0;
 }
@@ -301,5 +380,5 @@ if (import.meta.filename === argv[1]) {
   const origin = (
     argv[2] ?? parseSiteOrigin(await readFile('src/environments/environment.production.ts', 'utf8'))
   ).replace(/\/$/, '');
-  exit(await main(origin, argv[3] ?? 'public/sitemap.xml'));
+  exit(await main(origin, argv[3] ?? 'public/sitemap.xml', argv[4] ?? 'public/_headers'));
 }

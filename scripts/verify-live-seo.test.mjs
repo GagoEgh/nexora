@@ -3,6 +3,7 @@ import { describe, it } from 'node:test';
 import {
   canonicalOf,
   checkAssetCaching,
+  checkSecurityHeaders,
   checkNotFound,
   checkPage,
   checkWwwRedirect,
@@ -161,6 +162,85 @@ describe('verify-live-seo', () => {
           /expected max-age=31536000/.test(problem),
         ),
       );
+    });
+  });
+  describe('checkSecurityHeaders', () => {
+    const expected = new Map([
+      ['Content-Security-Policy', "default-src 'self'; connect-src 'self'; object-src 'none'"],
+      ['Strict-Transport-Security', 'max-age=31536000; includeSubDomains'],
+      ['X-Content-Type-Options', 'nosniff'],
+      ['X-Frame-Options', 'DENY'],
+      ['Referrer-Policy', 'strict-origin-when-cross-origin'],
+      ['Permissions-Policy', 'geolocation=()'],
+    ]);
+
+    /** @param {Record<string, string>} overrides */
+    const live = (overrides = {}) => {
+      const sent = {
+        'content-security-policy': "default-src 'self'; connect-src 'self'; object-src 'none'",
+        'strict-transport-security': 'max-age=31536000; includeSubDomains',
+        'x-content-type-options': 'nosniff',
+        'x-frame-options': 'DENY',
+        'referrer-policy': 'strict-origin-when-cross-origin',
+        'permissions-policy': 'geolocation=()',
+        ...overrides,
+      };
+      return Object.entries(sent).flatMap(([name, value]) => (value === '' ? [] : [name, value]));
+    };
+
+    it('passes when the server sends what the repository committed', () => {
+      assert.deepEqual(checkSecurityHeaders(expected, live()), []);
+    });
+
+    it('names the directive that drifted, not the whole policy', () => {
+      const problems = checkSecurityHeaders(
+        expected,
+        live({
+          'content-security-policy':
+            "default-src 'self'; connect-src 'self' https://nexoratechnology.org; object-src 'none'",
+        }),
+      );
+      assert.equal(problems.length, 1);
+      assert.match(problems[0], /connect-src/);
+      assert.match(problems[0], /https:\/\/nexoratechnology\.org/);
+    });
+
+    it('catches a directive the server dropped', () => {
+      const problems = checkSecurityHeaders(
+        expected,
+        live({ 'content-security-policy': "default-src 'self'; connect-src 'self'" }),
+      );
+      assert.ok(problems.some((problem) => /has no object-src/.test(problem)));
+    });
+
+    it('catches a directive the server added that _headers does not declare', () => {
+      const problems = checkSecurityHeaders(
+        expected,
+        live({
+          'content-security-policy':
+            "default-src 'self'; connect-src 'self'; object-src 'none'; report-uri /csp",
+        }),
+      );
+      assert.ok(problems.some((problem) => /sends report-uri/.test(problem)));
+    });
+
+    it('catches a second policy, which intersects rather than replaces', () => {
+      const headers = [...live(), 'content-security-policy', "default-src 'none'"];
+      const problems = checkSecurityHeaders(expected, headers);
+      assert.ok(problems.some((problem) => /sent 2 Content-Security-Policy headers/.test(problem)));
+    });
+
+    it('catches a missing policy and a changed ordinary header', () => {
+      const missing = checkSecurityHeaders(expected, live({ 'content-security-policy': '' }));
+      assert.ok(missing.some((problem) => /Content-Security-Policy is missing/.test(problem)));
+
+      const weakened = checkSecurityHeaders(expected, live({ 'x-frame-options': 'SAMEORIGIN' }));
+      assert.ok(weakened.some((problem) => /X-Frame-Options is "SAMEORIGIN"/.test(problem)));
+    });
+
+    it('reports an absent ordinary header rather than passing it over', () => {
+      const problems = checkSecurityHeaders(expected, live({ 'referrer-policy': '' }));
+      assert.ok(problems.some((problem) => /Referrer-Policy is missing/.test(problem)));
     });
   });
 });

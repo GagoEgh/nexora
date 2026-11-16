@@ -100,11 +100,12 @@ deployment. Only two exist:
 
 ## Hosting
 
-The build is fully static (`outputMode: "static"`, 27 prerendered routes - the nine pages in
-`DOCUMENT_META_PAGES` times three locales), so the host only has to serve files and answer an
-unknown URL with the prerendered 404 document. `public/_redirects` does that for Netlify,
-mapping each locale prefix to its own `not-found` page with a real `404` status. A different
-host needs the equivalent rewrite rules; without them an unknown URL falls through to the
+The build is fully static (`outputMode: "static"`, 111 prerendered routes - the nine pages in
+`DOCUMENT_META_PAGES` plus the 27 product detail pages, times three locales), so the host only
+has to serve files and answer an unknown URL with the prerendered 404 document.
+`public/_redirects` does that for Netlify, mapping each locale prefix to its own `not-found`
+page with a real `404` status. A different host needs the equivalent rewrite rules; without
+them an unknown URL falls through to the
 host's own error page instead of the localized one. `deploy/nginx/nexora-site.conf` carries
 those rules for nginx.
 
@@ -116,18 +117,22 @@ nothing in the application fails if they are missing.
 
 > **The committed nginx configuration is not the one production is running.** Run
 > `npm run verify:live-seo` for the current state — that command is the authority, not this list.
-> Most of what this section used to describe has since been fixed on the host: the earlier
-> measurement of 2026-11-06 reported 28 failing checks, and on **2026-11-12 four remain**.
+> 2026-11-06 reported 28 failing checks and 2026-11-12 reported four; on **2026-11-16 there are
+> 82**, because the portfolio grew here and was never deployed.
 >
-> | Observed on 2026-11-12                                               | Expected                              | Why                                           |
-> | -------------------------------------------------------------------- | ------------------------------------- | --------------------------------------------- |
-> | The three localized 404 bodies carry no `noindex` robots meta        | `noindex, follow`                     | the host serves a build from before `92a07ae` |
-> | Hashed assets send `Cache-Control: max-age=31536000`, no `immutable` | `public, max-age=31536000, immutable` | the asset `location` on the host differs      |
+> | Observed on 2026-11-16                                               | Count | Expected                              | Why                                                                                                                   |
+> | -------------------------------------------------------------------- | ----: | ------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+> | Every product detail page answers `404`                              |    81 | `200` with its prerendered document   | the host serves a build from before the `/our_work/:slug` routes existed; `/our_work` answers `200` but lists nothing |
+> | Hashed assets send `Cache-Control: max-age=31536000`, no `immutable` |     1 | `public, max-age=31536000, immutable` | `deploy/nginx/nexora-site.conf` line 24 already says exactly this; the host has not picked the file up                |
 >
-> Both are host-side. The first is not a configuration problem at all: the robots meta is present
-> in `dist/` (`npm run verify:seo` asserts three `noindex` documents) and the deployed bundle hash
-> does not match a current build, so production is simply behind this repository. The second is
-> one line of `nexora-site.conf` that the host has not picked up.
+> The three localized 404 bodies now carry `noindex` - that row is resolved, so this repository's
+> share of the 2026-11-12 list is clear.
+>
+> **Neither remaining item is a defect in this repository**, and neither can be fixed from it.
+> `npm run build` produces all 111 routes and `npm run verify:seo` passes over them (108
+> indexable, 3 `noindex`); the asset rule is already in `nexora-site.conf`. Both findings have
+> the same cause - production is serving an old build with an old configuration - and the same
+> fix: deploy, using the sequence below, then re-run `verify:live-seo`.
 >
 > One more drift is not covered by any check: the live CSP sends
 > `connect-src 'self' https://nexoratechnology.org`, while `public/_headers` and the generated
@@ -148,10 +153,27 @@ nothing in the application fails if they are missing.
 > silently and block hydration. `npm run verify:headers` fails when the two disagree, in CI as
 > well, so the nginx copy cannot drift from the policy the build was checked against.
 >
-> **Deploying it.** This is the whole sequence, and the order matters:
+> **Deploying it.** `npm run deploy -- user@host` is the supported path, and it is the
+> reason this section is no longer a list of commands to retype:
 >
 > ```sh
-> npm ci && npm run build            # 27 prerendered routes into dist/nexora/browser
+> npm run build
+> npm run deploy -- deploy@nexoratechnology.org          # root defaults to /srv/nexora
+> ```
+>
+> It refuses to ship an artifact that does not contain every URL `sitemap.xml` promises,
+> snapshots the running release to `/srv/nexora.prev` **before** overwriting it, syncs, then
+> runs `verify:live-seo` against the origin and **rolls back automatically** if the server
+> does not agree with this repository. The host once served a build from before the portfolio
+> existed, so 81 product URLs answered 404 while every check here passed; both halves of that
+> gap - shipping a stale artifact, and not noticing afterwards - are now closed by the script
+> rather than by remembering.
+>
+> The nginx snippets are still copied by hand, once, and the sequence below is what
+> `npm run deploy` automates - keep it for a first install or a manual recovery:
+>
+> ```sh
+> npm ci && npm run build            # 111 prerendered routes into dist/nexora/browser
 > npm run verify:prerender           # they work without JavaScript
 > npm run verify:seo                 # their metadata is correct and agrees with sitemap.xml
 > npm run verify:headers             # the nginx snippet matches this build's CSP hashes
@@ -163,11 +185,33 @@ nothing in the application fails if they are missing.
 > cp deploy/nginx/nexora-site.conf    /etc/nginx/sites-available/nexora
 > ln -s /etc/nginx/sites-available/nexora /etc/nginx/sites-enabled/nexora
 > nginx -t && systemctl reload nginx
+> # keep the running copy before replacing it - this is the rollback
+> rm -rf /srv/nexora.prev && cp -a /srv/nexora /srv/nexora.prev
 > rsync -a --delete dist/nexora/browser/ /srv/nexora/
 >
 > # back here, against the deployed origin
 > npm run verify:live-seo -- https://nexoratechnology.org
 > ```
+>
+> **Rolling back.** `verify:live-seo` is what decides whether a release stands, and it runs
+> after the files are already in place, so there has to be a way back. The copy above is it:
+>
+> ```sh
+> # on the host, if verify:live-seo fails on something the previous release did not do
+> rsync -a --delete /srv/nexora.prev/ /srv/nexora/
+> ```
+>
+> Static files make this cheap - there is no database to migrate back and no process to
+> restart, so the swap is atomic enough that a visitor mid-request sees one or the other. Do
+> not skip the `cp -a`: without it the only way back is a rebuild of whatever commit was live,
+> which is exactly the information the host does not record. The nginx snippets are versioned
+> here, so reverting configuration is `git checkout` plus another `nginx -t && systemctl
+reload nginx`.
+>
+> `verify:live-seo` also compares the live security headers against `public/_headers`,
+> directive by directive. That is the only check that reads the server rather than this
+> repository, so it is the one that notices a policy edited on the host - the drift that
+> `verify:headers` cannot see, because it compares two copies that both live here.
 >
 > `verify:live-seo` is the gate that matters: it is the only check that can see the difference
 > between the configuration in this repository and the one actually serving requests. It is
