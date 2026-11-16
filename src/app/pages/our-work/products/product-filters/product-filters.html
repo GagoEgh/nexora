@@ -1,0 +1,100 @@
+<div class="product-filters__row">
+  <div class="product-filters__axis">
+    <p class="product-filters__label" id="product-filters-category">{{ labels().category }}</p>
+
+    <div class="product-filters__chips" role="group" aria-labelledby="product-filters-category">
+      <button
+        class="product-filters__chip"
+        type="button"
+        [attr.aria-pressed]="archetype() === all"
+        (click)="onArchetype(all)"
+      >
+        {{ labels().all }}
+        <span class="product-filters__count">{{ total() }}</span>
+      </button>
+      @for (option of archetypes(); track option.value) {
+        <button
+          class="product-filters__chip"
+          type="button"
+          [attr.aria-pressed]="archetype() === option.value"
+          (click)="onArchetype(option.value)"
+        >
+          {{ option.label }}
+          <span class="product-filters__count">{{ option.count }}</span>
+        </button>
+      }
+    </div>
+
+    <div class="product-filters__select-wrap">
+      <select
+        class="product-filters__select"
+        [attr.aria-label]="labels().category"
+        (change)="onArchetypeSelect($event)"
+      >
+        <option [value]="all" [selected]="archetype() === all">
+          {{ labels().all }} ({{ total() }})
+        </option>
+        @for (option of archetypes(); track option.value) {
+          <option [value]="option.value" [selected]="archetype() === option.value">
+            {{ option.label }} ({{ option.count }})
+          </option>
+        }
+      </select>
+      <mat-icon class="product-filters__select-icon" [svgIcon]="chevronIcon" />
+    </div>
+  </div>
+
+  <div class="product-filters__axis">
+    <p class="product-filters__label" id="product-filters-platform">{{ labels().platform }}</p>
+
+    <div class="product-filters__chips" role="group" aria-labelledby="product-filters-platform">
+      <button
+        class="product-filters__chip"
+        type="button"
+        [attr.aria-pressed]="platform() === all"
+        (click)="onPlatform(all)"
+      >
+        {{ labels().all }}
+        <span class="product-filters__count">{{ total() }}</span>
+      </button>
+      @for (option of platforms(); track option.value) {
+        <button
+          class="product-filters__chip"
+          type="button"
+          [attr.aria-pressed]="platform() === option.value"
+          (click)="onPlatform(option.value)"
+        >
+          {{ option.label }}
+          <span class="product-filters__count">{{ option.count }}</span>
+        </button>
+      }
+    </div>
+
+    <div class="product-filters__select-wrap">
+      <select
+        class="product-filters__select"
+        [attr.aria-label]="labels().platform"
+        (change)="onPlatformSelect($event)"
+      >
+        <option [value]="all" [selected]="platform() === all">
+          {{ labels().all }} ({{ total() }})
+        </option>
+        @for (option of platforms(); track option.value) {
+          <option [value]="option.value" [selected]="platform() === option.value">
+            {{ option.label }} ({{ option.count }})
+          </option>
+        }
+      </select>
+      <mat-icon class="product-filters__select-icon" [svgIcon]="chevronIcon" />
+    </div>
+  </div>
+
+  @if (isFiltered()) {
+    <button class="product-filters__reset" matButton type="button" (click)="onReset()">
+      <mat-icon [svgIcon]="closeIcon" />
+      {{ labels().reset }}
+    </button>
+  }
+</div>
+
+<p class="product-filters__status" role="status">{{ labels().shown }}: {{ shown() }}</p>

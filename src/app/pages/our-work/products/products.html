@@ -14,11 +14,29 @@
     </div>
   </div>
 
-  <ul class="projects__grid">
-    @for (product of products(); track product.id) {
-      <li class="projects__card">
-        <app-project-card [product]="product" [labels]="labels()" />
-      </li>
-    }
-  </ul>
+  <app-product-filters
+    class="projects__filters"
+    [archetypes]="archetypeOptions()"
+    [platforms]="platformOptions()"
+    [archetype]="archetypeFilter()"
+    [platform]="platformFilter()"
+    [total]="products().length"
+    [shown]="visibleProducts().length"
+    [labels]="filterLabels()"
+    (archetypeChange)="onArchetypeChange($event)"
+    (platformChange)="onPlatformChange($event)"
+    (resetFilters)="onResetFilters()"
+  />
+
+  @if (visibleProducts().length > 0) {
+    <ul class="projects__grid">
+      @for (product of visibleProducts(); track product.id) {
+        <li class="projects__card">
+          <app-project-card [product]="product" [labels]="labels()" />
+        </li>
+      }
+    </ul>
+  } @else {
+    <p class="projects__empty">{{ content().filters.empty }}</p>
+  }
 </section>

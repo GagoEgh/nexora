@@ -31,6 +31,26 @@ const productContent = {
       ru: 'откроется в новой вкладке',
     }),
 
+    filters: {
+      category: t({ en: 'Category', hy: 'Կատեգորիա', ru: 'Категория' }),
+      platform: t({ en: 'Platform', hy: 'Հարթակ', ru: 'Платформа' }),
+      all: t({ en: 'All', hy: 'Բոլորը', ru: 'Все' }),
+      reset: t({
+        en: 'Show all products',
+        hy: 'Ցուցադրել բոլոր արտադրանքը',
+        ru: 'Показать все продукты',
+      }),
+      shown: t({
+        en: 'Products shown',
+        hy: 'Ցուցադրված արտադրանք',
+        ru: 'Показано продуктов',
+      }),
+      empty: t({
+        en: 'No products match these filters.',
+        hy: 'Այս զտիչներին համապատասխանող արտադրանք չկա։',
+        ru: 'Нет продуктов, соответствующих этим фильтрам.',
+      }),
+    },
     archetypes: {
       app: t({ en: 'Mobile app', hy: 'Բջջային հավելված', ru: 'Мобильное приложение' }),
       configurator: t({ en: 'Configurator', hy: 'Կոնֆիգուրատոր', ru: 'Конфигуратор' }),

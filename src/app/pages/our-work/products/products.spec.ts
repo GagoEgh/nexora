@@ -33,6 +33,15 @@ describe('Products', () => {
   const all = (selector: string) => Array.from(root.querySelectorAll(selector));
   const text = (selector: string) => all(selector).map((el) => el.textContent?.trim() ?? '');
 
+  /** Picks a value on one of the two native selects, as a narrow-screen visitor would. */
+  const choose = async (axis: number, value: string) => {
+    const select = all('select.product-filters__select')[axis] as HTMLSelectElement | undefined;
+    if (!select) throw new Error(`no select at axis ${axis}`);
+    select.value = value;
+    select.dispatchEvent(new Event('change'));
+    await fixture.whenStable();
+  };
+
   const render = async () => {
     fixture = TestBed.createComponent(Products);
     TestBed.inject(HttpTestingController)
@@ -191,6 +200,118 @@ describe('Products', () => {
 
     expect(root.querySelector('.projects__eyebrow')?.textContent?.trim()).toBe('Selected work');
     expect(root.querySelector('.projects__title')?.textContent?.trim()).toContain('Twenty-seven');
+  });
+
+  /**
+   * The grid arrives complete. Prerendered HTML is what a crawler and a visitor with no
+   * JavaScript receive, so a filter that started narrowed would publish a shorter portfolio
+   * than the one that exists.
+   */
+  it('starts with both axes open and every card on the page', async () => {
+    await render();
+
+    expect(all('.projects__card')).toHaveLength(PRODUCT_COUNT);
+    expect(root.querySelector('.projects__empty')).toBeNull();
+    expect(root.querySelector('.product-filters__reset'), 'nothing to reset yet').toBeNull();
+  });
+
+  /** The select carries the same options as the chips, so the narrow layout can filter too. */
+  it('offers every archetype and every platform the registry uses', async () => {
+    await render();
+
+    const selects = all('select.product-filters__select');
+    expect(selects, 'one per axis').toHaveLength(2);
+
+    const archetypes = new Set(PRODUCT_IDS.map((id) => PRODUCT_META[id].archetype));
+    const platforms = new Set(
+      PRODUCT_IDS.map((id) => PRODUCT_META[id].platform).filter((value) => value !== undefined),
+    );
+    expect(selects[0]?.querySelectorAll('option')).toHaveLength(archetypes.size + 1);
+    expect(selects[1]?.querySelectorAll('option')).toHaveLength(platforms.size + 1);
+  });
+
+  it('narrows the grid by category', async () => {
+    await render();
+
+    const expected = PRODUCT_IDS.filter((id) => PRODUCT_META[id].archetype === 'app').length;
+    await choose(0, 'app');
+
+    expect(all('.projects__card')).toHaveLength(expected);
+    expect(expected).toBeLessThan(PRODUCT_COUNT);
+  });
+
+  it('narrows the grid by platform', async () => {
+    await render();
+
+    const expected = PRODUCT_IDS.filter((id) => PRODUCT_META[id].platform === 'Shopify').length;
+    await choose(1, 'Shopify');
+
+    expect(all('.projects__card')).toHaveLength(expected);
+  });
+
+  /** The case a single filter cannot express, and the one most likely to be wired wrong. */
+  it('applies both filters together', async () => {
+    await render();
+
+    const expected = PRODUCT_IDS.filter(
+      (id) =>
+        PRODUCT_META[id].archetype === 'storefront' && PRODUCT_META[id].platform === 'Shopify',
+    ).length;
+
+    await choose(0, 'storefront');
+    await choose(1, 'Shopify');
+
+    expect(all('.projects__card')).toHaveLength(expected);
+  });
+
+  it('says so when the two filters intersect to nothing', async () => {
+    await render();
+
+    await choose(0, 'app');
+    await choose(1, 'Shopify');
+
+    expect(all('.projects__card')).toHaveLength(0);
+    expect(root.querySelector('.projects__empty')?.textContent?.trim()).toBe(
+      'No products match these filters.',
+    );
+  });
+
+  it('puts every card back when the filters are reset', async () => {
+    await render();
+
+    await choose(0, 'app');
+    await choose(1, 'iOS · App Store');
+    expect(all('.projects__card').length).toBeLessThan(PRODUCT_COUNT);
+
+    const reset = root.querySelector<HTMLButtonElement>('.product-filters__reset');
+    expect(reset, 'the reset appears once a filter is set').not.toBeNull();
+    reset?.click();
+    await fixture.whenStable();
+
+    expect(all('.projects__card')).toHaveLength(PRODUCT_COUNT);
+    expect(root.querySelector('.product-filters__reset')).toBeNull();
+  });
+
+  /** Both controls name their axis, and the result count is announced rather than only drawn. */
+  it('names each filter and reports the count to a screen reader', async () => {
+    await render();
+
+    expect(
+      all('select.product-filters__select').map((el) => el.getAttribute('aria-label')),
+    ).toEqual(['Category', 'Platform']);
+    const groups = all('.product-filters__chips');
+    expect(groups.map((el) => el.getAttribute('role'))).toEqual(['group', 'group']);
+    expect(
+      groups.map((el) => root.querySelector(`#${el.getAttribute('aria-labelledby')}`)?.textContent),
+    ).toEqual(['Category', 'Platform']);
+
+    // The pressed state is the attribute a screen reader reads, and exactly one per axis is set.
+    const pressed = all('.product-filters__chip[aria-pressed="true"]');
+    expect(pressed, 'one per axis, both on All to begin with').toHaveLength(2);
+
+    const status = root.querySelector('.product-filters__status');
+    expect(status?.getAttribute('role')).toBe('status');
+    expect(status?.textContent).toContain(String(PRODUCT_COUNT));
   });
 
   it('translates the band and every card', async () => {

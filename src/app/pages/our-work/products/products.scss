@@ -103,3 +103,16 @@
     @include reveal.hidden();
   }
 }
+
+.projects__filters {
+  margin-block-end: spacing.space(24);
+}
+
+.projects__empty {
+  @include text.contained();
+  margin: 0;
+  padding-block: spacing.space(48);
+  text-align: center;
+  font: var(--nx-sys-body-copy);
+  color: var(--mat-sys-on-surface-variant);
+}
