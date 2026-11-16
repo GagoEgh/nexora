@@ -9,9 +9,9 @@ const productContent = {
       ru: 'Избранные работы',
     }),
     title: t({
-      en: 'Twenty-two products, and what makes each one different.',
-      hy: 'Քսաներկու արտադրանք՝ յուրաքանչյուրն իր առանձնահատկությամբ։',
-      ru: 'Двадцать два продукта — и то, чем каждый из них отличается.',
+      en: 'Twenty-four products, and what makes each one different.',
+      hy: 'Քսանչորս արտադրանք՝ յուրաքանչյուրն իր առանձնահատկությամբ։',
+      ru: 'Двадцать четыре продукта — и то, чем каждый из них отличается.',
     }),
     intro: t({
       en: 'Mobile apps, storefronts, configurators and lead funnels across automotive, healthcare, beauty, food and luxury retail — each one summarised by the capability that sets it apart.',
@@ -1437,9 +1437,9 @@ const productContent = {
           ru: 'Владелец получает одно место для того, что раньше означало звонок дилеру.',
         }),
         about: t({
-          en: 'A connected-vehicle application is unlike every other product in this portfolio because the other side of the interface is a car rather than a database. Latency matters, connectivity is intermittent by nature, and a failed command has consequences a failed page load does not. The application brings remote control, GPS tracking, real-time monitoring, security alerting and maintenance management into a single interface for owners of premium vehicles. Of all twenty-two products this is the one whose published presence could not be established, so what is described here is its intended scope rather than a feature set verified against a live listing.',
-          hy: 'Կապակցված մեքենայի հավելվածը տարբերվում է այս պորտֆոլիոյի մյուս բոլոր արտադրանքներից, որովհետև ինտերֆեյսի մյուս կողմում մեքենա է, ոչ թե տվյալների բազա։ Ուշացումը կարևոր է, կապը բնույթով ընդհատվող է, իսկ ձախողված հրամանն ունի հետևանքներ, որոնք չունի չբեռնված էջը։ Հավելվածը մեկ ինտերֆեյսում միավորում է հեռակառավարումը, GPS հետևումը, իրական ժամանակի մոնիտորինգը, անվտանգության ծանուցումներն ու սպասարկման կառավարումը՝ պրեմիում մեքենաների սեփականատերերի համար։ Քսաներկու արտադրանքից սա միակն է, որի հրապարակային ներկայությունը հնարավոր չեղավ հաստատել, ուստի այստեղ նկարագրվածը նրա նախատեսված շրջանակն է, ոչ թե գործող էջի դիմաց ստուգված հնարավորությունների ցանկ։',
-          ru: 'Приложение для подключённого автомобиля отличается от всех остальных продуктов портфолио тем, что по другую сторону интерфейса находится машина, а не база данных. Здесь важна задержка, связь по своей природе прерывиста, а несработавшая команда имеет последствия, которых не бывает у незагрузившейся страницы. Приложение объединяет в одном интерфейсе удалённое управление, GPS-отслеживание, мониторинг в реальном времени, оповещения безопасности и управление обслуживанием для владельцев премиальных автомобилей. Из двадцати двух продуктов это единственный, чьё публичное присутствие установить не удалось, поэтому описанное здесь — его предполагаемый объём, а не набор функций, проверенный по действующей странице.',
+          en: 'A connected-vehicle application is unlike every other product in this portfolio because the other side of the interface is a car rather than a database. Latency matters, connectivity is intermittent by nature, and a failed command has consequences a failed page load does not. The application brings remote control, GPS tracking, real-time monitoring, security alerting and maintenance management into a single interface for owners of premium vehicles. Of all twenty-four products this is the one whose published presence could not be established, so what is described here is its intended scope rather than a feature set verified against a live listing.',
+          hy: 'Կապակցված մեքենայի հավելվածը տարբերվում է այս պորտֆոլիոյի մյուս բոլոր արտադրանքներից, որովհետև ինտերֆեյսի մյուս կողմում մեքենա է, ոչ թե տվյալների բազա։ Ուշացումը կարևոր է, կապը բնույթով ընդհատվող է, իսկ ձախողված հրամանն ունի հետևանքներ, որոնք չունի չբեռնված էջը։ Հավելվածը մեկ ինտերֆեյսում միավորում է հեռակառավարումը, GPS հետևումը, իրական ժամանակի մոնիտորինգը, անվտանգության ծանուցումներն ու սպասարկման կառավարումը՝ պրեմիում մեքենաների սեփականատերերի համար։ Քսանչորս արտադրանքից սա միակն է, որի հրապարակային ներկայությունը հնարավոր չեղավ հաստատել, ուստի այստեղ նկարագրվածը նրա նախատեսված շրջանակն է, ոչ թե գործող էջի դիմաց ստուգված հնարավորությունների ցանկ։',
+          ru: 'Приложение для подключённого автомобиля отличается от всех остальных продуктов портфолио тем, что по другую сторону интерфейса находится машина, а не база данных. Здесь важна задержка, связь по своей природе прерывиста, а несработавшая команда имеет последствия, которых не бывает у незагрузившейся страницы. Приложение объединяет в одном интерфейсе удалённое управление, GPS-отслеживание, мониторинг в реальном времени, оповещения безопасности и управление обслуживанием для владельцев премиальных автомобилей. Из двадцати четырёх продуктов это единственный, чьё публичное присутствие установить не удалось, поэтому описанное здесь — его предполагаемый объём, а не набор функций, проверенный по действующей странице.',
         }),
         photoAlts: [
           t({
@@ -1681,6 +1681,154 @@ const productContent = {
             en: 'Fabric swatches fanned out from a single point, textured weaves and plain naps in blues, reds, browns, greens and creams',
             hy: 'Գործվածքների նմուշներ՝ հովհարաձև մեկ կետից բացված, հյուսվածքային և հարթ մակերեսներ՝ կապույտ, կարմիր, շագանակագույն, կանաչ և կաթնագույն երանգներով',
             ru: 'Образцы тканей, разложенные веером из одной точки: фактурные переплетения и гладкие ворсовые полотна в синих, красных, коричневых, зелёных и кремовых тонах',
+          }),
+        ],
+      },
+      'atomic-shop': {
+        name: t({ en: 'ATOMIC-SHOP', hy: 'ATOMIC-SHOP', ru: 'ATOMIC-SHOP' }),
+        category: t({
+          en: 'Performance parts commerce',
+          hy: 'Ավտոսպորտային պահեստամասերի առևտուր',
+          ru: 'Торговля тюнинг-комплектующими',
+        }),
+        hook: t({
+          en: 'Three ways into one catalogue, because a part that fits the wrong car fits nothing.',
+          hy: 'Երեք մուտք մեկ կատալոգ, որովհետև սխալ մեքենային սազող դետալը ոչնչի չի սազում։',
+          ru: 'Три входа в один каталог: деталь, подошедшая не к той машине, не подошла ни к чему.',
+        }),
+        summary: t({
+          en: 'A European storefront for performance parts and motorsport equipment, built around fitment for a specific chassis.',
+          hy: 'Ավտոսպորտային պահեստամասերի և սարքավորումների եվրոպական խանութ՝ կառուցված կոնկրետ թափքին համապատասխանության շուրջ։',
+          ru: 'Европейский магазин тюнинг-комплектующих и мотоспортивного оборудования, построенный вокруг подбора под конкретный кузов.',
+        }),
+        highlights: [
+          t({
+            en: 'Year, make and model vehicle finder',
+            hy: 'Ընտրիչ՝ ըստ տարեթվի, մակնիշի և մոդելի',
+            ru: 'Подбор по году, марке и модели',
+          }),
+          t({
+            en: 'Six departments from brakes to safety gear',
+            hy: 'Վեց բաժին՝ արգելակներից մինչև պաշտպանիչ հանդերձանք',
+            ru: 'Шесть разделов — от тормозов до экипировки',
+          }),
+          t({
+            en: 'Chassis-specific collections',
+            hy: 'Թափքին հատուկ հավաքածուներ',
+            ru: 'Подборки под конкретные кузова',
+          }),
+          t({
+            en: 'In stock, special order or sold out',
+            hy: 'Առկա, հատուկ պատվերով կամ սպառված',
+            ru: 'В наличии, под заказ или распродано',
+          }),
+        ],
+        advantage: t({
+          en: 'Fitment is asked about before the basket, not discovered after delivery.',
+          hy: 'Համապատասխանության մասին հարցնում են զամբյուղից առաջ, ոչ թե պարզում առաքումից հետո։',
+          ru: 'О совместимости спрашивают до корзины, а не выясняют после доставки.',
+        }),
+        value: t({
+          en: 'A buyer who knows their chassis code can be sure before paying, not hopeful.',
+          hy: 'Գնորդը, ով գիտի իր թափքի կոդը, կարող է վստահ լինել վճարելուց առաջ, ոչ թե հուսալ։',
+          ru: 'Покупатель, знающий код кузова, может быть уверен до оплаты, а не надеяться.',
+        }),
+        about: t({
+          en: 'Performance parts fail in a particular way: the component arrives, it is well made, and it does not fit the car it was bought for. This storefront is organised against that failure, offering three routes into the same stock - six departments from brakes and suspension through to safety gear, a year-make-model finder under the heading "Choose Your Car for a Perfect Fit", and collections cut to individual chassis such as the GT-R R35 or the Porsche GT4. Stock is stated in three honest states rather than two, so an item that has to be brought in is labelled a special order instead of being presented as shelf stock, and prices carry their reductions openly across new arrivals, best sellers and discounts. A territory selector spanning most of the world in euros makes clear who it can ship to. The shop also races what it sells, and the project cars that appear throughout are the argument that the catalogue has been used rather than merely listed.',
+          hy: 'Ավտոսպորտային պահեստամասերը ձախողվում են յուրահատուկ ձևով. դետալը հասնում է, լավ պատրաստված է, բայց չի համապատասխանում այն մեքենային, որի համար գնվել է։ Այս խանութը կազմակերպված է հենց այդ ձախողման դեմ՝ առաջարկելով երեք ճանապարհ դեպի նույն ապրանքը՝ վեց բաժին՝ արգելակներից ու կախոցից մինչև պաշտպանիչ հանդերձանք, ընտրիչ՝ ըստ տարեթվի, մակնիշի և մոդելի՝ «Choose Your Car for a Perfect Fit» վերնագրի ներքո, և հավաքածուներ՝ ձևված առանձին թափքերի համար, օրինակ՝ GT-R R35 կամ Porsche GT4։ Առկայությունը նշվում է երեք ազնիվ վիճակով, ոչ թե երկուսով, ուստի այն ապրանքը, որը պետք է բերվի, նշվում է որպես հատուկ պատվեր, այլ ոչ թե ներկայացվում որպես պահեստում եղած, իսկ գներն իրենց զեղչերը բացահայտ կրում են նոր ժամանումների, լավագույն վաճառվողների և զեղչերի բաժիններում։ Տարածքների ընտրիչը, որն ընդգրկում է աշխարհի մեծ մասը եվրոյով, հստակեցնում է, թե ում կարող են առաքել։ Խանութը նաև մրցում է այն ամենով, ինչ վաճառում է, և էջերում հայտնվող նախագծային մեքենաներն այն փաստարկն են, որ կատալոգը օգտագործվել է, ոչ թե պարզապես ցուցակագրվել։',
+          ru: 'Тюнинг-комплектующие подводят особым образом: деталь приходит, она хорошо сделана — и не подходит к той машине, для которой её покупали. Эта витрина выстроена против такой неудачи и предлагает три пути к одному и тому же ассортименту: шесть разделов — от тормозов и подвески до защитной экипировки, подбор по году, марке и модели под заголовком «Choose Your Car for a Perfect Fit» и подборки, скроенные под отдельные кузова, например GT-R R35 или Porsche GT4. Наличие обозначается тремя честными состояниями, а не двумя, поэтому товар, который нужно привезти, помечен как заказ под клиента, а не выдаётся за складской, и цены открыто несут свои скидки в разделах новинок, хитов продаж и распродаж. Выбор территории, охватывающий большую часть мира в евро, ясно говорит, куда возможна отправка. Магазин ещё и выступает на том, что продаёт, и проектные машины, которые встречаются по всему сайту, — аргумент в пользу того, что каталогом пользовались, а не просто его составили.',
+        }),
+        photoAlts: [
+          t({
+            en: 'A white Volkswagen Golf R on a circuit, taking a guardrail-lined left-hand bend past bare winter trees, an ATOMIC banner across the top of its windscreen',
+            hy: 'Սպիտակ Volkswagen Golf R՝ ուղու վրա, անցնում է ապահովիչ պատնեշով եզրագծված ձախ շրջադարձը՝ ձմեռային մերկ ծառերի մոտով, հողմապակու վերին մասում՝ ATOMIC մակագրությամբ ժապավեն',
+            ru: 'Белый Volkswagen Golf R на трассе проходит левый поворот вдоль отбойника мимо голых зимних деревьев, по верху лобового стекла — полоса с надписью ATOMIC',
+          }),
+          t({
+            en: 'A matte grey BMW M3 saloon parked on tarmac beside a grandstand, on black split-spoke wheels with a black grille and front splitter',
+            hy: 'Մատ մոխրագույն BMW M3 սեդան՝ կանգնած ասֆալտին՝ ամֆիթատրոնի կողքին, սև երկճյուղ անիվներով, սև ջերմափոխանակիչի վանդակով և առջևի սպլիտերով',
+            ru: 'Матово-серый седан BMW M3 стоит на асфальте у трибуны, на чёрных сдвоенных спицах, с чёрной решёткой и передним сплиттером',
+          }),
+          t({
+            en: 'A bright green BMW M4 coupe on a show stand, carbon roof and tall rear wing, quad exhausts and a carbon diffuser, polished multi-piece wheels catching the lights',
+            hy: 'Վառ կանաչ BMW M4 կուպե՝ ցուցահանդեսային հարթակին, ածխաթելային տանիք և բարձր հետևի թև, քառակի արտանետման խողովակներ և ածխաթելային դիֆուզոր, փայլեցված բազմամաս անիվներ՝ լույսերի արտացոլանքով',
+            ru: 'Ярко-зелёное купе BMW M4 на выставочном подиуме: карбоновая крыша и высокое заднее антикрыло, четыре выхлопные трубы и карбоновый диффузор, полированные составные диски ловят свет',
+          }),
+        ],
+      },
+      'trade-line-group': {
+        name: t({
+          en: 'Trade Line Group',
+          hy: 'Trade Line Group',
+          ru: 'Trade Line Group',
+        }),
+        category: t({
+          en: 'Hunting and sporting goods retail',
+          hy: 'Որսորդական և սպորտային ապրանքների մանրածախ առևտուր',
+          ru: 'Розница охотничьих и спортивных товаров',
+        }),
+        hook: t({
+          en: 'A catalogue, a shooting range and the rules that govern both, on one site.',
+          hy: 'Կատալոգ, հրաձգարան և երկուսն էլ կարգավորող կանոնները՝ մեկ կայքում։',
+          ru: 'Каталог, тир и правила, которые регулируют и то и другое, — на одном сайте.',
+        }),
+        summary: t({
+          en: 'A retail chain in Yerevan presenting its stores, its product range and its indoor shooting range in one English-language catalogue.',
+          hy: 'Երևանյան մանրածախ ցանց, որը մեկ անգլալեզու կատալոգում ներկայացնում է իր խանութները, ապրանքատեսականին և փակ հրաձգարանը։',
+          ru: 'Ереванская розничная сеть, представляющая свои магазины, ассортимент и крытый тир в одном англоязычном каталоге.',
+        }),
+        highlights: [
+          t({
+            en: 'Six catalogue departments',
+            hy: 'Կատալոգի վեց բաժին',
+            ru: 'Шесть разделов каталога',
+          }),
+          t({
+            en: 'Range visits booked from the main menu',
+            hy: 'Հրաձգարան այցեր՝ ամրագրվող գլխավոր ընտրացանկից',
+            ru: 'Запись в тир прямо из главного меню',
+          }),
+          t({
+            en: 'News stream covering rule changes',
+            hy: 'Նորությունների հոսք՝ կանոնների փոփոխությունների մասին',
+            ru: 'Лента новостей об изменениях правил',
+          }),
+          t({
+            en: 'Four stores in Yerevan since 2017',
+            hy: 'Չորս խանութ Երևանում 2017 թվականից',
+            ru: 'Четыре магазина в Ереване с 2017 года',
+          }),
+        ],
+        advantage: t({
+          en: 'Rule changes are published beside the goods they affect rather than left for the counter.',
+          hy: 'Կանոնների փոփոխությունները հրապարակվում են այն ապրանքների կողքին, որոնց վերաբերում են, այլ ոչ թե թողնվում վաճառասեղանին։',
+          ru: 'Изменения правил публикуются рядом с товарами, которых они касаются, а не оставляются на прилавок.',
+        }),
+        value: t({
+          en: 'In a regulated category a buyer needs to know what is currently permitted before what is in stock.',
+          hy: 'Կարգավորվող ոլորտում գնորդին նախ պետք է իմանալ, թե ինչ է ներկայումս թույլատրված, և միայն հետո՝ ինչ կա առկա։',
+          ru: 'В регулируемой категории покупателю важно сначала знать, что сейчас разрешено, и только потом — что есть в наличии.',
+        }),
+        about: t({
+          en: 'Retailing licensed goods differs from ordinary retail in one respect that shapes the whole site: what a customer may buy and hold is set by regulation, and the regulation changes. This one answers that by running a news stream about rule changes - an explainer on amended airgun law sits among the announcements - directly alongside a catalogue divided into firearms, airguns, cartridges, optics, knives and accessories. The chain has grown to four stores in Yerevan since 2017 and presents its indoor range as the largest in the country, which is why a range visit sits in the main navigation as a destination of its own rather than as a note under the shop. The result has three jobs at once: goods that still need a physical counter, a facility that needs booking, and a regulatory position that has to stay current, all carried in English for a market that reaches beyond Armenia.',
+          hy: 'Լիցենզավորվող ապրանքների մանրածախ առևտուրը սովորականից տարբերվում է մի հանգամանքով, որը ձևավորում է ամբողջ կայքը. այն, ինչ հաճախորդը կարող է գնել և պահել, սահմանվում է կարգավորմամբ, իսկ կարգավորումը փոփոխվում է։ Այս կայքը դրան պատասխանում է՝ վարելով նորությունների հոսք կանոնների փոփոխությունների մասին, որտեղ հայտարարությունների շարքում է նաև օդաճնշական զենքի օրենքի փոփոխությունների բացատրությունը, և դա տեղադրված է անմիջապես կատալոգի կողքին, որը բաժանված է հրազենի, օդաճնշական զենքի, փամփուշտների, օպտիկայի, դանակների և պարագաների։ Ցանցը 2017 թվականից ի վեր հասել է Երևանի չորս խանութի և իր փակ հրաձգարանը ներկայացնում է որպես երկրի ամենամեծը, այդ պատճառով հրաձգարան այցը գլխավոր ընտրացանկում առանձին ուղղություն է, ոչ թե խանութի տակ դրված ծանոթագրություն։ Արդյունքում կայքը կատարում է երեք գործ միաժամանակ՝ ապրանքներ, որոնք դեռ պահանջում են ֆիզիկական վաճառասեղան, հաստատություն, որը պահանջում է ամրագրում, և կարգավորող դիրք, որը պետք է մնա արդիական՝ ամբողջը ներկայացված անգլերենով՝ Հայաստանից դուրս հասնող շուկայի համար։',
+          ru: 'Розница лицензируемых товаров отличается от обычной одним обстоятельством, которое определяет весь сайт: то, что покупатель вправе купить и хранить, задаётся регулированием, а регулирование меняется. Этот сайт отвечает на это лентой новостей об изменениях правил — среди объявлений есть разбор поправок к закону о пневматическом оружии, — и она стоит прямо рядом с каталогом, разделённым на огнестрельное оружие, пневматику, патроны, оптику, ножи и аксессуары. Сеть выросла до четырёх магазинов в Ереване с 2017 года и представляет свой крытый тир как крупнейший в стране, поэтому визит в тир вынесен в главное меню как самостоятельное направление, а не как примечание к магазину. В итоге сайт выполняет три задачи сразу: товары, которым по-прежнему нужен физический прилавок, площадка, которой нужна запись, и регуляторная позиция, которая должна оставаться актуальной, — и всё это по-английски, для рынка, выходящего за пределы Армении.',
+        }),
+        photoAlts: [
+          t({
+            en: 'The company wordmark beside a wild goat standing on a rocky mountain ledge, above the line "a chain of hunting shops" and the words Armenia and Yerevan',
+            hy: 'Ընկերության բառանշանը՝ ժայռոտ լեռան եզրին կանգնած վայրի այծի կողքին, ներքևում՝ «որսորդական խանութների ցանց» տողը և Հայաստան ու Երևան բառերը',
+            ru: 'Словесный знак компании рядом с диким козлом, стоящим на скалистом уступе, под ними строка «сеть охотничьих магазинов» и слова Армения и Ереван',
+          }),
+          t({
+            en: 'An over-and-under hunting shotgun photographed side-on against white, its two blued barrels above a chequered walnut forend and stock',
+            hy: 'Որսորդական երկփողանի հրացան՝ լուսանկարված կողքից՝ սպիտակ ֆոնին, երկու սևացված փողերը՝ ընկուզենու փորագրված առջևամասի և կոթի վերևում',
+            ru: 'Охотничье ружьё с вертикальным расположением стволов, снятое сбоку на белом фоне: два воронёных ствола над ореховым цевьём и прикладом с насечкой',
+          }),
+          t({
+            en: 'A black self-loading rifle photographed side-on against white, with a polymer stock and grip, a ribbed handguard and a curved detachable magazine',
+            hy: 'Սև ինքնալից հրացան՝ լուսանկարված կողքից՝ սպիտակ ֆոնին, պոլիմերային կոթով ու բռնակով, կողավոր ձեռնապաշտպանով և կորագիծ հանովի փամփշտատուփով',
+            ru: 'Чёрный самозарядный карабин, снятый сбоку на белом фоне: полимерные приклад и рукоять, ребристое цевьё и изогнутый отъёмный магазин',
           }),
         ],
       },

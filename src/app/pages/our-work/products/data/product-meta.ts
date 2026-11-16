@@ -259,6 +259,26 @@ export const PRODUCT_META: Readonly<Record<ProductId, ProductMeta>> = {
     url: 'https://kgtex.ru/',
     platform: 'WordPress',
   },
+  'atomic-shop': {
+    archetype: 'storefront',
+    photos: [
+      { file: 'atomic.webp', width: 1024, height: 633 },
+      { file: 'atomic-shop-m3.webp', width: 960, height: 640 },
+      { file: 'atomic-shop-m4.webp', width: 960, height: 640 },
+    ],
+    url: 'https://atomic-shop.eu/',
+    platform: 'Shopify',
+  },
+  'trade-line-group': {
+    archetype: 'storefront',
+    photos: [
+      { file: 'tradeline.webp', width: 637, height: 396 },
+      { file: 'tradeline-shotgun.webp', width: 1280, height: 254 },
+      { file: 'tradeline-rifle.webp', width: 1280, height: 439 },
+    ],
+    url: 'https://tradelinegroup01.com/en',
+    platform: 'Next.js',
+  },
 };
 
 export function photoSrc(photo: ProductPhoto): string {
