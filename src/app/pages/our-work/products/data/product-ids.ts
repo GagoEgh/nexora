@@ -22,6 +22,7 @@ export const PRODUCT_IDS = [
   'connected-car',
   'fairwell',
   'grishaev-architects',
+  'kgtex',
 ] as const;
 
 export type ProductId = (typeof PRODUCT_IDS)[number];

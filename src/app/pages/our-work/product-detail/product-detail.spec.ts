@@ -100,7 +100,7 @@ describe('ProductDetail', () => {
   });
 
   /**
-   * Twenty-one of these are brand names that read identically in all three locales. A title of
+   * Twenty-two of these are brand names that read identically in all three locales. A title of
    * the name alone would give each product's own hreflang alternates the same title, which is
    * what `verify-seo` fails the build over.
    */
@@ -280,7 +280,7 @@ describe('ProductDetail', () => {
 
   /**
    * Category and platform are the product's metadata, read as one block of facts rather than
-   * two stray lines. Four of the twenty-one have no platform on record and state none, which is
+   * two stray lines. Four of the twenty-two have no platform on record and state none, which is
    * the alternative to guessing at a stack - so the block is one item there and two here.
    */
   it('states the platform beside the category, and only when one is known', async () => {
@@ -325,7 +325,7 @@ describe('ProductDetail', () => {
   });
 
   /**
-   * Only the twenty-one known slugs are prerendered, so this is reached by a hand-typed or stale
+   * Only the twenty-two known slugs are prerendered, so this is reached by a hand-typed or stale
    * URL. Showing an empty page there would be indexed as a thin page on a real URL.
    *
    * `matchProductSlug` is what decides it: the product route does not match, the router falls

@@ -9,9 +9,9 @@ const productContent = {
       ru: 'Избранные работы',
     }),
     title: t({
-      en: 'Twenty-one products, and what makes each one different.',
-      hy: 'Քսանմեկ արտադրանք՝ յուրաքանչյուրն իր առանձնահատկությամբ։',
-      ru: 'Двадцать один продукт — и то, чем каждый из них отличается.',
+      en: 'Twenty-two products, and what makes each one different.',
+      hy: 'Քսաներկու արտադրանք՝ յուրաքանչյուրն իր առանձնահատկությամբ։',
+      ru: 'Двадцать два продукта — и то, чем каждый из них отличается.',
     }),
     intro: t({
       en: 'Mobile apps, storefronts, configurators and lead funnels across automotive, healthcare, beauty, food and luxury retail — each one summarised by the capability that sets it apart.',
@@ -1437,9 +1437,9 @@ const productContent = {
           ru: 'Владелец получает одно место для того, что раньше означало звонок дилеру.',
         }),
         about: t({
-          en: 'A connected-vehicle application is unlike every other product in this portfolio because the other side of the interface is a car rather than a database. Latency matters, connectivity is intermittent by nature, and a failed command has consequences a failed page load does not. The application brings remote control, GPS tracking, real-time monitoring, security alerting and maintenance management into a single interface for owners of premium vehicles. Of all twenty-one products this is the one whose published presence could not be established, so what is described here is its intended scope rather than a feature set verified against a live listing.',
-          hy: 'Կապակցված մեքենայի հավելվածը տարբերվում է այս պորտֆոլիոյի մյուս բոլոր արտադրանքներից, որովհետև ինտերֆեյսի մյուս կողմում մեքենա է, ոչ թե տվյալների բազա։ Ուշացումը կարևոր է, կապը բնույթով ընդհատվող է, իսկ ձախողված հրամանն ունի հետևանքներ, որոնք չունի չբեռնված էջը։ Հավելվածը մեկ ինտերֆեյսում միավորում է հեռակառավարումը, GPS հետևումը, իրական ժամանակի մոնիտորինգը, անվտանգության ծանուցումներն ու սպասարկման կառավարումը՝ պրեմիում մեքենաների սեփականատերերի համար։ Քսանմեկ արտադրանքից սա միակն է, որի հրապարակային ներկայությունը հնարավոր չեղավ հաստատել, ուստի այստեղ նկարագրվածը նրա նախատեսված շրջանակն է, ոչ թե գործող էջի դիմաց ստուգված հնարավորությունների ցանկ։',
-          ru: 'Приложение для подключённого автомобиля отличается от всех остальных продуктов портфолио тем, что по другую сторону интерфейса находится машина, а не база данных. Здесь важна задержка, связь по своей природе прерывиста, а несработавшая команда имеет последствия, которых не бывает у незагрузившейся страницы. Приложение объединяет в одном интерфейсе удалённое управление, GPS-отслеживание, мониторинг в реальном времени, оповещения безопасности и управление обслуживанием для владельцев премиальных автомобилей. Из двадцати одного продукта это единственный, чьё публичное присутствие установить не удалось, поэтому описанное здесь — его предполагаемый объём, а не набор функций, проверенный по действующей странице.',
+          en: 'A connected-vehicle application is unlike every other product in this portfolio because the other side of the interface is a car rather than a database. Latency matters, connectivity is intermittent by nature, and a failed command has consequences a failed page load does not. The application brings remote control, GPS tracking, real-time monitoring, security alerting and maintenance management into a single interface for owners of premium vehicles. Of all twenty-two products this is the one whose published presence could not be established, so what is described here is its intended scope rather than a feature set verified against a live listing.',
+          hy: 'Կապակցված մեքենայի հավելվածը տարբերվում է այս պորտֆոլիոյի մյուս բոլոր արտադրանքներից, որովհետև ինտերֆեյսի մյուս կողմում մեքենա է, ոչ թե տվյալների բազա։ Ուշացումը կարևոր է, կապը բնույթով ընդհատվող է, իսկ ձախողված հրամանն ունի հետևանքներ, որոնք չունի չբեռնված էջը։ Հավելվածը մեկ ինտերֆեյսում միավորում է հեռակառավարումը, GPS հետևումը, իրական ժամանակի մոնիտորինգը, անվտանգության ծանուցումներն ու սպասարկման կառավարումը՝ պրեմիում մեքենաների սեփականատերերի համար։ Քսաներկու արտադրանքից սա միակն է, որի հրապարակային ներկայությունը հնարավոր չեղավ հաստատել, ուստի այստեղ նկարագրվածը նրա նախատեսված շրջանակն է, ոչ թե գործող էջի դիմաց ստուգված հնարավորությունների ցանկ։',
+          ru: 'Приложение для подключённого автомобиля отличается от всех остальных продуктов портфолио тем, что по другую сторону интерфейса находится машина, а не база данных. Здесь важна задержка, связь по своей природе прерывиста, а несработавшая команда имеет последствия, которых не бывает у незагрузившейся страницы. Приложение объединяет в одном интерфейсе удалённое управление, GPS-отслеживание, мониторинг в реальном времени, оповещения безопасности и управление обслуживанием для владельцев премиальных автомобилей. Из двадцати двух продуктов это единственный, чьё публичное присутствие установить не удалось, поэтому описанное здесь — его предполагаемый объём, а не набор функций, проверенный по действующей странице.',
         }),
         photoAlts: [
           t({
@@ -1609,6 +1609,78 @@ const productContent = {
             en: 'A symmetrical white house of two glazed wings either side of a dark stone entrance, raised on a wide plinth with agaves at the steps and palms behind',
             hy: 'Համաչափ սպիտակ տուն՝ մուգ քարե մուտքի երկու կողմում ապակեպատ երկու թև, բարձրացված լայն պատվանդանի վրա՝ աստիճանների մոտ ագավաներով, հետևում՝ արմավենիներ',
             ru: 'Симметричный белый дом из двух остеклённых крыльев по сторонам тёмного каменного входа, поднятый на широком стилобате, у ступеней агавы, позади пальмы',
+          }),
+        ],
+      },
+      kgtex: {
+        name: t({ en: 'KG Tex', hy: 'KG Tex', ru: 'KG Tex' }),
+        category: t({
+          en: 'Garment manufacturing',
+          hy: 'Հագուստի արտադրություն',
+          ru: 'Швейное производство',
+        }),
+        hook: t({
+          en: 'A factory floor described step by step, for buyers who cannot visit it.',
+          hy: 'Արտադրամաս՝ նկարագրված քայլ առ քայլ այն գնորդների համար, ովքեր չեն կարող այցելել այնտեղ։',
+          ru: 'Производство, описанное шаг за шагом, — для заказчиков, которые не могут приехать на него посмотреть.',
+        }),
+        summary: t({
+          en: 'A full-cycle garment factory in Bishkek presenting its wholesale production service to clothing brands across the CIS.',
+          hy: 'Բիշքեկի ամբողջական ցիկլի կարի ֆաբրիկա, որը ներկայացնում է իր մեծածախ արտադրության ծառայությունը ԱՊՀ հագուստի բրենդներին։',
+          ru: 'Швейная фабрика полного цикла в Бишкеке, представляющая услугу оптового пошива брендам одежды по СНГ.',
+        }),
+        highlights: [
+          t({
+            en: 'Eight-step route from model to shipment',
+            hy: 'Ութ քայլ՝ մոդելից մինչև առաքում',
+            ru: 'Восемь шагов от модели до отгрузки',
+          }),
+          t({
+            en: 'Pattern making, sampling and batch sewing',
+            hy: 'Հարթաչափերի մշակում, նմուշ և խմբաքանակի կար',
+            ru: 'Разработка лекал, образец и пошив партии',
+          }),
+          t({
+            en: 'Eight garment categories',
+            hy: 'Հագուստի ութ կատեգորիա',
+            ru: 'Восемь категорий одежды',
+          }),
+          t({
+            en: 'Chestny Znak marking and full paperwork',
+            hy: '«Չեստնի Զնակ» մակնշում և ամբողջական փաստաթղթեր',
+            ru: 'Маркировка «Честный знак» и полный пакет документов',
+          }),
+        ],
+        advantage: t({
+          en: 'Every stage is named, so a brand can see where its order would be at any week.',
+          hy: 'Յուրաքանչյուր փուլ անվանված է, ուստի բրենդը կարող է տեսնել, թե որ շաբաթում որտեղ կլինի իր պատվերը։',
+          ru: 'Каждый этап назван, поэтому бренд видит, где его заказ окажется на любой неделе.',
+        }),
+        value: t({
+          en: 'Placing production abroad is a trust problem first, and the process is the answer to it.',
+          hy: 'Արտադրությունն արտերկրում տեղաբաշխելը նախ վստահության հարց է, և գործընթացն է դրա պատասխանը։',
+          ru: 'Размещение производства за рубежом — прежде всего вопрос доверия, и ответ на него — сам процесс.',
+        }),
+        about: t({
+          en: 'A clothing brand placing an order with a factory in another country is buying something it cannot inspect, from people it has not met, months before the goods exist. This site treats that as the problem to solve: the production route is broken into eight named stages - the client model, pattern development, a sewn sample, the sample sent out, fabric purchasing, batch sewing, quality control and shipment - so a buyer can follow where an order would be and what happens next. Around that sit the things a wholesale client checks before committing: the garment categories the floor actually handles, the fabric range, a registered company with contracts and a full document package, Chestny Znak marking, and a double quality check. Enquiries run through WhatsApp and Telegram rather than a long form, which matches how this trade is negotiated, and the factory premises and finished work are shown rather than described, because at this distance a photograph of the building is itself an argument.',
+          hy: 'Հագուստի բրենդը, որ պատվեր է տեղադրում այլ երկրի ֆաբրիկայում, գնում է մի բան, որը չի կարող ստուգել, մարդկանցից, որոնց չի հանդիպել, ապրանքի գոյություն ունենալուց ամիսներ առաջ։ Այս կայքը հենց դա է դիտարկում որպես լուծելի խնդիր. արտադրական ճանապարհը բաժանված է ութ անվանված փուլի՝ հաճախորդի մոդել, հարթաչափերի մշակում, կարված նմուշ, նմուշի ուղարկում, գործվածքի գնում, խմբաքանակի կար, որակի վերահսկում և առաքում, որպեսզի գնորդը կարողանա հետևել, թե որտեղ է պատվերը և ինչ է լինելու հետո։ Դրա շուրջ դասավորված է այն, ինչ մեծածախ հաճախորդը ստուգում է նախքան պարտավորվելը՝ հագուստի այն կատեգորիաները, որոնք արտադրամասն իրականում սպասարկում է, գործվածքների տեսականին, գրանցված ընկերություն՝ պայմանագրերով և փաստաթղթերի ամբողջական փաթեթով, «Չեստնի Զնակ» մակնշումը և որակի կրկնակի ստուգումը։ Հարցումներն անցնում են WhatsApp-ով և Telegram-ով, ոչ թե երկար ձևի միջոցով, ինչը համապատասխանում է այս առևտրի բանակցելու եղանակին, իսկ ֆաբրիկայի շենքն ու պատրաստի աշխատանքը ցույց են տրվում, ոչ թե նկարագրվում, քանի որ այսպիսի հեռավորության վրա շենքի լուսանկարն ինքնին փաստարկ է։',
+          ru: 'Бренд одежды, размещающий заказ на фабрике в другой стране, покупает то, что не может осмотреть, у людей, которых не встречал, за месяцы до того, как товар появится. Этот сайт и рассматривает это как задачу: производственный путь разбит на восемь названных этапов — модель клиента, разработка лекала, пошив образца, отправка образца, закупка ткани, пошив партии, контроль качества и отгрузка, — чтобы заказчик мог проследить, где окажется заказ и что произойдёт дальше. Вокруг этого расположено то, что оптовый клиент проверяет прежде, чем взять на себя обязательства: категории одежды, которые цех действительно обслуживает, ассортимент тканей, зарегистрированная компания с договорами и полным пакетом документов, маркировка «Честный знак» и двойная проверка качества. Обращения идут через WhatsApp и Telegram, а не через длинную форму, что соответствует тому, как ведутся переговоры в этой торговле, а здание фабрики и готовая работа показаны, а не описаны, потому что на таком расстоянии фотография здания — уже аргумент.',
+        }),
+        photoAlts: [
+          t({
+            en: 'A rail of finished shirts on wooden hangers receding into the distance, in grey, white, mustard, terracotta and navy',
+            hy: 'Պատրաստի վերնաշապիկների շարք՝ փայտե կախիչների վրա, հեռացող խորքի մեջ՝ մոխրագույն, սպիտակ, մանանեխի, աղյուսագույն և մուգ կապույտ երանգներով',
+            ru: 'Вешала с готовыми рубашками на деревянных плечиках, уходящие вглубь кадра, — серые, белые, горчичные, терракотовые и тёмно-синие',
+          }),
+          t({
+            en: 'The factory building under a clear winter sky, a two-storey facade panelled in white and dark blue with a KG TEX sign on the roof, railings and recruitment banners along the street wall',
+            hy: 'Ֆաբրիկայի շենքը պարզ ձմեռային երկնքի ներքո՝ երկհարկանի ճակատ՝ սպիտակ և մուգ կապույտ վահանակներով, տանիքին՝ KG TEX ցուցանակ, փողոցի պատի երկայնքով՝ ճաղավանդակ և աշխատանքի հրավերի պաստառներ',
+            ru: 'Здание фабрики под ясным зимним небом: двухэтажный фасад из белых и тёмно-синих панелей, на крыше вывеска KG TEX, вдоль уличной стены ограда и баннеры о наборе сотрудников',
+          }),
+          t({
+            en: 'Fabric swatches fanned out from a single point, textured weaves and plain naps in blues, reds, browns, greens and creams',
+            hy: 'Գործվածքների նմուշներ՝ հովհարաձև մեկ կետից բացված, հյուսվածքային և հարթ մակերեսներ՝ կապույտ, կարմիր, շագանակագույն, կանաչ և կաթնագույն երանգներով',
+            ru: 'Образцы тканей, разложенные веером из одной точки: фактурные переплетения и гладкие ворсовые полотна в синих, красных, коричневых, зелёных и кремовых тонах',
           }),
         ],
       },

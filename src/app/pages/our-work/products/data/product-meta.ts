@@ -249,6 +249,16 @@ export const PRODUCT_META: Readonly<Record<ProductId, ProductMeta>> = {
     url: 'https://grishaev-architects.com/lp/',
     platform: '1C-Bitrix',
   },
+  kgtex: {
+    archetype: 'trade',
+    photos: [
+      { file: 'kgtex.webp', width: 1000, height: 571 },
+      { file: 'kgtex-factory.webp', width: 1120, height: 840 },
+      { file: 'kgtex-fabrics.webp', width: 1024, height: 682 },
+    ],
+    url: 'https://kgtex.ru/',
+    platform: 'WordPress',
+  },
 };
 
 export function photoSrc(photo: ProductPhoto): string {
