@@ -229,6 +229,16 @@ export const PRODUCT_META: Readonly<Record<ProductId, ProductMeta>> = {
       { file: 'serv.webp', width: 910, height: 767 },
     ],
   },
+  fairwell: {
+    archetype: 'storefront',
+    photos: [
+      { file: 'fairwell.webp', width: 823, height: 514 },
+      { file: 'fairwell-girls.webp', width: 852, height: 1377 },
+      { file: 'fairwell-boys.webp', width: 867, height: 1303 },
+    ],
+    url: 'https://shopfairwell.com/',
+    platform: 'Shopify',
+  },
 };
 
 export function photoSrc(photo: ProductPhoto): string {

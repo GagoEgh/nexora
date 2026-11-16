@@ -352,7 +352,7 @@ describe('ProjectCard', () => {
   });
 
   /**
-   * Two of the nineteen products have no destination worth sending a visitor to, and the card
+   * Two of the twenty products have no destination worth sending a visitor to, and the card
    * renders no outbound link at all for them rather than a dead one.
    */
   it('renders no outbound link when the product has no live destination', async () => {

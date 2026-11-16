@@ -20,6 +20,7 @@ export const PRODUCT_IDS = [
   'tai-ping',
   'mezave',
   'connected-car',
+  'fairwell',
 ] as const;
 
 export type ProductId = (typeof PRODUCT_IDS)[number];

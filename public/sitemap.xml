@@ -596,4 +596,25 @@
     <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/connected-car" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/connected-car" />
   </url>
+  <url>
+    <loc>https://nexoratechnology.org/our_work/fairwell</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/fairwell" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/fairwell" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/fairwell" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/fairwell" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/hy/our_work/fairwell</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/fairwell" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/fairwell" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/fairwell" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/fairwell" />
+  </url>
+  <url>
+    <loc>https://nexoratechnology.org/ru/our_work/fairwell</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nexoratechnology.org/our_work/fairwell" />
+    <xhtml:link rel="alternate" hreflang="hy" href="https://nexoratechnology.org/hy/our_work/fairwell" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://nexoratechnology.org/ru/our_work/fairwell" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexoratechnology.org/our_work/fairwell" />
+  </url>
 </urlset>

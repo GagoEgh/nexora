@@ -15,12 +15,6 @@ const localisedPages = () =>
     ),
   );
 
-/**
- * `outputMode: "static"` prerenders by crawling the route table, and a parameterised path
- * cannot be crawled - so every product slug has to be named here, for the default locale and
- * for each prefixed one. Nineteen products across three locales take the build from 30 routes
- * to 87.
- */
 const productParams = () => Promise.resolve(PRODUCT_IDS.map((slug) => ({ slug })));
 const localisedProductParams = () =>
   Promise.resolve(
@@ -34,8 +28,6 @@ export const serverRoutes: ServerRoute[] = [
     getPrerenderParams: productParams,
   },
   {
-    // `:locale/**` cannot cover this: the router matches the more specific product route, so
-    // its own two parameters have to be supplied explicitly.
     path: `:locale/${OUR_WORK_SEGMENT}/:slug`,
     renderMode: RenderMode.Prerender,
     getPrerenderParams: localisedProductParams,

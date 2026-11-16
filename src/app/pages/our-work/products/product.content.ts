@@ -9,9 +9,9 @@ const productContent = {
       ru: 'Избранные работы',
     }),
     title: t({
-      en: 'Nineteen products, and what makes each one different.',
-      hy: 'Տասնինը արտադրանք՝ յուրաքանչյուրն իր առանձնահատկությամբ։',
-      ru: 'Девятнадцать продуктов — и то, чем каждый из них отличается.',
+      en: 'Twenty products, and what makes each one different.',
+      hy: 'Քսան արտադրանք՝ յուրաքանչյուրն իր առանձնահատկությամբ։',
+      ru: 'Двадцать продуктов — и то, чем каждый из них отличается.',
     }),
     intro: t({
       en: 'Mobile apps, storefronts, configurators and lead funnels across automotive, healthcare, beauty, food and luxury retail — each one summarised by the capability that sets it apart.',
@@ -1437,9 +1437,9 @@ const productContent = {
           ru: 'Владелец получает одно место для того, что раньше означало звонок дилеру.',
         }),
         about: t({
-          en: 'A connected-vehicle application is unlike every other product in this portfolio because the other side of the interface is a car rather than a database. Latency matters, connectivity is intermittent by nature, and a failed command has consequences a failed page load does not. The application brings remote control, GPS tracking, real-time monitoring, security alerting and maintenance management into a single interface for owners of premium vehicles. Of all nineteen products this is the one whose published presence could not be established, so what is described here is its intended scope rather than a feature set verified against a live listing.',
-          hy: 'Կապակցված մեքենայի հավելվածը տարբերվում է այս պորտֆոլիոյի մյուս բոլոր արտադրանքներից, որովհետև ինտերֆեյսի մյուս կողմում մեքենա է, ոչ թե տվյալների բազա։ Ուշացումը կարևոր է, կապը բնույթով ընդհատվող է, իսկ ձախողված հրամանն ունի հետևանքներ, որոնք չունի չբեռնված էջը։ Հավելվածը մեկ ինտերֆեյսում միավորում է հեռակառավարումը, GPS հետևումը, իրական ժամանակի մոնիտորինգը, անվտանգության ծանուցումներն ու սպասարկման կառավարումը՝ պրեմիում մեքենաների սեփականատերերի համար։ Տասնինը արտադրանքից սա միակն է, որի հրապարակային ներկայությունը հնարավոր չեղավ հաստատել, ուստի այստեղ նկարագրվածը նրա նախատեսված շրջանակն է, ոչ թե գործող էջի դիմաց ստուգված հնարավորությունների ցանկ։',
-          ru: 'Приложение для подключённого автомобиля отличается от всех остальных продуктов портфолио тем, что по другую сторону интерфейса находится машина, а не база данных. Здесь важна задержка, связь по своей природе прерывиста, а несработавшая команда имеет последствия, которых не бывает у незагрузившейся страницы. Приложение объединяет в одном интерфейсе удалённое управление, GPS-отслеживание, мониторинг в реальном времени, оповещения безопасности и управление обслуживанием для владельцев премиальных автомобилей. Из девятнадцати продуктов это единственный, чьё публичное присутствие установить не удалось, поэтому описанное здесь — его предполагаемый объём, а не набор функций, проверенный по действующей странице.',
+          en: 'A connected-vehicle application is unlike every other product in this portfolio because the other side of the interface is a car rather than a database. Latency matters, connectivity is intermittent by nature, and a failed command has consequences a failed page load does not. The application brings remote control, GPS tracking, real-time monitoring, security alerting and maintenance management into a single interface for owners of premium vehicles. Of all twenty products this is the one whose published presence could not be established, so what is described here is its intended scope rather than a feature set verified against a live listing.',
+          hy: 'Կապակցված մեքենայի հավելվածը տարբերվում է այս պորտֆոլիոյի մյուս բոլոր արտադրանքներից, որովհետև ինտերֆեյսի մյուս կողմում մեքենա է, ոչ թե տվյալների բազա։ Ուշացումը կարևոր է, կապը բնույթով ընդհատվող է, իսկ ձախողված հրամանն ունի հետևանքներ, որոնք չունի չբեռնված էջը։ Հավելվածը մեկ ինտերֆեյսում միավորում է հեռակառավարումը, GPS հետևումը, իրական ժամանակի մոնիտորինգը, անվտանգության ծանուցումներն ու սպասարկման կառավարումը՝ պրեմիում մեքենաների սեփականատերերի համար։ Քսան արտադրանքից սա միակն է, որի հրապարակային ներկայությունը հնարավոր չեղավ հաստատել, ուստի այստեղ նկարագրվածը նրա նախատեսված շրջանակն է, ոչ թե գործող էջի դիմաց ստուգված հնարավորությունների ցանկ։',
+          ru: 'Приложение для подключённого автомобиля отличается от всех остальных продуктов портфолио тем, что по другую сторону интерфейса находится машина, а не база данных. Здесь важна задержка, связь по своей природе прерывиста, а несработавшая команда имеет последствия, которых не бывает у незагрузившейся страницы. Приложение объединяет в одном интерфейсе удалённое управление, GPS-отслеживание, мониторинг в реальном времени, оповещения безопасности и управление обслуживанием для владельцев премиальных автомобилей. Из двадцати продуктов это единственный, чьё публичное присутствие установить не удалось, поэтому описанное здесь — его предполагаемый объём, а не набор функций, проверенный по действующей странице.',
         }),
         photoAlts: [
           t({
@@ -1461,6 +1461,78 @@ const productContent = {
             en: 'Five phone screens and a smartwatch arranged on white: a home screen with lights, lock, engine, unlock and horn controls and an engine-running countdown, a vehicle profile with odometer and tyre pressures, a dated service history, an appointment booking with available times, and an alerts screen with valet, drive-zone and curfew toggles',
             hy: 'Սպիտակ ֆոնին դասավորված հինգ հեռախոսի էկրան և խելացի ժամացույց. գլխավոր էկրան՝ լույսերի, կողպման, շարժիչի, բացելու և ազդանշանի կառավարմամբ ու շարժիչի աշխատանքի հետհաշվարկով, մեքենայի պրոֆիլ՝ վազքաչափով և անվադողերի ճնշմամբ, ամսաթվերով սպասարկման պատմություն, ազատ ժամերով գրանցման էկրան և ծանուցումների էկրան՝ փարքինգի ծառայության, երթևեկության գոտու և ժամային սահմանափակման անջատիչներով',
             ru: 'Пять экранов телефона и смарт-часы на белом фоне: главный экран с управлением фарами, блокировкой, двигателем, разблокировкой и сигналом и обратным отсчётом работы двигателя, профиль автомобиля с одометром и давлением в шинах, история обслуживания с датами, запись на сервис с доступным временем и экран оповещений с переключателями валет-режима, зон движения и комендантского часа',
+          }),
+        ],
+      },
+      fairwell: {
+        name: t({ en: 'Fairwell', hy: 'Fairwell', ru: 'Fairwell' }),
+        category: t({
+          en: 'Children’s clothing commerce',
+          hy: 'Մանկական հագուստի առևտուր',
+          ru: 'Торговля детской одеждой',
+        }),
+        hook: t({
+          en: 'Girls, boys and baby each get their own route into the same catalogue.',
+          hy: 'Աղջիկները, տղաները և նորածինները ստանում են իրենց ճանապարհը դեպի նույն կատալոգը։',
+          ru: 'Для девочек, мальчиков и малышей — свой вход в один и тот же каталог.',
+        }),
+        summary: t({
+          en: 'Direct-to-consumer commerce for a Los Angeles children’s clothing label, with separate departments for girls, boys and baby.',
+          hy: 'Լոս Անջելեսի մանկական հագուստի բրենդի ուղիղ վաճառք՝ աղջիկների, տղաների և նորածինների համար առանձին բաժիններով։',
+          ru: 'Прямые продажи лос-анджелесского бренда детской одежды с отдельными разделами для девочек, мальчиков и малышей.',
+        }),
+        highlights: [
+          t({
+            en: 'Girls, boys and baby departments',
+            hy: 'Աղջիկների, տղաների և նորածինների բաժիններ',
+            ru: 'Разделы для девочек, мальчиков и малышей',
+          }),
+          t({
+            en: 'Shop-by-category collections',
+            hy: 'Հավաքածուներ՝ ըստ կատեգորիայի',
+            ru: 'Коллекции по категориям',
+          }),
+          t({
+            en: 'Country and currency selector',
+            hy: 'Երկրի և արժույթի ընտրիչ',
+            ru: 'Выбор страны и валюты',
+          }),
+          t({
+            en: 'Free shipping over $150',
+            hy: 'Անվճար առաքում $150-ից',
+            ru: 'Бесплатная доставка от $150',
+          }),
+        ],
+        advantage: t({
+          en: 'One catalogue serves three shopper intents without splitting into three stores.',
+          hy: 'Մեկ կատալոգը սպասարկում է գնորդի երեք մտադրություն՝ առանց երեք խանութի բաժանվելու։',
+          ru: 'Один каталог обслуживает три покупательских сценария, не распадаясь на три магазина.',
+        }),
+        value: t({
+          en: 'A parent buying for two children of different ages stays in one basket.',
+          hy: 'Տարբեր տարիքի երկու երեխայի համար գնող ծնողը մնում է մեկ զամբյուղում։',
+          ru: 'Родитель, покупающий для двух детей разного возраста, остаётся в одной корзине.',
+        }),
+        about: t({
+          en: 'Children’s clothing is chosen by who it is for before it is chosen by what it is, so the first thing this storefront does is let a visitor say that: girls, boys and baby are separate routes into one catalogue, each carrying its own tops and bottoms and, where the category applies, dresses or onesies. A shop-by-category block presents the same stock from the other direction for anyone arriving who knows the garment rather than the wearer, while a standing sale section and seasonal campaign banners carry the rest of the merchandising. The practical questions an international visitor asks before adding anything - what currency is this, and what will delivery cost - are answered by a country and currency selector and a published free-shipping threshold rather than deferred to the checkout. What holds the whole thing together is that none of it splits the shop: a parent buying for a four-year-old and a newborn in the same visit stays in one basket throughout.',
+          hy: 'Մանկական հագուստն ընտրում են նախ ըստ այն բանի, թե ում համար է, և միայն հետո՝ ըստ այն բանի, թե ինչ է, ուստի այս խանութի առաջին անելիքն այցելուին հնարավորություն տալն է հենց դա ասելու. աղջիկները, տղաները և նորածինները առանձին ճանապարհներ են դեպի մեկ կատալոգ՝ յուրաքանչյուրն իր վերնամասերով ու ներքնամասերով, իսկ որտեղ կատեգորիան կիրառելի է՝ նաև զգեստներով կամ կոմբինեզոններով։ «Ըստ կատեգորիայի» բաժինը նույն ապրանքը ներկայացնում է հակառակ ուղղությունից՝ նրանց համար, ովքեր գալիս են՝ իմանալով հագուստը, ոչ թե կրողին, իսկ մշտական զեղչի բաժինն ու սեզոնային արշավների պաստառները կրում են մերչենդայզինգի մնացած մասը։ Գործնական հարցերը, որ միջազգային այցելուն տալիս է նախքան որևէ բան ավելացնելը՝ ինչ արժույթ է սա և ինչ կարժենա առաքումը, պատասխանվում են երկրի ու արժույթի ընտրիչով և հրապարակված անվճար առաքման շեմով, այլ ոչ թե հետաձգվում մինչև վճարման էջը։ Այս ամենը միասին է պահում այն, որ ոչինչ չի բաժանում խանութը. չորսամյա երեխայի և նորածնի համար նույն այցի ընթացքում գնող ծնողը մնում է մեկ զամբյուղում։',
+          ru: 'Детскую одежду выбирают сначала по тому, кому она предназначена, и лишь потом по тому, что это за вещь, поэтому первое, что делает эта витрина, — даёт посетителю возможность сказать именно это: девочки, мальчики и малыши — отдельные входы в один каталог, у каждого свои верх и низ, а где категория применима — платья или боди. Блок «по категориям» показывает тот же ассортимент с другой стороны — для тех, кто приходит, зная вещь, а не того, кто её носит, — а постоянный раздел распродажи и баннеры сезонных кампаний берут на себя остальной мерчандайзинг. Практические вопросы, которые международный посетитель задаёт прежде, чем что-то добавить, — в какой это валюте и сколько будет стоить доставка, — решаются выбором страны и валюты и объявленным порогом бесплатной доставки, а не откладываются до оформления заказа. Держится всё это на том, что ничто не разделяет магазин: родитель, покупающий в одно посещение для четырёхлетнего ребёнка и для новорождённого, всё время остаётся в одной корзине.',
+        }),
+        photoAlts: [
+          t({
+            en: 'Two children outdoors in round pale sunglasses and long-sleeved tie-dye dresses, one violet and navy, the other pink and turquoise, with sunlit greenery behind them',
+            hy: 'Երկու երեխա բացօթյա՝ կլոր բաց երանգի արևային ակնոցներով և երկար թևքով tie-dye զգեստներով՝ մեկը մանուշակագույն ու մուգ կապույտ, մյուսը՝ վարդագույն ու փիրուզագույն, հետևում՝ արևոտ կանաչի',
+            ru: 'Двое детей на улице в круглых светлых очках и платьях с длинным рукавом в технике тай-дай: одно фиолетово-тёмно-синее, другое розово-бирюзовое, позади — освещённая солнцем зелень',
+          }),
+          t({
+            en: 'A child standing on grass in a tie-dye sweatshirt and matching joggers, dip-dyed from pink through lilac to blue, with a garden and a wooden play frame behind',
+            hy: 'Խոտի վրա կանգնած երեխա՝ tie-dye սպորտաշապիկով և համապատասխան տաբատով՝ վարդագույնից դեպի յասամանագույն և կապույտ անցումով, հետևում՝ այգի և փայտե խաղահրապարակ',
+            ru: 'Ребёнок стоит на траве в свитшоте и джоггерах в технике тай-дай с переходом от розового через сиреневый к голубому, позади — сад и деревянная игровая конструкция',
+          }),
+          t({
+            en: 'A small child on a paved garden path in a tie-dye zip-up hoodie and matching joggers in navy, olive and denim blue',
+            hy: 'Փոքրիկ երեխա սալահատակ այգու արահետին՝ tie-dye կայծակաճարմանդով բաճկոնով և համապատասխան տաբատով՝ մուգ կապույտ, ձիթապտղագույն և ջինսի կապույտ երանգներով',
+            ru: 'Маленький ребёнок на мощёной садовой дорожке в толстовке на молнии и джоггерах в технике тай-дай тёмно-синего, оливкового и джинсового цвета',
           }),
         ],
       },

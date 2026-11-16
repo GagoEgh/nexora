@@ -25,10 +25,6 @@ export class Products {
 
   protected readonly products = computed(() => toProductViews(this.content()));
 
-  /**
-   * The strings every card shares, resolved once here rather than nineteen times in the child.
-   * Typed, so a dictionary rename breaks the build at the producer instead of in a template.
-   */
   protected readonly labels = computed<ProjectCardLabels>(() => {
     const copy = this.content();
     return {

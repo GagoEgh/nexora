@@ -78,7 +78,7 @@ describe('the route table and the document-meta page list', () => {
    * to be the path that route is served at, not merely *some* valid id.
    *
    * A parameterised child is the one allowed exception. `/our_work/:slug` carries `our_work`
-   * because `DOCUMENT_META_PAGES` has one entry per page and cannot hold nineteen product
+   * because `DOCUMENT_META_PAGES` has one entry per page and cannot hold twenty product
    * titles; the product supplies its own through `DocumentMetaOverride`, while the canonical
    * and the hreflang set are built from the URL and so are already the product's own. The
    * exception is deliberately narrow: only a direct `:param` child of the id it carries.
