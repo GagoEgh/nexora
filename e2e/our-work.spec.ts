@@ -102,7 +102,7 @@ test.describe('the portfolio grid', () => {
   /**
    * The regression that `visibility` is in the stylesheet to prevent. `backface-visibility` and
    * a rotation hide a face from view and leave its links clickable, focusable and announced -
-   * twenty cards' worth of controls that are nowhere on screen (WCAG 2.4.3, 4.1.2).
+   * twenty-one cards' worth of controls that are nowhere on screen (WCAG 2.4.3, 4.1.2).
    */
   test('puts the turned-away face out of reach, not merely out of sight', async ({ page }) => {
     await page.goto('/our_work');
@@ -204,7 +204,7 @@ test.describe('the portfolio grid', () => {
   });
 
   /**
-   * Twenty detail links, eighteen outbound ones - two products have no destination worth
+   * Twenty-one detail links, nineteen outbound ones - two products have no destination worth
    * sending anyone to - and no buttons at all, because the card is its own control.
    */
   test('offers a detail link per card and leaves the site only safely', async ({ page }) => {

@@ -13,14 +13,14 @@ const ICON_SVG =
   '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"></svg>';
 
 /**
- * The band renders one card per registered product and nothing else. Spelling all twenty
+ * The band renders one card per registered product and nothing else. Spelling all twenty-one
  * titles out here would only restate the dictionary - that parity is `product-content.spec.ts`
  * - so what is pinned here is the join: every registry entry reaches the grid, in order, with
  * its own route and its own art.
  */
 const PRODUCT_COUNT = PRODUCT_IDS.length;
 
-/** Eighteen of the twenty have a live destination; two deliberately have none. */
+/** Nineteen of the twenty-one have a live destination; two deliberately have none. */
 const LIVE_COUNT = PRODUCT_IDS.filter((id) => PRODUCT_META[id].url !== undefined).length;
 
 describe('Products', () => {
@@ -83,7 +83,7 @@ describe('Products', () => {
 
   /**
    * Every card carries the photograph of its own product, restored from `public/images`. The
-   * failure this guards against is the one that is invisible on the page: twenty cards that
+   * failure this guards against is the one that is invisible on the page: twenty-one cards that
    * all render, each showing the wrong company's work.
    */
   it('gives every card its own product photograph, deferred', async () => {
@@ -111,7 +111,7 @@ describe('Products', () => {
   });
 
   /**
-   * The grid's interactive surface, counted: twenty detail links, one outbound link per live
+   * The grid's interactive surface, counted: twenty-one detail links, one outbound link per live
    * product, and the band's own call to action. Nothing is a button - the card is its own
    * control, and there is no "Details" trigger to add a twentieth of anything.
    */
@@ -130,7 +130,7 @@ describe('Products', () => {
 
   /**
    * Every card has a second face, and every one of them starts turned away. The failure this
-   * guards against scales with the grid: twenty back faces live in the accessibility tree at
+   * guards against scales with the grid: twenty-one back faces live in the accessibility tree at
    * once, and it is the stylesheet's `visibility` - not `backface-visibility` - that keeps them
    * out of the tab order. A card rendered pre-flipped would show the back of the deck.
    */
@@ -190,7 +190,7 @@ describe('Products', () => {
     await render();
 
     expect(root.querySelector('.projects__eyebrow')?.textContent?.trim()).toBe('Selected work');
-    expect(root.querySelector('.projects__title')?.textContent?.trim()).toContain('Twenty');
+    expect(root.querySelector('.projects__title')?.textContent?.trim()).toContain('Twenty-one');
   });
 
   it('translates the band and every card', async () => {

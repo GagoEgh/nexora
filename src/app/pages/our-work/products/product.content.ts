@@ -9,9 +9,9 @@ const productContent = {
       ru: 'Избранные работы',
     }),
     title: t({
-      en: 'Twenty products, and what makes each one different.',
-      hy: 'Քսան արտադրանք՝ յուրաքանչյուրն իր առանձնահատկությամբ։',
-      ru: 'Двадцать продуктов — и то, чем каждый из них отличается.',
+      en: 'Twenty-one products, and what makes each one different.',
+      hy: 'Քսանմեկ արտադրանք՝ յուրաքանչյուրն իր առանձնահատկությամբ։',
+      ru: 'Двадцать один продукт — и то, чем каждый из них отличается.',
     }),
     intro: t({
       en: 'Mobile apps, storefronts, configurators and lead funnels across automotive, healthcare, beauty, food and luxury retail — each one summarised by the capability that sets it apart.',
@@ -1437,9 +1437,9 @@ const productContent = {
           ru: 'Владелец получает одно место для того, что раньше означало звонок дилеру.',
         }),
         about: t({
-          en: 'A connected-vehicle application is unlike every other product in this portfolio because the other side of the interface is a car rather than a database. Latency matters, connectivity is intermittent by nature, and a failed command has consequences a failed page load does not. The application brings remote control, GPS tracking, real-time monitoring, security alerting and maintenance management into a single interface for owners of premium vehicles. Of all twenty products this is the one whose published presence could not be established, so what is described here is its intended scope rather than a feature set verified against a live listing.',
-          hy: 'Կապակցված մեքենայի հավելվածը տարբերվում է այս պորտֆոլիոյի մյուս բոլոր արտադրանքներից, որովհետև ինտերֆեյսի մյուս կողմում մեքենա է, ոչ թե տվյալների բազա։ Ուշացումը կարևոր է, կապը բնույթով ընդհատվող է, իսկ ձախողված հրամանն ունի հետևանքներ, որոնք չունի չբեռնված էջը։ Հավելվածը մեկ ինտերֆեյսում միավորում է հեռակառավարումը, GPS հետևումը, իրական ժամանակի մոնիտորինգը, անվտանգության ծանուցումներն ու սպասարկման կառավարումը՝ պրեմիում մեքենաների սեփականատերերի համար։ Քսան արտադրանքից սա միակն է, որի հրապարակային ներկայությունը հնարավոր չեղավ հաստատել, ուստի այստեղ նկարագրվածը նրա նախատեսված շրջանակն է, ոչ թե գործող էջի դիմաց ստուգված հնարավորությունների ցանկ։',
-          ru: 'Приложение для подключённого автомобиля отличается от всех остальных продуктов портфолио тем, что по другую сторону интерфейса находится машина, а не база данных. Здесь важна задержка, связь по своей природе прерывиста, а несработавшая команда имеет последствия, которых не бывает у незагрузившейся страницы. Приложение объединяет в одном интерфейсе удалённое управление, GPS-отслеживание, мониторинг в реальном времени, оповещения безопасности и управление обслуживанием для владельцев премиальных автомобилей. Из двадцати продуктов это единственный, чьё публичное присутствие установить не удалось, поэтому описанное здесь — его предполагаемый объём, а не набор функций, проверенный по действующей странице.',
+          en: 'A connected-vehicle application is unlike every other product in this portfolio because the other side of the interface is a car rather than a database. Latency matters, connectivity is intermittent by nature, and a failed command has consequences a failed page load does not. The application brings remote control, GPS tracking, real-time monitoring, security alerting and maintenance management into a single interface for owners of premium vehicles. Of all twenty-one products this is the one whose published presence could not be established, so what is described here is its intended scope rather than a feature set verified against a live listing.',
+          hy: 'Կապակցված մեքենայի հավելվածը տարբերվում է այս պորտֆոլիոյի մյուս բոլոր արտադրանքներից, որովհետև ինտերֆեյսի մյուս կողմում մեքենա է, ոչ թե տվյալների բազա։ Ուշացումը կարևոր է, կապը բնույթով ընդհատվող է, իսկ ձախողված հրամանն ունի հետևանքներ, որոնք չունի չբեռնված էջը։ Հավելվածը մեկ ինտերֆեյսում միավորում է հեռակառավարումը, GPS հետևումը, իրական ժամանակի մոնիտորինգը, անվտանգության ծանուցումներն ու սպասարկման կառավարումը՝ պրեմիում մեքենաների սեփականատերերի համար։ Քսանմեկ արտադրանքից սա միակն է, որի հրապարակային ներկայությունը հնարավոր չեղավ հաստատել, ուստի այստեղ նկարագրվածը նրա նախատեսված շրջանակն է, ոչ թե գործող էջի դիմաց ստուգված հնարավորությունների ցանկ։',
+          ru: 'Приложение для подключённого автомобиля отличается от всех остальных продуктов портфолио тем, что по другую сторону интерфейса находится машина, а не база данных. Здесь важна задержка, связь по своей природе прерывиста, а несработавшая команда имеет последствия, которых не бывает у незагрузившейся страницы. Приложение объединяет в одном интерфейсе удалённое управление, GPS-отслеживание, мониторинг в реальном времени, оповещения безопасности и управление обслуживанием для владельцев премиальных автомобилей. Из двадцати одного продукта это единственный, чьё публичное присутствие установить не удалось, поэтому описанное здесь — его предполагаемый объём, а не набор функций, проверенный по действующей странице.',
         }),
         photoAlts: [
           t({
@@ -1533,6 +1533,82 @@ const productContent = {
             en: 'A small child on a paved garden path in a tie-dye zip-up hoodie and matching joggers in navy, olive and denim blue',
             hy: 'Փոքրիկ երեխա սալահատակ այգու արահետին՝ tie-dye կայծակաճարմանդով բաճկոնով և համապատասխան տաբատով՝ մուգ կապույտ, ձիթապտղագույն և ջինսի կապույտ երանգներով',
             ru: 'Маленький ребёнок на мощёной садовой дорожке в толстовке на молнии и джоггерах в технике тай-дай тёмно-синего, оливкового и джинсового цвета',
+          }),
+        ],
+      },
+      'grishaev-architects': {
+        name: t({
+          en: 'Grishaev Architects',
+          hy: 'Grishaev Architects',
+          ru: 'Grishaev Architects',
+        }),
+        category: t({
+          en: 'Architectural practice lead funnel',
+          hy: 'Ճարտարապետական բյուրոյի հաճախորդների ձագար',
+          ru: 'Воронка заявок архитектурного бюро',
+        }),
+        hook: t({
+          en: 'A single landing page that turns a house someone is imagining into a booked consultation.',
+          hy: 'Մեկ վայրէջքի էջ, որը պատկերացվող տունը վերածում է ամրագրված խորհրդատվության։',
+          ru: 'Одна посадочная страница, превращающая дом, который человек пока лишь представляет, в назначенную консультацию.',
+        }),
+        summary: t({
+          en: 'A lead funnel for a residential architecture studio working internationally, built around a staged path from first enquiry to signed project.',
+          hy: 'Միջազգայնորեն աշխատող բնակելի ճարտարապետության ստուդիայի հաճախորդների ձագար՝ կառուցված առաջին հարցումից մինչև ստորագրված նախագիծ տանող փուլային ճանապարհի շուրջ։',
+          ru: 'Воронка заявок для студии жилой архитектуры, работающей на международном рынке, построенная вокруг этапного пути от первого обращения до подписанного проекта.',
+        }),
+        highlights: [
+          t({
+            en: 'Four-stage path to a signed project',
+            hy: 'Չորս փուլ՝ մինչև ստորագրված նախագիծ',
+            ru: 'Четыре этапа до подписанного проекта',
+          }),
+          t({
+            en: 'Concept or turnkey construction',
+            hy: 'Դիզայն-մակետ կամ շինարարություն «բանալին ձեռքին»',
+            ru: 'Дизайн-макет или строительство под ключ',
+          }),
+          t({
+            en: 'Project archive with per-project pages',
+            hy: 'Նախագծերի արխիվ՝ առանձին էջերով',
+            ru: 'Архив проектов с отдельными страницами',
+          }),
+          t({
+            en: 'Russian, English and Spanish editions',
+            hy: 'Ռուսերեն, անգլերեն և իսպաներեն տարբերակներ',
+            ru: 'Русская, английская и испанская версии',
+          }),
+        ],
+        advantage: t({
+          en: 'The enquiry form is the last step rather than the first, so what reaches the studio is a brief.',
+          hy: 'Հարցման ձևը վերջին քայլն է, ոչ թե առաջինը, ուստի ստուդիա է հասնում արդեն ձևավորված հարցում։',
+          ru: 'Форма заявки стоит последним шагом, а не первым, поэтому в студию приходит уже оформленный запрос.',
+        }),
+        value: t({
+          en: 'A commission that takes months to agree starts from a conversation the visitor booked themselves.',
+          hy: 'Պատվերը, որի համաձայնեցումը ամիսներ է տևում, սկսվում է այցելուի՝ ինքնուրույն ամրագրած զրույցից։',
+          ru: 'Заказ, согласование которого занимает месяцы, начинается с разговора, который посетитель назначил сам.',
+        }),
+        about: t({
+          en: 'Commissioning a house is a decision made over months, not minutes, and a visitor arriving at an architecture studio for the first time usually cannot say what they want in the vocabulary the studio works in. The page answers that by explaining the engagement before it asks for anything: the studio and its principles come first, then a four-step sequence - consultation, deposit, project, finished house - that sets out who does what and when, then a choice between a design concept and turnkey construction, and only then the enquiry form. A project archive of named houses carries the evidence a prospective client actually weighs, since in this field the portfolio is the argument, and client accounts of author supervision and international practice answer the question that follows it. Messaging links sit alongside the form throughout, because a decision at this scale tends to begin with a question rather than a submission, and the page is published in Russian, English and Spanish for a practice whose clients are not in one country.',
+          hy: 'Տուն պատվիրելը ամիսների, ոչ թե րոպեների ընթացքում կայացվող որոշում է, իսկ ճարտարապետական ստուդիա առաջին անգամ եկող այցելուն սովորաբար չի կարող իր ուզածը ձևակերպել այն բառապաշարով, որով աշխատում է ստուդիան։ Էջը դա լուծում է՝ նախ բացատրելով համագործակցությունը և միայն հետո ինչ-որ բան խնդրելով. սկզբում ստուդիան ու նրա սկզբունքներն են, ապա չորս քայլից բաղկացած հաջորդականությունը՝ խորհրդատվություն, կանխավճար, նախագիծ, պատրաստի տուն, որը սահմանում է, թե ով ինչ է անում և երբ, ապա ընտրությունը դիզայն-մակետի և «բանալին ձեռքին» շինարարության միջև, և միայն դրանից հետո՝ հարցման ձևը։ Անվանված տների նախագծերի արխիվը կրում է այն ապացույցը, որը պոտենցիալ հաճախորդն իրականում կշռադատում է, քանի որ այս ոլորտում պորտֆոլիոն ինքնին փաստարկ է, իսկ հաճախորդների պատմությունները հեղինակային վերահսկողության և միջազգային փորձի մասին պատասխանում են հաջորդ հարցին։ Մեսենջերների հղումները ձևի կողքին են ամբողջ էջի ընթացքում, որովհետև այս մասշտաբի որոշումը սովորաբար սկսվում է հարցից, ոչ թե ուղարկված հայտից, և էջը հրապարակված է ռուսերեն, անգլերեն և իսպաներեն՝ ստուդիայի համար, որի հաճախորդները մեկ երկրում չեն։',
+          ru: 'Заказ дома — решение, которое принимают месяцами, а не минутами, и посетитель, впервые пришедший в архитектурную студию, обычно не может сформулировать желаемое на том языке, на котором работает студия. Страница решает это тем, что объясняет сотрудничество прежде, чем о чём-либо просит: сначала студия и её принципы, затем последовательность из четырёх шагов — консультация, предоплата, проект, готовый дом, — которая задаёт, кто что делает и когда, затем выбор между дизайн-макетом и строительством под ключ, и только после этого форма заявки. Архив названных проектов несёт то доказательство, которое потенциальный клиент действительно взвешивает, поскольку в этой области портфолио и есть аргумент, а отзывы об авторском надзоре и международной практике отвечают на следующий вопрос. Ссылки на мессенджеры стоят рядом с формой по всей странице, потому что решение такого масштаба обычно начинается с вопроса, а не с отправленной заявки, и страница опубликована на русском, английском и испанском — для бюро, клиенты которого находятся не в одной стране.',
+        }),
+        photoAlts: [
+          t({
+            en: 'A single-storey white villa with a sharp gabled centre and a terracotta roof, glazed across its length, palms to either side and a free-form pool in front under a dark sky',
+            hy: 'Միահարկ սպիտակ վիլլա՝ սուր ֆրոնտոնով կենտրոնով և աղյուսագույն տանիքով, ամբողջ երկարությամբ ապակեպատ, երկու կողմից՝ արմավենիներ, առջևում՝ ազատ ձևի լողավազան՝ մութ երկնքի ներքո',
+            ru: 'Одноэтажная белая вилла с острым фронтоном по центру и терракотовой кровлей, остеклённая по всей длине, по бокам пальмы, перед ней бассейн свободной формы под тёмным небом',
+          }),
+          t({
+            en: 'A two-storey brick house with a steep slate roof and black-framed windows of varying size, a glazed gable end, and a concrete terrace with steps down to a lawn',
+            hy: 'Երկհարկանի աղյուսե տուն՝ թեք թերթաքարե տանիքով և տարբեր չափի սև շրջանակներով պատուհաններով, ապակեպատ ֆրոնտոնով և բետոնե տեռասով՝ սիզամարգ իջնող աստիճաններով',
+            ru: 'Двухэтажный кирпичный дом с крутой сланцевой кровлей и окнами разного размера в чёрных рамах, остеклённым торцом и бетонной террасой со ступенями на газон',
+          }),
+          t({
+            en: 'A symmetrical white house of two glazed wings either side of a dark stone entrance, raised on a wide plinth with agaves at the steps and palms behind',
+            hy: 'Համաչափ սպիտակ տուն՝ մուգ քարե մուտքի երկու կողմում ապակեպատ երկու թև, բարձրացված լայն պատվանդանի վրա՝ աստիճանների մոտ ագավաներով, հետևում՝ արմավենիներ',
+            ru: 'Симметричный белый дом из двух остеклённых крыльев по сторонам тёмного каменного входа, поднятый на широком стилобате, у ступеней агавы, позади пальмы',
           }),
         ],
       },

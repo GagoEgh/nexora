@@ -21,6 +21,7 @@ export const PRODUCT_IDS = [
   'mezave',
   'connected-car',
   'fairwell',
+  'grishaev-architects',
 ] as const;
 
 export type ProductId = (typeof PRODUCT_IDS)[number];

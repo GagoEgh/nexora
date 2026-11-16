@@ -239,6 +239,16 @@ export const PRODUCT_META: Readonly<Record<ProductId, ProductMeta>> = {
     url: 'https://shopfairwell.com/',
     platform: 'Shopify',
   },
+  'grishaev-architects': {
+    archetype: 'lead-generation',
+    photos: [
+      { file: 'grishaev.webp', width: 1280, height: 720 },
+      { file: 'grishaev-brick-house.webp', width: 1080, height: 607 },
+      { file: 'grishaev-villa.webp', width: 1080, height: 607 },
+    ],
+    url: 'https://grishaev-architects.com/lp/',
+    platform: '1C-Bitrix',
+  },
 };
 
 export function photoSrc(photo: ProductPhoto): string {
